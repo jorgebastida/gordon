@@ -1,0 +1,19 @@
+Metadata-Version: 1.1
+Name: piranha
+Version: 0.0.1
+Summary: piranha is a simple framework for creating server-less applications using AWS services
+Home-page: http://github.com/jorgebastida/piranha
+Author: Jorge Bastida
+Author-email: me@jorgebastida.com
+License: BSD
+Description: UNKNOWN
+Keywords: aws lambda api gateway
+Platform: any
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 2
+Classifier: Development Status :: 4 - Beta
+Classifier: Environment :: Web Environment
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Operating System :: OS Independent
+Classifier: Topic :: Utilities

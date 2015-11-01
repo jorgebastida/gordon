@@ -3,10 +3,11 @@ import sys
 from setuptools import setup, find_packages
 
 install_requires = [
-    'jmespath==0.7.1',
-    'botocore<=1.2.3',
-    'boto3>1.0.0',
+    'boto3>=1.2.1',
     'termcolor>=1.1.0',
+    'PyYAML>=3',
+    'troposphere>=1.3'
+    'awacs',
 ]
 
 tests_require = []
@@ -21,13 +22,13 @@ if sys.version_info < (3, 3):
     tests_require.append('mock>=1.0.0')
 
 setup(
-    name='yeast',
+    name='piranha',
     version='0.0.1',
-    url='http://github.com/jorgebastida/yeast',
+    url='http://github.com/jorgebastida/piranha',
     license='BSD',
     author='Jorge Bastida',
     author_email='me@jorgebastida.com',
-    description='yeast is a simple framework for creating server-less applications using AWS services',
+    description='piranha is a simple framework for creating server-less applications using AWS services',
     keywords="aws lambda api gateway",
     packages=find_packages(),
     platforms='any',
@@ -46,7 +47,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'yeast = yeast.bin:main',
+            'piranha = piranha.bin:main',
         ]
     },
     zip_safe=False

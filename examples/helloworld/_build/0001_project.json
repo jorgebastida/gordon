@@ -1,0 +1,37 @@
+{
+    "Outputs": {
+        "CodeBucket": {
+            "Description": "CodeBucket name",
+            "Value": {
+                "Ref": "CodeBucket"
+            }
+        }
+    },
+    "Parameters": {
+        "Stage": {
+            "Default": "dev",
+            "Description": "Name of the Stage",
+            "Type": "String"
+        }
+    },
+    "Resources": {
+        "CodeBucket": {
+            "Properties": {
+                "AccessControl": "Private",
+                "BucketName": {
+                    "Fn::Join": [
+                        "-",
+                        [
+                            {
+                                "Ref": "Stage"
+                            },
+                            "helloworld",
+                            "piranha"
+                        ]
+                    ]
+                }
+            },
+            "Type": "AWS::S3::Bucket"
+        }
+    }
+}

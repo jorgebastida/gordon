@@ -1,0 +1,58 @@
+---
+project: helloworld
+apps:
+  - himachine
+
+code_bucket:
+
+
+# api:
+#   default:
+#     /hello/{parameter}/:
+#       lambda: simple.functions.hello_world
+#       method: GET
+#       methods:
+#         - GET
+#         - POST
+#       stage:
+#       security:
+
+#
+# logs:
+#   - lambda: simple.functions.hello_world
+#     group: ???
+#     filter: ???
+#     pattern: ???
+#
+# cognito_sync:
+#   - lambda: ???
+#     pool: ???
+#
+# dynamodb:
+#   - lambda: ???
+#     table: ???
+#     batch_size: ???
+#     starting_position: ???
+#
+# kinesis:
+#   - lambda: ???
+#     stream: ???
+#     batch_size: ???
+#     starting_position: ???
+#
+# s3:
+#   - lambda: ???
+#     bucket: ???
+#     event: ???
+#     prefix: ???
+#     suffix: ???
+#
+# scheduled:
+#   - lambda: ???
+#     name: ???
+#     description: ???
+#     expression: ???
+#
+# sns:
+#   - lambda: ???
+#     topic: ???

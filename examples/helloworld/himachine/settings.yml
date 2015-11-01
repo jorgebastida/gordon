@@ -1,0 +1,15 @@
+lambdas:
+  hellojs:
+    code: hellojs.js
+      # role:
+      # memory:
+      # timeout:
+      # #description: This simple function will do nothing
+      # #runtime: python-2.7
+  hellopy:
+    code: hellopy.py
+      # role:
+      # memory:
+      # timeout:
+      #description: This simple function will do nothing
+      #runtime: python-2.7
