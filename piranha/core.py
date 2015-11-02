@@ -1,13 +1,17 @@
 import os
+import re
 import json
 import zipfile
 import StringIO
 
+import boto3
 import troposphere
 from troposphere import iam, awslambda, s3
 
 from . import exceptions
 from . import utils
+from . import actions
+
 
 SETTINGS_FILE = 'settings.yml'
 
@@ -62,24 +66,36 @@ class Lambda(object):
         if isinstance(role, basestring):
             return role
         elif role is None:
-            policy = {
-                "Version": "2012-10-17",
-                "Statement": [
-                    {
-                        "Effect": "Allow",
-                        "Action": [
-                            "logs:CreateLogGroup",
-                            "logs:CreateLogStream",
-                            "logs:PutLogEvents"
-                        ],
-                        "Resource": "arn:aws:logs:*:*:*"
-                    }
-                ]
-            }
-
+            policies = [iam.Policy(
+                PolicyName=utils.valid_cloudformation_name(self.name, 'basic', 'policy'),
+                PolicyDocument={
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Action": [
+                                "logs:CreateLogGroup",
+                                "logs:CreateLogStream",
+                                "logs:PutLogEvents"
+                            ],
+                            "Resource": "arn:aws:logs:*:*:*",
+                        }
+                    ]
+                }
+            )]
         return iam.Role(
                 utils.valid_cloudformation_name(self.name, 'role'),
-                AssumeRolePolicyDocument=policy
+                AssumeRolePolicyDocument={
+                   "Version" : "2012-10-17",
+                   "Statement": [ {
+                      "Effect": "Allow",
+                      "Principal": {
+                         "Service": [ "ec2.amazonaws.com" ]
+                      },
+                      "Action": [ "sts:AssumeRole" ]
+                   } ]
+                },
+                Policies=policies
             )
 
 
@@ -91,7 +107,7 @@ class Lambda(object):
         role = self.get_role()
         if isinstance(role, iam.Role):
             template.add_resource(role)
-            role = troposphere.Ref(role)
+            role = troposphere.GetAtt(role, 'Arn')
 
         template.add_resource(
             awslambda.Function(
@@ -163,6 +179,7 @@ class Project(object):
 
     def __init__(self, path, *args, **kwargs):
         self.path = path
+        self.stage = kwargs.pop('stage', None)
         self.build_path = os.path.join(self.path, '_build')
         self.settings = utils.load_settings(
             os.path.join(self.path, SETTINGS_FILE),
@@ -205,7 +222,37 @@ class Project(object):
         if not os.path.exists(self.build_path):
             raise Exception("It looks like you have not build this project.")
 
+        steps = []
+        for filename in os.listdir(self.build_path):
+            match = re.match(r'(\d{4})_(.*)\.json', filename)
+            if not match:
+                continue
 
+            with open(os.path.join(self.build_path, filename), 'r') as f:
+                template = json.loads(f.read())
+            template_type = 'custom' if '_type' in template else 'cf'
+            steps.append((int(match.groups()[0]), match.groups()[1], filename, template_type))
+
+        steps = sorted(steps, key=lambda x:x[1])
+
+        context = {"Stage": self.stage}
+        for (number, name, filename, template_type) in steps:
+            getattr(self, 'apply_{}_template'.format(template_type))(name, filename, context)
+
+    def apply_custom_template(self, name, filename, context):
+        with open(filename, 'r') as f:
+            template = json.loads(f.read())
+        if template['_type'] == 'colle'
+
+    def apply_cf_template(self, name, filename, context):
+        stack_name = '-'.join([context['Stage'], self.name, name])
+        stack = utils.create_or_update_cf_stack(
+            name=stack_name,
+            template_filename=os.path.join(self.build_path, filename),
+            context=context
+        )
+        for output in stack['Outputs']:
+            context[output['OutputKey']] = output['OutputValue']
 
     def build(self):
         if not os.path.exists(self.build_path):
@@ -265,10 +312,22 @@ class Project(object):
         if not os.path.exists(code_path):
             os.makedirs(code_path)
 
-        for l in self.get_lambdas():
-            with open(os.path.join(code_path, l.get_bucket_key()), 'w') as f:
-                f.write(l.get_zip_file().read())
+        collection = actions.Collection()
+        collection.add_parameter(
+            name="CodeBucket",
+        )
 
-        actions = []
+        for l in self.get_lambdas():
+            filename = os.path.join(code_path, l.get_bucket_key())
+            with open(filename, 'w') as f:
+                f.write(l.get_zip_file().read())
+                collection.add(
+                    actions.UploadToS3(
+                        bucket=actions.Ref('CodeBucket'),
+                        key=l.get_bucket_key(),
+                        filename=os.path.relpath(filename, self.build_path)
+                    )
+                )
+
         with open(os.path.join(self.build_path, '0002_upload_code.json'), 'w') as f:
-            f.write(json.dumps(actions))
+            f.write(collection.to_json(indent=4))

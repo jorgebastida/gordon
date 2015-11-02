@@ -3,3 +3,9 @@ class BasePiranhaException(Exception):
 
 class UnknownAppFormat(BasePiranhaException):
     pass
+
+class AbnormalCloudFormationStatusError(BasePiranhaException):
+    pass
+
+class CloudFormationStackInProgressError(BasePiranhaException):
+    pass

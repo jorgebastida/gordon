@@ -21,6 +21,15 @@ def main(argv=None):
     build_parser = subparsers.add_parser('build', description='Build')
     build_parser.set_defaults(func="build")
 
+    apply_parser = subparsers.add_parser('apply', description='Build')
+    apply_parser.add_argument("-s", "--stage",
+                            dest="stage",
+                            type=str,
+                            required=True,
+                            help="Stage where to apply this project")
+
+    apply_parser.set_defaults(func="apply")
+
     options, args = parser.parse_known_args(argv)
 
     path = os.getcwd()

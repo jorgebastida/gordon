@@ -1,9 +1,10 @@
 ---
 project: helloworld
+region: eu-west1
 apps:
   - himachine
 
-code_bucket:
+#code_bucket:
 
 
 # api:

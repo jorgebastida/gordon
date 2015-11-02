@@ -1,1 +1,29 @@
-[]
+{
+    "_type": "Collection", 
+    "actions": [
+        {
+            "_type": "UploadToS3", 
+            "bucket": {
+                "Ref": "CodeBucket"
+            }, 
+            "key": "hellojs.zip", 
+            "filename": "code/hellojs.zip"
+        }, 
+        {
+            "_type": "UploadToS3", 
+            "bucket": {
+                "Ref": "CodeBucket"
+            }, 
+            "key": "hellopy.zip", 
+            "filename": "code/hellopy.zip"
+        }
+    ], 
+    "parameters": {
+        "CodeBucket": {
+            "default": null, 
+            "type": "string", 
+            "description": ""
+        }
+    }, 
+    "parallelizable": true
+}
