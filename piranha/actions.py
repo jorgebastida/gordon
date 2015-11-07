@@ -36,13 +36,14 @@ class BaseAction(object):
         return json.dumps(self.serialize(), *args, **kwargs)
 
 
-class Collection(BaseAction):
+class ActionsTemplate(BaseAction):
 
-    properties = ('actions', 'parameters', 'parallelizable')
+    properties = ('actions', 'parameters', 'outputs', 'parallelizable')
 
     def __init__(self, parallelizable=True):
         self.actions = []
         self.parameters = {}
+        self.outputs = {}
         self.parallelizable = parallelizable
 
     def add(self, action):
@@ -53,6 +54,13 @@ class Collection(BaseAction):
             "default": default,
             "description": description,
             "type": type,
+        }
+
+    def add_output(self, name, value, default=None, description=""):
+        self.outputs[name] = {
+            "default": default,
+            "description": description,
+            "value": value,
         }
 
 
