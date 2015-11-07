@@ -158,6 +158,7 @@ class Project(object):
             f.write(template.to_json(indent=4))
 
     def _build_resources_template(self, output_filename="{}_resources.json"):
+        output_filename = output_filename.format(self._get_next_build_sequence_id())
         template = troposphere.Template()
 
         template.add_parameter(
