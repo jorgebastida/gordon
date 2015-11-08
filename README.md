@@ -3,6 +3,17 @@ Gordon
 
 Gordon is a high-level framework which allows you to create, wire and deploy AWS Lambdas in an easy way.
 
+Usage
+------
+```shell
+$ gordon startproject demo
+$ cd demo
+$ gordon startapp helloworld
+# ... Add helloword to demo/settings.yml installed apps.
+$ gordon build
+$ gordon apply
+```
+
 Why?
 ------
 In an ideal world, this project should not exits. AWS Lambdas (as any other AWS resource) should be provisioned using CloudFormation - One of the best advantages of using AWS is not it's scalability nor the fancy services... ain't the price; It is the fact that reproducibility is at it's core and their ecosystem is full of services which encourage/enforce it. Their flagship is CloudFormation.
@@ -21,6 +32,6 @@ Because eventually you'll stop using it -ish. Once CloudFormation supports 100% 
 
 How it works
 -------------
-It is easy - we want as much as possible to happen on CloudFormation, so every single thing which could be done with it... will be done with it. Any other resource or integration will be done as part of a pre or post script, before the stack is applied or after it succeeds.
+It is easy - we want as much as possible to happen on CloudFormation, so every single thing which could be done with it... will be done with it. Any other resource or integration will be done as part of a pre or post script, before the stack is applied or after it succeeds. (The internal are slightly more complex, but that's pretty much it).
 
-You should not worry about what happens where and you should focus of developing whatever your product is. As soon as new APIs are released or CloudFormation get's new fancy stuff we'll do as much as possible to reduce the bolierplate.
+You should not worry about what happens where, and you should focus of developing whatever your product is. As soon as new APIs are released or CloudFormation get's new fancy stuff we'll do as much as possible to reduce the bolierplate.
