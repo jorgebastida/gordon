@@ -6,12 +6,12 @@ Gordon is a high-level framework which allows you to create, wire and deploy AWS
 Usage
 ------
 ```shell
-$ gordon startproject demo
+$ gordon startproject demo [--region=eu-west-1|...]
 $ cd demo
-$ gordon startapp helloworld
+$ gordon startapp helloworld [--runtime=py|js]
 # ... Add helloword to demo/settings.yml installed apps.
 $ gordon build
-$ gordon apply
+$ gordon apply [--stage=dev|prod|...]]
 ```
 
 Why?
