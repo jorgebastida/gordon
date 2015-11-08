@@ -11,7 +11,7 @@ $ cd demo
 $ gordon startapp helloworld [--runtime=py|js]
 # ... Add helloword to demo/settings.yml installed apps.
 $ gordon build
-$ gordon apply [--stage=dev|prod|...]]
+$ gordon apply [--stage=dev|prod|...]
 ```
 
 Why?
