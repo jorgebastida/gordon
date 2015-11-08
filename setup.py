@@ -22,13 +22,13 @@ if sys.version_info < (3, 3):
     tests_require.append('mock>=1.0.0')
 
 setup(
-    name='piranha',
+    name='gordon',
     version='0.0.1',
-    url='http://github.com/jorgebastida/piranha',
+    url='http://github.com/jorgebastida/gordon',
     license='BSD',
     author='Jorge Bastida',
     author_email='me@jorgebastida.com',
-    description='piranha is a simple framework for creating server-less applications using AWS services',
+    description='gordon is a simple framework for creating server-less applications using AWS services',
     keywords="aws lambda api gateway",
     packages=find_packages(),
     platforms='any',
@@ -47,7 +47,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'piranha = piranha.bin:main',
+            'gordon = gordon.bin:main',
         ]
     },
     zip_safe=False

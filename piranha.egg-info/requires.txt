@@ -1,5 +1,0 @@
-boto3>=1.2.1
-clint
-PyYAML>=3
-troposphere>=1.3
-Jinja2

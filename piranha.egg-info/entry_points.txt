@@ -1,3 +1,0 @@
-[console_scripts]
-piranha = piranha.bin:main
-

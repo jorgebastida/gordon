@@ -6,8 +6,8 @@ import StringIO
 import troposphere
 from troposphere import iam, awslambda, s3
 
-from piranha import actions
-from piranha import utils
+from gordon import actions
+from gordon import utils
 from . import base
 
 class Lambda(base.BaseResource):
@@ -112,7 +112,7 @@ class Lambda(base.BaseResource):
     def register_type_project_template(cls, project, template):
         code_bucket = s3.Bucket(
             "CodeBucket",
-            BucketName=troposphere.Join('-', ['piranha', troposphere.Ref("Region"), troposphere.Ref("Stage"), project.name]),
+            BucketName=troposphere.Join('-', ['gordon', troposphere.Ref("Region"), troposphere.Ref("Stage"), project.name]),
             AccessControl=s3.Private,
         )
         template.add_resource(code_bucket)

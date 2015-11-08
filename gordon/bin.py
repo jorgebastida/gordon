@@ -65,7 +65,7 @@ def main(argv=None):
     options, args = parser.parse_known_args(argv)
 
     path = os.getcwd()
-    piranha = options.cls(path=path, **vars(options))
-    getattr(piranha, options.func)()
+    obj = options.cls(path=path, **vars(options))
+    getattr(obj, options.func)()
 
     return 0

@@ -1,7 +1,7 @@
-Piranha
+Gordon
 =========
 
-Piranha is a high-level framework which allows you to create, wire and deploy AWS Lambdas in an easy way.
+Gordon is a high-level framework which allows you to create, wire and deploy AWS Lambdas in an easy way.
 
 Why?
 ------  
