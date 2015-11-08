@@ -4,7 +4,7 @@ Gordon
 Gordon is a high-level framework which allows you to create, wire and deploy AWS Lambdas in an easy way.
 
 Why?
-------  
+------
 In an ideal world, this project should not exits. AWS Lambdas (as any other AWS resource) should be provisioned using CloudFormation - One of the best advantages of using AWS is not it's scalability nor the fancy services... ain't the price; It is the fact that reproducibility is at it's core and their ecosystem is full of services which encourage/enforce it. Their flagship is CloudFormation.
 
 Then... why not use CloudFormation? Well, there are two reasons: First, not all AWS APIs are released when services are announced... ain't frameworks (boto3), ain't their integration with CloudFormation. You could wait for them to get released... but ain't nobody got time for that!
