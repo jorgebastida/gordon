@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 install_requires = [
     'boto3>=1.2.1',
-    'termcolor>=1.1.0',
+    'clint',
     'PyYAML>=3',
     'troposphere>=1.3',
     'Jinja2',
