@@ -97,7 +97,7 @@ def update_stack(name, template_filename, context, **kwargs):
             return get_cf_stack(name)
         raise
 
-    return stack['StackId']
+    return get_cf_stack(stack['StackId'])
 
 
 def wait_for_cf_status(stack_id, success_if, abort_if, every=1, limit=60 * 15):

@@ -1,8 +1,5 @@
-- folder based lambdas
+- folder based lambdas ??
 - custom roles for lambdas
-
-1. pre_project
-2. project
-3. pre_resources
-4. resources
-5. post_resources
+- actionstemplates from_dict
+- upload to s3
+- review  Exceptions

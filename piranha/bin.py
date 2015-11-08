@@ -28,6 +28,12 @@ def main(argv=None):
                             required=True,
                             help="Stage where to apply this project")
 
+    apply_parser.add_argument("--region",
+                            dest="region",
+                            type=str,
+                            default='',
+                            help="AWS region where this project should be applied")
+
     apply_parser.set_defaults(func="apply")
 
     options, args = parser.parse_known_args(argv)

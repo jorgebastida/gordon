@@ -1,6 +1,6 @@
 ---
 project: helloworld
-region: eu-west1
+default-region: eu-west-1
 apps:
   - himachine
 

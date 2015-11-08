@@ -1,4 +1,5 @@
 import os
+import hashlib
 import zipfile
 import StringIO
 
@@ -13,7 +14,7 @@ class Lambda(base.BaseResource):
 
     PYTHON_2_7_RUNTIME = 'python2.7'
     NODEJS_0_10_36_RUNTIME = 'nodejs'
-    JAVA_8_RUNTIME = 'python2.7'
+    JAVA_8_RUNTIME = 'java8'
 
     EXTENSIONS = {
         PYTHON_2_7_RUNTIME: 'py',
@@ -22,6 +23,8 @@ class Lambda(base.BaseResource):
     }
 
     REQUIRED_SETTINGS = ('code', )
+
+    CODE_FILENAME = 'code'
 
     def get_runtime(self):
         """Return lambda runtime"""
@@ -38,8 +41,11 @@ class Lambda(base.BaseResource):
         with open(os.path.join(self.app.path, self.settings['code']), 'r') as f:
             return f.read()
 
+    def get_code_hash(self):
+        return hashlib.sha1(self.get_code()).hexdigest()[:8]
+
     def get_handler(self):
-        return self.name
+        return self.settings.get('handler', '{}.handler'.format(self.CODE_FILENAME))
 
     def get_memory(self):
         """Returns the memory setting by rounding the actual value to the
@@ -77,7 +83,7 @@ class Lambda(base.BaseResource):
                    "Statement": [ {
                       "Effect": "Allow",
                       "Principal": {
-                         "Service": [ "ec2.amazonaws.com" ]
+                         "Service": [ "lambda.amazonaws.com" ]
                       },
                       "Action": [ "sts:AssumeRole" ]
                    } ]
@@ -91,10 +97,10 @@ class Lambda(base.BaseResource):
         return max(min(timeout, 300), 1)
 
     def get_bucket_key(self):
-        return "{}.zip".format(self.name)
+        return "{}_{}.zip".format(self.name, self.get_code_hash())
 
     def get_zip_file(self):
-        filename = 'code.{}'.format(self.EXTENSIONS.get(self.get_runtime()))
+        filename = '{}.{}'.format(self.CODE_FILENAME, self.EXTENSIONS.get(self.get_runtime()))
         output = StringIO.StringIO()
         zipzile = zipfile.ZipFile(output, 'w')
         zipzile.write(os.path.join(self.app.path, self.settings['code']), filename)
@@ -106,7 +112,7 @@ class Lambda(base.BaseResource):
     def register_type_project_template(cls, project, template):
         code_bucket = s3.Bucket(
             "CodeBucket",
-            BucketName=troposphere.Join('-', [troposphere.Ref("Stage"), project.name, 'piranha']),
+            BucketName=troposphere.Join('-', ['piranha', troposphere.Ref("Region"), troposphere.Ref("Stage"), project.name]),
             AccessControl=s3.Private,
         )
         template.add_resource(code_bucket)
@@ -118,15 +124,28 @@ class Lambda(base.BaseResource):
             )
         ])
 
+    @classmethod
+    def register_type_resources_template(cls, project, template):
+        template.add_parameter(
+            troposphere.Parameter(
+                "CodeBucket",
+                Description="Bucket where the code is located.",
+                Type="String",
+            )
+        )
+
     def register_resources_template(self, template):
         role = self.get_role()
+        depends_on = []
         if isinstance(role, iam.Role):
             template.add_resource(role)
+            depends_on.append(role.name)
             role = troposphere.GetAtt(role, 'Arn')
 
         template.add_resource(
             awslambda.Function(
                 self.name,
+                DependsOn=depends_on,
                 Code=awslambda.Code(
                     S3Bucket=troposphere.Ref("CodeBucket"),
                     S3Key=self.get_bucket_key(),
@@ -148,7 +167,9 @@ class Lambda(base.BaseResource):
             os.makedirs(code_path)
 
         template.add_parameter(
-            name="CodeBucket",
+            actions.Parameter(
+                name="CodeBucket"
+            )
         )
 
         filename = os.path.join(code_path, self.get_bucket_key())
@@ -156,8 +177,18 @@ class Lambda(base.BaseResource):
             f.write(self.get_zip_file().read())
             template.add(
                 actions.UploadToS3(
-                    bucket=actions.Ref('CodeBucket'),
+                    name="{}-upload".format(self.name),
+                    bucket=actions.Ref(name='CodeBucket'),
                     key=self.get_bucket_key(),
                     filename=os.path.relpath(filename, self.app.project.build_path)
+                )
+            )
+            template.add_output(
+                actions.Output(
+                    name=utils.valid_cloudformation_name(self.name, "s3url"),
+                    value=actions.GetAttr(
+                        action="{}-upload".format(self.name),
+                        attr="s3url",
+                    )
                 )
             )

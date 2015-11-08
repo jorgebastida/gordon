@@ -66,6 +66,8 @@ class Project(object):
             default=self.DEFAULT_SETTINS
         )
         self.name = self.settings['project']
+        self.region = kwargs.pop('region', None) or self.settings.get('default-region', 'us-east-1')
+        os.environ['AWS_DEFAULT_REGION'] = self.region
         self.applications = []
         self._load_installed_applications()
 
@@ -112,21 +114,7 @@ class Project(object):
         self._build_sequence += 1
         return "{:0>4}".format(self._build_sequence)
 
-    def _build_pre_project_template(self, output_filename="{}_pre_project.json"):
-        output_filename = output_filename.format(self._get_next_build_sequence_id())
-        template = actions.ActionsTemplate()
-
-        for resource_type, resource_cls in AVAILABLE_RESOURCES.iteritems():
-            resource_cls.register_type_pre_project_template(self, template)
-            for r in self.get_resources(resource_type):
-                r.register_pre_project_template(template)
-
-        with open(os.path.join(self.build_path, output_filename), 'w') as f:
-            f.write(template.to_json(indent=4))
-
-    def _build_project_template(self,  output_filename="{}_project.json"):
-        output_filename = output_filename.format(self._get_next_build_sequence_id())
-
+    def _base_troposphere_template(self):
         template = troposphere.Template()
         template.add_parameter(
             troposphere.Parameter(
@@ -137,6 +125,35 @@ class Project(object):
             )
         )
 
+        template.add_parameter(
+            troposphere.Parameter(
+                "Region",
+                Default="dev",
+                Description="Name of the Stage",
+                Type="String",
+            )
+        )
+        return template
+
+    def _build_pre_project_template(self, output_filename="{}_pre_project.json"):
+
+        template = actions.ActionsTemplate()
+
+        for resource_type, resource_cls in AVAILABLE_RESOURCES.iteritems():
+            resource_cls.register_type_pre_project_template(self, template)
+            for r in self.get_resources(resource_type):
+                r.register_pre_project_template(template)
+
+        if template:
+            output_filename = output_filename.format(self._get_next_build_sequence_id())
+            with open(os.path.join(self.build_path, output_filename), 'w') as f:
+                f.write(template.to_json(indent=4))
+
+    def _build_project_template(self,  output_filename="{}_project.json"):
+        output_filename = output_filename.format(self._get_next_build_sequence_id())
+
+        template = self._base_troposphere_template()
+
         for resource_type, resource_cls in AVAILABLE_RESOURCES.iteritems():
             resource_cls.register_type_project_template(self, template)
             for r in self.get_resources(resource_type):
@@ -146,7 +163,6 @@ class Project(object):
             f.write(template.to_json())
 
     def _build_pre_resources_template(self, output_filename="{}_pre_resources.json"):
-        output_filename = output_filename.format(self._get_next_build_sequence_id())
         template = actions.ActionsTemplate()
 
         for resource_type, resource_cls in AVAILABLE_RESOURCES.iteritems():
@@ -154,31 +170,26 @@ class Project(object):
             for r in self.get_resources(resource_type):
                 r.register_pre_resources_template(template)
 
-        with open(os.path.join(self.build_path, output_filename), 'w') as f:
-            f.write(template.to_json(indent=4))
+        if template:
+            output_filename = output_filename.format(self._get_next_build_sequence_id())
+            with open(os.path.join(self.build_path, output_filename), 'w') as f:
+                f.write(template.to_json(indent=4))
 
     def _build_resources_template(self, output_filename="{}_resources.json"):
-        output_filename = output_filename.format(self._get_next_build_sequence_id())
-        template = troposphere.Template()
 
-        template.add_parameter(
-            troposphere.Parameter(
-                "CodeBucket",
-                Description="Bucket where the code is located.",
-                Type="String",
-            )
-        )
+        template = self._base_troposphere_template()
 
         for resource_type, resource_cls in AVAILABLE_RESOURCES.iteritems():
             resource_cls.register_type_resources_template(self, template)
             for r in self.get_resources(resource_type):
                 r.register_resources_template(template)
 
-        with open(os.path.join(self.build_path, output_filename), 'w') as f:
-            f.write(template.to_json())
+        if template:
+            output_filename = output_filename.format(self._get_next_build_sequence_id())
+            with open(os.path.join(self.build_path, output_filename), 'w') as f:
+                f.write(template.to_json())
 
     def _build_post_resources_template(self, output_filename="{}_post_resources.json"):
-        output_filename = output_filename.format(self._get_next_build_sequence_id())
         template = actions.ActionsTemplate()
 
         for resource_type, resource_cls in AVAILABLE_RESOURCES.iteritems():
@@ -186,8 +197,10 @@ class Project(object):
             for r in self.get_resources(resource_type):
                 r.register_post_resources_template(template)
 
-        with open(os.path.join(self.build_path, output_filename), 'w') as f:
-            f.write(template.to_json(indent=4))
+        if template:
+            output_filename = output_filename.format(self._get_next_build_sequence_id())
+            with open(os.path.join(self.build_path, output_filename), 'w') as f:
+                f.write(template.to_json(indent=4))
 
     def apply(self):
         if not os.path.exists(self.build_path):
@@ -204,16 +217,18 @@ class Project(object):
             template_type = 'custom' if '_type' in template else 'cf'
             steps.append((int(match.groups()[0]), match.groups()[1], filename, template_type))
 
-        steps = sorted(steps, key=lambda x:x[1])
+            steps = sorted(steps, key=lambda x:x[0])
 
         context = {"Stage": self.stage}
         for (number, name, filename, template_type) in steps:
             getattr(self, 'apply_{}_template'.format(template_type))(name, filename, context)
 
     def apply_custom_template(self, name, filename, context):
-        with open(filename, 'r') as f:
-            template = json.loads(f.read())
-            print template
+        with open(os.path.join(self.build_path, filename), 'r') as f:
+            template = actions.ActionsTemplate.from_dict(json.loads(f.read()))
+
+        template.apply(context, self)
+
 
     def apply_cf_template(self, name, filename, context):
         stack_name = '-'.join([context['Stage'], self.name, name])
@@ -222,5 +237,6 @@ class Project(object):
             template_filename=os.path.join(self.build_path, filename),
             context=context
         )
+
         for output in stack['Outputs']:
             context[output['OutputKey']] = output['OutputValue']
