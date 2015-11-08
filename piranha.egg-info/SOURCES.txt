@@ -1,5 +1,6 @@
 setup.py
 piranha/__init__.py
+piranha/actions.py
 piranha/bin.py
 piranha/core.py
 piranha/exceptions.py
@@ -11,3 +12,6 @@ piranha.egg-info/entry_points.txt
 piranha.egg-info/not-zip-safe
 piranha.egg-info/requires.txt
 piranha.egg-info/top_level.txt
+piranha/resources/__init__.py
+piranha/resources/base.py
+piranha/resources/lambdas.py

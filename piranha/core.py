@@ -3,7 +3,9 @@ import re
 import json
 from collections import defaultdict
 
+import yaml
 import boto3
+import jinja2
 import troposphere
 from troposphere import iam, awslambda, s3
 
@@ -18,6 +20,77 @@ SETTINGS_FILE = 'settings.yml'
 AVAILABLE_RESOURCES = {
     'lambdas': resources.lambdas.Lambda
 }
+
+
+def setup_region(region, settings=None):
+    region = region or os.environ.get('AWS_DEFAULT_REGION', None) or (settings and settings.get('default-region', None)) or 'us-east-1'
+    os.environ['AWS_DEFAULT_REGION'] = region
+    return region
+
+
+class Bootstrap(object):
+
+    def __init__(self, path, **kwargs):
+        self.path = path
+        self.region = setup_region(kwargs.pop('region', None))
+        self.project_name = kwargs.pop('project_name', None)
+        self.app_name = kwargs.pop('app_name', None)
+        self.runtime = kwargs.pop('runtime', None)
+        self.root = os.path.dirname(os.path.abspath(__file__))
+
+    def startproject(self):
+
+        path = os.path.join(self.path, self.project_name)
+        if os.path.exists(path):
+            raise Exception("A directory with name {} already exists".format(self.project_name))
+        else:
+            os.makedirs(path)
+
+        context = {
+            'project_name': self.project_name,
+            'default_region': self.region
+        }
+
+        self._clone_defaults(
+            os.path.join(self.root, 'defaults', 'project'),
+            path,
+            context
+        )
+
+    def startapp(self):
+
+        path = os.path.join(self.path, self.app_name)
+        if os.path.exists(path):
+            raise Exception("A directory with name {} already exists".format(self.app_name))
+        else:
+            os.makedirs(path)
+
+        context = {
+            'app_name': self.app_name,
+        }
+
+        self._clone_defaults(
+            os.path.join(self.root, 'defaults', 'app_{}'.format(self.runtime)),
+            path,
+            context
+        )
+
+    def _clone_defaults(self, source, dest, context):
+        for base, dirs, files in os.walk(source):
+
+            relative = os.path.relpath(base, source)
+
+            for d in dirs:
+                os.makedirs(os.path.join(dest, relative, d))
+
+            for filename in files:
+                with open(os.path.join(base, filename), 'r') as f:
+                    data = f.read()
+
+                with open(os.path.join(dest, relative, filename), 'w') as f:
+                    data = jinja2.Template(data).render(**context)
+                    f.write(data)
+
 
 class App(object):
 
@@ -66,14 +139,13 @@ class Project(object):
             default=self.DEFAULT_SETTINS
         )
         self.name = self.settings['project']
-        self.region = kwargs.pop('region', None) or self.settings.get('default-region', 'us-east-1')
-        os.environ['AWS_DEFAULT_REGION'] = self.region
+        self.region = setup_region(kwargs.pop('region', None), self.settings)
         self.applications = []
         self._load_installed_applications()
 
     def _load_installed_applications(self):
         """Loads all installed applications."""
-        for application in self.settings.get('apps'):
+        for application in self.settings.get('apps', None) or []:
             if isinstance(application, basestring):
                 application_name = application
                 settings = {}
@@ -238,5 +310,5 @@ class Project(object):
             context=context
         )
 
-        for output in stack['Outputs']:
+        for output in stack.get('Outputs', []):
             context[output['OutputKey']] = output['OutputValue']

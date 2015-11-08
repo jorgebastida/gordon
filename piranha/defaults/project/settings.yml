@@ -1,0 +1,5 @@
+---
+project: {{ project_name }}
+default-region: {{ default_region }}
+apps:
+#  - my_first_app

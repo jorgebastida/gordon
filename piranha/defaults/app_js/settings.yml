@@ -1,0 +1,9 @@
+lambdas:
+  helloworld:
+    code: lambdas.js
+    #description: Simple functions in js which says hello
+    #handler: handler
+    #role:
+    #memory:
+    #timeout:
+    #

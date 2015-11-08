@@ -149,8 +149,6 @@ class Lambda(base.BaseResource):
                 Code=awslambda.Code(
                     S3Bucket=troposphere.Ref("CodeBucket"),
                     S3Key=self.get_bucket_key(),
-                    #S3ObjectVersion="",
-                    #ZipFile="",
                 ),
                 Description=self.settings.get('description', ''),
                 Handler=self.get_handler(),

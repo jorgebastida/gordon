@@ -6,8 +6,8 @@ install_requires = [
     'boto3>=1.2.1',
     'termcolor>=1.1.0',
     'PyYAML>=3',
-    'troposphere>=1.3'
-    'awacs',
+    'troposphere>=1.3',
+    'Jinja2',
 ]
 
 tests_require = []
