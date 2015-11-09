@@ -4,7 +4,6 @@ import argparse
 
 import boto3
 from botocore.client import ClientError
-from termcolor import colored
 
 from .core import Bootstrap, Project
 
@@ -56,11 +55,10 @@ def main(argv=None):
     apply_parser.set_defaults(cls=Project)
     apply_parser.set_defaults(func="apply")
     apply_parser.add_argument("-s", "--stage",
-                            dest="stage",
-                            type=str,
-                            default='dev',
-                            required=True,
-                            help="Stage where to apply this project")
+                              dest="stage",
+                              type=str,
+                              default='dev',
+                              help="Stage where to apply this project")
 
     options, args = parser.parse_known_args(argv)
 

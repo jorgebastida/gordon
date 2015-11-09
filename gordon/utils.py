@@ -74,7 +74,8 @@ def create_stack(name, template_filename, context, **kwargs):
         Parameters=[{'ParameterKey': k, 'ParameterValue': v} for k, v in parameters.iteritems()],
         TimeoutInMinutes=kwargs.get('TimeoutInMinutes', 25),
         Capabilities=['CAPABILITY_IAM'],
-        OnFailure='ROLLBACK'
+        #OnFailure='ROLLBACK'
+        OnFailure='DO_NOTHING'
     )
     return get_cf_stack(stack['StackId'])
 
@@ -114,6 +115,7 @@ def wait_for_cf_status(stack_id, success_if, abort_if, every=1, limit=60 * 15):
                     success_if=success_if,
                     abort_if=abort_if
                 )
+            print stack_status, "waiting..."
         time.sleep(every)
 
 
@@ -127,10 +129,10 @@ def create_or_update_cf_stack(name, template_filename, context=None, **kwargs):
     if stack:
         print "update stack"
         stack = update_stack(name, template_filename, context=context, **kwargs)
-        stack = wait_for_cf_status(stack['StackId'], ('CREATE_COMPLETE',), NEGATIVE_CF_STATUS)
+        stack = wait_for_cf_status(stack['StackId'], POSITIVE_CF_STATUS, NEGATIVE_CF_STATUS)
     else:
         print "create stack"
         stack = create_stack(name, template_filename, context=context, **kwargs)
-        stack = wait_for_cf_status(stack['StackId'], POSITIVE_CF_STATUS, NEGATIVE_CF_STATUS)
+        stack = wait_for_cf_status(stack['StackId'], ('CREATE_COMPLETE',), NEGATIVE_CF_STATUS)
 
     return stack

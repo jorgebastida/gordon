@@ -18,7 +18,9 @@ from . import resources
 SETTINGS_FILE = 'settings.yml'
 
 AVAILABLE_RESOURCES = {
-    'lambdas': resources.lambdas.Lambda
+    'lambdas': resources.lambdas.Lambda,
+    'dynamodb': resources.dynamodb.Dynamodb,
+    'kinesis': resources.kinesis.Kinesis
 }
 
 
@@ -92,11 +94,36 @@ class Bootstrap(object):
                     f.write(data)
 
 
-class App(object):
+class BaseResourceContainer(object):
+
+    def __init__(self, *args, **kwargs):
+        self._resources = defaultdict(list)
+        self._load_resources()
+
+    def _load_resources(self):
+        for resource_type, resource_cls in AVAILABLE_RESOURCES.iteritems():
+            for name in self.settings.get(resource_type, {}):
+                extra = {
+                    'project': getattr(self, 'project', None) or self,
+                    'app': self if hasattr(self, 'project') else None,
+                }
+                self._resources[resource_type].append(
+                    resource_cls(
+                        name=name,
+                        settings=self.settings.get(resource_type, {})[name],
+                        **extra
+                    )
+                )
+
+    def get_resources(self, resource_type):
+        for r in self._resources[resource_type]:
+            yield r
+
+class App(BaseResourceContainer):
 
     DEFAULT_SETTINS = {}
 
-    def __init__(self, name, project, settings=None):
+    def __init__(self, name, project, settings=None, *args, **kwargs):
         self.name = name
         self.project = project
         self.settings = settings or {}
@@ -105,26 +132,10 @@ class App(object):
             os.path.join(self.path, SETTINGS_FILE),
             default=self.DEFAULT_SETTINS
         )
-        self._resources = defaultdict(list)
-        self._load_resources()
-
-    def _load_resources(self):
-        for resource_type, resource_cls in AVAILABLE_RESOURCES.iteritems():
-            for name in self.settings.get(resource_type, []):
-                self._resources[resource_type].append(
-                    resource_cls(
-                        name=name,
-                        app=self,
-                        settings=self.settings.get(resource_type, {}).get(name)
-                    )
-                )
-
-    def get_resources(self, resource_type):
-        for r in self._resources[resource_type]:
-            yield r
+        super(App, self).__init__(*args, **kwargs)
 
 
-class Project(object):
+class Project(BaseResourceContainer):
 
     DEFAULT_SETTINS = {
         'apps': {}
@@ -140,8 +151,10 @@ class Project(object):
         )
         self.name = self.settings['project']
         self.region = setup_region(kwargs.pop('region', None), self.settings)
+        self._in_project_resource_references = {}
         self.applications = []
         self._load_installed_applications()
+        super(Project, self).__init__(*args, **kwargs)
 
     def _load_installed_applications(self):
         """Loads all installed applications."""
@@ -163,10 +176,23 @@ class Project(object):
                 )
             )
 
+    def register_resource_reference(self, name, cf_name):
+        if name in self._in_project_resource_references or \
+           cf_name in self._in_project_resource_references.values():
+            raise Exception("Duplicate resource name {} / {}".format(name, cf_name))
+
+        self._in_project_resource_references[name] = cf_name
+
+    def reference(self, name):
+        return self._in_project_resource_references[name]
+
     def get_resources(self, resource_type):
         for application in self.applications:
             for r in application.get_resources(resource_type):
                 yield r
+
+        for r in super(Project, self).get_resources(resource_type):
+            yield r
 
     def build(self):
         if not os.path.exists(self.build_path):
@@ -200,7 +226,6 @@ class Project(object):
         template.add_parameter(
             troposphere.Parameter(
                 "Region",
-                Default="dev",
                 Description="Name of the Stage",
                 Type="String",
             )
@@ -227,6 +252,7 @@ class Project(object):
         template = self._base_troposphere_template()
 
         for resource_type, resource_cls in AVAILABLE_RESOURCES.iteritems():
+
             resource_cls.register_type_project_template(self, template)
             for r in self.get_resources(resource_type):
                 r.register_project_template(template)
@@ -291,7 +317,7 @@ class Project(object):
 
             steps = sorted(steps, key=lambda x:x[0])
 
-        context = {"Stage": self.stage}
+        context = {"Stage": self.stage, 'Region': self.region}
         for (number, name, filename, template_type) in steps:
             getattr(self, 'apply_{}_template'.format(template_type))(name, filename, context)
 

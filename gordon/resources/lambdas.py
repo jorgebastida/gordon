@@ -38,7 +38,7 @@ class Lambda(base.BaseResource):
             raise Exception('Unknown extension {}'.format(extension))
 
     def get_code(self):
-        with open(os.path.join(self.app.path, self.settings['code']), 'r') as f:
+        with open(os.path.join(self.get_root(), self.settings['code']), 'r') as f:
             return f.read()
 
     def get_code_hash(self):
@@ -58,24 +58,46 @@ class Lambda(base.BaseResource):
         role = self.settings.get('role')
         if isinstance(role, basestring):
             return role
+
         elif role is None:
-            policies = [iam.Policy(
-                PolicyName=utils.valid_cloudformation_name(self.name, 'basic', 'policy'),
-                PolicyDocument={
-                    "Version": "2012-10-17",
-                    "Statement": [
-                        {
-                            "Effect": "Allow",
-                            "Action": [
-                                "logs:CreateLogGroup",
-                                "logs:CreateLogStream",
-                                "logs:PutLogEvents"
-                            ],
-                            "Resource": "arn:aws:logs:*:*:*",
-                        }
-                    ]
-                }
-            )]
+            policies = [
+                iam.Policy(
+                    PolicyName=utils.valid_cloudformation_name(self.name, 'logs', 'policy'),
+                    PolicyDocument={
+                        "Version": "2012-10-17",
+                        "Statement": [
+                            {
+                                "Effect": "Allow",
+                                "Action": [
+                                    "lambda:InvokeFunction"
+                                ],
+                                "Resource": [
+                                    "*"
+                                ]
+                            },
+                            {
+                                "Effect": "Allow",
+                                "Action": [
+                                    "logs:CreateLogGroup",
+                                    "logs:CreateLogStream",
+                                    "logs:PutLogEvents"
+                                ],
+                                "Resource": "arn:aws:logs:*:*:*",
+                            }
+                        ]
+                    }
+                ),
+            ]
+            for policy_nme, policy_document in self.settings.get('policies', {}).iteritems():
+                policies.append(
+                    iam.Policy(
+                        PolicyName=utils.valid_cloudformation_name(self.name, policy_nme, 'policy'),
+                        PolicyDocument=policy_document
+                    )
+                )
+        else:
+            raise Exception("Lambda role can only be an arn or None.")
+
         return iam.Role(
                 utils.valid_cloudformation_name(self.name, 'role'),
                 AssumeRolePolicyDocument={
@@ -103,7 +125,7 @@ class Lambda(base.BaseResource):
         filename = '{}.{}'.format(self.CODE_FILENAME, self.EXTENSIONS.get(self.get_runtime()))
         output = StringIO.StringIO()
         zipzile = zipfile.ZipFile(output, 'w')
-        zipzile.write(os.path.join(self.app.path, self.settings['code']), filename)
+        zipzile.write(os.path.join(self.get_root(), self.settings['code']), filename)
         zipzile.close()
         output.seek(0)
         return output
@@ -144,7 +166,7 @@ class Lambda(base.BaseResource):
 
         template.add_resource(
             awslambda.Function(
-                self.name,
+                self.in_project_cf_name,
                 DependsOn=depends_on,
                 Code=awslambda.Code(
                     S3Bucket=troposphere.Ref("CodeBucket"),
@@ -160,7 +182,7 @@ class Lambda(base.BaseResource):
         )
 
     def register_pre_resources_template(self, template):
-        code_path = os.path.join(self.app.project.build_path, 'code')
+        code_path = os.path.join(self.project.build_path, 'code')
         if not os.path.exists(code_path):
             os.makedirs(code_path)
 
@@ -178,7 +200,7 @@ class Lambda(base.BaseResource):
                     name="{}-upload".format(self.name),
                     bucket=actions.Ref(name='CodeBucket'),
                     key=self.get_bucket_key(),
-                    filename=os.path.relpath(filename, self.app.project.build_path)
+                    filename=os.path.relpath(filename, self.project.build_path)
                 )
             )
             template.add_output(

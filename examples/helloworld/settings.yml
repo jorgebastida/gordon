@@ -4,7 +4,19 @@ default-region: eu-west-1
 apps:
   - himachine
 
-#code_bucket:
+dynamodb:
+  test_dynamo_integration:
+    lambda: himachine.hellopy
+    stream: arn:aws:dynamodb:eu-west-1:936837623851:table/test/stream/2015-11-09T10:53:25.441
+    batch_size: 1
+    starting_position: LATEST
+
+kinesis:
+  test_kinesis_integration:
+    lambda: himachine.hellopy
+    stream: arn:aws:kinesis:eu-west-1:936837623851:stream/test
+    batch_size: 1
+    starting_position: LATEST
 
 
 # api:
@@ -29,11 +41,6 @@ apps:
 #   - lambda: ???
 #     pool: ???
 #
-# dynamodb:
-#   - lambda: ???
-#     table: ???
-#     batch_size: ???
-#     starting_position: ???
 #
 # kinesis:
 #   - lambda: ???
