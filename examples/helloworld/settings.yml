@@ -1,5 +1,5 @@
 ---
-project: helloworld3
+project: helloworld2
 default-region: eu-west-1
 apps:
   - gordon.contrib.utils
