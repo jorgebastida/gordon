@@ -1,7 +1,8 @@
 ---
-project: helloworld
+project: helloworld3
 default-region: eu-west-1
 apps:
+  - gordon.contrib.utils
   - himachine
 
 dynamodb:

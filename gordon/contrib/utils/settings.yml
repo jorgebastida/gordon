@@ -1,0 +1,5 @@
+lambdas:
+  gordon_sleep:
+    code: gordon_sleep.py
+    description: Simple Lambda which sleeps for some seconds. The cloud they said! 128Mb of ram sleeping - What a time be alive...
+    timeout: 300

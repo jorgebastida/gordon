@@ -126,6 +126,15 @@ class Lambda(base.BaseResource):
         output = StringIO.StringIO()
         zipzile = zipfile.ZipFile(output, 'w')
         zipzile.write(os.path.join(self.get_root(), self.settings['code']), filename)
+
+        source = os.path.join(self.get_root(), 'modules')
+        for base, dirs, files in os.walk(source):
+            relative = os.path.relpath(base, source)
+            #for d in dirs:
+            #    os.makedirs(os.path.join(dest, relative, d))
+            for filename in files:
+                zipzile.write(os.path.join(self.get_root(), base, filename), os.path.join(relative, filename))
+
         zipzile.close()
         output.seek(0)
         return output

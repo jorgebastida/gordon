@@ -4,7 +4,7 @@ import troposphere
 from troposphere import iam, awslambda, s3
 
 from gordon import utils
-
+from gordon.contrib.utils.cloudformation import Sleep
 
 class BaseResource(object):
 
@@ -99,10 +99,16 @@ class BaseStream(BaseResource):
 
     def register_resources_template(self, template):
 
+        sleep = Sleep.create_with(
+            utils.valid_cloudformation_name(self.name, "Sleep"),
+            Time=30
+        )
+        template.add_resource(sleep)
+
         template.add_resource(
             awslambda.EventSourceMapping(
                 utils.valid_cloudformation_name(self.name),
-                DependsOn=[self.get_function_name()],
+                DependsOn=[sleep.name, self.get_function_name()],
                 BatchSize=self.get_batch_size(),
                 Enabled=self.get_enabled(),
                 EventSourceArn=self.settings.get('stream'),

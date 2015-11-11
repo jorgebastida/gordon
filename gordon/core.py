@@ -123,11 +123,11 @@ class App(BaseResourceContainer):
 
     DEFAULT_SETTINS = {}
 
-    def __init__(self, name, project, settings=None, *args, **kwargs):
+    def __init__(self, name, project, path=None, settings=None, *args, **kwargs):
         self.name = name
         self.project = project
         self.settings = settings or {}
-        self.path = os.path.join(self.project.path, name)
+        self.path = path or os.path.join(self.project.path, name)
         self.settings = utils.load_settings(
             os.path.join(self.path, SETTINGS_FILE),
             default=self.DEFAULT_SETTINS
@@ -144,6 +144,7 @@ class Project(BaseResourceContainer):
     def __init__(self, path, *args, **kwargs):
         self.path = path
         self.stage = kwargs.pop('stage', None)
+        self.root = os.path.dirname(os.path.abspath(__file__))
         self.build_path = os.path.join(self.path, '_build')
         self.settings = utils.load_settings(
             os.path.join(self.path, SETTINGS_FILE),
@@ -159,7 +160,11 @@ class Project(BaseResourceContainer):
     def _load_installed_applications(self):
         """Loads all installed applications."""
         for application in self.settings.get('apps', None) or []:
+            path = None
             if isinstance(application, basestring):
+                if application.startswith('gordon.contrib.'):
+                    application = application[len('gordon.contrib.'):]
+                    path = os.path.join(self.root, 'contrib', application)
                 application_name = application
                 settings = {}
             elif isinstance(application, dict):
@@ -172,7 +177,8 @@ class Project(BaseResourceContainer):
                 App(
                     name=application_name,
                     settings=settings,
-                    project=self
+                    project=self,
+                    path=path
                 )
             )
 

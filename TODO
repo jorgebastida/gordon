@@ -1,4 +1,4 @@
 - folder based lambdas ??
 - custom roles for lambdas
 - review  Exceptions
--
+- TimeoutInMinutes is now 3

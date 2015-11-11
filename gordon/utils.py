@@ -72,7 +72,7 @@ def create_stack(name, template_filename, context, **kwargs):
         StackName=name,
         TemplateBody=template_body,
         Parameters=[{'ParameterKey': k, 'ParameterValue': v} for k, v in parameters.iteritems()],
-        TimeoutInMinutes=kwargs.get('TimeoutInMinutes', 25),
+        TimeoutInMinutes=kwargs.get('TimeoutInMinutes', 3),
         Capabilities=['CAPABILITY_IAM'],
         #OnFailure='ROLLBACK'
         OnFailure='DO_NOTHING'
