@@ -2,4 +2,5 @@
 project: {{ project_name }}
 default-region: {{ default_region }}
 apps:
-#  - my_first_app
+  - gordon.contrib.utils
+# - my_first_app

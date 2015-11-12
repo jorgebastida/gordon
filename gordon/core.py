@@ -108,7 +108,7 @@ class BaseResourceContainer(object):
                     'app': self if hasattr(self, 'project') else None,
                 }
                 self._resources[resource_type].append(
-                    resource_cls(
+                    resource_cls.factory(
                         name=name,
                         settings=self.settings.get(resource_type, {})[name],
                         **extra

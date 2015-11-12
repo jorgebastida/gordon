@@ -1,7 +1,10 @@
 import os
+import shutil
+import tempfile
 import hashlib
 import zipfile
 import StringIO
+import subprocess
 
 import troposphere
 from troposphere import iam, awslambda, s3
@@ -12,28 +15,17 @@ from . import base
 
 class Lambda(base.BaseResource):
 
-    PYTHON_2_7_RUNTIME = 'python2.7'
-    NODEJS_0_10_36_RUNTIME = 'nodejs'
-    JAVA_8_RUNTIME = 'java8'
-
-    EXTENSIONS = {
-        PYTHON_2_7_RUNTIME: 'py',
-        NODEJS_0_10_36_RUNTIME: 'js',
-        JAVA_8_RUNTIME: 'java',
-    }
-
     REQUIRED_SETTINGS = ('code', )
+    code_filename = 'code'
 
-    CODE_FILENAME = 'code'
-
-    def get_runtime(self):
-        """Return lambda runtime"""
-        _, extension = os.path.splitext(self.settings.get('code'))
+    @classmethod
+    def factory(cls, *args, **kwargs):
+        _, extension = os.path.splitext(kwargs['settings'].get('code'))
 
         if extension == '.py':
-            return self.PYTHON_2_7_RUNTIME
+            return PythonLambda(*args, **kwargs)
         elif extension == '.js':
-            return self.NODEJS_0_10_36_RUNTIME
+            return NodeLambda(*args, **kwargs)
         else:
             raise Exception('Unknown extension {}'.format(extension))
 
@@ -45,7 +37,19 @@ class Lambda(base.BaseResource):
         return hashlib.sha1(self.get_code()).hexdigest()[:8]
 
     def get_handler(self):
-        return self.settings.get('handler', '{}.handler'.format(self.CODE_FILENAME))
+        return self.settings.get('handler', '{}.handler'.format(self.code_filename))
+
+    def get_requirements(self):
+        settings_name = '{}_requirements'.format(self.base_runtime)
+        sources = (
+            self.app.project.settings.get(settings_name, []),
+            self.app.settings.get(settings_name, []),
+            self.settings.get(settings_name, []),
+        )
+
+        for source in sources:
+            for requirement in source:
+                yield requirement
 
     def get_memory(self):
         """Returns the memory setting by rounding the actual value to the
@@ -121,19 +125,44 @@ class Lambda(base.BaseResource):
     def get_bucket_key(self):
         return "{}_{}.zip".format(self.name, self.get_code_hash())
 
+    def _collect_zip_content(self):
+        destination = tempfile.mkdtemp()
+
+        # Collect requirements
+        self.collect_requirements(destination)
+
+        # Collect app modules
+        modules_path = os.path.join(self.get_root(), 'modules')
+        if os.path.exists(modules_path):
+            for base, dirs, files in os.walk(modules_path):
+
+                relative = os.path.relpath(base, modules_path)
+
+                for d in dirs:
+                    shutil.copytree(os.path.join(base, d), os.path.join(destination, relative, d))
+
+                for filename in files:
+                    shutil.copyfile(os.path.join(base, filename), os.path.join(destination, relative, filename))
+
+        # Copy lambda code
+        filename = '{}.{}'.format(self.code_filename, self.extension)
+        shutil.copyfile(os.path.join(self.get_root(), self.settings['code']), os.path.join(destination, filename))
+
+        return destination
+
     def get_zip_file(self):
-        filename = '{}.{}'.format(self.CODE_FILENAME, self.EXTENSIONS.get(self.get_runtime()))
+
+        tmp_directory = self._collect_zip_content()
+
+        filename = '{}.{}'.format(self.code_filename, self.extension)
         output = StringIO.StringIO()
         zipzile = zipfile.ZipFile(output, 'w')
-        zipzile.write(os.path.join(self.get_root(), self.settings['code']), filename)
 
-        source = os.path.join(self.get_root(), 'modules')
-        for base, dirs, files in os.walk(source):
-            relative = os.path.relpath(base, source)
-            #for d in dirs:
-            #    os.makedirs(os.path.join(dest, relative, d))
+        for base, dirs, files in os.walk(tmp_directory):
+            relative = os.path.relpath(base, tmp_directory)
+
             for filename in files:
-                zipzile.write(os.path.join(self.get_root(), base, filename), os.path.join(relative, filename))
+                zipzile.write(os.path.join(tmp_directory, base, filename), os.path.join(relative, filename))
 
         zipzile.close()
         output.seek(0)
@@ -185,7 +214,7 @@ class Lambda(base.BaseResource):
                 Handler=self.get_handler(),
                 MemorySize=self.get_memory(),
                 Role=role,
-                Runtime=self.get_runtime(),
+                Runtime=self.runtime,
                 Timeout=self.get_timeout()
             )
         )
@@ -221,3 +250,35 @@ class Lambda(base.BaseResource):
                     )
                 )
             )
+
+
+class PythonLambda(Lambda):
+    runtime = 'python2.7'
+    base_runtime = 'python'
+    extension = 'py'
+
+    def collect_requirements(self, destination):
+        setup_cfg_path = os.path.join(destination, 'setup.cfg')
+
+        with open(setup_cfg_path, 'w') as f:
+            f.write("[install]\nprefix=")
+
+        for requirement in self.get_requirements():
+            subprocess.call("pip install {} -t {}".format(requirement, destination), shell=True)
+
+        for name in os.listdir(destination):
+            dist_dir = os.path.join(destination, name)
+            if os.path.isdir(dist_dir) and name.endswith('.dist-info'):
+                shutil.rmtree(dist_dir)
+
+        os.remove(setup_cfg_path)
+
+class NodeLambda(Lambda):
+    runtime = 'nodejs'
+    base_runtime = 'node'
+    extension = 'js'
+
+    def collect_requirements(self, destination):
+
+        for requirement in self.get_requirements():
+            subprocess.call("cd {} && npm install {}".format(destination, requirement), shell=True)

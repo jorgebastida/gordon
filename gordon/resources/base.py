@@ -8,14 +8,14 @@ from gordon.contrib.utils.cloudformation import Sleep
 
 class BaseResource(object):
 
-    REQUIRED_SETTINGS = ()
+    required_settings = ()
 
     def __init__(self, name, settings, project=None, app=None):
         self.name = name
         self.app = app
         self.project = project or self.app.project
         self.settings = settings
-        for key in self.REQUIRED_SETTINGS:
+        for key in self.required_settings:
             if key not in self.settings:
                 raise Exception("Required setting {}".format(key))
 
@@ -31,8 +31,9 @@ class BaseResource(object):
             self.in_project_cf_name
         )
 
-    def get_root(self):
-        return self.app.path if self.app else self.project.path
+    @classmethod
+    def factory(cls, *args, **kwargs):
+        return cls(*args, **kwargs)
 
     @classmethod
     def register_type_pre_project_template(cls, project, template):
@@ -54,6 +55,9 @@ class BaseResource(object):
     def register_type_post_resources_template(cls, project, template):
         pass
 
+    def get_root(self):
+        return self.app.path if self.app else self.project.path
+
     def register_pre_project_template(self, template):
         pass
 
@@ -72,7 +76,7 @@ class BaseResource(object):
 
 class BaseStream(BaseResource):
 
-    REQUIRED_SETTINGS = (
+    required_settings = (
         'stream',
         'starting_position',
         'lambda'

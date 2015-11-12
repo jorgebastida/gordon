@@ -1,6 +1,8 @@
 lambdas:
   hellojs:
     code: hellojs.js
+    node_requirements:
+      - async
     #role: arn:aws:iam::936837623851:role/dev-jawstest-r-IamRoleLambda-1ITRHZJZ9DDWI
       # memory:
       # timeout:
