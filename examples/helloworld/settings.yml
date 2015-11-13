@@ -8,7 +8,8 @@ apps:
 dynamodb:
   test_dynamo_integration:
     lambda: himachine.hellopy
-    stream: arn:aws:dynamodb:eu-west-1:936837623851:table/test/stream/2015-11-09T10:53:25.441
+    #stream: arn:aws:dynamodb:eu-west-1:936837623851:table/test/stream/2015-11-09T10:53:25.441
+    stream: ref://DynamoIntegrationArn
     batch_size: 1
     starting_position: LATEST
 

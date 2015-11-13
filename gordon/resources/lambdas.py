@@ -11,15 +11,22 @@ from troposphere import iam, awslambda, s3
 
 from gordon import actions
 from gordon import utils
+from gordon import exceptions
 from . import base
 
+
 class Lambda(base.BaseResource):
+    """Base Lambda Resource which defines all shared resources between
+    runtimes.
+    """
 
     REQUIRED_SETTINGS = ('code', )
     code_filename = 'code'
 
     @classmethod
     def factory(cls, *args, **kwargs):
+        """Returns an instance of one of the severeal available Lambda
+        resources based on the runtime."""
         _, extension = os.path.splitext(kwargs['settings'].get('code'))
 
         if extension == '.py':
@@ -27,19 +34,25 @@ class Lambda(base.BaseResource):
         elif extension == '.js':
             return NodeLambda(*args, **kwargs)
         else:
-            raise Exception('Unknown extension {}'.format(extension))
+            raise exceptions.InvalidLambdaCodeExtensionError(extension)
 
     def get_code(self):
+        """Returns the sourcecode of the lambda."""
         with open(os.path.join(self.get_root(), self.settings['code']), 'r') as f:
             return f.read()
 
     def get_code_hash(self):
+        """Returns an consistent hash of the sourcecode of the lambda."""
         return hashlib.sha1(self.get_code()).hexdigest()[:8]
 
     def get_handler(self):
+        """Returns the name of the handler. If there is no any available in
+        the settngs we assume is ``handler``."""
         return self.settings.get('handler', '{}.handler'.format(self.code_filename))
 
     def get_requirements(self):
+        """Returns the requirements for this lambda based on the requirements
+        of the project, app and lambda."""
         settings_name = '{}_requirements'.format(self.base_runtime)
         sources = (
             self.app.project.settings.get(settings_name, []),
@@ -58,49 +71,71 @@ class Lambda(base.BaseResource):
         memory = memory + (64 - (memory % 64))
         return min(memory, 1536)
 
+    def get_timeout(self):
+        """Returns the timeout value for this lambda."""
+        timeout = self.settings.get('timeout', 3)
+        return max(min(timeout, 300), 1)
+
+    def _get_policies(self):
+        """Returns a list of policies to attach to the IAM Role of this Lambda.
+        Users can add more policies to this Role by defining policy documents
+        in the settings of the lambda under the ``policies`` key."""
+
+        policies = [
+            iam.Policy(
+                PolicyName=utils.valid_cloudformation_name(self.name, 'logs', 'policy'),
+                PolicyDocument={
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Action": [
+                                "lambda:InvokeFunction"
+                            ],
+                            "Resource": [
+                                "*"
+                            ]
+                        },
+                        {
+                            "Effect": "Allow",
+                            "Action": [
+                                "logs:CreateLogGroup",
+                                "logs:CreateLogStream",
+                                "logs:PutLogEvents"
+                            ],
+                            "Resource": "arn:aws:logs:*:*:*",
+                        }
+                    ]
+                }
+            ),
+        ]
+
+        for policy_nme, policy_document in self.settings.get('policies', {}).iteritems():
+            policies.append(
+                iam.Policy(
+                    PolicyName=utils.valid_cloudformation_name(self.name, policy_nme, 'policy'),
+                    PolicyDocument=policy_document
+                )
+            )
+        return policies
+
     def get_role(self):
+        """Returns the role this lambda function will use. Users can customize
+        which role to apply by referencing the ARN of the role. If no Role
+        is defined, gordon will create and assing one with the basic
+        permissions suggested by AWS.
+
+        Users can customize the policies attached to the role using
+        ``policies`` in the lambda settings."""
+
         role = self.settings.get('role')
+
         if isinstance(role, basestring):
             return role
-
         elif role is None:
-            policies = [
-                iam.Policy(
-                    PolicyName=utils.valid_cloudformation_name(self.name, 'logs', 'policy'),
-                    PolicyDocument={
-                        "Version": "2012-10-17",
-                        "Statement": [
-                            {
-                                "Effect": "Allow",
-                                "Action": [
-                                    "lambda:InvokeFunction"
-                                ],
-                                "Resource": [
-                                    "*"
-                                ]
-                            },
-                            {
-                                "Effect": "Allow",
-                                "Action": [
-                                    "logs:CreateLogGroup",
-                                    "logs:CreateLogStream",
-                                    "logs:PutLogEvents"
-                                ],
-                                "Resource": "arn:aws:logs:*:*:*",
-                            }
-                        ]
-                    }
-                ),
-            ]
-            for policy_nme, policy_document in self.settings.get('policies', {}).iteritems():
-                policies.append(
-                    iam.Policy(
-                        PolicyName=utils.valid_cloudformation_name(self.name, policy_nme, 'policy'),
-                        PolicyDocument=policy_document
-                    )
-                )
+            pass
         else:
-            raise Exception("Lambda role can only be an arn or None.")
+            raise exceptions.InvalidLambdaRoleError(role)
 
         return iam.Role(
                 utils.valid_cloudformation_name(self.name, 'role'),
@@ -114,30 +149,47 @@ class Lambda(base.BaseResource):
                       "Action": [ "sts:AssumeRole" ]
                    } ]
                 },
-                Policies=policies
+                Policies=self._get_policies()
             )
 
-
-    def get_timeout(self):
-        timeout = self.settings.get('timeout', 3)
-        return max(min(timeout, 300), 1)
-
     def get_bucket_key(self):
+        """Return the S3 bucket key for this lambda."""
         return "{}_{}.zip".format(self.name, self.get_code_hash())
 
+    def _collect_requirements(self, destination):
+        """Collect runtime specific requirements."""
+        pass
+
     def _collect_zip_content(self):
+        """Collects all required files to be included in the .zip file of the
+        lambda.
+
+        This includes:
+         - runtime requirements
+         - project modules
+         - app modules
+
+        Returns a temporal directory path
+        """
         destination = tempfile.mkdtemp()
 
-        # Collect requirements
-        self.collect_requirements(destination)
+        # Collect runtime requirements
+        self._collect_requirements(destination)
 
         # Collect app modules
-        modules_path = os.path.join(self.get_root(), 'modules')
-        if os.path.exists(modules_path):
-            for base, dirs, files in os.walk(modules_path):
+        modules_paths = (
+            os.path.join(self.get_root(), 'modules'),
+            os.path.join(self.get_parent_root(), 'modules')
 
-                relative = os.path.relpath(base, modules_path)
+        )
+        for path in modules_paths:
 
+            # Modules might or might not exist.
+            if not path or not os.path.exists(path):
+                continue
+
+            for base, dirs, files in os.walk(path):
+                relative = os.path.relpath(base, path)
                 for d in dirs:
                     shutil.copytree(os.path.join(base, d), os.path.join(destination, relative, d))
 
@@ -151,9 +203,9 @@ class Lambda(base.BaseResource):
         return destination
 
     def get_zip_file(self):
-
+        """Returns a zip file file-like object with all the required source
+        on it."""
         tmp_directory = self._collect_zip_content()
-
         filename = '{}.{}'.format(self.code_filename, self.extension)
         output = StringIO.StringIO()
         zipzile = zipfile.ZipFile(output, 'w')
@@ -166,10 +218,15 @@ class Lambda(base.BaseResource):
 
         zipzile.close()
         output.seek(0)
+        shutil.rmtree(tmp_directory)
         return output
 
     @classmethod
     def register_type_project_template(cls, project, template):
+        """Registers into the project stack a S3 bucket where all lambdas
+        code will be stored, as well as an output so any subsequent template
+        can have a reference to this resource."""
+
         code_bucket = s3.Bucket(
             "CodeBucket",
             BucketName=troposphere.Join('-', ['gordon', troposphere.Ref("Region"), troposphere.Ref("Stage"), project.name]),
@@ -186,6 +243,8 @@ class Lambda(base.BaseResource):
 
     @classmethod
     def register_type_resources_template(cls, project, template):
+        """Registers into the resources stack ``CodeBucket`` as parameter
+        so any resource in the template can use it."""
         template.add_parameter(
             troposphere.Parameter(
                 "CodeBucket",
@@ -195,6 +254,9 @@ class Lambda(base.BaseResource):
         )
 
     def register_resources_template(self, template):
+        """Register the lambda Function into the troposphere template. If
+        this function requires a custom Role, register it too."""
+
         role = self.get_role()
         depends_on = []
         if isinstance(role, iam.Role):
@@ -220,10 +282,18 @@ class Lambda(base.BaseResource):
         )
 
     def register_pre_resources_template(self, template):
+        """Register one UploadToS3 action into the pre_resources template, as
+        well as several Outputs so subsequente templates can reference these
+        files.
+        Before registering these actions, we create the .zip file we'll
+        upload to s3 on apply time.
+        """
+
         code_path = os.path.join(self.project.build_path, 'code')
         if not os.path.exists(code_path):
             os.makedirs(code_path)
 
+        # We need to know to which bucket we are uploading these files.
         template.add_parameter(
             actions.Parameter(
                 name="CodeBucket"
@@ -233,31 +303,34 @@ class Lambda(base.BaseResource):
         filename = os.path.join(code_path, self.get_bucket_key())
         with open(filename, 'w') as f:
             f.write(self.get_zip_file().read())
-            template.add(
-                actions.UploadToS3(
-                    name="{}-upload".format(self.name),
-                    bucket=actions.Ref(name='CodeBucket'),
-                    key=self.get_bucket_key(),
-                    filename=os.path.relpath(filename, self.project.build_path)
+
+        template.add(
+            actions.UploadToS3(
+                name="{}-upload".format(self.name),
+                bucket=actions.Ref(name='CodeBucket'),
+                key=self.get_bucket_key(),
+                filename=os.path.relpath(filename, self.project.build_path)
+            )
+        )
+        template.add_output(
+            actions.Output(
+                name=utils.valid_cloudformation_name(self.name, "s3url"),
+                value=actions.GetAttr(
+                    action="{}-upload".format(self.name),
+                    attr="s3url",
                 )
             )
-            template.add_output(
-                actions.Output(
-                    name=utils.valid_cloudformation_name(self.name, "s3url"),
-                    value=actions.GetAttr(
-                        action="{}-upload".format(self.name),
-                        attr="s3url",
-                    )
-                )
-            )
+        )
 
 
 class PythonLambda(Lambda):
+
     runtime = 'python2.7'
     base_runtime = 'python'
     extension = 'py'
 
-    def collect_requirements(self, destination):
+    def _collect_requirements(self, destination):
+        """Collect python requirements using ``pip``"""
         setup_cfg_path = os.path.join(destination, 'setup.cfg')
 
         with open(setup_cfg_path, 'w') as f:
@@ -273,12 +346,15 @@ class PythonLambda(Lambda):
 
         os.remove(setup_cfg_path)
 
+
 class NodeLambda(Lambda):
+
     runtime = 'nodejs'
     base_runtime = 'node'
     extension = 'js'
 
-    def collect_requirements(self, destination):
+    def _collect_requirements(self, destination):
+        """Collect node requirements using ``npm``"""
 
         for requirement in self.get_requirements():
             subprocess.call("cd {} && npm install {}".format(destination, requirement), shell=True)

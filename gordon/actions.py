@@ -5,6 +5,17 @@ import boto3
 
 
 class Serializable(object):
+    """Base Serializable abstractions we'll use to serialize actions and
+    properties included in gordon's custom templates.
+
+    Serializable objects must define a list of properties they care about
+    using the following format:
+
+    properties = (
+        (NAME, DEFAULT_VALUE, REQUIRED),
+        ...
+    )
+    """
 
     properties = ()
 
@@ -13,7 +24,7 @@ class Serializable(object):
             if key in kwargs:
                 value = kwargs[key]
             elif required:
-                raise Exception("{} requires {} as parameter".format(self.__class__.__name__, key))
+                raise exceptions.ActionRequiredPropertyError(self.__class__.__name__, key)
             else:
                 value = default
                 if type(value) is type:
@@ -57,6 +68,7 @@ class Ref(Serializable):
         ('name', '', True),
     )
 
+
 class GetAttr(Serializable):
 
     properties = (
@@ -64,11 +76,13 @@ class GetAttr(Serializable):
         ('attr', '', True),
     )
 
+
 class Parameter(Serializable):
     properties = (
         ('name', '', True),
         ('default', '', False),
     )
+
 
 class Output(Serializable):
     properties = (
@@ -76,6 +90,7 @@ class Output(Serializable):
         ('default', '', False),
         ('value', '', True),
     )
+
 
 class ActionsTemplate(Serializable):
     properties = (
@@ -99,10 +114,12 @@ class ActionsTemplate(Serializable):
         for action in self.actions:
             action_outputs[action.name] = action.apply(context, project)
 
+        outputs = {}
         for name, output in self.outputs.iteritems():
             if isinstance(output.value, GetAttr):
                 value = action_outputs[output.value.action].get(output.value.attr, output.default)
-            context[name] = value
+            outputs[name] = value
+        return outputs
 
     def __nonzero__(self):
         return bool(self.actions)
@@ -119,8 +136,9 @@ class BaseAction(Serializable):
             value = context[value.name]
         return value
 
-class UploadToS3(BaseAction):
 
+class UploadToS3(BaseAction):
+    """Uploads ``filename`` to ``bucket/key``."""
     properties = (
         ('name', '', True),
         ('bucket', '', True),

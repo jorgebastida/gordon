@@ -1,0 +1,3 @@
+---
+#DynamoIntegrationArn: arn:aws:dynamodb:{{ aws_region }}:{{ aws_account_id }}:table/test/stream/2015-11-09T10:53:25.441
+DynamoIntegrationArn: arn:aws:dynamodb:{{ aws_region }}:936837623851:table/test/stream/2015-11-09T10:53:25.441

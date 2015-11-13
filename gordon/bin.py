@@ -5,7 +5,7 @@ import argparse
 import boto3
 from botocore.client import ClientError
 
-from .core import Bootstrap, Project
+from .core import Bootstrap, ProjectBuild, ProjectApply
 
 __version__ = "0.0.1"
 
@@ -47,12 +47,12 @@ def main(argv=None):
 
     build_parser = subparsers.add_parser('build', description='Build')
     add_default_arguments(build_parser)
-    build_parser.set_defaults(cls=Project)
+    build_parser.set_defaults(cls=ProjectBuild)
     build_parser.set_defaults(func="build")
 
     apply_parser = subparsers.add_parser('apply', description='Build')
     add_default_arguments(apply_parser)
-    apply_parser.set_defaults(cls=Project)
+    apply_parser.set_defaults(cls=ProjectApply)
     apply_parser.set_defaults(func="apply")
     apply_parser.add_argument("-s", "--stage",
                               dest="stage",

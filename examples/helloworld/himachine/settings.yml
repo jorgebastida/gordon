@@ -8,6 +8,7 @@ lambdas:
       # timeout:
       # #description: This simple function will do nothing
       # #runtime: python-2.7
+
   hellopy:
     code: hellopy.py
     policies:
