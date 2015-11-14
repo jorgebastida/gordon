@@ -1,7 +1,7 @@
 import os
 
 import troposphere
-from troposphere import iam, awslambda, s3
+from troposphere import iam, awslambda, s3, GetAtt
 
 from gordon import utils
 from gordon.contrib.utils.cloudformation import Sleep
@@ -202,6 +202,9 @@ class BaseStream(BaseResource):
 
         sleep = Sleep.create_with(
             utils.valid_cloudformation_name(self.name, "Sleep"),
+            lambda_arn=GetAtt(
+                self.project.reference('utils.gordon_contrib_utils_sleep'), 'Arn'
+            ),
             Time=30
         )
         template.add_resource(sleep)

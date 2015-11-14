@@ -41,7 +41,7 @@ class Lambda(base.BaseResource):
         with open(os.path.join(self.get_root(), self.settings['code']), 'r') as f:
             return f.read()
 
-    def get_code_hash(self):
+    def get_hash(self):
         """Returns an consistent hash of the sourcecode of the lambda."""
         return hashlib.sha1(self.get_code()).hexdigest()[:8]
 
@@ -154,7 +154,7 @@ class Lambda(base.BaseResource):
 
     def get_bucket_key(self):
         """Return the S3 bucket key for this lambda."""
-        return "{}_{}.zip".format(self.name, self.get_code_hash())
+        return "{}.zip".format(self.name)
 
     def _collect_requirements(self, destination):
         """Collect runtime specific requirements."""
@@ -231,6 +231,9 @@ class Lambda(base.BaseResource):
             "CodeBucket",
             BucketName=troposphere.Join('-', ['gordon', troposphere.Ref("Region"), troposphere.Ref("Stage"), project.name]),
             AccessControl=s3.Private,
+            VersioningConfiguration=s3.VersioningConfiguration(
+                Status='Enabled'
+            )
         )
         template.add_resource(code_bucket)
         template.add_output([

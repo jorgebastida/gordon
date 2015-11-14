@@ -175,7 +175,8 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
 
     def build(self):
         """Build current current project"""
-        shutil.rmtree(self.build_path)
+        if os.path.exists(self.build_path):
+            shutil.rmtree(self.build_path)
         os.makedirs(self.build_path)
         self._reset_build_sequence_id()
         self._build_pre_project_template()

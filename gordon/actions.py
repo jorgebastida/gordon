@@ -139,6 +139,7 @@ class BaseAction(Serializable):
 
 class UploadToS3(BaseAction):
     """Uploads ``filename`` to ``bucket/key``."""
+
     properties = (
         ('name', '', True),
         ('bucket', '', True),

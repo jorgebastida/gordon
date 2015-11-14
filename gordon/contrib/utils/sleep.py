@@ -1,7 +1,7 @@
 import time
 import json
 
-from cf import send, SUCCESS
+from cfnresponse import send, SUCCESS
 
 def handler(event, context):
     if event['RequestType'] == 'Delete':

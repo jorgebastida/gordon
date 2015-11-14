@@ -197,7 +197,6 @@ def wait_for_cf_status(stack_id, success_if, abort_if, every=1, limit=60 * 15):
                 return stack
             elif stack_status in abort_if:
                 raise exceptions.AbnormalCloudFormationStatusError(stack, success_if, abort_if)
-                )
             print stack_status, "waiting..."
         time.sleep(every)
 
@@ -229,12 +228,6 @@ class BaseLambdaAWSCustomObject(cloudformation.AWSCustomObject):
 
     @classmethod
     def create_with(cls, *args, **kwargs):
-        cf_lambda_name = valid_cloudformation_name('utils.', cls.lambda_name)
-        kwargs['ServiceToken'] = Join("",
-            ["arn:aws:lambda:", Ref("AWS::Region"), ":", Ref("AWS::AccountId"),":function:", Ref(cf_lambda_name)]
-        )
-        depends_on = kwargs.pop('DependsOn', [])
-        depends_on.append(cf_lambda_name)
-        if depends_on:
-            kwargs['DependsOn'] = depends_on
+        lambda_arn = kwargs.pop('lambda_arn')
+        kwargs['ServiceToken'] = lambda_arn        
         return cls(*args, **kwargs)
