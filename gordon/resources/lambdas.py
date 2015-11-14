@@ -267,6 +267,13 @@ class Lambda(base.BaseResource):
             depends_on.append(role.name)
             role = troposphere.GetAtt(role, 'Arn')
 
+        template.add_parameter(
+            troposphere.Parameter(
+                utils.valid_cloudformation_name(self.name, "s3version"),
+                Type="String",
+            )
+        )
+
         template.add_resource(
             awslambda.Function(
                 self.in_project_cf_name,
@@ -274,6 +281,9 @@ class Lambda(base.BaseResource):
                 Code=awslambda.Code(
                     S3Bucket=troposphere.Ref("CodeBucket"),
                     S3Key=self.get_bucket_key(),
+                    S3ObjectVersion=troposphere.Ref(
+                        utils.valid_cloudformation_name(self.name, "s3version")
+                    ),
                 ),
                 Description=self.settings.get('description', ''),
                 Handler=self.get_handler(),
@@ -321,6 +331,15 @@ class Lambda(base.BaseResource):
                 value=actions.GetAttr(
                     action="{}-upload".format(self.name),
                     attr="s3url",
+                )
+            )
+        )
+        template.add_output(
+            actions.Output(
+                name=utils.valid_cloudformation_name(self.name, "s3version"),
+                value=actions.GetAttr(
+                    action="{}-upload".format(self.name),
+                    attr="s3version",
                 )
             )
         )

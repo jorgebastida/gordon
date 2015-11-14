@@ -158,8 +158,11 @@ class UploadToS3(BaseAction):
         obj = s3.Object(bucket, key)
         obj.upload_file(filename)
 
-        return {'s3url': 'https://s3-{}.amazonaws.com/{}/{}'.format(
-            project.region,
-            self._get('bucket', context),
-            self._get('key', context)
-        )}
+        return {
+            's3url': 'https://s3-{}.amazonaws.com/{}/{}'.format(
+                project.region,
+                self._get('bucket', context),
+                self._get('key', context)
+            ),
+            's3version': obj.version_id
+        }
