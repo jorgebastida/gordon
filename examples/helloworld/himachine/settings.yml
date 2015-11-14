@@ -3,41 +3,7 @@ lambdas:
     code: hellojs.js
     node_requirements:
       - async
-    #role: arn:aws:iam::936837623851:role/dev-jawstest-r-IamRoleLambda-1ITRHZJZ9DDWI
-      # memory:
-      # timeout:
-      # #description: This simple function will do nothing
-      # #runtime: python-2.7
 
   hellopy:
     code: hellopy.py
-    policies:
-      read_dynamo:
-        Version: "2012-10-17"
-        Statement:
-          -
-            Action:
-              - "dynamodb:DescribeStream"
-              - "dynamodb:ListStreams"
-              - "dynamodb:GetShardIterator"
-              - "dynamodb:GetRecords"
-            Resource: "arn:aws:dynamodb:*:*:*"
-            Effect: "Allow"
-      read_kinesis:
-        Version: "2012-10-17"
-        Statement:
-          -
-            Action:
-              - "kinesis:DescribeStream"
-              - "kinesis:ListStreams"
-              - "kinesis:GetShardIterator"
-              - "kinesis:GetRecords"
-            Resource: "arn:aws:kinesis:*:*:*"
-            Effect: "Allow"
-
-      # role:
-      # role:
-      # memory:
-      # timeout:
-      #description: This simple function will do nothing
-      #runtime: python-2.7
+    

@@ -1,0 +1,55 @@
+{
+    "outputs": {
+        "GordonContribUtilsSleepS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "GordonContribUtilsSleepS3Url", 
+            "value": {
+                "action": "gordon_contrib_utils_sleep-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }, 
+        "KinesisconsumerS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "KinesisconsumerS3Url", 
+            "value": {
+                "action": "kinesisconsumer-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }
+    }, 
+    "_type": "ActionsTemplate", 
+    "actions": [
+        {
+            "_type": "UploadToS3", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "name": "gordon_contrib_utils_sleep-upload", 
+            "key": "gordon_contrib_utils_sleep.zip", 
+            "filename": "code/gordon_contrib_utils_sleep.zip"
+        }, 
+        {
+            "_type": "UploadToS3", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "name": "kinesisconsumer-upload", 
+            "key": "kinesisconsumer.zip", 
+            "filename": "code/kinesisconsumer.zip"
+        }
+    ], 
+    "parameters": {
+        "CodeBucket": {
+            "default": "", 
+            "_type": "Parameter", 
+            "name": "CodeBucket"
+        }
+    }, 
+    "parallelizable": true
+}

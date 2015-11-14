@@ -1,0 +1,13 @@
+---
+project: kinesisexample
+default-region: eu-west-1
+apps:
+  - gordon.contrib.utils
+  - exampleapp
+
+dynamodb:
+  example_kinesis_integration:
+    lambda: exampleapp.kinesisconsumer
+    stream: ref://KinesisIntegrationArn
+    batch_size: 1
+    starting_position: LATEST

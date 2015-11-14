@@ -1,0 +1,13 @@
+---
+project: dynamodbexample
+default-region: eu-west-1
+apps:
+  - gordon.contrib.utils
+  - exampleapp
+
+dynamodb:
+  example_dynamo_integration:
+    lambda: exampleapp.dynamoconsumer
+    stream: ref://DynamoIntegrationArn
+    batch_size: 1
+    starting_position: LATEST

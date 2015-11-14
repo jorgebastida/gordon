@@ -1,0 +1,55 @@
+{
+    "outputs": {
+        "DynamoconsumerS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "DynamoconsumerS3Url", 
+            "value": {
+                "action": "dynamoconsumer-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }, 
+        "GordonContribUtilsSleepS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "GordonContribUtilsSleepS3Url", 
+            "value": {
+                "action": "gordon_contrib_utils_sleep-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }
+    }, 
+    "_type": "ActionsTemplate", 
+    "actions": [
+        {
+            "_type": "UploadToS3", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "name": "gordon_contrib_utils_sleep-upload", 
+            "key": "gordon_contrib_utils_sleep.zip", 
+            "filename": "code/gordon_contrib_utils_sleep.zip"
+        }, 
+        {
+            "_type": "UploadToS3", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "name": "dynamoconsumer-upload", 
+            "key": "dynamoconsumer.zip", 
+            "filename": "code/dynamoconsumer.zip"
+        }
+    ], 
+    "parameters": {
+        "CodeBucket": {
+            "default": "", 
+            "_type": "Parameter", 
+            "name": "CodeBucket"
+        }
+    }, 
+    "parallelizable": true
+}

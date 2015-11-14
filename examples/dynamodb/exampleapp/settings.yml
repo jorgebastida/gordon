@@ -1,0 +1,16 @@
+lambdas:
+  dynamoconsumer:
+    code: dynamoconsumer.py
+
+    policies:
+      read_dynamo:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Action:
+              - "dynamodb:DescribeStream"
+              - "dynamodb:ListStreams"
+              - "dynamodb:GetShardIterator"
+              - "dynamodb:GetRecords"
+            Resource: "arn:aws:dynamodb:*:*:*"
+            Effect: "Allow"
