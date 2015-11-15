@@ -1,7 +1,7 @@
 Gordon
 =========
 
-Gordon is a high-level framework which allows you to create, wire and deploy AWS Lambdas in an easy way.
+Gordon is a high-level framework to create, wire and deploy AWS Lambdas in an easy way.
 
 Usage
 ------
@@ -25,6 +25,24 @@ The second reason is complexity. CloudFormation stacks are defined using JSON te
 
 This project tries to solve these two issues by working around the lack of CloudFormation/Framework APIs (keeping in mind they will happen eventually) and trying to create a high level abstraction on top of CloudFormation so people without a deep understanding of it can write and deploy lambdas without shooting their foot.
 
+Features
+---------
+* 100% CloudFormation resource creation.
+* Python/Javascript/Java runtimes supported.
+* Simple yml configuration
+* Seamless integration with package managers (``pip``,``npm``)
+* AWS Lambda Versioning
+* AWS Lambda Alias
+* Dead-simple custom multi-stage and multi region deployments ``--stage=prod``
+* S3 Versioning
+* Supported integrations
+  * Kinesis Streams
+  * Dynamodb Streams
+* Dynamic stage parametrization including:
+  * jinja2 love
+  * Environment variables
+  * ARN translation helpers (``dynamodb-starswith://clients-``, ``dynamodb-endswith://-clients``, ``dynamodb-match://clients-`` ...)
+* Love
 
 Why should you use this project?
 -----------------------------------
