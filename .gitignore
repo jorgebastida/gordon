@@ -2,3 +2,4 @@
 *.eggs
 *.egg-info
 examples/helloworld/_build/
+docs/_build
