@@ -32,6 +32,11 @@ IN_PROGRESS_STATUS = (
     'UPDATE_IN_PROGRESS', 'UPDATE_ROLLBACK_IN_PROGRESS'
 )
 
+DELETE_STACK_STATUS = (
+    'CREATE_FAILED', 'DELETE_FAILED', 'ROLLBACK_FAILED',
+    'UPDATE_ROLLBACK_FAILED'
+)
+
 STATUS_COLORS = {
     'CREATE_FAILED'
 }
@@ -237,7 +242,7 @@ def wait_for_cf_status(stack_id, success_if, abort_if=None, every=1, limit=60 * 
     with ID ``stack_id`` reached one of the status in ``success_if`` or
     ``abort_if``.
     """
-    abort_if = abort_if or []
+    abort_if = abort_if or DELETE_STACK_STATUS
     client = boto3.client('cloudformation')
     clean_output = False
     for m, i in mill(xrange(0, limit, every)):
@@ -248,12 +253,13 @@ def wait_for_cf_status(stack_id, success_if, abort_if=None, every=1, limit=60 * 
                 puts("\r{}".format(" " * 80), newline=False)
                 puts("\r    {} waiting... {}".format(get_cf_color(stack_status)(stack_status), m), newline=False)
                 sys.stdout.flush()
+
             if stack_status in success_if:
                 if clean_output:
                     puts("")
                 return stack
             elif stack_status in abort_if:
-                raise exceptions.AbnormalCloudFormationStatusError(stack, success_if, abort_if)
+                raise exceptions.AbnormalCloudFormationStatusError(stack, stack_status, success_if, abort_if)
             clean_output = True
         time.sleep(every)
     puts("")

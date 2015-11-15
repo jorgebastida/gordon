@@ -48,7 +48,28 @@ class ProjectNotBuildError(BaseGordonException):
 
 
 class AbnormalCloudFormationStatusError(BaseGordonException):
-    hint = "Cloudformation status is {}, which is bad."
+    hint = """
+    Oh Oh!! You stack status is {1}... which is bad, quite bad.
+    The stack cannot return to a good state. In other words, a dependent
+    resource cannot return to its original state, which causes a failure.
+
+    What can you do now? Well... you need to manually delete the stack from the
+    CloudFormation console, and run this commanda again. Before doing that,
+    it would be good if you check what failed... because it is quite possible
+    this will happend again if you don't solve the root issue.
+
+    Keep in mind that deleting the stack will remove all resources deployed
+    by Gordon (Lambdas, EventSourceMapping, APIGateways, etc...) which will
+    generate disruption in your service (for obvious reasons).
+
+    Because the nature of Gordon, all templates should be idempotent, so,
+    if you apply your gordon project again after deleting your stack, the
+    final result should be the same.
+
+    It is going to be fine.
+
+    Stack: {0}
+    """
     code = 10
 
 
