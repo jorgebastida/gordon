@@ -18,33 +18,6 @@ from clint.textui import colored, puts, progress, indent
 
 from . import exceptions
 
-MILL_CHARS = ['|', '/', '-', '\\']
-
-def mill(iterable):
-    for i, elem in enumerate(iterable):
-        yield MILL_CHARS[i % len(MILL_CHARS)], elem
-
-def get_zip_metadata(filename, metadata_filename='.metadata'):
-    zfile = zipfile.ZipFile(filename)
-    try:
-        return json.loads(zfile.read(metadata_filename))
-    except Exception:
-        return {}
-
-def file_hash(filename):
-    with open(filename, 'rb') as f:
-        return hashlib.sha1(f.read()).hexdigest()
-
-def tree_hash(path):
-    digest = hashlib.sha1()
-    for root, dirs, files in os.walk(path):
-        relative = os.path.relpath(root, path)
-        for filename in sorted(files):
-            digest.update(os.path.join(relative, filename))
-            with open(os.path.join(root, filename), 'rb') as f:
-                digest.update(f.read())
-    return digest.hexdigest()
-
 
 NEGATIVE_CF_STATUS = (
     'CREATE_FAILED', 'DELETE_FAILED', 'ROLLBACK_FAILED',
@@ -61,6 +34,39 @@ IN_PROGRESS_STATUS = (
     'UPDATE_COMPLETE_CLEANUP_IN_PROGRESS', 'UPDATE_IN_PROGRESS',
     'UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS', 'UPDATE_ROLLBACK_IN_PROGRESS'
 )
+
+MILL_CHARS = ['|', '/', '-', '\\']
+
+def mill(iterable):
+    for i, elem in enumerate(iterable):
+        yield MILL_CHARS[i % len(MILL_CHARS)], elem
+
+
+def get_zip_metadata(filename, metadata_filename='.metadata'):
+    """Return metadata information attached to a zip file."""
+    zfile = zipfile.ZipFile(filename)
+    try:
+        return json.loads(zfile.read(metadata_filename))
+    except Exception:
+        return {}
+
+
+def file_hash(filename):
+    """Return a consistent sha1 hash of a file."""
+    with open(filename, 'rb') as f:
+        return hashlib.sha1(f.read()).hexdigest()
+
+
+def tree_hash(path):
+    """Return a consistent sha1 hash of a directory."""
+    digest = hashlib.sha1()
+    for root, dirs, files in os.walk(path):
+        relative = os.path.relpath(root, path)
+        for filename in sorted(files):
+            digest.update(os.path.join(relative, filename))
+            with open(os.path.join(root, filename), 'rb') as f:
+                digest.update(f.read())
+    return digest.hexdigest()
 
 
 def setup_region(region, settings=None):
