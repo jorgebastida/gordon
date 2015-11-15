@@ -59,4 +59,4 @@ Yes, we eat our own dog food; We use gordon to create gordon. The idea is that, 
 
 Those Custom CloudFormation resources are implemented using Lambdas (deployed by gordon)... crazy uh?!
 
-Why all this madness? Again... because reproducibility. If you manage some resources using CloudFormation, and some others streaming API commands, when you try to decommission your environment... you are pretty much f***, and you MUST use the original tool to (hopefully) delete all resources. With Gordon this is not a problem. You delete our CloudFormation stacks and all our sh** is gone.
+Why all this madness? Again... because reproducibility. If you manage some resources using CloudFormation, and some others streaming API commands, when you try to decommission your environment... you are pretty much f*, and you MUST use the original tool to (hopefully) delete all resources. With Gordon this is not a problem. You delete our CloudFormation stacks and all our sh* is gone.
