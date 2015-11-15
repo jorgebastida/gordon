@@ -18,24 +18,33 @@ from clint.textui import colored, puts, progress, indent
 
 from . import exceptions
 
-
-NEGATIVE_CF_STATUS = (
+FINAL_STATUS = (
     'CREATE_FAILED', 'DELETE_FAILED', 'ROLLBACK_FAILED',
-    'UPDATE_ROLLBACK_FAILED', 'UPDATE_ROLLBACK_COMPLETE',
-    'UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS', 'ROLLBACK_COMPLETE'
+    'UPDATE_ROLLBACK_FAILED', 'UPDATE_ROLLBACK_COMPLETE', 'CREATE_COMPLETE',
+    'DELETE_COMPLETE', 'UPDATE_COMPLETE',
+    'UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS', 'ROLLBACK_COMPLETE',
+    'UPDATE_COMPLETE_CLEANUP_IN_PROGRESS'
 )
 
-POSITIVE_CF_STATUS = (
-    'CREATE_COMPLETE', 'DELETE_COMPLETE', 'UPDATE_COMPLETE',
-)
 
 IN_PROGRESS_STATUS = (
     'CREATE_IN_PROGRESS', 'DELETE_IN_PROGRESS', 'ROLLBACK_IN_PROGRESS',
-    'UPDATE_COMPLETE_CLEANUP_IN_PROGRESS', 'UPDATE_IN_PROGRESS',
-    'UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS', 'UPDATE_ROLLBACK_IN_PROGRESS'
+    'UPDATE_IN_PROGRESS', 'UPDATE_ROLLBACK_IN_PROGRESS'
 )
 
+STATUS_COLORS = {
+    'CREATE_FAILED'
+}
+
 MILL_CHARS = ['|', '/', '-', '\\']
+
+def get_cf_color(status):
+    if 'IN_PROGRESS' in status:
+        return colored.yellow
+    elif 'ROLLBACK' in status or 'FAILED' in status:
+        return colored.red
+    return colored.green
+
 
 def mill(iterable):
     for i, elem in enumerate(iterable):
@@ -223,17 +232,22 @@ def update_stack(name, template_filename, context, **kwargs):
     return get_cf_stack(stack['StackId'])
 
 
-def wait_for_cf_status(stack_id, success_if, abort_if, every=1, limit=60 * 15):
+def wait_for_cf_status(stack_id, success_if, abort_if=None, every=1, limit=60 * 15):
     """Waits up to ``limit`` seconds in ``every`` intervals until the stack
     with ID ``stack_id`` reached one of the status in ``success_if`` or
     ``abort_if``.
     """
+    abort_if = abort_if or []
     client = boto3.client('cloudformation')
     clean_output = False
     for m, i in mill(xrange(0, limit, every)):
         stack = get_cf_stack(name=stack_id)
         if stack:
             stack_status = stack['StackStatus']
+            if i:
+                puts("\r{}".format(" " * 80), newline=False)
+                puts("\r    {} waiting... {}".format(get_cf_color(stack_status)(stack_status), m), newline=False)
+                sys.stdout.flush()
             if stack_status in success_if:
                 if clean_output:
                     puts("")
@@ -241,8 +255,6 @@ def wait_for_cf_status(stack_id, success_if, abort_if, every=1, limit=60 * 15):
             elif stack_status in abort_if:
                 raise exceptions.AbnormalCloudFormationStatusError(stack, success_if, abort_if)
             clean_output = True
-            puts("\r    {} waiting... {}".format(colored.green(stack_status), m), newline=False)
-            sys.stdout.flush()
         time.sleep(every)
     puts("")
 
@@ -258,10 +270,10 @@ def create_or_update_cf_stack(name, template_filename, context=None, **kwargs):
 
     if stack:
         stack = update_stack(name, template_filename, context=context, **kwargs)
-        stack = wait_for_cf_status(stack['StackId'], POSITIVE_CF_STATUS, NEGATIVE_CF_STATUS)
     else:
         stack = create_stack(name, template_filename, context=context, **kwargs)
-        stack = wait_for_cf_status(stack['StackId'], ('CREATE_COMPLETE',), NEGATIVE_CF_STATUS)
+
+    stack = wait_for_cf_status(stack['StackId'], FINAL_STATUS)
 
     return stack
 
