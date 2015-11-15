@@ -4,6 +4,7 @@ import tempfile
 import hashlib
 import zipfile
 import StringIO
+import json
 import subprocess
 
 import troposphere
@@ -173,9 +174,19 @@ class Lambda(base.BaseResource):
         Returns a temporal directory path
         """
         destination = tempfile.mkdtemp()
+        digest = hashlib.sha1()
 
         # Collect runtime requirements
         self._collect_requirements(destination)
+
+        # Add requirements to the digest. We don't digest the content of the
+        # required modules, but the name and version number (if included).
+        # We need to reiterate in the the documentation how importat is to
+        # freeze version numbers. In the future we could try to make the
+        # particular implementations of __collect_requirements yield the
+        # actual version numbers dowloaded, so we can make this more robust.
+        for requirement in self.get_requirements():
+            digest.update(requirement)
 
         # Collect app modules
         modules_paths = (
@@ -192,14 +203,23 @@ class Lambda(base.BaseResource):
             for base, dirs, files in os.walk(path):
                 relative = os.path.relpath(base, path)
                 for d in dirs:
-                    shutil.copytree(os.path.join(base, d), os.path.join(destination, relative, d))
+                    relative_destination = os.path.join(destination, relative, d)
+                    shutil.copytree(os.path.join(base, d), relative_destination)
+                    digest.update(utils.tree_hash(relative_destination))
 
                 for filename in files:
-                    shutil.copyfile(os.path.join(base, filename), os.path.join(destination, relative, filename))
+                    relative_destination = os.path.join(destination, relative, filename)
+                    shutil.copyfile(os.path.join(base, filename), relative_destination)
+                    digest.update(utils.file_hash(relative_destination))
 
         # Copy lambda code
         filename = '{}.{}'.format(self.code_filename, self.extension)
         shutil.copyfile(os.path.join(self.get_root(), self.settings['code']), os.path.join(destination, filename))
+        digest.update(utils.file_hash(os.path.join(destination, filename)))
+
+        # Calculate digest of destination
+        with open(os.path.join(destination, '.metadata'), 'w') as f:
+            f.write(json.dumps({'sha1': digest.hexdigest()}))
 
         return destination
 

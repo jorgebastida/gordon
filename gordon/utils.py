@@ -4,6 +4,7 @@ import time
 import copy
 import json
 import hashlib
+import zipfile
 
 import boto3
 from botocore.exceptions import ClientError
@@ -15,11 +16,28 @@ from troposphere import cloudformation, Join, Ref
 from . import exceptions
 
 
-def s3etag(filename):
-    """Calculate the ETAG (md5) of a file. Apparantly s3 does a different thing
-    for files >5GB... which I hope nobody is going to use as a lambda."""
+def get_zip_metadata(filename, metadata_filename='.metadata'):
+    zfile = zipfile.ZipFile(filename)
+    try:
+        return json.loads(zfile.read(metadata_filename))
+    except Exception:
+        return {}
+
+
+def file_hash(filename):
     with open(filename, 'rb') as f:
-        return hashlib.md5(f.read()).hexdigest()
+        return hashlib.sha1(f.read()).hexdigest()
+
+def tree_hash(path):
+    digest = hashlib.sha1()
+    for root, dirs, files in os.walk(path):
+        relative = os.path.relpath(root, path)
+        for filename in sorted(files):
+            digest.update(os.path.join(relative, filename))
+            print os.path.join(relative, filename)
+            with open(os.path.join(root, filename), 'rb') as f:
+                digest.update(f.read())
+    return digest.hexdigest()
 
 
 NEGATIVE_CF_STATUS = (

@@ -4,6 +4,8 @@ import hashlib
 
 import boto3
 
+from gordon import utils
+
 
 class Serializable(object):
     """Base Serializable abstractions we'll use to serialize actions and
@@ -149,24 +151,63 @@ class UploadToS3(BaseAction):
     )
 
     def apply(self, context, project):
-        bucket = self._get('bucket', context)
-        key = self._get('key', context)
-        filename = os.path.join(project.build_path, self._get('filename', context))
+        # Check if this file needs to get uploaded or not. In order to do so,
+        # we could rely on ETAG for normal files, but one of the mainline
+        # cases of gordon is to upload .zip files, and identical source folders
+        # don't have consistent checksums when you zip them, so we need to
+        # workaround this by generating our own checksum uppon creation and
+        # leave a .metadata file inside the zip file.
+        # If the file is not .zip file, we always upload the file.
+        self.project = project
+        self.context = context
+        self.bucket = self._get('bucket', self.context)
+        self.key = self._get('key', self.context)
 
-        s3client = boto3.client('s3')
-        etag = utils.s3etag(filename)
-        obj = s3client.get_object(Bucket=bucket, Key=key, IfMatch=etag)
-        import ipdb; ipdb.set_trace()
+        self.filename = os.path.join(
+            project.build_path,
+            self._get('filename', context)
+        )
 
+        if self.filename.endswith('.zip'):
+            return self.apply_zip()
+        return self.apply_general()
+
+    def apply_general(self, metadata=None):
         print "Uploading", self.name, self.bucket, self.key
         s3 = boto3.resource('s3')
-        obj = s3.Object(bucket, key)
-        obj.upload_file(filename)
+        obj = s3.Object(self.bucket, self.key)
 
+        extraargs = None
+        if metadata:
+            extraargs = {'Metadata': metadata}
+
+        obj.upload_file(self.filename, ExtraArgs=extraargs)
+        return self.output(obj.version_id)
+
+    def output(self, version):
         return {
             's3url': 'https://s3-{}.amazonaws.com/{}/{}'.format(
-                project.region,
-                self._get('bucket', context),
-                self._get('key', context)
+                self.project.region,
+                self.bucket,
+                self.key
             ),
-            's3version': obj.version_id        }
+            's3version': version
+        }
+
+    def apply_zip(self):
+        s3client = boto3.client('s3')
+        try:
+            obj = s3client.get_object(Bucket=self.bucket, Key=self.key)
+        except Exception, exc:
+            obj = None
+
+        # If there is a file in this key, check if the attached metadata sha1
+        # matches with the sha1 inside the file zip
+        zipmetadata = utils.get_zip_metadata(self.filename)
+        if obj:
+            if zipmetadata.get('sha1') and zipmetadata.get('sha1') == obj['Metadata'].get('sha1'):
+                print "Local .zip metadata and current S3 file metadata are equal!"
+                return self.output(obj['VersionId'])
+            else:
+                print "Local .zip metadata and current S3 file metadata are NOT equal!"
+        return self.apply_general(metadata=zipmetadata)
