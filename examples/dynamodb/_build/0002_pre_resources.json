@@ -1,5 +1,15 @@
 {
     "outputs": {
+        "SleepS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "SleepS3Url", 
+            "value": {
+                "action": "sleep-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }, 
         "DynamoconsumerS3Url": {
             "default": "", 
             "_type": "Output", 
@@ -10,12 +20,42 @@
                 "attr": "s3url"
             }
         }, 
-        "GordonContribUtilsSleepS3Url": {
+        "SleepS3Version": {
             "default": "", 
             "_type": "Output", 
-            "name": "GordonContribUtilsSleepS3Url", 
+            "name": "SleepS3Version", 
             "value": {
-                "action": "gordon_contrib_utils_sleep-upload", 
+                "action": "sleep-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
+        "DynamoconsumerS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "DynamoconsumerS3Version", 
+            "value": {
+                "action": "dynamoconsumer-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
+        "LambdaVersionS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "LambdaVersionS3Version", 
+            "value": {
+                "action": "lambda_version-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
+        "LambdaVersionS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "LambdaVersionS3Url", 
+            "value": {
+                "action": "lambda_version-upload", 
                 "_type": "GetAttr", 
                 "attr": "s3url"
             }
@@ -29,9 +69,19 @@
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
-            "name": "gordon_contrib_utils_sleep-upload", 
-            "key": "gordon_contrib_utils_sleep.zip", 
-            "filename": "code/gordon_contrib_utils_sleep.zip"
+            "name": "sleep-upload", 
+            "key": "sleep.zip", 
+            "filename": "code/sleep.zip"
+        }, 
+        {
+            "_type": "UploadToS3", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "name": "lambda_version-upload", 
+            "key": "lambda_version.zip", 
+            "filename": "code/lambda_version.zip"
         }, 
         {
             "_type": "UploadToS3", 

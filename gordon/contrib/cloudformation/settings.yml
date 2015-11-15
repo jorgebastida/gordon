@@ -1,0 +1,24 @@
+lambdas:
+  sleep:
+    code: sleep.py
+    description: Sleeps several seconds before succeeding.
+    timeout: 300
+
+  lambda_version:
+    code: lambda_version.py
+    description: Publishes new versions of Lambdas.
+    timeout: 300
+    policies:
+      read_kinesis:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Action:
+              - "lambda:PublishVersion"
+              - "lambda:GetFunction"
+            Resource: "arn:aws:lambda:*:*:*"
+            Effect: "Allow"
+
+
+python_requirements:
+  - cfn-response

@@ -1,8 +1,8 @@
 ---
-project: dynamodbexample
+project: dynamodbexample2
 default-region: eu-west-1
 apps:
-  - gordon.contrib.utils
+  - gordon.contrib.cloudformation
   - exampleapp
 
 dynamodb:

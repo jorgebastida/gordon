@@ -1,5 +1,6 @@
 import os
 import json
+import hashlib
 
 import boto3
 
@@ -164,5 +165,4 @@ class UploadToS3(BaseAction):
                 self._get('bucket', context),
                 self._get('key', context)
             ),
-            's3version': obj.version_id
-        }
+            's3version': obj.version_id        }

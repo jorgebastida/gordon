@@ -3,6 +3,7 @@ import re
 import time
 import copy
 import json
+import hashlib
 
 import boto3
 from botocore.exceptions import ClientError
@@ -29,6 +30,7 @@ IN_PROGRESS_STATUS = (
     'UPDATE_COMPLETE_CLEANUP_IN_PROGRESS', 'UPDATE_IN_PROGRESS',
     'UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS', 'UPDATE_ROLLBACK_IN_PROGRESS'
 )
+
 
 def setup_region(region, settings=None):
     """Returns which region should be used and sets ``AWS_DEFAULT_REGION`` in
@@ -229,5 +231,5 @@ class BaseLambdaAWSCustomObject(cloudformation.AWSCustomObject):
     @classmethod
     def create_with(cls, *args, **kwargs):
         lambda_arn = kwargs.pop('lambda_arn')
-        kwargs['ServiceToken'] = lambda_arn        
+        kwargs['ServiceToken'] = lambda_arn
         return cls(*args, **kwargs)

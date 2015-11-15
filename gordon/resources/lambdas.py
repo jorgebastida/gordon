@@ -12,6 +12,7 @@ from troposphere import iam, awslambda, s3
 from gordon import actions
 from gordon import utils
 from gordon import exceptions
+from gordon.contrib.cloudformation.resources import LambdaVersion
 from . import base
 
 
@@ -274,7 +275,7 @@ class Lambda(base.BaseResource):
             )
         )
 
-        template.add_resource(
+        function = template.add_resource(
             awslambda.Function(
                 self.in_project_cf_name,
                 DependsOn=depends_on,
@@ -291,6 +292,21 @@ class Lambda(base.BaseResource):
                 Role=role,
                 Runtime=self.runtime,
                 Timeout=self.get_timeout()
+            )
+        )
+
+        template.add_resource(
+            LambdaVersion.create_with(
+                utils.valid_cloudformation_name(self.name, "Version"),
+                lambda_arn=troposphere.GetAtt(
+                    self.project.reference('cloudformation.lambda_version'), 'Arn'
+                ),
+                FunctionName=troposphere.Ref(
+                    function
+                ),
+                S3ObjectVersion=troposphere.Ref(
+                    utils.valid_cloudformation_name(self.name, "s3version")
+                ),
             )
         )
 

@@ -33,7 +33,7 @@
                             {
                                 "Ref": "Stage"
                             },
-                            "dynamodbexample"
+                            "dynamodbexample2"
                         ]
                     ]
                 },

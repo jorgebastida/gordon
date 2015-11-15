@@ -1,7 +1,0 @@
-lambdas:
-  gordon_contrib_utils_sleep:
-    code: sleep.py
-    description: CloudFormation Lambda which sleeps Time seconds before succeeding.
-    timeout: 300
-    python_requirements:
-      - cfn-response

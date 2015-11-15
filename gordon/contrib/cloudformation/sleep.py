@@ -7,6 +7,5 @@ def handler(event, context):
     if event['RequestType'] == 'Delete':
         send(event, context, SUCCESS)
         return
-    print("Received event: " + json.dumps(event, indent=2))
-    time.sleep(5)
+    time.sleep(int(event['ResourceProperties']['Time']))
     send(event, context, SUCCESS)
