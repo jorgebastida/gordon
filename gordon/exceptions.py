@@ -69,6 +69,8 @@ class AbnormalCloudFormationStatusError(BaseGordonException):
     It is going to be fine.
 
     Stack: {0}
+
+    http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/troubleshooting.html#d0e114571
     """
     code = 10
 
