@@ -1,7 +1,7 @@
 lambdas:
   dynamoconsumer:
     code: dynamoconsumer.py
-
+    #update_current_alias: false
     policies:
       read_dynamo:
         Version: "2012-10-17"

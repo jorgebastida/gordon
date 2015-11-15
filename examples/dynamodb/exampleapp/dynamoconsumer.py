@@ -1,5 +1,5 @@
 import json
 
 def handler(event, context):
-    print "party"
+    print "risky"
     print("Received event: " + json.dumps(event, indent=2))

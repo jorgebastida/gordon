@@ -153,6 +153,10 @@ class BaseResource(object):
         defined"""
         return self.project.path if self.app else None
 
+    def _get_true_false(self, field, default='t'):
+        """Returns if this stream is enable or not."""
+        return str(self.settings.get(field, default)).lower()[0] == 't'
+
 
 class BaseStream(BaseResource):
     """BaseStream resource for all stream-based CloudFormation resources."""
@@ -172,7 +176,7 @@ class BaseStream(BaseResource):
 
     def get_enabled(self):
         """Returns if this stream is enable or not."""
-        return str(self.settings.get('enabled', 't')).lower()[0] == 't'
+        return self._get_true_false('enabled')
 
     def get_starting_position(self):
         """Returns the starting position for this stream. Valid options are

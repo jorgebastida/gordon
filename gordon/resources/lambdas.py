@@ -13,7 +13,7 @@ from troposphere import iam, awslambda, s3
 from gordon import actions
 from gordon import utils
 from gordon import exceptions
-from gordon.contrib.cloudformation.resources import LambdaVersion
+from gordon.contrib.cloudformation.resources import LambdaVersion, LambdaAlias
 from . import base
 
 
@@ -37,6 +37,9 @@ class Lambda(base.BaseResource):
             return NodeLambda(*args, **kwargs)
         else:
             raise exceptions.InvalidLambdaCodeExtensionError(extension)
+
+    def get_update_current_alias(self):
+        return self._get_true_false('update_current_alias')
 
     def get_code(self):
         """Returns the sourcecode of the lambda."""
@@ -315,7 +318,7 @@ class Lambda(base.BaseResource):
             )
         )
 
-        template.add_resource(
+        version = template.add_resource(
             LambdaVersion.create_with(
                 utils.valid_cloudformation_name(self.name, "Version"),
                 lambda_arn=troposphere.GetAtt(
@@ -329,6 +332,26 @@ class Lambda(base.BaseResource):
                 ),
             )
         )
+
+        if self.get_update_current_alias():
+            template.add_resource(
+                LambdaAlias.create_with(
+                    utils.valid_cloudformation_name(self.name, "CurrentAlias"),
+                    lambda_arn=troposphere.GetAtt(
+                        self.project.reference('cloudformation.lambda_alias'), 'Arn'
+                    ),
+                    FunctionName=troposphere.Ref(
+                        function
+                    ),
+                    S3ObjectVersion=troposphere.Ref(
+                        utils.valid_cloudformation_name(self.name, "s3version")
+                    ),
+                    FunctionVersion=troposphere.GetAtt(
+                        version, "Version"
+                    ),
+                    Name="Current",
+                )
+            )
 
     def register_pre_resources_template(self, template):
         """Register one UploadToS3 action into the pre_resources template, as

@@ -10,7 +10,7 @@ def publish_version(function_name):
     client = boto3.client('lambda')
     function = client.get_function(FunctionName=function_name)
 
-    client.publish_version(
+    return client.publish_version(
         FunctionName=function_name,
         CodeSha256=function['Configuration']['CodeSha256']
     )
@@ -21,5 +21,7 @@ def handler(event, context):
         send(event, context, SUCCESS)
         return
 
-    publish_version(function_name=event['ResourceProperties']['FunctionName'])
-    send(event, context, SUCCESS)
+    output = publish_version(function_name=event['ResourceProperties']['FunctionName'])
+    send(event, context, SUCCESS,
+        response_data={'Version': output['Version']}
+    )

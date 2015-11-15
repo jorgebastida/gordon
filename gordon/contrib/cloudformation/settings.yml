@@ -19,6 +19,23 @@ lambdas:
             Resource: "arn:aws:lambda:*:*:*"
             Effect: "Allow"
 
+  lambda_alias:
+    code: lambda_alias.py
+    description: Manages aliases of Lambdas.
+    timeout: 300
+    policies:
+      read_kinesis:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Action:
+              - "lambda:CreateAlias"
+              - "lambda:DeleteAlias"
+              - "lambda:GetAlias"
+              - "lambda:UpdateAlias"
+            Resource: "arn:aws:lambda:*:*:*"
+            Effect: "Allow"
+
 
 python_requirements:
   - cfn-response

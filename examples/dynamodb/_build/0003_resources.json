@@ -10,6 +10,9 @@
         "DynamoconsumerS3Version": {
             "Type": "String"
         },
+        "LambdaAliasS3Version": {
+            "Type": "String"
+        },
         "LambdaVersionS3Version": {
             "Type": "String"
         },
@@ -27,6 +30,34 @@
         }
     },
     "Resources": {
+        "CloudformationLambdaAlias": {
+            "DependsOn": [
+                "LambdaAliasRole"
+            ],
+            "Properties": {
+                "Code": {
+                    "S3Bucket": {
+                        "Ref": "CodeBucket"
+                    },
+                    "S3Key": "lambda_alias.zip",
+                    "S3ObjectVersion": {
+                        "Ref": "LambdaAliasS3Version"
+                    }
+                },
+                "Description": "Manages aliases of Lambdas.",
+                "Handler": "code.handler",
+                "MemorySize": 192,
+                "Role": {
+                    "Fn::GetAtt": [
+                        "LambdaAliasRole",
+                        "Arn"
+                    ]
+                },
+                "Runtime": "python2.7",
+                "Timeout": 300
+            },
+            "Type": "AWS::Lambda::Function"
+        },
         "CloudformationLambdaVersion": {
             "DependsOn": [
                 "LambdaVersionRole"
@@ -82,6 +113,30 @@
                 "Timeout": 300
             },
             "Type": "AWS::Lambda::Function"
+        },
+        "DynamoconsumerCurrentalias": {
+            "Properties": {
+                "FunctionName": {
+                    "Ref": "ExampleappDynamoconsumer"
+                },
+                "FunctionVersion": {
+                    "Fn::GetAtt": [
+                        "DynamoconsumerVersion",
+                        "Version"
+                    ]
+                },
+                "Name": "Current",
+                "S3ObjectVersion": {
+                    "Ref": "DynamoconsumerS3Version"
+                },
+                "ServiceToken": {
+                    "Fn::GetAtt": [
+                        "CloudformationLambdaAlias",
+                        "Arn"
+                    ]
+                }
+            },
+            "Type": "Custom::LambdaAlias"
         },
         "DynamoconsumerRole": {
             "Properties": {
@@ -225,6 +280,139 @@
             },
             "Type": "AWS::Lambda::Function"
         },
+        "LambdaAliasCurrentalias": {
+            "Properties": {
+                "FunctionName": {
+                    "Ref": "CloudformationLambdaAlias"
+                },
+                "FunctionVersion": {
+                    "Fn::GetAtt": [
+                        "LambdaAliasVersion",
+                        "Version"
+                    ]
+                },
+                "Name": "Current",
+                "S3ObjectVersion": {
+                    "Ref": "LambdaAliasS3Version"
+                },
+                "ServiceToken": {
+                    "Fn::GetAtt": [
+                        "CloudformationLambdaAlias",
+                        "Arn"
+                    ]
+                }
+            },
+            "Type": "Custom::LambdaAlias"
+        },
+        "LambdaAliasRole": {
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Statement": [
+                        {
+                            "Action": [
+                                "sts:AssumeRole"
+                            ],
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": [
+                                    "lambda.amazonaws.com"
+                                ]
+                            }
+                        }
+                    ],
+                    "Version": "2012-10-17"
+                },
+                "Policies": [
+                    {
+                        "PolicyDocument": {
+                            "Statement": [
+                                {
+                                    "Action": [
+                                        "lambda:InvokeFunction"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": [
+                                        "*"
+                                    ]
+                                },
+                                {
+                                    "Action": [
+                                        "logs:CreateLogGroup",
+                                        "logs:CreateLogStream",
+                                        "logs:PutLogEvents"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "arn:aws:logs:*:*:*"
+                                }
+                            ],
+                            "Version": "2012-10-17"
+                        },
+                        "PolicyName": "LambdaAliasLogsPolicy"
+                    },
+                    {
+                        "PolicyDocument": {
+                            "Statement": [
+                                {
+                                    "Action": [
+                                        "lambda:CreateAlias",
+                                        "lambda:DeleteAlias",
+                                        "lambda:GetAlias",
+                                        "lambda:ListAliases",
+                                        "lambda:UpdateAlias"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "arn:aws:lambda:*:*:*"
+                                }
+                            ],
+                            "Version": "2012-10-17"
+                        },
+                        "PolicyName": "LambdaAliasReadKinesisPolicy"
+                    }
+                ]
+            },
+            "Type": "AWS::IAM::Role"
+        },
+        "LambdaAliasVersion": {
+            "Properties": {
+                "FunctionName": {
+                    "Ref": "CloudformationLambdaAlias"
+                },
+                "S3ObjectVersion": {
+                    "Ref": "LambdaAliasS3Version"
+                },
+                "ServiceToken": {
+                    "Fn::GetAtt": [
+                        "CloudformationLambdaVersion",
+                        "Arn"
+                    ]
+                }
+            },
+            "Type": "Custom::LambdaVersion"
+        },
+        "LambdaVersionCurrentalias": {
+            "Properties": {
+                "FunctionName": {
+                    "Ref": "CloudformationLambdaVersion"
+                },
+                "FunctionVersion": {
+                    "Fn::GetAtt": [
+                        "LambdaVersionVersion",
+                        "Version"
+                    ]
+                },
+                "Name": "Current",
+                "S3ObjectVersion": {
+                    "Ref": "LambdaVersionS3Version"
+                },
+                "ServiceToken": {
+                    "Fn::GetAtt": [
+                        "CloudformationLambdaAlias",
+                        "Arn"
+                    ]
+                }
+            },
+            "Type": "Custom::LambdaAlias"
+        },
         "LambdaVersionRole": {
             "Properties": {
                 "AssumeRolePolicyDocument": {
@@ -306,6 +494,30 @@
                 }
             },
             "Type": "Custom::LambdaVersion"
+        },
+        "SleepCurrentalias": {
+            "Properties": {
+                "FunctionName": {
+                    "Ref": "CloudformationSleep"
+                },
+                "FunctionVersion": {
+                    "Fn::GetAtt": [
+                        "SleepVersion",
+                        "Version"
+                    ]
+                },
+                "Name": "Current",
+                "S3ObjectVersion": {
+                    "Ref": "SleepS3Version"
+                },
+                "ServiceToken": {
+                    "Fn::GetAtt": [
+                        "CloudformationLambdaAlias",
+                        "Arn"
+                    ]
+                }
+            },
+            "Type": "Custom::LambdaAlias"
         },
         "SleepRole": {
             "Properties": {
