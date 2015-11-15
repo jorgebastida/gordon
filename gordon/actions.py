@@ -27,7 +27,7 @@ class Serializable(object):
             if key in kwargs:
                 value = kwargs[key]
             elif required:
-                raise exceptions.ActionRequiredPropertyError(self.__class__.__name__, key)
+                raise exceptions.PropertyRequiredError(self.__class__.__name__, key)
             else:
                 value = default
                 if type(value) is type:

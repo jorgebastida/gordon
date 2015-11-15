@@ -36,7 +36,7 @@ class Lambda(base.BaseResource):
         elif extension == '.js':
             return NodeLambda(*args, **kwargs)
         else:
-            raise exceptions.InvalidLambdaCodeExtensionError(extension)
+            raise exceptions.InvalidLambdaCodeExtensionError(self.name, extension)
 
     def get_update_current_alias(self):
         return self._get_true_false('update_current_alias')
@@ -140,7 +140,7 @@ class Lambda(base.BaseResource):
         elif role is None:
             pass
         else:
-            raise exceptions.InvalidLambdaRoleError(role)
+            raise exceptions.InvalidLambdaRoleError(self.name, role)
 
         return iam.Role(
                 utils.valid_cloudformation_name(self.name, 'role'),

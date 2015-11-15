@@ -1,41 +1,72 @@
 class BaseGordonException(Exception):
-    pass
+
+    code = 1
+    hint = "Something went't wrong"
+
+    def get_hint(self):
+        return self.hint.format(*self.args)
+
 
 class ResourceSettingRequiredError(BaseGordonException):
-    pass
+    code = 2
+    hint = "Resource {} requires you to define '{}' in it's settings."
+
 
 class InvalidStreamStartingPositionError(BaseGordonException):
-    pass
+    code = 3
+    hint = "Resource {} starting position '{}' is invalid."
+
 
 class InvalidLambdaRoleError(BaseGordonException):
-    pass
+    hint = "Resource {} role is invalid '{}'."
+    code = 4
+
 
 class InvalidLambdaCodeExtensionError(BaseGordonException):
-    pass
+    hint = "Resource {} extension is invalid '{}'."
+    code = 5
 
-class ActionRequiredPropertyError(BaseGordonException):
-    pass
+
+class PropertyRequiredError(BaseGordonException):
+    hint = "Action {} requires you to define '{}' property."
+    code = 6
+
 
 class InvalidAppFormatError(BaseGordonException):
-    pass
+    hint = "Invalid app format {}."
+    code = 7
+
 
 class DuplicateResourceNameError(BaseGordonException):
-    pass
+    hint = "Duplicate resource error {} {}"
+    code = 8
+
 
 class ProjectNotBuildError(BaseGordonException):
-    pass
+    hint = "It looks you have not build your project yet! Run $ gordon build"
+    code = 9
+
 
 class AbnormalCloudFormationStatusError(BaseGordonException):
-    pass
+    hint = "Cloudformation status is {}, which is bad."
+    code = 10
+
 
 class ProjectDirectoryAlreadyExistsError(BaseGordonException):
-    pass
+    hint = "A directory with name '{}' already exists."
+    code = 11
+
 
 class AppDirectoryAlreadyExistsError(BaseGordonException):
-    pass
+    hint = "A directory with name '{}' already exists."
+    code = 12
+
 
 class UnknownProtocolError(BaseGordonException):
-    pass
-    
+    hint = "Unknown protocol {} with value {}."
+    code = 13
+
+
 class CloudFormationStackInProgressError(BaseGordonException):
-    pass
+    hint = "CloudFormation stack {} is in progress ({})."
+    code = 14

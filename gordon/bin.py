@@ -4,8 +4,11 @@ import argparse
 
 import boto3
 from botocore.client import ClientError
+from clint.textui import colored, puts
 
 from .core import Bootstrap, ProjectBuild, ProjectApply
+from .exceptions import BaseGordonException
+
 
 __version__ = "0.0.1"
 
@@ -64,6 +67,12 @@ def main(argv=None):
 
     path = os.getcwd()
     obj = options.cls(path=path, **vars(options))
-    getattr(obj, options.func)()
+    try:
+        getattr(obj, options.func)()
+    except BaseGordonException, exc:
+        puts(colored.red(exc.get_hint()))
+        return exc.code
+    except Exception:
+        raise
 
     return 0

@@ -235,7 +235,7 @@ def create_or_update_cf_stack(name, template_filename, context=None, **kwargs):
     stack = get_cf_stack(name)
 
     if stack and stack['StackStatus'] in IN_PROGRESS_STATUS:
-        raise exceptions.CloudFormationStackInProgressError()
+        raise exceptions.CloudFormationStackInProgressError(stack, stack['StackStatus'])
 
     if stack:
         print "update stack"

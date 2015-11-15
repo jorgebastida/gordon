@@ -55,7 +55,7 @@ class BaseResource(object):
         self.settings = settings
         for key in self.required_settings:
             if key not in self.settings:
-                raise exceptions.ResourceSettingRequiredError(key)
+                raise exceptions.ResourceSettingRequiredError(self.name, key)
 
         # Resources can be defined both at project and app level.
         # Resources defined at app level get the name of the app prepend
@@ -184,7 +184,7 @@ class BaseStream(BaseResource):
         position = self.settings.get('starting_position')
         if position in self.VALID_STARTING_POSITIONS:
             return position
-        raise exceptions.InvalidStreamStartingPositionError(position)
+        raise exceptions.InvalidStreamStartingPositionError(self.name, position)
 
     def get_function_name(self):
         """Returns a reference to the lambda which will process this stream."""
