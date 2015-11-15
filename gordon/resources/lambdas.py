@@ -159,7 +159,7 @@ class Lambda(base.BaseResource):
 
     def get_bucket_key(self):
         """Return the S3 bucket key for this lambda."""
-        return "{}.zip".format(self.name)
+        return "{}.zip".format(self.in_project_name.replace('.', '_'))
 
     def _collect_requirements(self, destination):
         """Collect runtime specific requirements."""
@@ -418,7 +418,7 @@ class PythonLambda(Lambda):
             f.write("[install]\nprefix=")
 
         for requirement in self.get_requirements():
-            subprocess.call("pip install {} -t {}".format(requirement, destination), shell=True)
+            subprocess.check_output("pip install -q {} -t {}".format(requirement, destination), shell=True, stderr=subprocess.STDOUT)
 
         for name in os.listdir(destination):
             dist_dir = os.path.join(destination, name)
@@ -438,4 +438,4 @@ class NodeLambda(Lambda):
         """Collect node requirements using ``npm``"""
 
         for requirement in self.get_requirements():
-            subprocess.call("cd {} && npm install {}".format(destination, requirement), shell=True)
+            subprocess.check_output("cd {} && npm install {}".format(destination, requirement), shell=True, stderr=subprocess.STDOUT)

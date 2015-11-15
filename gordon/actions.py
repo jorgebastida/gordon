@@ -1,8 +1,10 @@
+# -*- coding: utf-8 -*-
 import os
 import json
 import hashlib
 
 import boto3
+from clint.textui import colored, puts
 
 from gordon import utils
 
@@ -173,7 +175,6 @@ class UploadToS3(BaseAction):
         return self.apply_general()
 
     def apply_general(self, metadata=None):
-        print "Uploading", self.name, self.bucket, self.key
         s3 = boto3.resource('s3')
         obj = s3.Object(self.bucket, self.key)
 
@@ -182,6 +183,7 @@ class UploadToS3(BaseAction):
             extraargs = {'Metadata': metadata}
 
         obj.upload_file(self.filename, ExtraArgs=extraargs)
+        self._success(metadata.get('sha1'))
         return self.output(obj.version_id)
 
     def output(self, version):
@@ -206,8 +208,11 @@ class UploadToS3(BaseAction):
         zipmetadata = utils.get_zip_metadata(self.filename)
         if obj:
             if zipmetadata.get('sha1') and zipmetadata.get('sha1') == obj['Metadata'].get('sha1'):
-                print "Local .zip metadata and current S3 file metadata are equal!"
+                self._success(zipmetadata.get('sha1'))
                 return self.output(obj['VersionId'])
             else:
                 print "Local .zip metadata and current S3 file metadata are NOT equal!"
         return self.apply_general(metadata=zipmetadata)
+
+    def _success(self, metadata):
+        puts(colored.green(u"✓ {} ({})".format(os.path.relpath(self.filename, self.project.build_path), metadata[:8])))

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 import re
 import json
@@ -10,6 +11,7 @@ import boto3
 import jinja2
 import troposphere
 from troposphere import iam, awslambda, s3
+from clint.textui import colored, puts, progress, indent
 
 from . import exceptions
 from . import utils
@@ -42,6 +44,10 @@ class BaseResourceContainer(object):
                     'project': getattr(self, 'project', None) or self,
                     'app': self if hasattr(self, 'project') else None,
                 }
+
+                with indent(4 if hasattr(self, 'project') else 2):
+                    puts(colored.green(u"✓ {}".format(name)))
+
                 self._resources[resource_type].append(
                     resource_cls.factory(
                         name=name,
@@ -111,7 +117,9 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
         self.applications = []
         self._in_project_resource_references = {}
         BaseProject.__init__(self, *args, **kwargs)
+        puts(colored.blue("Loading project resources"))
         BaseResourceContainer.__init__(self, *args, **kwargs)
+        puts(colored.blue("Loading installed applications"))
         self._load_installed_applications()
 
     def _load_installed_applications(self):
@@ -142,6 +150,9 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
                 settings = application.values()[0]
             else:
                 raise exceptions.InvalidAppFormatError(application)
+
+            with indent(2):
+                puts(colored.cyan("{}:".format(application_name)))
 
             self.applications.append(
                 App(
@@ -175,15 +186,19 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
 
     def build(self):
         """Build current current project"""
+        puts(colored.blue("Building project..."))
+
         if os.path.exists(self.build_path):
             shutil.rmtree(self.build_path)
         os.makedirs(self.build_path)
-        self._reset_build_sequence_id()
-        self._build_pre_project_template()
-        self._build_project_template()
-        self._build_pre_resources_template()
-        self._build_resources_template()
-        self._build_post_resources_template()
+
+        with indent(2):
+            self._reset_build_sequence_id()
+            self._build_pre_project_template()
+            self._build_project_template()
+            self._build_pre_resources_template()
+            self._build_resources_template()
+            self._build_post_resources_template()
 
     def _reset_build_sequence_id(self):
         self._build_sequence = 0
@@ -226,6 +241,7 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
 
         if template:
             output_filename = output_filename.format(self._get_next_build_sequence_id())
+            puts(colored.green(u"✓ {}".format(output_filename)))
             with open(os.path.join(self.build_path, output_filename), 'w') as f:
                 f.write(template.to_json(indent=4))
 
@@ -243,6 +259,7 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
 
         template = utils.fix_troposphere_references(template)
 
+        puts(colored.green(u"✓ {}".format(output_filename)))
         with open(os.path.join(self.build_path, output_filename), 'w') as f:
             f.write(template.to_json())
 
@@ -258,6 +275,7 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
 
         if template:
             output_filename = output_filename.format(self._get_next_build_sequence_id())
+            puts(colored.green(u"✓ {}".format(output_filename)))
             with open(os.path.join(self.build_path, output_filename), 'w') as f:
                 f.write(template.to_json(indent=4))
 
@@ -276,6 +294,7 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
 
         if template:
             output_filename = output_filename.format(self._get_next_build_sequence_id())
+            puts(colored.green(u"✓ {}".format(output_filename)))
             with open(os.path.join(self.build_path, output_filename), 'w') as f:
                 f.write(template.to_json())
 
@@ -292,6 +311,7 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
 
         if template:
             output_filename = output_filename.format(self._get_next_build_sequence_id())
+            puts(colored.green(u"✓ {}".format(output_filename)))
             with open(os.path.join(self.build_path, output_filename), 'w') as f:
                 f.write(template.to_json(indent=4))
 
@@ -309,6 +329,8 @@ class ProjectApply(BaseProject):
         them. Use the output of each of them to populate the context of the
         subsequent templates."""
 
+        puts(colored.blue("Applying project..."))
+
         if not os.path.exists(self.build_path):
             raise exceptions.ProjectNotBuildError()
 
@@ -321,7 +343,7 @@ class ProjectApply(BaseProject):
             with open(os.path.join(self.build_path, filename), 'r') as f:
                 template = json.loads(f.read())
 
-            template_type = 'custom' if '_type' in template else 'cf'
+            template_type = 'custom' if '_type' in template else 'cloudformation'
             steps.append((int(match.groups()[0]), match.groups()[1], filename, template_type))
             steps = sorted(steps, key=lambda x:x[0])
 
@@ -329,7 +351,10 @@ class ProjectApply(BaseProject):
         context.update(self.collect_parameters())
 
         for (number, name, filename, template_type) in steps:
-            getattr(self, 'apply_{}_template'.format(template_type))(name, filename, context)
+            with indent(2):
+                puts(colored.cyan("{} ({})".format(filename, template_type)))
+            with indent(4):
+                getattr(self, 'apply_{}_template'.format(template_type))(name, filename, context)
 
     def collect_parameters(self):
         """Collect parameters from both the ``common.yml`` parameters file and
@@ -370,7 +395,7 @@ class ProjectApply(BaseProject):
         for key, value in outputs.iteritems():
             context[key] = value
 
-    def apply_cf_template(self, name, filename, context):
+    def apply_cloudformation_template(self, name, filename, context):
         """Apply ``filename`` template with ``context``-"""
         stack_name = '-'.join([context['Stage'], self.name, name])
         stack = utils.create_or_update_cf_stack(

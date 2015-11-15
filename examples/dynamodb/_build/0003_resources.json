@@ -39,7 +39,7 @@
                     "S3Bucket": {
                         "Ref": "CodeBucket"
                     },
-                    "S3Key": "lambda_alias.zip",
+                    "S3Key": "cloudformation_lambda_alias.zip",
                     "S3ObjectVersion": {
                         "Ref": "LambdaAliasS3Version"
                     }
@@ -67,7 +67,7 @@
                     "S3Bucket": {
                         "Ref": "CodeBucket"
                     },
-                    "S3Key": "lambda_version.zip",
+                    "S3Key": "cloudformation_lambda_version.zip",
                     "S3ObjectVersion": {
                         "Ref": "LambdaVersionS3Version"
                     }
@@ -95,7 +95,7 @@
                     "S3Bucket": {
                         "Ref": "CodeBucket"
                     },
-                    "S3Key": "sleep.zip",
+                    "S3Key": "cloudformation_sleep.zip",
                     "S3ObjectVersion": {
                         "Ref": "SleepS3Version"
                     }
@@ -261,7 +261,7 @@
                     "S3Bucket": {
                         "Ref": "CodeBucket"
                     },
-                    "S3Key": "dynamoconsumer.zip",
+                    "S3Key": "exampleapp_dynamoconsumer.zip",
                     "S3ObjectVersion": {
                         "Ref": "DynamoconsumerS3Version"
                     }
@@ -357,7 +357,6 @@
                                         "lambda:CreateAlias",
                                         "lambda:DeleteAlias",
                                         "lambda:GetAlias",
-                                        "lambda:ListAliases",
                                         "lambda:UpdateAlias"
                                     ],
                                     "Effect": "Allow",

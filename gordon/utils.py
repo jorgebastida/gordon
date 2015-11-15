@@ -1,5 +1,7 @@
+# -*- coding: utf-8 -*-
 import os
 import re
+import sys
 import time
 import copy
 import json
@@ -12,9 +14,15 @@ import yaml
 import jinja2
 import troposphere
 from troposphere import cloudformation, Join, Ref
+from clint.textui import colored, puts, progress, indent
 
 from . import exceptions
 
+MILL_CHARS = ['|', '/', '-', '\\']
+
+def mill(iterable):
+    for i, elem in enumerate(iterable):
+        yield MILL_CHARS[i % len(MILL_CHARS)], elem
 
 def get_zip_metadata(filename, metadata_filename='.metadata'):
     zfile = zipfile.ZipFile(filename)
@@ -22,7 +30,6 @@ def get_zip_metadata(filename, metadata_filename='.metadata'):
         return json.loads(zfile.read(metadata_filename))
     except Exception:
         return {}
-
 
 def file_hash(filename):
     with open(filename, 'rb') as f:
@@ -34,7 +41,6 @@ def tree_hash(path):
         relative = os.path.relpath(root, path)
         for filename in sorted(files):
             digest.update(os.path.join(relative, filename))
-            print os.path.join(relative, filename)
             with open(os.path.join(root, filename), 'rb') as f:
                 digest.update(f.read())
     return digest.hexdigest()
@@ -204,6 +210,7 @@ def update_stack(name, template_filename, context, **kwargs):
         )
     except ClientError, e:
         if e.response['Error']['Message'] == 'No updates are to be performed.':
+            puts(colored.green('✓ No updates are to be performed.'))
             return get_cf_stack(name)
         raise
 
@@ -216,16 +223,22 @@ def wait_for_cf_status(stack_id, success_if, abort_if, every=1, limit=60 * 15):
     ``abort_if``.
     """
     client = boto3.client('cloudformation')
-    for i in xrange(0, limit, every):
+    clean_output = False
+    for m, i in mill(xrange(0, limit, every)):
         stack = get_cf_stack(name=stack_id)
         if stack:
             stack_status = stack['StackStatus']
             if stack_status in success_if:
+                if clean_output:
+                    puts("")
                 return stack
             elif stack_status in abort_if:
                 raise exceptions.AbnormalCloudFormationStatusError(stack, success_if, abort_if)
-            print stack_status, "waiting..."
+            clean_output = True
+            puts("\r    {} waiting... {}".format(colored.green(stack_status), m), newline=False)
+            sys.stdout.flush()
         time.sleep(every)
+    puts("")
 
 
 def create_or_update_cf_stack(name, template_filename, context=None, **kwargs):
@@ -238,11 +251,9 @@ def create_or_update_cf_stack(name, template_filename, context=None, **kwargs):
         raise exceptions.CloudFormationStackInProgressError(stack, stack['StackStatus'])
 
     if stack:
-        print "update stack"
         stack = update_stack(name, template_filename, context=context, **kwargs)
         stack = wait_for_cf_status(stack['StackId'], POSITIVE_CF_STATUS, NEGATIVE_CF_STATUS)
     else:
-        print "create stack"
         stack = create_stack(name, template_filename, context=context, **kwargs)
         stack = wait_for_cf_status(stack['StackId'], ('CREATE_COMPLETE',), NEGATIVE_CF_STATUS)
 
