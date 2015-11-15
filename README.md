@@ -14,11 +14,12 @@ $ gordon build
 $ gordon apply [--stage=dev|prod|...]
 ```
 
+
 Why?
 ------
-In an ideal world, this project should not exits. AWS Lambdas (as any other AWS resource) should be provisioned using CloudFormation - One of the best advantages of using AWS is not it's scalability nor the fancy services... ain't the price; It is the fact that reproducibility is at it's core and their ecosystem is full of services which encourage/enforce it. Their flagship is CloudFormation.
+In an ideal world, this project should not exits. AWS Lambdas (as any other AWS resource) should be provisioned using CloudFormation - One of the best advantages of using AWS (imho) is not it's scalability nor the fancy services... ain't the price; It is the fact that reproducibility is at it's core and their ecosystem is full of services which encourage/enforce it. Their flagship is CloudFormation.
 
-Then... why not use CloudFormation? Well, there are two reasons: First, not all AWS APIs are released when services are announced... ain't frameworks (boto3), ain't their integration with CloudFormation. You could wait for them to get released... but ain't nobody got time for that!
+Then... why not use CloudFormation? Well, there are two reasons: First, not all AWS APIs are released when services are announced... ain't frameworks (boto3), nor integrations with CloudFormation.
 
 The second reason is complexity. CloudFormation stacks are defined using JSON templates which are a nightmare to write and maintain.
 
@@ -32,6 +33,12 @@ Because eventually you'll stop using it -ish. Once CloudFormation supports 100% 
 
 How it works
 -------------
-It is easy - we want as much as possible to happen on CloudFormation, so every single thing which could be done with it... will be done with it. Any other resource or integration will be done as part of a pre or post script, before the stack is applied or after it succeeds. (The internals are slightly more complex, but that's pretty much it).
+It is easy - we want as much as possible to happen on CloudFormation, so every single thing which could be done with it... will be done with it.
 
-You should not worry about what happens where, and you should focus of developing whatever your product is. As soon as new APIs are released or CloudFormation get's new fancy stuff we'll do as much as possible to reduce the bolierplate.
+If you are interested in the details, I would recommend you to read ``gordon/contrib/cloudFormation/settings.yml``. That's where all the pain is.
+
+Yes, we eat our own dog food; We use gordon to create gordon. The idea is that, (unlike many other projects), we don't think streaming API commands to AWS is a nice solution to leverage the gaps in the CloudFormation API, so instead, we fill the gaps with custom CloudFormation resources which look like how AWS will implement them -ish ;)
+
+Those Custom CloudFormation resources are implemented using Lambdas (deployed by gordon)... crazy uh?!
+
+Why all this madness? Again... because reproducibility. If you manage some resources using CloudFormation, and some others streaming API commands, when you try to decommission your environment... you are pretty much f***, and you MUST use the original tool to (hopefully) delete all resources. With Gordon this is not a problem. You delete our CloudFormation stacks and all our sh** is gone.
