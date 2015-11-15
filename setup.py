@@ -28,7 +28,7 @@ setup(
     license='BSD',
     author='Jorge Bastida',
     author_email='me@jorgebastida.com',
-    description='gordon is a simple framework for creating server-less applications using AWS services',
+    description='Gordon is a high-level framework to create, wire and deploy AWS Lambdas in an easy way.',
     keywords="aws lambda api gateway",
     packages=find_packages(),
     platforms='any',

@@ -14,17 +14,6 @@ $ gordon build
 $ gordon apply [--stage=dev|prod|...]
 ```
 
-
-Why?
-------
-In an ideal world, this project should not exits. AWS Lambdas (as any other AWS resource) should be provisioned using CloudFormation - One of the best advantages of using AWS (imho) is not it's scalability nor the fancy services... ain't the price; It is the fact that reproducibility is at it's core and their ecosystem is full of services which encourage/enforce it. Their flagship is CloudFormation.
-
-Then... why not use CloudFormation? Well, there are two reasons: First, not all AWS APIs are released when services are announced... ain't frameworks (boto3), nor integrations with CloudFormation.
-
-The second reason is complexity. CloudFormation stacks are defined using JSON templates which are a nightmare to write and maintain.
-
-This project tries to solve these two issues by working around the lack of CloudFormation/Framework APIs (keeping in mind they will happen eventually) and trying to create a high level abstraction on top of CloudFormation so people without a deep understanding of it can write and deploy lambdas without shooting their foot.
-
 Features
 ---------
 * 100% CloudFormation resource creation.
@@ -43,6 +32,17 @@ Features
   * Environment variables
   * ARN translation helpers (``dynamodb-starswith://clients-``, ``dynamodb-endswith://-clients``, ``dynamodb-match://clients-`` ...)
 * Love
+
+Why?
+------
+In an ideal world, this project should not exits. AWS Lambdas (as any other AWS resource) should be provisioned using CloudFormation - One of the best advantages of using AWS (imho) is not it's scalability nor the fancy services... ain't the price; It is the fact that reproducibility is at it's core and their ecosystem is full of services which encourage/enforce it. Their flagship is CloudFormation.
+
+Then... why not use CloudFormation? Well, there are two reasons: First, not all AWS APIs are released when services are announced... ain't frameworks (boto3), nor integrations with CloudFormation.
+
+The second reason is complexity. CloudFormation stacks are defined using JSON templates which are a nightmare to write and maintain.
+
+This project tries to solve these two issues by working around the lack of CloudFormation/Framework APIs (keeping in mind they will happen eventually) and trying to create a high level abstraction on top of CloudFormation so people without a deep understanding of it can write and deploy lambdas without shooting their foot.
+
 
 Why should you use this project?
 -----------------------------------
