@@ -153,8 +153,12 @@ class UploadToS3(BaseAction):
         key = self._get('key', context)
         filename = os.path.join(project.build_path, self._get('filename', context))
 
-        print "Uploading", self.name, self.bucket, self.key
+        s3client = boto3.client('s3')
+        etag = utils.s3etag(filename)
+        obj = s3client.get_object(Bucket=bucket, Key=key, IfMatch=etag)
+        import ipdb; ipdb.set_trace()
 
+        print "Uploading", self.name, self.bucket, self.key
         s3 = boto3.resource('s3')
         obj = s3.Object(bucket, key)
         obj.upload_file(filename)

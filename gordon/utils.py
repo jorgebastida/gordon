@@ -15,6 +15,13 @@ from troposphere import cloudformation, Join, Ref
 from . import exceptions
 
 
+def s3etag(filename):
+    """Calculate the ETAG (md5) of a file. Apparantly s3 does a different thing
+    for files >5GB... which I hope nobody is going to use as a lambda."""
+    with open(filename, 'rb') as f:
+        return hashlib.md5(f.read()).hexdigest()
+
+
 NEGATIVE_CF_STATUS = (
     'CREATE_FAILED', 'DELETE_FAILED', 'ROLLBACK_FAILED',
     'UPDATE_ROLLBACK_FAILED', 'UPDATE_ROLLBACK_COMPLETE',
