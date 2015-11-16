@@ -2,5 +2,5 @@
 project: {{ project_name }}
 default-region: {{ default_region }}
 apps:
-  - gordon.contrib.utils
+  - gordon.contrib.cloudformation
 # - my_first_app
