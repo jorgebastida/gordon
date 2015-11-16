@@ -14,3 +14,9 @@ Development version
 -------------------
 
 The source code of Gordon is available on Github `https://github.com/jorgebastida/gordon/ <https://github.com/jorgebastida/gordon/>`_.
+
+
+What next?
+-----------
+
+Give it a look to the :doc:`quickstart` where you'll create your first Gordon project!

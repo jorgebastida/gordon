@@ -9,6 +9,13 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+   installation
+   quickstart
+   project
+   apps
+   resources
+   tutorials
+
 
 Indices and tables
 ==================
