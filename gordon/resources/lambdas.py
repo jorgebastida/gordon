@@ -13,7 +13,7 @@ from troposphere import iam, awslambda, s3
 from gordon import actions
 from gordon import utils
 from gordon import exceptions
-from gordon.contrib.cloudformation.resources import LambdaVersion, LambdaAlias
+from gordon.contrib.lambdas.resources import LambdaVersion, LambdaAlias
 from . import base
 
 
@@ -36,6 +36,7 @@ class Lambda(base.BaseResource):
         elif extension == '.js':
             return NodeLambda(*args, **kwargs)
         else:
+            # TODO: Fix this self.name
             raise exceptions.InvalidLambdaCodeExtensionError(self.name, extension)
 
     def get_update_current_alias(self):
@@ -322,7 +323,7 @@ class Lambda(base.BaseResource):
             LambdaVersion.create_with(
                 utils.valid_cloudformation_name(self.name, "Version"),
                 lambda_arn=troposphere.GetAtt(
-                    self.project.reference('cloudformation.lambda_version'), 'Arn'
+                    self.project.reference('lambdas.lambda_version'), 'Arn'
                 ),
                 FunctionName=troposphere.Ref(
                     function
@@ -338,7 +339,7 @@ class Lambda(base.BaseResource):
                 LambdaAlias.create_with(
                     utils.valid_cloudformation_name(self.name, "CurrentAlias"),
                     lambda_arn=troposphere.GetAtt(
-                        self.project.reference('cloudformation.lambda_alias'), 'Arn'
+                        self.project.reference('lambdas.lambda_alias'), 'Arn'
                     ),
                     FunctionName=troposphere.Ref(
                         function

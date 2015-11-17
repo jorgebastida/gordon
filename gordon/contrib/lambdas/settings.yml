@@ -1,8 +1,4 @@
 lambdas:
-  sleep:
-    code: sleep.py
-    description: Sleeps several seconds before succeeding.
-    timeout: 300
 
   lambda_version:
     code: lambda_version.py

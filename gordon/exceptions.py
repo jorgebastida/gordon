@@ -93,3 +93,10 @@ class UnknownProtocolError(BaseGordonException):
 class CloudFormationStackInProgressError(BaseGordonException):
     hint = "CloudFormation stack {} is in progress ({})."
     code = 14
+
+
+class ResourceValidationError(BaseGordonException):
+    code = 15
+
+    def get_hint(self):
+        return self.args[0]

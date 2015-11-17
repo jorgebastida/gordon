@@ -1,0 +1,75 @@
+---
+project: s3example
+default-region: eu-west-1
+apps:
+  - gordon.contrib.helpers
+  - gordon.contrib.lambdas
+  - gordon.contrib.s3
+  - exampleapp
+
+s3:
+  example_s3_integration:
+    bucket: xxx
+    notifications:
+
+      - id: lambda_on_remove
+        lambda: exampleapp.s3consumer
+        events:
+          - s3:ObjectRemoved:*
+        key_filters:
+          - prefix: a
+
+      - id: topic_on_all_create
+        topic: yyyy
+        events:
+          - s3:ObjectCreated:*
+        key_filters:
+          - prefix: a
+
+      - id: queue_on_lost
+        queue: zzzz
+        events:
+        # - s3:ObjectCreated:*
+        # - s3:ObjectCreated:Put
+        # - s3:ObjectCreated:Post
+        # - s3:ObjectCreated:Copy
+        # - s3:ObjectCreated:CompleteMultipartUpload
+        # - s3:ObjectRemoved:*
+        # - s3:ObjectRemoved:Delete
+        # - s3:ObjectRemoved:DeleteMarkerCreated
+          - s3:ReducedRedundancyLostObject
+        key_filters:
+          - prefix: a
+          - suffix: c
+#
+#
+# s3:
+#   bucket: xxx
+#     notfications:
+#
+#       test_lambda:
+#         lambda: exampleapp.s3consumer
+#         # topic: xxx
+#         # queue: xxx
+#         events:
+#           - s3:ObjectCreated:*
+#           # - s3:ObjectCreated:Put
+#           # - s3:ObjectCreated:Post
+#           # - s3:ObjectCreated:Copy
+#           # - s3:ObjectCreated:CompleteMultipartUpload
+#           # - s3:ObjectRemoved:*
+#           # - s3:ObjectRemoved:Delete
+#           # - s3:ObjectRemoved:DeleteMarkerCreated
+#           # - s3:ReducedRedundancyLostObject
+#         key_filters:
+#           - prefix: a
+#           - prefix: b
+#           - suffix: c
+#
+#     #
+#     # filter:
+#     #   Key:
+#     #     FilterRules:
+#     #       -
+#     #         name: prefix
+#     #         value: hola

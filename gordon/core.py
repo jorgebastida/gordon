@@ -24,7 +24,8 @@ SETTINGS_FILE = 'settings.yml'
 AVAILABLE_RESOURCES = {
     'lambdas': resources.lambdas.Lambda,
     'dynamodb': resources.dynamodb.Dynamodb,
-    'kinesis': resources.kinesis.Kinesis
+    'kinesis': resources.kinesis.Kinesis,
+    's3': resources.s3.BucketNotificationConfiguration,
 }
 
 

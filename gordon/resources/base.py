@@ -4,7 +4,7 @@ import troposphere
 from troposphere import iam, awslambda, s3, GetAtt
 
 from gordon import utils
-from gordon.contrib.cloudformation.resources import Sleep
+from gordon.contrib.helpers.resources import Sleep
 from gordon import exceptions
 
 
@@ -156,6 +156,14 @@ class BaseResource(object):
     def _get_true_false(self, field, default='t'):
         """Returns if this stream is enable or not."""
         return str(self.settings.get(field, default)).lower()[0] == 't'
+
+    def validate(self):
+        """Check if the current resource can co-exist with the rest of the
+        resources in the project. This is not suppose to be a thoughtful
+        validation, but a safe net to make people experience better.
+        If any validation error is found, this method must raise a
+        ResourceValidationError exception otherwise, do nothing"""
+        pass
 
 
 class BaseStream(BaseResource):

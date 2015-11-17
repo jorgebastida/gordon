@@ -1,0 +1,19 @@
+lambdas:
+
+  bucket_notification_configuration:
+    code: bucket_notification_configuration.py
+    description: Manages Bucket Notification Configurations
+    timeout: 300
+    policies:
+      read_kinesis:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Action:
+              - "lambda:PutBucketNotification"
+              - "lambda:GetBucketNotification"
+            Resource: "arn:aws:s3:*:*:*"
+            Effect: "Allow"
+
+python_requirements:
+  - cfn-response
