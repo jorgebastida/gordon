@@ -13,7 +13,8 @@ Contents:
    quickstart
    project
    apps
-   resources
+   lambdas
+   integrations/index
    tutorials
 
 

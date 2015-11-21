@@ -21,14 +21,26 @@ s3:
           - prefix: a
           - suffix: b
 
-      - id: queue_on_delete
-        queue: gordon-test
+      - id: topic_on_delete
+        topic: gordon-test
         # queue:
         #   name: gordon-test
         #   account_id: 936837623851
         #queue: arn:aws:sqs:eu-west-1:936837623851:gordon-test
         events:
           - s3:ObjectRemoved:*
+
+      # - id: queue_on_delete
+      #   queue:
+      #     name: gordon-test
+      #     account_id: 936837623851
+      #   # queue:
+      #   #   name: gordon-test
+      #   #   account_id: 936837623851
+      #   #queue: arn:aws:sqs:eu-west-1:936837623851:gordon-test
+      #   events:
+      #     - s3:ObjectRemoved:*
+
 
       # - id: topic_on_all_create
       #   topic: yyyy

@@ -2,8 +2,7 @@ import re
 from collections import defaultdict, Counter
 
 import troposphere
-from troposphere import awslambda
-from troposphere import sqs
+from troposphere import sqs, sns, awslambda
 from . import base
 from gordon import exceptions
 from gordon import utils
@@ -112,16 +111,17 @@ class QueueNotification(BaseNotification):
 
     def get_destination_arn(self):
         destination = self.settings['queue']
-        if destination.startswith('arn:aws:'):
-            return destination
-
         region = troposphere.Ref(troposphere.AWS_REGION)
 
         if isinstance(destination, basestring):
+            if destination.startswith('arn:aws:'):
+                return destination
             account = troposphere.Ref(troposphere.AWS_ACCOUNT_ID)
         elif isinstance(destination, dict):
             account = destination['account_id']
             destination = destination['name']
+        else:
+            return destination
 
         return troposphere.Join(":", [
             "arn:aws:sqs",
@@ -132,16 +132,17 @@ class QueueNotification(BaseNotification):
 
     def get_destination_url(self):
         destination = self.settings['queue']
-        if destination.startswith('arn:aws:'):
-            return destination
-
         region = troposphere.Ref(troposphere.AWS_REGION)
 
         if isinstance(destination, basestring):
             account = troposphere.Ref(troposphere.AWS_ACCOUNT_ID)
+            if destination.startswith('arn:aws:'):
+                destination = bucket.rsplit(':', 1)[1]
         elif isinstance(destination, dict):
             account = destination['account_id']
             destination = destination['name']
+        else:
+            return destination
 
         return troposphere.Join("", [
             "https://sqs.",
@@ -183,7 +184,52 @@ class TopicNotification(BaseNotification):
     api_property = 'TopicConfigurations'
 
     def get_destination_arn(self):
-        pass
+        destination = self.settings['topic']
+        region = troposphere.Ref(troposphere.AWS_REGION)
+
+        if isinstance(destination, basestring):
+            if destination.startswith('arn:aws:'):
+                return destination
+            account = troposphere.Ref(troposphere.AWS_ACCOUNT_ID)
+        elif isinstance(destination, dict):
+            account = destination['account_id']
+            destination = destination['name']
+        else:
+            return destination
+            
+        return troposphere.Join(":", [
+            "arn:aws:sns",
+            troposphere.Ref(troposphere.AWS_REGION),
+            troposphere.Ref(troposphere.AWS_ACCOUNT_ID),
+            destination
+        ])
+
+    def register_destination_publish_permission(self, template):
+        template.add_resource(
+            sns.TopicPolicy(
+                utils.valid_cloudformation_name(
+                    self.bucket_notification_configuration.name,
+                    self.id,
+                    'permission'
+                ),
+                Topics=[self.get_destination_arn()],
+                PolicyDocument={
+                    "Version": "2008-10-17",
+                    "Id": "PublicationPolicy",
+                    "Statement": [{
+                        "Effect": "Allow",
+                        "Principal": {
+                          "AWS": "*"
+                        },
+                        "Action": ["sns:Publish"],
+                        "Resource": self.get_destination_arn(),
+                        "Condition": {
+                            "ArnEquals": {"aws:SourceArn": self.bucket_notification_configuration.get_bucket_arn()}
+                        }
+                    }]
+                }
+            )
+        )
 
 
 class BucketNotificationConfiguration(base.BaseResource):

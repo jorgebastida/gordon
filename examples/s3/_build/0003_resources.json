@@ -174,13 +174,19 @@
                         ]
                     }
                 ],
-                "QueueConfigurations": [
+                "ServiceToken": {
+                    "Fn::GetAtt": [
+                        "S3BucketNotificationConfiguration",
+                        "Arn"
+                    ]
+                },
+                "TopicConfigurations": [
                     {
                         "DestinationArn": {
                             "Fn::Join": [
                                 ":",
                                 [
-                                    "arn:aws:sqs",
+                                    "arn:aws:sns",
                                     {
                                         "Ref": "AWS::Region"
                                     },
@@ -199,30 +205,40 @@
                                 "-",
                                 [
                                     "gordon",
-                                    "queue_on_delete"
+                                    "topic_on_delete"
                                 ]
                             ]
                         },
                         "KeyFilters": []
                     }
-                ],
-                "ServiceToken": {
-                    "Fn::GetAtt": [
-                        "S3BucketNotificationConfiguration",
-                        "Arn"
-                    ]
-                }
+                ]
             },
             "Type": "Custom::S3BucketNotificationConfiguration"
         },
-        "ExampleS3IntegrationQueueOnDeletePermission": {
+        "ExampleS3IntegrationS3ConsumerOnCreate2Permission": {
+            "Properties": {
+                "Action": "lambda:InvokeFunction",
+                "FunctionName": {
+                    "Fn::GetAtt": [
+                        "ExampleappS3Consumer",
+                        "Arn"
+                    ]
+                },
+                "Principal": "s3.amazonaws.com",
+                "SourceAccount": {
+                    "Ref": "AWS::AccountId"
+                }
+            },
+            "Type": "AWS::Lambda::Permission"
+        },
+        "ExampleS3IntegrationTopicOnDeletePermission": {
             "Properties": {
                 "PolicyDocument": {
                     "Id": "PublicationPolicy",
                     "Statement": [
                         {
                             "Action": [
-                                "sqs:SendMessage"
+                                "sns:Publish"
                             ],
                             "Condition": {
                                 "ArnEquals": {
@@ -245,7 +261,7 @@
                                 "Fn::Join": [
                                     ":",
                                     [
-                                        "arn:aws:sqs",
+                                        "arn:aws:sns",
                                         {
                                             "Ref": "AWS::Region"
                                         },
@@ -260,43 +276,25 @@
                     ],
                     "Version": "2008-10-17"
                 },
-                "Queues": [
+                "Topics": [
                     {
                         "Fn::Join": [
-                            "",
+                            ":",
                             [
-                                "https://sqs.",
+                                "arn:aws:sns",
                                 {
                                     "Ref": "AWS::Region"
                                 },
-                                ".amazonaws.com/",
                                 {
                                     "Ref": "AWS::AccountId"
                                 },
-                                "/",
                                 "gordon-test"
                             ]
                         ]
                     }
                 ]
             },
-            "Type": "AWS::SQS::QueuePolicy"
-        },
-        "ExampleS3IntegrationS3ConsumerOnCreate2Permission": {
-            "Properties": {
-                "Action": "lambda:InvokeFunction",
-                "FunctionName": {
-                    "Fn::GetAtt": [
-                        "ExampleappS3Consumer",
-                        "Arn"
-                    ]
-                },
-                "Principal": "s3.amazonaws.com",
-                "SourceAccount": {
-                    "Ref": "AWS::AccountId"
-                }
-            },
-            "Type": "AWS::Lambda::Permission"
+            "Type": "AWS::SNS::TopicPolicy"
         },
         "ExampleappS3Consumer": {
             "DependsOn": [
