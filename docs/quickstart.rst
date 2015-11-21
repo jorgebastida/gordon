@@ -102,7 +102,36 @@ This command will have an output similar to:
       ✓ 0003_resources.json
 
 
-What is all this? ...
+What is all this? Well, without going into much detail, gordon has just decided that deploying you application implies three stages.
+ * ``0001_project.json`` gordon is going to create a s3 bucket where the code of your lambdas will be uploaded.
+ * ``0002_pre_resources.json`` gordon will upload the code of your lambdas to S3.
+ * ``0003_resources.json`` gordon will create your lambdas.
+
+But, should I care? **No** you should not really care much about what is going on. The only important part is that you'll now see a new ``_build`` directory in your project path. That directory contains everything gordon needs to put your lambdas live.
+
+
+Deploy your project
+---------------------
+
+Deploying a project is a as easy as using the ``apply`` command:
+
+.. code-block:: bash
+
+    $ gordon apply
+
+
+.. note::
+
+    It is important that you make your AWS credential available in your terminal before, so gordon can use them. For more information: :doc:`setup_aws`
+
+This command will have an output similar to:
+
+.. code-block:: bash
+
+    $ gordon apply
+    ...
+
+Your lambdas are ready to be used!
 
 What next?
 -----------

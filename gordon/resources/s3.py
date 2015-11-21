@@ -1,13 +1,189 @@
 import re
-from collections import defaultdict
+from collections import defaultdict, Counter
 
 import troposphere
-
+from troposphere import awslambda
+from troposphere import sqs
 from . import base
 from gordon import exceptions
 from gordon import utils
 from gordon.contrib.s3.resources import (S3BucketNotificationConfiguration,
     NotificationConfiguration, KeyFilter)
+
+
+class BaseNotification(object):
+
+    def __init__(self, bucket_notification_configuration, **kwargs):
+        self.settings = kwargs
+        self.bucket_notification_configuration = bucket_notification_configuration
+        self.events = []
+
+        # Validate all notifications have an id. This important because
+        # we'll rely on this id to create/modify/delete notifactions
+        if 'id' in self.settings:
+            self.id = self.settings['id']
+        else:
+            raise exceptions.ResourceValidationError(
+                ("You need to define an id which identifies the "
+                "notification {}").format(self.settings)
+            )
+
+        # Validate that events is present, and that it contains valid values
+        if 'events' in self.settings and self.settings['events']:
+            for event in self.settings['events']:
+                event_match = re.match(r's3\:(\w+|\*)(?:\:(\w+|\*))?', event)
+                if event_match:
+                    self.events.append([event] + list(event_match.groups()))
+                else:
+                    raise exceptions.ResourceValidationError(
+                        "Invalid event {}".format(event)
+                    )
+        else:
+            raise exceptions.ResourceValidationError(
+                ("You need to define a list of events for the "
+                 "notification {}").format(notification)
+            )
+
+        # Validate that filters are a subset of (prefix, suffix) and keys
+        # are not duplicated.
+        _filters = self.settings.get('key_filters', [])
+        _filters_keys = [f.keys()[0] for f in _filters]
+        if set(_filters_keys) > set(('prefix', 'suffix')) or\
+           any([v > 1 for v in dict(Counter(_filters_keys)).values()]):
+            raise exceptions.ResourceValidationError("""You can't create
+            filters for '{}'.""".format(', '.join(_filter_keys)))
+        else:
+            self.filters = [(f.keys()[0], f.values()[0]) for f in _filters]
+
+    @classmethod
+    def from_dict(cls, data, bucket_notification_configuration):
+        notification_type = set(('lambda', 'topic', 'queue')) & set(data.keys())
+
+        if len(notification_type) != 1:
+            raise exceptions.ResourceValidationError(
+                ("You need to define either a lamda, a queue or a topic "
+                "as destination of your notification {}").format(notification)
+            )
+
+        return {'lambda': LambdaFunctionNotification,
+                'queue': QueueNotification,
+                'topic': TopicNotification}.get(
+                    list(notification_type)[0])(
+                        bucket_notification_configuration=bucket_notification_configuration,
+                        **data
+                )
+
+    def get_destination_arn(self):
+        pass
+
+    def register_destination_publish_permission(self, template):
+        pass
+
+
+class LambdaFunctionNotification(BaseNotification):
+    api_property = 'LambdaFunctionConfigurations'
+
+    def register_destination_publish_permission(self, template):
+        template.add_resource(
+            awslambda.Permission(
+                utils.valid_cloudformation_name(
+                    self.bucket_notification_configuration.name,
+                    self.id,
+                    'permission'
+                ),
+                Action="lambda:InvokeFunction",
+                FunctionName=self.get_destination_arn(),
+                Principal="s3.amazonaws.com",
+                SourceAccount=troposphere.Ref(troposphere.AWS_ACCOUNT_ID),
+            )
+        )
+
+    def get_destination_arn(self):
+        value = self.settings['lambda']
+        if value.startswith('arn:aws:'):
+            return value
+        return troposphere.GetAtt(
+            self.bucket_notification_configuration.project.reference(value), 'Arn'
+        )
+
+class QueueNotification(BaseNotification):
+
+    api_property = 'QueueConfigurations'
+
+    def get_destination_arn(self):
+        destination = self.settings['queue']
+        if destination.startswith('arn:aws:'):
+            return destination
+
+        region = troposphere.Ref(troposphere.AWS_REGION)
+
+        if isinstance(destination, basestring):
+            account = troposphere.Ref(troposphere.AWS_ACCOUNT_ID)
+        elif isinstance(destination, dict):
+            account = destination['account_id']
+            destination = destination['name']
+
+        return troposphere.Join(":", [
+            "arn:aws:sqs",
+            troposphere.Ref(troposphere.AWS_REGION),
+            troposphere.Ref(troposphere.AWS_ACCOUNT_ID),
+            destination
+        ])
+
+    def get_destination_url(self):
+        destination = self.settings['queue']
+        if destination.startswith('arn:aws:'):
+            return destination
+
+        region = troposphere.Ref(troposphere.AWS_REGION)
+
+        if isinstance(destination, basestring):
+            account = troposphere.Ref(troposphere.AWS_ACCOUNT_ID)
+        elif isinstance(destination, dict):
+            account = destination['account_id']
+            destination = destination['name']
+
+        return troposphere.Join("", [
+            "https://sqs.",
+            troposphere.Ref(troposphere.AWS_REGION),
+            ".amazonaws.com/",
+            account,
+            "/",
+            destination
+        ])
+
+    def register_destination_publish_permission(self, template):
+        template.add_resource(
+            sqs.QueuePolicy(
+                utils.valid_cloudformation_name(
+                    self.bucket_notification_configuration.name,
+                    self.id,
+                    'permission'
+                ),
+                Queues=[self.get_destination_url()],
+                PolicyDocument={
+                    "Version": "2008-10-17",
+                    "Id": "PublicationPolicy",
+                    "Statement": [{
+                        "Effect": "Allow",
+                        "Principal": {
+                          "AWS": "*"
+                        },
+                        "Action": ["sqs:SendMessage"],
+                        "Resource": self.get_destination_arn(),
+                        "Condition": {
+                            "ArnEquals": {"aws:SourceArn": self.bucket_notification_configuration.get_bucket_arn()}
+                        }
+                    }]
+                }
+            )
+        )
+
+class TopicNotification(BaseNotification):
+    api_property = 'TopicConfigurations'
+
+    def get_destination_arn(self):
+        pass
 
 
 class BucketNotificationConfiguration(base.BaseResource):
@@ -17,99 +193,102 @@ class BucketNotificationConfiguration(base.BaseResource):
         'notifications',
     )
 
-    def get_function_name(self):
-        """Returns a reference to the lambda which will process this stream."""
-        return self.project.reference(
-            self.settings.get('lambda')
-        )
+    def __init__(self, *args, **kwargs):
+        super(BucketNotificationConfiguration, self).__init__(*args, **kwargs)
+        self._notifications = []
 
-    def register_resources_template(self, template):
-        extra = defaultdict(list)
-
-        notifications_map = {
-            'lambda': 'LambdaFunctionConfigurations',
-            'queue': 'QueueConfigurations',
-            'topic': 'TopicConfigurations',
-
-        }
-
-        top_events_for_bucket = set()
-        sub_events_for_top = defaultdict(list)
-
-        for notification in self.settings.get('notifications', []):
-
-            notification_type = set(('lambda', 'topic', 'queue')) & set(notification.keys())
-
-            if len(notification_type) != 1:
-                raise exceptions.ResourceValidationError("""You need to define
-                either a lamda, a queue or a topic as destination of your
-                notification {}""".format(notification))
-
-            if 'id' not in notification:
-                raise exceptions.ResourceValidationError("""You need to define
-                an id which identifies the notification {}""".format(notification))
-
-            if 'events' in notification and notification['events']:
-                for event in notification['events']:
-                    event_match = re.match(r's3\:(\w+|\*)(?:\:(\w+|\*))?', event)
-                    if event_match:
-                        top, sub = event_match.groups()
-                        if top in top_events_for_bucket or \
-                           top in sub_events_for_top or\
-                           sub in sub_events_for_top.get(top, []):
-                           raise exceptions.ResourceValidationError("""Event
-                           {} overlaps with some other event registered for the
-                           same bucket.""".format(event))
-                        else:
-                            top_events_for_bucket.add(top)
-                            sub_events_for_top[top].append(sub)
-                    else:
-                        raise exceptions.ResourceValidationError("""Invalid
-                        event {}""".format(event))
-            else:
-                raise exceptions.ResourceValidationError("""You need to define
-                a list of events for notification {}""".format(notification))
-
-            filters = []
-            for f in notification.get('filters', []):
-                filters.append(
-                    KeyFilter(
-                        Name=f.keys()[0],
-                        Value=f.values()[0]
-                    )
-                )
-
-            extra[notifications_map[list(notification_type)[0]]].append(
-                NotificationConfiguration(
-                    Id=troposphere.Join('-', ['gordon', self.settings.get('id')]),
-                    DestinationArn=notification.get(list(notification_type)[0]),
-                    Events=notification['events'],
-                    KeyFilters=filters
+        for notification_data in self.settings.get('notifications', []):
+            self._notifications.append(
+                BaseNotification.from_dict(
+                    data=notification_data,
+                    bucket_notification_configuration=self
                 )
             )
 
-        extra = dict([[k, v] for k, v in extra.iteritems() if v])
+        self._validate_notifications()
+
+    def get_bucket_arn(self):
+        bucket = self.settings.get('bucket')
+        if bucket.startswith('arn:aws:'):
+            return bucket
+        return troposphere.Join("", ["arn:aws:s3:::", bucket])
+
+    def get_bucket_name(self):
+        bucket = self.settings.get('bucket')
+        if bucket.startswith('arn:aws:'):
+            return bucket.rsplit(':', 1)[1]
+        return bucket
+
+    def _validate_notifications(self):
+        # Validate that notifications events don't overlap
+        top_events_for_bucket = set()
+        sub_events_for_top = defaultdict(list)
+        for notification in self._notifications:
+            for event, top, sub in notification.events:
+                if top in top_events_for_bucket or \
+                   top in sub_events_for_top or\
+                   sub in sub_events_for_top.get(top, []):
+                   raise exceptions.ResourceValidationError(
+                    ("Event {} overlaps with some other event "
+                     "registered for the same bucket.").format(event)
+                   )
+                else:
+                    top_events_for_bucket.add(top)
+                    sub_events_for_top[top].append(sub)
+
+        # Validate that all key prefix/suffix filters for a bucket
+        # don't overlap one to each other.
+        all_filters = defaultdict(list)
+        for notification in self._notifications:
+            for name, value in notification.filters:
+                all_filters[name].append(value)
+
+        overlap_checks = {'prefix': 'startswith', 'suffix': 'endswith'}
+        for filter_type, values in all_filters.iteritems():
+            check = overlap_checks.get(filter_type)
+            overlaps = [sum([int(getattr(v, check)(z)) for z in values]) for v in values]
+            if sum(overlaps) > len(values):
+                raise exceptions.ResourceValidationError(
+                "One or more {} filters overlap one to each other {}.".format(
+                    filter_type, ', '.join(values))
+                )
+
+    def register_resources_template(self, template):
+
+        extra = defaultdict(list)
+        for notification in self._notifications:
+            notification.register_destination_publish_permission(template)
+
+            extra[notification.api_property].append(
+                NotificationConfiguration(
+                    Id=troposphere.Join('-', ['gordon', notification.id]),
+                    DestinationArn=notification.get_destination_arn(),
+                    Events=[e for e, _, _ in notification.events],
+                    KeyFilters=[KeyFilter(Name=name, Value=value) for name, value in notification.filters]
+                )
+            )
 
         template.add_resource(
             S3BucketNotificationConfiguration.create_with(
                 utils.valid_cloudformation_name(self.name),
+                DependsOn=[self.project.reference('s3.bucket_notification_configuration')],
                 lambda_arn=troposphere.GetAtt(
                     self.project.reference('s3.bucket_notification_configuration'), 'Arn'
                 ),
-                Bucket=self.settings.get('bucket'),
-                **extra
+                Bucket=self.get_bucket_name(),
+                **dict([[k, v] for k, v in extra.iteritems() if v])
             )
         )
 
     def validate(self):
-        for resource in self.project.get_resources():
+        """Validate that there are no any other resources in the project which
+        try to register notifications for the same bucket than this resource"""
 
-            if not isinstance(resource, self.__class__):
-                pass
-
-            if resource.bucket == self.bucket:
-                raise exceptions.ResourceValidationError("""Both resources
-                '{}' and '{}', registers notifications for the bucket '{}'.
-                Because AWS API limitations we need you to register all
-                notifications of one bucket in the same resource.
-                """.format(self, resource, self.bucket))
+        for resource in (r for r in self.project.get_resources() if \
+                isinstance(r, self.__class__) and r.bucket == self.bucket):
+            raise exceptions.ResourceValidationError(
+                ("Both resources '{}' and '{}', registers notifications for "
+                "the bucket '{}'. Because AWS API limitations we need you to "
+                "register all notifications of one bucket in the same "
+                "resource.").format(self, resource, self.bucket)
+            )

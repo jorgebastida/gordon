@@ -10,9 +10,9 @@ lambdas:
         Statement:
           -
             Action:
-              - "lambda:PutBucketNotification"
-              - "lambda:GetBucketNotification"
-            Resource: "arn:aws:s3:*:*:*"
+              - "s3:PutBucketNotification"
+              - "s3:GetBucketNotification"
+            Resource: "arn:aws:s3:::*"
             Effect: "Allow"
 
 python_requirements:

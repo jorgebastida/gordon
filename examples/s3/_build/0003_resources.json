@@ -104,11 +104,11 @@
                             "Statement": [
                                 {
                                     "Action": [
-                                        "lambda:PutBucketNotification",
-                                        "lambda:GetBucketNotification"
+                                        "s3:PutBucketNotification",
+                                        "s3:GetBucketNotification"
                                     ],
                                     "Effect": "Allow",
-                                    "Resource": "arn:aws:s3:*:*:*"
+                                    "Resource": "arn:aws:s3:::*"
                                 }
                             ],
                             "Version": "2012-10-17"
@@ -137,11 +137,60 @@
             "Type": "Custom::LambdaVersion"
         },
         "ExampleS3Integration": {
+            "DependsOn": [
+                "S3BucketNotificationConfiguration"
+            ],
             "Properties": {
-                "Bucket": "xxx",
+                "Bucket": "gordon-s3-test",
                 "LambdaFunctionConfigurations": [
                     {
-                        "DestinationArn": "exampleapp.s3consumer",
+                        "DestinationArn": {
+                            "Fn::GetAtt": [
+                                "ExampleappS3Consumer",
+                                "Arn"
+                            ]
+                        },
+                        "Events": [
+                            "s3:ObjectCreated:*"
+                        ],
+                        "Id": {
+                            "Fn::Join": [
+                                "-",
+                                [
+                                    "gordon",
+                                    "s3consumer_on_create2"
+                                ]
+                            ]
+                        },
+                        "KeyFilters": [
+                            {
+                                "Name": "prefix",
+                                "Value": "a"
+                            },
+                            {
+                                "Name": "suffix",
+                                "Value": "b"
+                            }
+                        ]
+                    }
+                ],
+                "QueueConfigurations": [
+                    {
+                        "DestinationArn": {
+                            "Fn::Join": [
+                                ":",
+                                [
+                                    "arn:aws:sqs",
+                                    {
+                                        "Ref": "AWS::Region"
+                                    },
+                                    {
+                                        "Ref": "AWS::AccountId"
+                                    },
+                                    "gordon-test"
+                                ]
+                            ]
+                        },
                         "Events": [
                             "s3:ObjectRemoved:*"
                         ],
@@ -150,25 +199,7 @@
                                 "-",
                                 [
                                     "gordon",
-                                    null
-                                ]
-                            ]
-                        },
-                        "KeyFilters": []
-                    }
-                ],
-                "QueueConfigurations": [
-                    {
-                        "DestinationArn": "zzzz",
-                        "Events": [
-                            "s3:ReducedRedundancyLostObject"
-                        ],
-                        "Id": {
-                            "Fn::Join": [
-                                "-",
-                                [
-                                    "gordon",
-                                    null
+                                    "queue_on_delete"
                                 ]
                             ]
                         },
@@ -180,27 +211,92 @@
                         "S3BucketNotificationConfiguration",
                         "Arn"
                     ]
-                },
-                "TopicConfigurations": [
-                    {
-                        "DestinationArn": "yyyy",
-                        "Events": [
-                            "s3:ObjectCreated:*"
-                        ],
-                        "Id": {
-                            "Fn::Join": [
-                                "-",
-                                [
-                                    "gordon",
-                                    null
+                }
+            },
+            "Type": "Custom::S3BucketNotificationConfiguration"
+        },
+        "ExampleS3IntegrationQueueOnDeletePermission": {
+            "Properties": {
+                "PolicyDocument": {
+                    "Id": "PublicationPolicy",
+                    "Statement": [
+                        {
+                            "Action": [
+                                "sqs:SendMessage"
+                            ],
+                            "Condition": {
+                                "ArnEquals": {
+                                    "aws:SourceArn": {
+                                        "Fn::Join": [
+                                            "",
+                                            [
+                                                "arn:aws:s3:::",
+                                                "gordon-s3-test"
+                                            ]
+                                        ]
+                                    }
+                                }
+                            },
+                            "Effect": "Allow",
+                            "Principal": {
+                                "AWS": "*"
+                            },
+                            "Resource": {
+                                "Fn::Join": [
+                                    ":",
+                                    [
+                                        "arn:aws:sqs",
+                                        {
+                                            "Ref": "AWS::Region"
+                                        },
+                                        {
+                                            "Ref": "AWS::AccountId"
+                                        },
+                                        "gordon-test"
+                                    ]
                                 ]
+                            }
+                        }
+                    ],
+                    "Version": "2008-10-17"
+                },
+                "Queues": [
+                    {
+                        "Fn::Join": [
+                            "",
+                            [
+                                "https://sqs.",
+                                {
+                                    "Ref": "AWS::Region"
+                                },
+                                ".amazonaws.com/",
+                                {
+                                    "Ref": "AWS::AccountId"
+                                },
+                                "/",
+                                "gordon-test"
                             ]
-                        },
-                        "KeyFilters": []
+                        ]
                     }
                 ]
             },
-            "Type": "Custom::S3BucketNotificationConfiguration"
+            "Type": "AWS::SQS::QueuePolicy"
+        },
+        "ExampleS3IntegrationS3ConsumerOnCreate2Permission": {
+            "Properties": {
+                "Action": "lambda:InvokeFunction",
+                "FunctionName": {
+                    "Fn::GetAtt": [
+                        "ExampleappS3Consumer",
+                        "Arn"
+                    ]
+                },
+                "Principal": "s3.amazonaws.com",
+                "SourceAccount": {
+                    "Ref": "AWS::AccountId"
+                }
+            },
+            "Type": "AWS::Lambda::Permission"
         },
         "ExampleappS3Consumer": {
             "DependsOn": [

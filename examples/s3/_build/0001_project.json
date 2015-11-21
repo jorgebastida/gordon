@@ -33,7 +33,7 @@
                             {
                                 "Ref": "Stage"
                             },
-                            "s3example"
+                            "s3example2"
                         ]
                     ]
                 },

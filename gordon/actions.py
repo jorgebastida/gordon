@@ -210,8 +210,6 @@ class UploadToS3(BaseAction):
             if zipmetadata.get('sha1') and zipmetadata.get('sha1') == obj['Metadata'].get('sha1'):
                 self._success(zipmetadata.get('sha1'))
                 return self.output(obj['VersionId'])
-            else:
-                print "Local .zip metadata and current S3 file metadata are NOT equal!"
         return self.apply_general(metadata=zipmetadata)
 
     def _success(self, metadata):

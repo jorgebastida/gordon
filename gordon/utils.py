@@ -56,6 +56,15 @@ def mill(iterable):
         yield MILL_CHARS[i % len(MILL_CHARS)], elem
 
 
+def split_arn(arn):
+    match = re.match(r'arn\:aws\:(.+)\:(.+):(\d+):(.+)', value)
+    if not match:
+        raise exceptions.ResourceValidationError(
+            "{} is a don't a valid arn.".format(arn)
+        )
+    return match.groups()
+
+    
 def get_zip_metadata(filename, metadata_filename='.metadata'):
     """Return metadata information attached to a zip file."""
     zfile = zipfile.ZipFile(filename)
@@ -152,7 +161,7 @@ def fix_troposphere_references(template):
         for prop, value in obj.properties.iteritems():
             if isinstance(value, troposphere.Ref):
                 name = value.data['Ref']
-                if name not in (template.parameters.keys() + template.resources.keys()):
+                if name not in (template.parameters.keys() + template.resources.keys()) and not name.startswith('AWS::'):
                     template.add_parameter(
                         troposphere.Parameter(
                             name,
@@ -204,7 +213,7 @@ def create_stack(name, template_filename, context, **kwargs):
         StackName=name,
         TemplateBody=template_body,
         Parameters=[{'ParameterKey': k, 'ParameterValue': v} for k, v in parameters.iteritems()],
-        TimeoutInMinutes=kwargs.get('TimeoutInMinutes', 3),
+        TimeoutInMinutes=kwargs.get('TimeoutInMinutes', 5),
         Capabilities=['CAPABILITY_IAM'],
         #OnFailure='ROLLBACK'
         OnFailure='DO_NOTHING'
@@ -272,7 +281,7 @@ def create_or_update_cf_stack(name, template_filename, context=None, **kwargs):
     stack = get_cf_stack(name)
 
     if stack and stack['StackStatus'] in IN_PROGRESS_STATUS:
-        raise exceptions.CloudFormationStackInProgressError(stack, stack['StackStatus'])
+        raise exceptions.CloudFormationStackInProgressError(stack['StackId'], stack['StackStatus'])
 
     if stack:
         stack = update_stack(name, template_filename, context=context, **kwargs)

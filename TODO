@@ -2,3 +2,6 @@
 - custom roles for lambdas
 - TimeoutInMinutes is now 3
 - fix protocols
+
+
+- use lambda @current not the latests

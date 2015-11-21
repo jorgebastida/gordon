@@ -1,5 +1,5 @@
 ---
-project: s3example
+project: s3example2
 default-region: eu-west-1
 apps:
   - gordon.contrib.helpers
@@ -7,40 +7,51 @@ apps:
   - gordon.contrib.s3
   - exampleapp
 
+# http://docs.aws.amazon.com/AmazonS3/latest/dev/NotificationHowTo.html
 s3:
   example_s3_integration:
-    bucket: xxx
+    bucket: gordon-s3-test
     notifications:
 
-      - id: lambda_on_remove
+      - id: s3consumer_on_create2
         lambda: exampleapp.s3consumer
-        events:
-          - s3:ObjectRemoved:*
-        key_filters:
-          - prefix: a
-
-      - id: topic_on_all_create
-        topic: yyyy
         events:
           - s3:ObjectCreated:*
         key_filters:
           - prefix: a
+          - suffix: b
 
-      - id: queue_on_lost
-        queue: zzzz
+      - id: queue_on_delete
+        queue: gordon-test
+        # queue:
+        #   name: gordon-test
+        #   account_id: 936837623851
+        #queue: arn:aws:sqs:eu-west-1:936837623851:gordon-test
         events:
-        # - s3:ObjectCreated:*
-        # - s3:ObjectCreated:Put
-        # - s3:ObjectCreated:Post
-        # - s3:ObjectCreated:Copy
-        # - s3:ObjectCreated:CompleteMultipartUpload
-        # - s3:ObjectRemoved:*
-        # - s3:ObjectRemoved:Delete
-        # - s3:ObjectRemoved:DeleteMarkerCreated
-          - s3:ReducedRedundancyLostObject
-        key_filters:
-          - prefix: a
-          - suffix: c
+          - s3:ObjectRemoved:*
+
+      # - id: topic_on_all_create
+      #   topic: yyyy
+      #   events:
+      #     - s3:ObjectCreated:*
+      #   key_filters:
+      #     - prefix: a
+      #
+      # - id: queue_on_lost
+      #   queue: zzzz
+      #   events:
+      #   # - s3:ObjectCreated:*
+      #   # - s3:ObjectCreated:Put
+      #   # - s3:ObjectCreated:Post
+      #   # - s3:ObjectCreated:Copy
+      #   # - s3:ObjectCreated:CompleteMultipartUpload
+      #   # - s3:ObjectRemoved:*
+      #   # - s3:ObjectRemoved:Delete
+      #   # - s3:ObjectRemoved:DeleteMarkerCreated
+      #     - s3:ReducedRedundancyLostObject
+      #   key_filters:
+      #     - prefix: a
+      #     - suffix: c
 #
 #
 # s3:
