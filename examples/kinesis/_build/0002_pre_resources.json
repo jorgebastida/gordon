@@ -1,21 +1,81 @@
 {
     "outputs": {
-        "GordonContribUtilsSleepS3Url": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "GordonContribUtilsSleepS3Url", 
-            "value": {
-                "action": "gordon_contrib_utils_sleep-upload", 
-                "_type": "GetAttr", 
-                "attr": "s3url"
-            }
-        }, 
         "KinesisconsumerS3Url": {
             "default": "", 
             "_type": "Output", 
             "name": "KinesisconsumerS3Url", 
             "value": {
                 "action": "kinesisconsumer-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }, 
+        "SleepS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "SleepS3Url", 
+            "value": {
+                "action": "sleep-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }, 
+        "LambdaAliasS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "LambdaAliasS3Version", 
+            "value": {
+                "action": "lambda_alias-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
+        "LambdaAliasS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "LambdaAliasS3Url", 
+            "value": {
+                "action": "lambda_alias-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }, 
+        "SleepS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "SleepS3Version", 
+            "value": {
+                "action": "sleep-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
+        "KinesisconsumerS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "KinesisconsumerS3Version", 
+            "value": {
+                "action": "kinesisconsumer-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
+        "LambdaVersionS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "LambdaVersionS3Version", 
+            "value": {
+                "action": "lambda_version-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
+        "LambdaVersionS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "LambdaVersionS3Url", 
+            "value": {
+                "action": "lambda_version-upload", 
                 "_type": "GetAttr", 
                 "attr": "s3url"
             }
@@ -29,9 +89,29 @@
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
-            "name": "gordon_contrib_utils_sleep-upload", 
-            "key": "gordon_contrib_utils_sleep.zip", 
-            "filename": "code/gordon_contrib_utils_sleep.zip"
+            "name": "sleep-upload", 
+            "key": "helpers_sleep.zip", 
+            "filename": "code/helpers_sleep.zip"
+        }, 
+        {
+            "_type": "UploadToS3", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "name": "lambda_alias-upload", 
+            "key": "lambdas_lambda_alias.zip", 
+            "filename": "code/lambdas_lambda_alias.zip"
+        }, 
+        {
+            "_type": "UploadToS3", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "name": "lambda_version-upload", 
+            "key": "lambdas_lambda_version.zip", 
+            "filename": "code/lambdas_lambda_version.zip"
         }, 
         {
             "_type": "UploadToS3", 
@@ -40,8 +120,8 @@
                 "name": "CodeBucket"
             }, 
             "name": "kinesisconsumer-upload", 
-            "key": "kinesisconsumer.zip", 
-            "filename": "code/kinesisconsumer.zip"
+            "key": "exampleapp_kinesisconsumer.zip", 
+            "filename": "code/exampleapp_kinesisconsumer.zip"
         }
     ], 
     "parameters": {

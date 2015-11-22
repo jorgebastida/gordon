@@ -89,9 +89,9 @@
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
-            "name": "lambda_alias-upload", 
-            "key": "cloudformation_lambda_alias.zip", 
-            "filename": "code/cloudformation_lambda_alias.zip"
+            "name": "sleep-upload", 
+            "key": "helpers_sleep.zip", 
+            "filename": "code/helpers_sleep.zip"
         }, 
         {
             "_type": "UploadToS3", 
@@ -99,9 +99,9 @@
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
-            "name": "sleep-upload", 
-            "key": "cloudformation_sleep.zip", 
-            "filename": "code/cloudformation_sleep.zip"
+            "name": "lambda_alias-upload", 
+            "key": "lambdas_lambda_alias.zip", 
+            "filename": "code/lambdas_lambda_alias.zip"
         }, 
         {
             "_type": "UploadToS3", 
@@ -110,8 +110,8 @@
                 "name": "CodeBucket"
             }, 
             "name": "lambda_version-upload", 
-            "key": "cloudformation_lambda_version.zip", 
-            "filename": "code/cloudformation_lambda_version.zip"
+            "key": "lambdas_lambda_version.zip", 
+            "filename": "code/lambdas_lambda_version.zip"
         }, 
         {
             "_type": "UploadToS3", 

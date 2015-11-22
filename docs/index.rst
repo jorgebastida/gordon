@@ -15,6 +15,8 @@ Contents:
    apps
    lambdas
    integrations/index
+   parameters
+   contrib
    tutorials
 
 

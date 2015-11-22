@@ -2,7 +2,7 @@
 project: helloworld
 default-region: eu-west-1
 apps:
-  - gordon.contrib.cloudformation
+  - gordon.contrib.lambdas
   - himachine
 
 # api:

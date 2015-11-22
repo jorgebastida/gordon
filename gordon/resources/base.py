@@ -215,7 +215,7 @@ class BaseStream(BaseResource):
         sleep = Sleep.create_with(
             utils.valid_cloudformation_name(self.name, "Sleep"),
             lambda_arn=GetAtt(
-                self.project.reference('cloudformation.sleep'), 'Arn'
+                self.project.reference('helpers.sleep'), 'Arn'
             ),
             Time=30
         )
