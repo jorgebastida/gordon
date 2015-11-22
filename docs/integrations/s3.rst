@@ -11,6 +11,9 @@ The idea is simple, every time an object get's created/deleted, S3, will trigger
   * **SQS**: S3 will create a message in a SQS queue every time something happens. Once the message is in the queue, you can make a lambda process those messages easily. *(1 S3 event = 1 message in a queue)*
   * **SNS**: S3 will send a message to a SNS Topic. You can subscribe as many lambdas as you want to this topic and process those messages individually *(1 S3 event = N lambdas executed)*
 
+  .. note::
+
+    As always, is not gordon's business to create those ``sqs`` or ``sns`` resources. You should create them in advance. :doc:`../why_gordon_dont_create_other_resources`
 
 Limitations
 ------------
@@ -42,7 +45,6 @@ Anatomy of the integration
              - prefix: PREFIX
              - suffix: SUFFIX
 
-        - ...
 
 Destinations
 -------------
@@ -161,5 +163,3 @@ Full Example
           topic: redundacy_lost_topic
           events:
             - s3:ReducedRedundancyLostObject:*
-
-        ...
