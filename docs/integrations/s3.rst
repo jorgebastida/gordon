@@ -8,7 +8,7 @@ Gordon allow you to integrate your lambdas with S3 using their notification serv
 The idea is simple, every time an object get's created/deleted, S3, will trigger a notification which you can route to three different services:
 
   * **Lambda**: Your code will be triggered each time something happens. *(1 S3 event = 1 lambda executed)*
-  * **SQS**: S3 will create a message in a SQS queue every time something happens. Once the message is in the queue, you can make a lambda process those messages easily. *(1 S3 event = 1 message in a queue)*
+  * **SQS**: S3 will create a message in a SQS queue every time something happens. Right now there is no any api for Lambdas to consume messages from a sqs queue, but because you need to define all bucket notification in the same place, we need to support this. In the future AWS will might support consuming SQS messages using lambda. *(1 S3 event = 1 message in a queue)*
   * **SNS**: S3 will send a message to a SNS Topic. You can subscribe as many lambdas as you want to this topic and process those messages individually *(1 S3 event = N lambdas executed)*
 
   .. note::
