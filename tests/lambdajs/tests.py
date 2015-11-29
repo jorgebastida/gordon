@@ -11,8 +11,8 @@ class IntegrationTest(BaseIntegrationTest, unittest.TestCase):
         self.assert_stack_succeed('project')
         self.assert_stack_succeed('resources')
 
-        lambda_ = self.get_lambda('LambdaPyexamplePyexample')
-        self.assertEqual(lambda_['Runtime'], 'python2.7')
+        lambda_ = self.get_lambda('LambdaJsexampleJsexample')
+        self.assertEqual(lambda_['Runtime'], 'nodejs')
         self.assertEqual(lambda_['Description'], 'My description')
         self.assertEqual(lambda_['MemorySize'], 192)
         self.assertEqual(lambda_['Timeout'], 123)
