@@ -17,6 +17,8 @@ from troposphere import cloudformation, Join, Ref
 from clint.textui import colored, puts, progress, indent
 
 from . import exceptions
+from gordon import get_version
+
 
 FINAL_STATUS = (
     'CREATE_FAILED', 'DELETE_FAILED', 'ROLLBACK_FAILED',
@@ -64,7 +66,7 @@ def split_arn(arn):
         )
     return match.groups()
 
-    
+
 def get_zip_metadata(filename, metadata_filename='.metadata'):
     """Return metadata information attached to a zip file."""
     zfile = zipfile.ZipFile(filename)
@@ -216,7 +218,13 @@ def create_stack(name, template_filename, context, **kwargs):
         TimeoutInMinutes=kwargs.get('TimeoutInMinutes', 5),
         Capabilities=['CAPABILITY_IAM'],
         #OnFailure='ROLLBACK'
-        OnFailure='DO_NOTHING'
+        OnFailure='DO_NOTHING',
+        Tags=[
+        {
+            'Key': 'GordonVersion',
+            'Value': get_version()
+        },
+    ]
     )
     return get_cf_stack(stack['StackId'])
 
@@ -302,3 +310,17 @@ class BaseLambdaAWSCustomObject(cloudformation.AWSCustomObject):
         lambda_arn = kwargs.pop('lambda_arn')
         kwargs['ServiceToken'] = lambda_arn
         return cls(*args, **kwargs)
+
+
+class cd:
+    """Context manager for changing the current working directory"""
+
+    def __init__(self, new_path):
+        self.new_path = os.path.expanduser(new_path)
+
+    def __enter__(self):
+        self.old_path = os.getcwd()
+        os.chdir(self.new_path)
+
+    def __exit__(self, etype, value, traceback):
+        os.chdir(self.old_path)

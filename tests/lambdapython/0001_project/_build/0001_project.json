@@ -1,0 +1,47 @@
+{
+    "Outputs": {
+        "CodeBucket": {
+            "Description": "CodeBucket name",
+            "Value": {
+                "Ref": "CodeBucket"
+            }
+        }
+    },
+    "Parameters": {
+        "Region": {
+            "Description": "Name of the Stage",
+            "Type": "String"
+        },
+        "Stage": {
+            "Default": "dev",
+            "Description": "Name of the Stage",
+            "Type": "String"
+        }
+    },
+    "Resources": {
+        "CodeBucket": {
+            "Properties": {
+                "AccessControl": "Private",
+                "BucketName": {
+                    "Fn::Join": [
+                        "-",
+                        [
+                            "gordon",
+                            {
+                                "Ref": "Region"
+                            },
+                            {
+                                "Ref": "Stage"
+                            },
+                            "lambdapython"
+                        ]
+                    ]
+                },
+                "VersioningConfiguration": {
+                    "Status": "Enabled"
+                }
+            },
+            "Type": "AWS::S3::Bucket"
+        }
+    }
+}

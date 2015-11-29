@@ -10,11 +10,8 @@ from .core import Bootstrap, ProjectBuild, ProjectApply
 from .exceptions import BaseGordonException
 
 
-__version__ = "0.0.1"
-
-
 def main(argv=None):
-
+    print sys.argv
     argv = (argv or sys.argv)[1:]
 
     parser = argparse.ArgumentParser(usage=("%(prog)s [build | apply | startproject | startapp]"))

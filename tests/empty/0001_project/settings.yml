@@ -1,0 +1,4 @@
+---
+project: empty
+default-region: us-east-1
+apps:

@@ -1,0 +1,6 @@
+---
+project: base
+default-region: us-east-1
+apps:
+  - gordon.contrib.helpers
+  - gordon.contrib.lambdas

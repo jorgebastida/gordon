@@ -20,6 +20,8 @@ if sys.version_info < (2, 7):
 if sys.version_info < (3, 3):
     tests_require.append('pbr>=0.11,<1.7.0')
     tests_require.append('mock>=1.0.0')
+    tests_require.append('nose')
+    tests_require.append('cfn-response')
 
 setup(
     name='gordon',
@@ -33,7 +35,7 @@ setup(
     packages=find_packages(),
     platforms='any',
     install_requires=install_requires,
-    test_suite='tests',
+    test_suite='nose.collector',
     tests_require=tests_require,
     classifiers=[
         'Programming Language :: Python :: 3',

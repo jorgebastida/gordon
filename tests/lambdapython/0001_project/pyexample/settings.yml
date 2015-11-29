@@ -1,0 +1,8 @@
+lambdas:
+  pyexample:
+    code: code.py
+    description: My description
+    memory: 192
+    timeout: 123
+    python_requirements:
+      - requests

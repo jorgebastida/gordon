@@ -26,6 +26,8 @@ AVAILABLE_RESOURCES = {
     'dynamodb': resources.dynamodb.Dynamodb,
     'kinesis': resources.kinesis.Kinesis,
     's3': resources.s3.BucketNotificationConfiguration,
+    'api': resources.apigateway.RestAPI,
+    'urls': resources.apigateway.APIResource,
 }
 
 
@@ -293,7 +295,7 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
 
         template = utils.fix_troposphere_references(template)
 
-        if template:
+        if template and template.resources:
             output_filename = output_filename.format(self._get_next_build_sequence_id())
             puts(colored.green(u"✓ {}".format(output_filename)))
             with open(os.path.join(self.build_path, output_filename), 'w') as f:
