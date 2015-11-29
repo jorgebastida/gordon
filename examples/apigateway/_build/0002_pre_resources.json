@@ -1,0 +1,135 @@
+{
+    "outputs": {
+        "ApiResourceS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "ApiResourceS3Url", 
+            "value": {
+                "action": "api_resource-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }, 
+        "LambdaAliasS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "LambdaAliasS3Version", 
+            "value": {
+                "action": "lambda_alias-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
+        "LambdaAliasS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "LambdaAliasS3Url", 
+            "value": {
+                "action": "lambda_alias-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }, 
+        "ApiResourceS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "ApiResourceS3Version", 
+            "value": {
+                "action": "api_resource-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
+        "RestApiS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "RestApiS3Url", 
+            "value": {
+                "action": "rest_api-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }, 
+        "LambdaVersionS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "LambdaVersionS3Version", 
+            "value": {
+                "action": "lambda_version-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
+        "RestApiS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "RestApiS3Version", 
+            "value": {
+                "action": "rest_api-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
+        "LambdaVersionS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "LambdaVersionS3Url", 
+            "value": {
+                "action": "lambda_version-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }
+    }, 
+    "_type": "ActionsTemplate", 
+    "actions": [
+        {
+            "_type": "UploadToS3", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "name": "lambda_alias-upload", 
+            "key": "lambda:lambdas:lambda_alias.zip", 
+            "filename": "code/lambda:lambdas:lambda_alias.zip"
+        }, 
+        {
+            "_type": "UploadToS3", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "name": "lambda_version-upload", 
+            "key": "lambda:lambdas:lambda_version.zip", 
+            "filename": "code/lambda:lambdas:lambda_version.zip"
+        }, 
+        {
+            "_type": "UploadToS3", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "name": "api_resource-upload", 
+            "key": "lambda:apigateway:api_resource.zip", 
+            "filename": "code/lambda:apigateway:api_resource.zip"
+        }, 
+        {
+            "_type": "UploadToS3", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "name": "rest_api-upload", 
+            "key": "lambda:apigateway:rest_api.zip", 
+            "filename": "code/lambda:apigateway:rest_api.zip"
+        }
+    ], 
+    "parameters": {
+        "CodeBucket": {
+            "default": "", 
+            "_type": "Parameter", 
+            "name": "CodeBucket"
+        }
+    }, 
+    "parallelizable": true
+}

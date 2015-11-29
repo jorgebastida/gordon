@@ -24,6 +24,7 @@ class Lambda(base.BaseResource):
 
     REQUIRED_SETTINGS = ('code', )
     code_filename = 'code'
+    grn_type = 'lambda'
 
     @classmethod
     def factory(cls, *args, **kwargs):
@@ -74,7 +75,7 @@ class Lambda(base.BaseResource):
         """Returns the memory setting by rounding the actual value to the
         nearest power of 64. If no memory is defined, returns 128."""
         memory = int(self.settings.get('memory', 128))
-        memory = memory + (64 - (memory % 64))
+        memory = memory - (memory % 64)
         return min(memory, 1536)
 
     def get_timeout(self):
@@ -160,7 +161,7 @@ class Lambda(base.BaseResource):
 
     def get_bucket_key(self):
         """Return the S3 bucket key for this lambda."""
-        return "{}.zip".format(self.in_project_name.replace('.', '_'))
+        return "{}.zip".format(self.in_project_name.replace(':', '_'))
 
     def _collect_requirements(self, destination):
         """Collect runtime specific requirements."""
@@ -323,7 +324,7 @@ class Lambda(base.BaseResource):
             LambdaVersion.create_with(
                 utils.valid_cloudformation_name(self.name, "Version"),
                 lambda_arn=troposphere.GetAtt(
-                    self.project.reference('lambdas.lambda_version'), 'Arn'
+                    self.project.reference('lambda:lambdas:lambda_version'), 'Arn'
                 ),
                 FunctionName=troposphere.Ref(
                     function
@@ -339,7 +340,7 @@ class Lambda(base.BaseResource):
                 LambdaAlias.create_with(
                     utils.valid_cloudformation_name(self.name, "CurrentAlias"),
                     lambda_arn=troposphere.GetAtt(
-                        self.project.reference('lambdas.lambda_alias'), 'Arn'
+                        self.project.reference('lambda:lambdas:lambda_alias'), 'Arn'
                     ),
                     FunctionName=troposphere.Ref(
                         function

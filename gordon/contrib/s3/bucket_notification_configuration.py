@@ -100,8 +100,6 @@ def handler(event, context):
                     }
                 configuration[_type].append(data)
 
-    print buckent_name
-    print configuration
     client.put_bucket_notification_configuration(
         Bucket=buckent_name,
         NotificationConfiguration=configuration

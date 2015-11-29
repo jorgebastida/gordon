@@ -2,4 +2,4 @@ from . import base
 
 class Kinesis(base.BaseStream):
     """Resource which consumes ``Kinesis``streams."""
-    pass
+    grn_type = 'kinesis-stream'

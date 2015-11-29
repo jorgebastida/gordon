@@ -1,4 +1,5 @@
 import os
+import re
 
 import troposphere
 from troposphere import iam, awslambda, s3, GetAtt
@@ -45,7 +46,7 @@ class BaseResource(object):
     list of ``required_settings`` so gordon will avoid proceeding if any of
     them is not defined.
     """
-
+    grn_type = ''
     required_settings = ()
 
     def __init__(self, name, settings, project=None, app=None):
@@ -57,20 +58,37 @@ class BaseResource(object):
             if key not in self.settings:
                 raise exceptions.ResourceSettingRequiredError(self.name, key)
 
-        # Resources can be defined both at project and app level.
-        # Resources defined at app level get the name of the app prepend
-        # in toder to avoid name-collisions.
-        if self.app:
-            self.in_project_name = '.'.join((self.app.name, self.name))
-        else:
-            self.in_project_name = self.name
-
+        self.in_project_name = self._get_in_project_name()
         self.in_project_cf_name = utils.valid_cloudformation_name(self.in_project_name)
 
         self.project.register_resource_reference(
             self.in_project_name,
             self.in_project_cf_name
         )
+
+    def _get_in_project_name(self):
+        """
+        resource-type:my-app:my-resource
+        resource-type::my-resource
+        resource-type:my-app:my-resource
+        """
+        resource_path = [
+            self.grn_type,
+            self._get_grn_app(),
+        ]
+        return ':'.join(resource_path + list(self._get_grn_path()))
+
+    def _get_grn_app(self):
+        return self.app.name if self.app else ''
+
+    def _get_grn_path(self):
+        return [self._clean_grn_element(n) for n in self.get_grn_path()]
+
+    def _clean_grn_element(self, value):
+        return re.sub(r'[^\w\-\_\/]', '-', value)
+
+    def get_grn_path(self):
+        return [self.name]
 
     @classmethod
     def factory(cls, *args, **kwargs):

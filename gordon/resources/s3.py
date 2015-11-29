@@ -196,7 +196,7 @@ class TopicNotification(BaseNotification):
             destination = destination['name']
         else:
             return destination
-            
+
         return troposphere.Join(":", [
             "arn:aws:sns",
             troposphere.Ref(troposphere.AWS_REGION),
@@ -234,6 +234,7 @@ class TopicNotification(BaseNotification):
 
 class BucketNotificationConfiguration(base.BaseResource):
 
+    grn_type = 's3-bucket-notification'
     required_settings = (
         'bucket',
         'notifications',

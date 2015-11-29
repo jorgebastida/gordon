@@ -1,0 +1,32 @@
+lambdas:
+  rest_api:
+    code: rest_api.py
+    description: Manages a RESTAPI
+    timeout: 300
+    policies:
+      manage_api:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Action:
+              - "apigateway:*" # FIXME
+            Resource: "arn:aws:apigateway:*::/*"
+            Effect: "Allow"
+
+  api_resource:
+    code: api_resource.py
+    description: Manages an API Resource
+    timeout: 300
+    policies:
+      manage_api:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Action:
+              - "apigateway:*" # FIXME
+            Resource: "arn:aws:apigateway:*::/*"
+            Effect: "Allow"
+
+
+python_requirements:
+  - cfn-response
