@@ -1,0 +1,16 @@
+lambdas:
+  consumer:
+    code: code.py
+    description: My kinesis consumer
+    policies:
+      read_kinesis:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Action:
+              - "kinesis:DescribeStream"
+              - "kinesis:ListStreams"
+              - "kinesis:GetShardIterator"
+              - "kinesis:GetRecords"
+            Resource: ref://KinesisIntegrationArn
+            Effect: "Allow"

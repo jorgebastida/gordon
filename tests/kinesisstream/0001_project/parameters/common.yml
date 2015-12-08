@@ -1,0 +1,2 @@
+---
+KinesisIntegrationArn: env://KINESIS_INTEGRATION

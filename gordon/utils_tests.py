@@ -11,7 +11,7 @@ from nose.plugins.attrib import attr
 import boto3
 
 from gordon.bin import main as gordon
-from gordon.utils import cd
+from gordon.utils import cd, generate_stack_name
 
 
 
@@ -58,7 +58,7 @@ def delete_test_stacks(name):
     for stacks in paginator.paginate():
         for stack in stacks['Stacks']:
             print stack['StackName']
-            if stack['StackName'].startswith('test{}'.format(name)) and\
+            if stack['StackName'].startswith(name) and\
                [t for t in stack['Tags'] if t['Key'] == 'GordonVersion']:
 
                 # Empty S3 buckets
@@ -77,8 +77,9 @@ class BaseIntegrationTest(object):
 
     def __init__(self, *args, **kwargs):
         super(BaseIntegrationTest, self).__init__(*args, **kwargs)
-        self.uid = hashlib.sha1(str(uuid.uuid4())).hexdigest()[:6]
+        self.uid = 'gt{}'.format(hashlib.sha1(str(uuid.uuid4())).hexdigest()[:5])
         self.test_path = os.path.join('tests', self.test)
+        self.extra_env = {}
 
     @property
     def test(self):
@@ -96,14 +97,32 @@ class BaseIntegrationTest(object):
             with cd(os.path.join(self.test_path, filename)):
                 gordon(['gordon', 'build'])
                 self._test_build()
-                gordon(['gordon', 'apply', '--stage=test{}'.format(self.uid)])
+                gordon([
+                    'gordon',
+                    'apply',
+                    '--stage={}'.format(self.uid),
+                ])
                 self._test_apply()
 
-    def tearDown(self):
+    def _restore_context(self):
+        os.environ.clear()
+        os.environ.update(self._environ)
+
+    def _clean_extra_env(self):
+        self.extra_env = {}
+
+    def _clean_build_path(self):
         build_path = os.path.join(self.test_path, '_build')
         if os.path.exists(build_path):
             shutil.rmtree(build_path)
-        delete_test_stacks(self.uid)
+
+    def setUp(self):
+        self._environ = dict(os.environ)
+        os.environ.update(self.extra_env)
+        self.addCleanup(self._restore_context)
+        self.addCleanup(delete_test_stacks, self.uid)
+        self.addCleanup(self._clean_build_path)
+        self.addCleanup(self._clean_extra_env)
 
     def _test_build(self):
         pass
@@ -112,18 +131,24 @@ class BaseIntegrationTest(object):
         pass
 
     def assert_stack_succeed(self, stack_name):
-        name = 'test{uid}-{project}-{stack_name}'.format(uid=self.uid, project=self.test, stack_name=stack_name)
+        name = generate_stack_name(self.uid, self.test, stack_name)
         client = boto3.client('cloudformation')
         stacks = client.describe_stacks(StackName=name)
         self.assertEqual(len(stacks['Stacks']), 1)
         stack = stacks['Stacks'][0]
-        self.assertTrue(stack['StackStatus'] in ('CREATE_COMPLETE',))
+        self.assertIn(stack['StackStatus'], ('CREATE_COMPLETE',))
 
     def get_lambda(self, function_name):
         client = boto3.client('lambda')
+        matches = []
         for f in client.list_functions().get('Functions', []):
-            if f['FunctionName'].split('-')[-2] == function_name:
-                return f
+            name = f['FunctionName'].split('-')
+            if name[0] == self.uid and function_name.startswith(name[-2]):
+                matches.append(f)
+        if len(matches) == 1:
+            return matches[0]
+        elif len(matches) > 1:
+            raise KeyError("Ambiguous lambda {}".format(function_name))
         raise KeyError(function_name)
 
     def invoke_lambda(self, function_name, payload=None):
@@ -151,3 +176,11 @@ class BaseIntegrationTest(object):
             FunctionName=function_name
         )['Aliases']
         return dict([[a['Name'], a] for a in aliases])
+
+    def create_kinesis_stream(self, uid_prefix=''):
+        stream_name = '{}{}'.format(uid_prefix, self.uid)
+        client = boto3.client('kinesis')
+        client.create_stream(StreamName=stream_name, ShardCount=1)
+        client.get_waiter('stream_exists').wait(StreamName=stream_name)
+        self.addCleanup(client.delete_stream, StreamName=stream_name)
+        return client.describe_stream(StreamName=stream_name)

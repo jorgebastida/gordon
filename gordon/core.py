@@ -176,7 +176,9 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
 
     def reference(self, name):
         """Resolve ``name`` as a CloudFormation reference"""
-        return self._in_project_resource_references[name]
+        if name in self._in_project_resource_references:
+            return self._in_project_resource_references[name]
+        raise KeyError(self._in_project_resource_references.keys())
 
     def get_resources(self, resource_type):
         """Returns all project and application resources"""
@@ -232,7 +234,7 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
         )
         return template
 
-    def _build_pre_project_template(self, output_filename="{}_pre_project.json"):
+    def _build_pre_project_template(self, output_filename="{}_pr_p.json"):
         """Collect registered hooks both for ``register_type_pre_project_template``
         and ``register_pre_project_template``"""
         template = actions.ActionsTemplate()
@@ -248,7 +250,7 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
             with open(os.path.join(self.build_path, output_filename), 'w') as f:
                 f.write(template.to_json(indent=4))
 
-    def _build_project_template(self,  output_filename="{}_project.json"):
+    def _build_project_template(self,  output_filename="{}_p.json"):
         """Collect registered hooks both for ``register_type_project_template``
         and ``register_project_template``"""
 
@@ -266,7 +268,7 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
         with open(os.path.join(self.build_path, output_filename), 'w') as f:
             f.write(template.to_json())
 
-    def _build_pre_resources_template(self, output_filename="{}_pre_resources.json"):
+    def _build_pre_resources_template(self, output_filename="{}_pr_r.json"):
         """Collect registered hooks both for ``register_type_pre_resources_template``
         and ``register_pre_resources_template``"""
         template = actions.ActionsTemplate()
@@ -282,7 +284,7 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
             with open(os.path.join(self.build_path, output_filename), 'w') as f:
                 f.write(template.to_json(indent=4))
 
-    def _build_resources_template(self, output_filename="{}_resources.json"):
+    def _build_resources_template(self, output_filename="{}_r.json"):
         """Collect registered hooks both for ``register_type_resources_template``
         and ``register_resources_template``"""
 
@@ -301,7 +303,7 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
             with open(os.path.join(self.build_path, output_filename), 'w') as f:
                 f.write(template.to_json())
 
-    def _build_post_resources_template(self, output_filename="{}_post_resources.json"):
+    def _build_post_resources_template(self, output_filename="{}_ps_r.json"):
         """Collect registered hooks both for ``register_type_post_resources_template``
         and ``register_post_resources_template``"""
 
@@ -400,7 +402,7 @@ class ProjectApply(BaseProject):
 
     def apply_cloudformation_template(self, name, filename, context):
         """Apply ``filename`` template with ``context``-"""
-        stack_name = '-'.join([context['Stage'], self.name, name])
+        stack_name = utils.generate_stack_name(context['Stage'], self.name, name)
         stack = utils.create_or_update_cf_stack(
             name=stack_name,
             template_filename=os.path.join(self.build_path, filename),

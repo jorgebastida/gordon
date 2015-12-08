@@ -11,7 +11,6 @@ from .exceptions import BaseGordonException
 
 
 def main(argv=None):
-    print sys.argv
     argv = (argv or sys.argv)[1:]
 
     parser = argparse.ArgumentParser(usage=("%(prog)s [build | apply | startproject | startapp]"))

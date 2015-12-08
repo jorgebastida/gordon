@@ -59,7 +59,9 @@ class BaseResource(object):
                 raise exceptions.ResourceSettingRequiredError(self.name, key)
 
         self.in_project_name = self._get_in_project_name()
-        self.in_project_cf_name = utils.valid_cloudformation_name(self.in_project_name)
+        self.in_project_cf_name = utils.valid_cloudformation_name(
+            self.in_project_name.split(':', 1)[1]
+        )
 
         self.project.register_resource_reference(
             self.in_project_name,
@@ -215,7 +217,7 @@ class BaseStream(BaseResource):
     def get_function_name(self):
         """Returns a reference to the lambda which will process this stream."""
         return self.project.reference(
-            self.settings.get('lambda')
+            'lambda:{}'.format(self.settings.get('lambda'))
         )
 
     def register_resources_template(self, template):
@@ -233,7 +235,7 @@ class BaseStream(BaseResource):
         sleep = Sleep.create_with(
             utils.valid_cloudformation_name(self.name, "Sleep"),
             lambda_arn=GetAtt(
-                self.project.reference('helpers.sleep'), 'Arn'
+                self.project.reference('lambda:helpers:sleep'), 'Arn'
             ),
             Time=30
         )

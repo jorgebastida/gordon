@@ -3,15 +3,16 @@ import unittest
 import boto3
 
 from gordon.utils_tests import BaseIntegrationTest
+from gordon.utils import valid_cloudformation_name
 
 
 class IntegrationTest(BaseIntegrationTest, unittest.TestCase):
 
     def _test_apply(self):
-        self.assert_stack_succeed('project')
-        self.assert_stack_succeed('resources')
+        self.assert_stack_succeed('p')
+        self.assert_stack_succeed('r')
 
-        lambda_ = self.get_lambda('LambdaJsexampleJsexample')
+        lambda_ = self.get_lambda(valid_cloudformation_name('jsexample:jsexample'))
         self.assertEqual(lambda_['Runtime'], 'nodejs')
         self.assertEqual(lambda_['Description'], 'My description')
         self.assertEqual(lambda_['MemorySize'], 192)

@@ -1,14 +1,15 @@
 ---
-project: kinesisexample
-default-region: eu-west-1
+project: kinesisstream
+default-region: us-east-1
 apps:
   - gordon.contrib.helpers
   - gordon.contrib.lambdas
-  - exampleapp
+  - kinesisconsumer
+
 
 kinesis:
-  example_kinesis_integration:
-    lambda: exampleapp.kinesisconsumer
+  kinesis_integration:
+    lambda: kinesisconsumer:consumer
     stream: ref://KinesisIntegrationArn
     batch_size: 1
     starting_position: LATEST

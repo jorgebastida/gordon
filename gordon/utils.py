@@ -179,9 +179,19 @@ def fix_troposphere_references(template):
     return template
 
 
+def generate_stack_name(stage, project_name, step):
+    return '-'.join([stage, project_name, step])
+
+
 def valid_cloudformation_name(*elements):
-    """Generete a valid CloudFormation name using ``elements``"""
+    """Generete a valid CloudFormation name using ``elements``
+    Because Resource names in AWS are truncaded, we try to respect up to 7
+    characters per group, except for the last one, which hopefully is the
+    most representative one
+    """
+    last = len(elements) - 1
     elements = sum([re.split(r'[^a-zA-Z0-9]', e.title()) for e in elements], [])
+    #elements = [e[:(6 if i != last else None)] for i, e in enumerate(elements)]
     return ''.join(elements)
 
 def get_cf_stack(name):
