@@ -1,0 +1,209 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Parameters &mdash; Gordon 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Gordon 0.0.1 documentation" href="index.html" />
+    <link rel="next" title="gordon.contrib" href="contrib.html" />
+    <link rel="prev" title="S3" href="integrations/s3.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="parameters">
+<h1>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h1>
+<p>Parameters are the artifact around the fact that project templates (what gordon generates into <code class="docutils literal"><span class="pre">_build</span></code>) should be immutable between stages. Parameters allow you
+to have stage specific variables.</p>
+<p>The easiest way to understand why parameters are necessary is an example.</p>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<p>Let&#8217;s imagine you wan to call one lambda every time a file is created in one of your buckets.</p>
+<blockquote>
+<div><ul class="simple">
+<li>First, you&#8217;ll create and register a lambda</li>
+<li>then you&#8217;ll create a new s3 integration which connects <code class="docutils literal"><span class="pre">my-production-bucket</span></code> with <code class="docutils literal"><span class="pre">app.mys3consumer</span></code> when a <code class="docutils literal"><span class="pre">s3:ObjectCreated:*</span></code> happens.</li>
+</ul>
+</div></blockquote>
+<p>Something like this:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">s3</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">my_s3_integration</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">bucket</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">my-production-bucket</span>
+    <span class="l-Scalar-Plain">notifications</span><span class="p-Indicator">:</span>
+
+      <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">id</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">lambda_on_create_cat</span>
+        <span class="l-Scalar-Plain">lambda</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">app.mys3consumer</span>
+        <span class="l-Scalar-Plain">events</span><span class="p-Indicator">:</span>
+          <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">s3:ObjectCreated:*</span>
+</pre></div>
+</div>
+<p>This is good to start with, but what about if once this is working great for a while... you want to test how a new lambda function works? You&#8217;ll probably need to:</p>
+<blockquote>
+<div><ul class="simple">
+<li>change <code class="docutils literal"><span class="pre">my-production-bucket</span></code> with <code class="docutils literal"><span class="pre">my-dev-bucket</span></code></li>
+<li><code class="docutils literal"><span class="pre">gordon</span> <span class="pre">build</span></code></li>
+<li><code class="docutils literal"><span class="pre">gordon</span> <span class="pre">apply</span> <span class="pre">--stage=test</span></code></li>
+<li>Test your lambda, and if everything is ok, remember to change the name of the buckets back to the original.</li>
+</ul>
+</div></blockquote>
+<p>This is tedious and unmaintainable.</p>
+</div>
+<div class="section" id="solution">
+<h2>Solution<a class="headerlink" href="#solution" title="Permalink to this headline">¶</a></h2>
+<p>The solution is as simple as making your bucket name be a parameter. In this case we are calling the parameter <code class="docutils literal"><span class="pre">MyS3IntegrationBucket</span></code>.</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">s3</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">my_s3_integration</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">bucket</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">ref://MyS3IntegrationBucket</span>
+    <span class="l-Scalar-Plain">notifications</span><span class="p-Indicator">:</span>
+
+      <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">id</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">lambda_on_create_cat</span>
+        <span class="l-Scalar-Plain">lambda</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">app.mys3consumer</span>
+        <span class="l-Scalar-Plain">events</span><span class="p-Indicator">:</span>
+          <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">s3:ObjectCreated:*</span>
+</pre></div>
+</div>
+<p>Then, in the root of you project, create a new directory called <code class="docutils literal"><span class="pre">parameters</span></code> and create a new file with the name of each of the stages (<code class="docutils literal"><span class="pre">dev</span></code> and <code class="docutils literal"><span class="pre">prod</span></code>).</p>
+<div class="highlight-bash"><div class="highlight"><pre>...
+parameters/
+├── prod.yml
+└── dev.yml
+</pre></div>
+</div>
+<p>Then, we can define two different values for <code class="docutils literal"><span class="pre">MyS3IntegrationBucket</span></code> based on the stage where we are applying the project.</p>
+<p><code class="docutils literal"><span class="pre">prod.yml</span></code> will have the production bucket:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="nn">---</span>
+<span class="l-Scalar-Plain">MyS3IntegrationBucket</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">my-production-bucket</span>
+</pre></div>
+</div>
+<p>and <code class="docutils literal"><span class="pre">dev.yml</span></code> will have the dev one:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="nn">---</span>
+<span class="l-Scalar-Plain">MyS3IntegrationBucket</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">my-dev-bucket</span>
+</pre></div>
+</div>
+<p>Now we can simply run:</p>
+<blockquote>
+<div><ul class="simple">
+<li><code class="docutils literal"><span class="pre">gordon</span> <span class="pre">apply</span> <span class="pre">--stage=dev</span></code></li>
+<li><code class="docutils literal"><span class="pre">gordon</span> <span class="pre">apply</span> <span class="pre">--stage=prod</span></code></li>
+</ul>
+</div></blockquote>
+<p>And the correct settings will be used.</p>
+</div>
+<div class="section" id="how-can-i-user-parameters">
+<h2>How can I user parameters?<a class="headerlink" href="#how-can-i-user-parameters" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>In order to use parameters you only need to:</dt>
+<dd><ul class="first last simple">
+<li>Create a directory named <code class="docutils literal"><span class="pre">parameters</span></code></li>
+<li>Inside of this directory, create files for your different stages (<code class="docutils literal"><span class="pre">dev.yml</span></code>, <code class="docutils literal"><span class="pre">prod.yml</span></code>, ...)</li>
+<li>Replace values in your settings with <code class="docutils literal"><span class="pre">ref://MyParameter</span></code></li>
+<li>Add different values to <code class="docutils literal"><span class="pre">MyParameter</span></code> in <code class="docutils literal"><span class="pre">dev.yml</span></code>, <code class="docutils literal"><span class="pre">prod.yml</span></code> ...</li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">You can create a file called <code class="docutils literal"><span class="pre">common.yml</span></code>, and place all shared parameters between stages on it. When this file is present, gordon will read it first, and then
+update the parameters map using your stage-specific settings file (if pressent).</p>
+</div>
+</div>
+<div class="section" id="how-it-works">
+<h2>How it works?<a class="headerlink" href="#how-it-works" title="Permalink to this headline">¶</a></h2>
+<p>When you define in your settings file a value as a reference <code class="docutils literal"><span class="pre">ref://</span></code>, gordon will automatically register (on <code class="docutils literal"><span class="pre">build</span></code> time) all required input parameters in your CloudFormation templates
+and collect  values from your parameters files when you call <code class="docutils literal"><span class="pre">apply</span></code>.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Parameters</a><ul>
+<li><a class="reference internal" href="#example">Example</a></li>
+<li><a class="reference internal" href="#solution">Solution</a></li>
+<li><a class="reference internal" href="#how-can-i-user-parameters">How can I user parameters?</a></li>
+<li><a class="reference internal" href="#how-it-works">How it works?</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="integrations/s3.html" title="previous chapter">S3</a></li>
+      <li>Next: <a href="contrib.html" title="next chapter">gordon.contrib</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/parameters.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, Jorge Bastida.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="_sources/parameters.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

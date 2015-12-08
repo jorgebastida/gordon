@@ -7,6 +7,7 @@ import hashlib
 import shutil
 import unittest
 from nose.plugins.attrib import attr
+from nose.tools import nottest
 
 import boto3
 
@@ -52,6 +53,7 @@ def delete_s3_bucket(bucket_name):
     s3client.delete_bucket(Bucket=bucket_name)
 
 
+@nottest
 def delete_test_stacks(name):
     client = boto3.client('cloudformation')
     paginator = client.get_paginator('describe_stacks')

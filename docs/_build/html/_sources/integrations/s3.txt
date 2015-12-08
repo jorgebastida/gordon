@@ -1,0 +1,165 @@
+S3
+=====
+
+Amazon Simple Storage Service (Amazon S3), provides developers and IT teams with secure, durable, highly-scalable object storage.
+Amazon S3 is easy to use, with a simple web service interface to store and retrieve any amount of data from anywhere on the web.
+
+Gordon allow you to integrate your lambdas with S3 using their notification service.
+The idea is simple, every time an object get's created/deleted, S3, will trigger a notification which you can route to three different services:
+
+  * **Lambda**: Your code will be triggered each time something happens. *(1 S3 event = 1 lambda executed)*
+  * **SQS**: S3 will create a message in a SQS queue every time something happens. Right now there is no any api for Lambdas to consume messages from a sqs queue, but because you need to define all bucket notification in the same place, we need to support this. In the future AWS will might support consuming SQS messages using lambda. *(1 S3 event = 1 message in a queue)*
+  * **SNS**: S3 will send a message to a SNS Topic. You can subscribe as many lambdas as you want to this topic and process those messages individually *(1 S3 event = N lambdas executed)*
+
+  .. note::
+
+    As always, is not gordon's business to create those ``sqs`` or ``sns`` resources. You should create them in advance. :doc:`../why_gordon_dont_create_other_resources`
+
+Limitations
+------------
+
+This integration, has some limitations because how the AWS API is designed:
+ * You must define all notifications for a bucket within the same integration.
+ * Gordon will refuse to configure notifications in bucket if it already has some other notifications configured manually (this is a safe measure).
+
+
+Anatomy of the integration
+----------------------------------
+
+ .. code-block:: yaml
+
+   s3:
+
+     { INTEGRATION_NAME }:
+       bucket: { BUCKET_NAME }
+       notifications:
+
+         - id: { NOTFICATION_ID  }
+           { DESTINATION_TYPE }: { DESTINATION }
+
+           events:
+             - { EVENT_NAME }
+             - ...
+
+           key_filters: (optional)
+             - prefix: PREFIX
+             - suffix: SUFFIX
+
+
+Destinations
+-------------
+
+Valid destinations types are:
+ * ``lambda``
+ * ``queue``
+ * ``topic``
+
+
+Destination: ``lambda``
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+You can reference lambdas by name
+
+.. code-block:: yaml
+
+  lambda: app.s3consumer
+
+Or by their full ``arn``:
+
+.. code-block:: yaml
+
+  lambda: arn:aws:lambda:eu-west-1:123456789:function:function-name
+
+
+Destination: ``queue``
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+You can reference queues by name if they are in the same account than the bucket
+
+.. code-block:: yaml
+
+  queue: my-queue-name
+
+If your queue is on a different account you can use the dictionary format:
+
+.. code-block:: yaml
+
+  queue:
+    name: my-queue-name
+    acount_id: 123456789
+
+
+Destination: ``topic``
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+You can reference topics by name if they are in the same account than the bucket
+
+.. code-block:: yaml
+
+  topic: my-topic-name
+
+If your topic is on a different account you can use the dictionary format:
+
+.. code-block:: yaml
+
+  topic:
+    name: my-topic-name
+    acount_id: 123456789
+
+Events
+--------
+
+It is mandatory you provide a list of events where your notification will be subscribed. The list of available events is the following:
+
+  * ``s3:ObjectCreated:*``
+   * ``s3:ObjectCreated:Put``
+   * ``s3:ObjectCreated:Post``
+   * ``s3:ObjectCreated:Copy``
+   * ``s3:ObjectCreated:CompleteMultipartUpload``
+  * ``s3:ObjectRemoved:*``
+   * ``s3:ObjectRemoved:Delete``
+   * ``s3:ObjectRemoved:DeleteMarkerCreated``
+  * ``s3:ReducedRedundancyLostObject``
+
+  .. note::
+
+      Remember that you can't overlap events between notifications. So, if you for example subscribe a lambda to ``s3:ObjectCreated:*``, you'll not
+      be able to subscribe any other notification to: ``s3:ObjectCreated:Put``, ``s3:ObjectCreated:Post``, etc...
+
+
+Filters
+--------
+
+Filters are optional to all notifications. The current AWS API only allows you to filter events by the key's ``prefix`` and ``suffix``. One notification can't define
+more than one of each (``prefix`` and ``suffix``) and  filters in a bucket can't overlap one to each other.
+
+
+Full Example
+----------------------------------
+
+.. code-block:: yaml
+
+  s3:
+    my_s3_integration:
+      bucket: my_bucket_name
+      notifications:
+
+        - id: lambda_on_create_cat
+          lambda: app.s3consumer
+          events:
+            - s3:ObjectCreated:*
+          key_filters:
+            - prefix: cat_
+            - suffix: .png
+
+        - id: queue_on_remove_dog
+          queue: removed_dogs_queue
+          events:
+            - s3:ObjectRemoved:*
+          key_filters:
+            - prefix: dog_
+
+        - id: topic_on_redundacy_lost
+          topic: redundacy_lost_topic
+          events:
+            - s3:ReducedRedundancyLostObject:*

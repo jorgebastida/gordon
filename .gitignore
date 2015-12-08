@@ -1,6 +1,3 @@
 *.pyc
 *.eggs
 *.egg-info
-examples/helloworld/_build/
-docs/_build
-tests/*/*/_build/

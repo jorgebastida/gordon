@@ -1,0 +1,135 @@
+{
+    "outputs": {
+        "SleepS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "SleepS3Url", 
+            "value": {
+                "action": "sleep-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }, 
+        "LambdaAliasS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "LambdaAliasS3Version", 
+            "value": {
+                "action": "lambda_alias-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
+        "LambdaAliasS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "LambdaAliasS3Url", 
+            "value": {
+                "action": "lambda_alias-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }, 
+        "SleepS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "SleepS3Version", 
+            "value": {
+                "action": "sleep-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
+        "JsexampleS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "JsexampleS3Url", 
+            "value": {
+                "action": "jsexample-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }, 
+        "LambdaVersionS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "LambdaVersionS3Version", 
+            "value": {
+                "action": "lambda_version-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
+        "LambdaVersionS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "LambdaVersionS3Url", 
+            "value": {
+                "action": "lambda_version-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }, 
+        "JsexampleS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "JsexampleS3Version", 
+            "value": {
+                "action": "jsexample-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }
+    }, 
+    "_type": "ActionsTemplate", 
+    "actions": [
+        {
+            "_type": "UploadToS3", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "name": "sleep-upload", 
+            "key": "lambda_helpers_sleep.zip", 
+            "filename": "code/lambda_helpers_sleep.zip"
+        }, 
+        {
+            "_type": "UploadToS3", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "name": "lambda_alias-upload", 
+            "key": "lambda_lambdas_lambda_alias.zip", 
+            "filename": "code/lambda_lambdas_lambda_alias.zip"
+        }, 
+        {
+            "_type": "UploadToS3", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "name": "lambda_version-upload", 
+            "key": "lambda_lambdas_lambda_version.zip", 
+            "filename": "code/lambda_lambdas_lambda_version.zip"
+        }, 
+        {
+            "_type": "UploadToS3", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "name": "jsexample-upload", 
+            "key": "lambda_jsexample_jsexample.zip", 
+            "filename": "code/lambda_jsexample_jsexample.zip"
+        }
+    ], 
+    "parameters": {
+        "CodeBucket": {
+            "default": "", 
+            "_type": "Parameter", 
+            "name": "CodeBucket"
+        }
+    }, 
+    "parallelizable": true
+}

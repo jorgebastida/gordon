@@ -17,7 +17,7 @@ How to run integration tests?
 ------------------------------
 
 ```shell
-python setup.py nosetests -a 'integration' --stop --nologcapture --processes=3
+python setup.py nosetests -a 'integration' --stop --nologcapture
 ```
 
 How to run one integration test?
