@@ -3,6 +3,7 @@ import unittest
 import boto3
 
 from gordon.utils_tests import BaseIntegrationTest
+from gordon import utils
 
 
 class IntegrationTest(BaseIntegrationTest, unittest.TestCase):
@@ -11,7 +12,7 @@ class IntegrationTest(BaseIntegrationTest, unittest.TestCase):
         self.assert_stack_succeed('p')
         self.assert_stack_succeed('r')
 
-        lambda_ = self.get_lambda(valid_cloudformation_name('pyexample:pyexample'))
+        lambda_ = self.get_lambda(utils.valid_cloudformation_name('pyexample:pyexample'))
         self.assertEqual(lambda_['Runtime'], 'python2.7')
         self.assertEqual(lambda_['Description'], 'My description')
         self.assertEqual(lambda_['MemorySize'], 192)
