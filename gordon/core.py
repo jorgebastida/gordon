@@ -25,9 +25,7 @@ AVAILABLE_RESOURCES = {
     'lambdas': resources.lambdas.Lambda,
     'dynamodb': resources.dynamodb.Dynamodb,
     'kinesis': resources.kinesis.Kinesis,
-    's3': resources.s3.BucketNotificationConfiguration,
-    'api': resources.apigateway.RestAPI,
-    'urls': resources.apigateway.APIResource,
+    's3': resources.s3.BucketNotificationConfiguration
 }
 
 
