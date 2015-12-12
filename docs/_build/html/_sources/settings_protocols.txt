@@ -4,11 +4,25 @@ Settings Protocols
 When working with settings, static values are sometimes not flexible enough. gordon provides severals protocol which will allow you to
 customize your settings.
 
-It is important to understand the difference between :doc:`settings_protocols` and :doc:`parameters_protocols`. Settings protocols are evaluated on ``build`` time, and
-parameter_protocols on ``apply``.
+It is important to understand the difference between :doc:`settings_protocols` and :doc:`parameters_protocols`.
+Settings protocols are evaluated on ``build`` time, and parameter_protocols on ``apply``.
+
+On build time there is a limited amount of things we can allow you to customize using protocols. This is because we don't want you
+to shoot yourself in the foot.
 
 
 Reference ``ref://``
 ---------------------
 
-You can use references ...
+You can reference parameters using ``ref://NameOfTheParameter`` as value of your setting.
+
+Example:
+
+.. code-block:: yml
+
+    ---
+    s3:
+      my_s3_integration:
+        bucket: ref://MyBucket
+        notifications:
+          ...

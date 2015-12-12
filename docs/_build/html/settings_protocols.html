@@ -24,6 +24,8 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="Gordon 0.0.1 documentation" href="index.html" />
+    <link rel="next" title="Parameters Protocols" href="parameters_protocols.html" />
+    <link rel="prev" title="Parameters" href="parameters.html" />
    
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
@@ -40,11 +42,22 @@
 <h1>Settings Protocols<a class="headerlink" href="#settings-protocols" title="Permalink to this headline">¶</a></h1>
 <p>When working with settings, static values are sometimes not flexible enough. gordon provides severals protocol which will allow you to
 customize your settings.</p>
-<p>It is important to understand the difference between <a class="reference internal" href=""><em>Settings Protocols</em></a> and <a class="reference internal" href="parameters_protocols.html"><em>&lt;no title&gt;</em></a>. Settings protocols are evaluated on <code class="docutils literal"><span class="pre">build</span></code> time, and
-parameter_protocols on <code class="docutils literal"><span class="pre">apply</span></code>.</p>
+<p>It is important to understand the difference between <a class="reference internal" href=""><em>Settings Protocols</em></a> and <a class="reference internal" href="parameters_protocols.html"><em>Parameters Protocols</em></a>.
+Settings protocols are evaluated on <code class="docutils literal"><span class="pre">build</span></code> time, and parameter_protocols on <code class="docutils literal"><span class="pre">apply</span></code>.</p>
+<p>On build time there is a limited amount of things we can allow you to customize using protocols. This is because we don&#8217;t want you
+to shoot yourself in the foot.</p>
 <div class="section" id="reference-ref">
 <h2>Reference <code class="docutils literal"><span class="pre">ref://</span></code><a class="headerlink" href="#reference-ref" title="Permalink to this headline">¶</a></h2>
-<p>You can use references ...</p>
+<p>You can reference parameters using <code class="docutils literal"><span class="pre">ref://NameOfTheParameter</span></code> as value of your setting.</p>
+<p>Example:</p>
+<div class="highlight-yml"><div class="highlight"><pre>---
+s3:
+  my_s3_integration:
+    bucket: ref://MyBucket
+    notifications:
+      ...
+</pre></div>
+</div>
 </div>
 </div>
 
@@ -65,6 +78,8 @@ parameter_protocols on <code class="docutils literal"><span class="pre">apply</s
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="parameters.html" title="previous chapter">Parameters</a></li>
+      <li>Next: <a href="parameters_protocols.html" title="next chapter">Parameters Protocols</a></li>
   </ul></li>
 </ul>
 </div>

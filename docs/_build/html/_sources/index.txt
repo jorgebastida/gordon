@@ -16,8 +16,7 @@ Contents:
    lambdas
    integrations/index
    parameters
-   settings_protocols
-   parameters_protocols
+   parameters_advanced
    contrib
    tutorials
 

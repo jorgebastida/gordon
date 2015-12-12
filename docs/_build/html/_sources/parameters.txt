@@ -1,10 +1,25 @@
 Parameters
 =============
 
-Parameters are the artifact around the fact that project templates (what gordon generates into ``_build``) should be immutable between stages. Parameters allow you
-to have stage specific variables.
+Parameters are the artifact around the fact that project templates (what gordon generates into ``_build``) should be immutable between stages.
+Parameters allow you to have specific stage settings.
 
-The easiest way to understand why parameters are necessary is an example.
+How can I user parameters?
+---------------------------
+
+In order to use parameters you only need to:
+ * Create a directory called ``parameters``
+ * Inside of this directory, create ``.yml`` files for your different stages (``dev.yml``, ``prod.yml``, ...)
+ * Replace values in your settings with ``ref://MyParameter``
+ * Add values for ``MyParameter`` in ``dev.yml``, ``prod.yml`` ...
+
+.. note::
+
+   You can create a file called ``common.yml``, and place all shared parameters between stages on it. When this file is present, gordon will read it first, and then
+   update the parameters map using your stage-specific settings file (if pressent).
+
+If you want to customize your parameters further, read :doc:`parameters_advanced`, where you'll find information on how make paramater values be dynamic.
+
 
 Example
 --------
@@ -30,10 +45,11 @@ Something like this:
 
 This is good to start with, but what about if once this is working great for a while... you want to test how a new lambda function works? You'll probably need to:
 
- * change ``my-production-bucket`` with ``my-dev-bucket``
- * ``gordon build``
- * ``gordon apply --stage=test``
- * Test your lambda, and if everything is ok, remember to change the name of the buckets back to the original.
+ * Change the bucket name to a test one ``my-production-bucket`` -> ``my-dev-bucket``
+ * Build your project ``gordon build``
+ * Apply the project into a test stage ``gordon apply --stage=test``
+ * Test your lambda
+ * If everything is ok, remember to change the name of the buckets back to the original, and deploy it to production again.
 
 This is tedious and unmaintainable.
 
@@ -88,24 +104,8 @@ Now we can simply run:
 
 And the correct settings will be used.
 
-How can I user parameters?
----------------------------
-
-In order to use parameters you only need to:
- * Create a directory named ``parameters``
- * Inside of this directory, create files for your different stages (``dev.yml``, ``prod.yml``, ...)
- * Replace values in your settings with ``ref://MyParameter``
- * Add different values to ``MyParameter`` in ``dev.yml``, ``prod.yml`` ...
-
-
-.. note::
-
-   You can create a file called ``common.yml``, and place all shared parameters between stages on it. When this file is present, gordon will read it first, and then
-   update the parameters map using your stage-specific settings file (if pressent).
-
-
 How it works?
 --------------
 
-When you define in your settings file a value as a reference ``ref://``, gordon will automatically register (on ``build`` time) all required input parameters in your CloudFormation templates 
+When you define in your settings file a value as a reference ``ref://``, gordon will automatically register (on ``build`` time) all required input parameters in your CloudFormation templates
 and collect  values from your parameters files when you call ``apply``.

@@ -74,11 +74,9 @@ class App(BaseResourceContainer):
         self.settings = utils.load_settings(
             os.path.join(self.path, SETTINGS_FILE),
             default=self.DEFAULT_SETTINS,
-            context=self.project._context(),
             protocols=protocols.BASE_BUILD_PROTOCOLS
         )
         self.settings.update(settings or {})
-
         super(App, self).__init__(*args, **kwargs)
 
 
@@ -94,16 +92,9 @@ class BaseProject(object):
         self.settings = utils.load_settings(
             os.path.join(self.path, SETTINGS_FILE),
             default=self.DEFAULT_SETTINS,
-            context=self._context(),
             protocols=protocols.BASE_BUILD_PROTOCOLS
         )
         self.name = self.settings['project']
-
-    def _context(self):
-        """Available context when enriching settings using jinja2."""
-        return {
-            'env': os.environ
-        }
 
 
 class ProjectBuild(BaseProject, BaseResourceContainer):

@@ -1,2 +1,27 @@
 Parameters Protocols
 ====================
+
+It is great that you can abstract your project to use different parameters on each stage, but sometimes the fact that those parameters are
+static makes quite hard to describe your needs.
+
+It is important to understand the difference between :doc:`parameters_protocols` and :doc:`settings_protocols`.
+Settings protocols are evaluated on ``build`` time, and parameter_protocols on ``apply``.
+
+
+Reference ``ref://``
+---------------------
+
+You can use references ...
+
+
+Reference ``env://``
+---------------------
+
+You can make the value of your parameter be based on any environment variable using the ``env://`` protocol.
+
+.. code-block:: yml
+
+    ---
+    MyParameter: env://MY_ENV_VARIABLE
+
+gordon will make the parameter ``MyParameter`` value be whatever ``MY_ENV_VARIABLE`` value is on ``apply`` time.
