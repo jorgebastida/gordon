@@ -4,18 +4,12 @@ Advanced Parameters
 It is great that you can abstract your project to use different parameters on each stage, but sometimes the fact that those parameters are
 static makes quite hard to describe your needs.
 
-There are two ways you can customize your parameters further, Protocols and Jinja2.
+There are two ways you can customize your parameters further, Protocols and Templates.
 
 Protocols
 ===========
 
 Protocols are helpers which will allows you to make the value of one parameter be dynamic. Protocols are evaluated on ``apply`` time.
-
-
-Reference ``ref://``
----------------------
-
-You can use ``ref://`` to references other parameters. ?
 
 
 Reference ``env://``
@@ -31,8 +25,8 @@ You can make the value of your parameter be based on any environment variable us
 gordon will make the parameter ``MyParameter`` value be whatever ``MY_ENV_VARIABLE`` value is on ``apply`` time.
 
 
-Jinja2
-========
+Jinja2 Templates
+=================
 
 If you want to customize your parameter values even further, you can use jinja2 syntax to customize the value of your parameters.
 
@@ -51,4 +45,4 @@ Example:
     MyBucket: "company-{{ stage }}-images"
 
 
-There are lot's of things you can do with Jinja2. For more information `Template Designer Documentation <http://jinja.pocoo.org/docs/dev/templates/#filters>`_ 
+There are lot's of things you can do with Jinja2. For more information `Template Designer Documentation <http://jinja.pocoo.org/docs/dev/templates/#filters>`_

@@ -10,7 +10,9 @@ install_requires = [
     'Jinja2',
 ]
 
-tests_require = []
+tests_require = [
+    'coverage'
+]
 
 # as of Python >= 2.7 argparse module is maintained within Python.
 if sys.version_info < (2, 7):

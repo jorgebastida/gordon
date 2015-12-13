@@ -73,7 +73,7 @@ class Lambda(base.BaseResource):
 
     def get_memory(self):
         """Returns the memory setting by rounding the actual value to the
-        nearest power of 64. If no memory is defined, returns 128."""
+        nearest multiple of 64. If no memory is defined, returns 128."""
         memory = int(self.settings.get('memory', 128))
         memory = memory - (memory % 64)
         return min(memory, 1536)

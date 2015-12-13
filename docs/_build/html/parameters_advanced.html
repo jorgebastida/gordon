@@ -24,6 +24,8 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="Gordon 0.0.1 documentation" href="index.html" />
+    <link rel="next" title="gordon.contrib" href="contrib.html" />
+    <link rel="prev" title="Parameters" href="parameters.html" />
    
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
@@ -40,15 +42,11 @@
 <h1>Advanced Parameters<a class="headerlink" href="#advanced-parameters" title="Permalink to this headline">¶</a></h1>
 <p>It is great that you can abstract your project to use different parameters on each stage, but sometimes the fact that those parameters are
 static makes quite hard to describe your needs.</p>
-<p>There are two ways you can customize your parameters further, Protocols and Jinja2.</p>
+<p>There are two ways you can customize your parameters further, Protocols and Templates.</p>
 </div>
 <div class="section" id="protocols">
 <h1>Protocols<a class="headerlink" href="#protocols" title="Permalink to this headline">¶</a></h1>
 <p>Protocols are helpers which will allows you to make the value of one parameter be dynamic. Protocols are evaluated on <code class="docutils literal"><span class="pre">apply</span></code> time.</p>
-<div class="section" id="reference-ref">
-<h2>Reference <code class="docutils literal"><span class="pre">ref://</span></code><a class="headerlink" href="#reference-ref" title="Permalink to this headline">¶</a></h2>
-<p>You can use <code class="docutils literal"><span class="pre">ref://</span></code> to references other parameters. ?</p>
-</div>
 <div class="section" id="reference-env">
 <h2>Reference <code class="docutils literal"><span class="pre">env://</span></code><a class="headerlink" href="#reference-env" title="Permalink to this headline">¶</a></h2>
 <p>You can make the value of your parameter be based on any environment variable using the <code class="docutils literal"><span class="pre">env://</span></code> protocol.</p>
@@ -59,8 +57,8 @@ MyParameter: env://MY_ENV_VARIABLE
 <p>gordon will make the parameter <code class="docutils literal"><span class="pre">MyParameter</span></code> value be whatever <code class="docutils literal"><span class="pre">MY_ENV_VARIABLE</span></code> value is on <code class="docutils literal"><span class="pre">apply</span></code> time.</p>
 </div>
 </div>
-<div class="section" id="jinja2">
-<h1>Jinja2<a class="headerlink" href="#jinja2" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="jinja2-templates">
+<h1>Jinja2 Templates<a class="headerlink" href="#jinja2-templates" title="Permalink to this headline">¶</a></h1>
 <p>If you want to customize your parameter values even further, you can use jinja2 syntax to customize the value of your parameters.</p>
 <p>The context gordon will provide to this jinja helper is:</p>
 <blockquote>
@@ -89,16 +87,17 @@ MyBucket: &#8220;company-{{ stage }}-images&#8221;</div></blockquote>
   <ul>
 <li><a class="reference internal" href="#">Advanced Parameters</a></li>
 <li><a class="reference internal" href="#protocols">Protocols</a><ul>
-<li><a class="reference internal" href="#reference-ref">Reference <code class="docutils literal"><span class="pre">ref://</span></code></a></li>
 <li><a class="reference internal" href="#reference-env">Reference <code class="docutils literal"><span class="pre">env://</span></code></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#jinja2">Jinja2</a></li>
+<li><a class="reference internal" href="#jinja2-templates">Jinja2 Templates</a></li>
 </ul>
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="parameters.html" title="previous chapter">Parameters</a></li>
+      <li>Next: <a href="contrib.html" title="next chapter">gordon.contrib</a></li>
   </ul></li>
 </ul>
 </div>

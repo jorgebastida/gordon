@@ -26,3 +26,11 @@ How to run one integration test?
 ```shell
 python setup.py nosetests -a 'integration' --stop --nologcapture --where=tests/lambdapython/
 ```
+
+
+How to run coverage
+--------------------------------
+
+```shell
+coverage run --source=gordon setup.py nosetests -a 'integration' --stop --nologcapture
+```
