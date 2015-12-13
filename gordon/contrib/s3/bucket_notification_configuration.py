@@ -38,8 +38,6 @@ def handler(event, context):
     (for example) the lambda ID has changed. As result, CF will only trigger
     a delete when the bucket changes - which is expected.
     """
-
-    print("Received event: " + json.dumps(event, indent=2))
     properties = event['ResourceProperties']
 
     # It doesn't matter how big you put this on the doc... people wil
