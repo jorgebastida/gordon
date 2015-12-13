@@ -6,7 +6,6 @@ from cfnresponse import send, SUCCESS
 
 
 def publish_version(function_name):
-    print "Publishing version for {}".format(function_name)
     client = boto3.client('lambda')
     function = client.get_function(FunctionName=function_name)
 
