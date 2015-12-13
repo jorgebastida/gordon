@@ -43,12 +43,11 @@
 <p>It is great that you can abstract your project to use different parameters on each stage, but sometimes the fact that those parameters are
 static makes quite hard to describe your needs.</p>
 <p>There are two ways you can customize your parameters further, Protocols and Templates.</p>
-</div>
 <div class="section" id="protocols">
-<h1>Protocols<a class="headerlink" href="#protocols" title="Permalink to this headline">¶</a></h1>
+<h2>Protocols<a class="headerlink" href="#protocols" title="Permalink to this headline">¶</a></h2>
 <p>Protocols are helpers which will allows you to make the value of one parameter be dynamic. Protocols are evaluated on <code class="docutils literal"><span class="pre">apply</span></code> time.</p>
 <div class="section" id="reference-env">
-<h2>Reference <code class="docutils literal"><span class="pre">env://</span></code><a class="headerlink" href="#reference-env" title="Permalink to this headline">¶</a></h2>
+<h3>Reference <code class="docutils literal"><span class="pre">env://</span></code><a class="headerlink" href="#reference-env" title="Permalink to this headline">¶</a></h3>
 <p>You can make the value of your parameter be based on any environment variable using the <code class="docutils literal"><span class="pre">env://</span></code> protocol.</p>
 <div class="highlight-yml"><div class="highlight"><pre>---
 MyParameter: env://MY_ENV_VARIABLE
@@ -58,7 +57,7 @@ MyParameter: env://MY_ENV_VARIABLE
 </div>
 </div>
 <div class="section" id="jinja2-templates">
-<h1>Jinja2 Templates<a class="headerlink" href="#jinja2-templates" title="Permalink to this headline">¶</a></h1>
+<h2>Jinja2 Templates<a class="headerlink" href="#jinja2-templates" title="Permalink to this headline">¶</a></h2>
 <p>If you want to customize your parameter values even further, you can use jinja2 syntax to customize the value of your parameters.</p>
 <p>The context gordon will provide to this jinja helper is:</p>
 <blockquote>
@@ -69,12 +68,13 @@ MyParameter: env://MY_ENV_VARIABLE
 <li><code class="docutils literal"><span class="pre">env</span></code>: All available environment variables.</li>
 </ul>
 </div></blockquote>
-<p>Example:
-.. code-block:: yml</p>
-<blockquote>
-<div>&#8212;
-MyBucket: &#8220;company-{{ stage }}-images&#8221;</div></blockquote>
-<p>There are lot&#8217;s of things you can do with Jinja2. For more information <a class="reference external" href="http://jinja.pocoo.org/docs/dev/templates/#filters">Template Designer Documentation</a></p>
+<p>Example:</p>
+<div class="highlight-yml"><div class="highlight"><pre>---
+MyBucket: &quot;company-{{ stage }}-images&quot;
+</pre></div>
+</div>
+<p>There are lot&#8217;s of things you can do with Jinja2. For more information <a class="reference external" href="http://jinja.pocoo.org/docs/dev/templates/#filters">Jinja2 Template Designer Documentation</a></p>
+</div>
 </div>
 
 
@@ -85,12 +85,14 @@ MyBucket: &#8220;company-{{ stage }}-images&#8221;</div></blockquote>
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Advanced Parameters</a></li>
+<li><a class="reference internal" href="#">Advanced Parameters</a><ul>
 <li><a class="reference internal" href="#protocols">Protocols</a><ul>
 <li><a class="reference internal" href="#reference-env">Reference <code class="docutils literal"><span class="pre">env://</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#jinja2-templates">Jinja2 Templates</a></li>
+</ul>
+</li>
 </ul>
 <div class="relations">
 <h3>Related Topics</h3>

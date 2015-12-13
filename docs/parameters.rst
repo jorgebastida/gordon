@@ -4,7 +4,7 @@ Parameters
 Parameters are the artifact around the fact that project templates (what gordon generates into ``_build``) should be immutable between stages.
 Parameters allow you to have specific stage settings.
 
-How can I user parameters?
+How can I use parameters?
 ---------------------------
 
 In order to use parameters you only need to:

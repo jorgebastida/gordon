@@ -46,7 +46,7 @@ a new piece of code! That's where gordon tries to help.
 
 
 Anatomy of a Lambda
-============================
+--------------------
 
 
 .. code-block:: yaml
