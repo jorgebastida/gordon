@@ -7,7 +7,7 @@ try:
 except ImportError:
     from unittest.mock import patch, Mock, call
 
-from gordon.actions import Parameter, ActionsTemplate, GetAttr
+from gordon.actions import Parameter, ActionsTemplate, GetAttr, UploadToS3
 from gordon import exceptions
 
 
@@ -58,15 +58,76 @@ class TestActions(unittest.TestCase):
 
         self.assertEqual(at.apply(context, project), {'version': '1234', 'pi': '3.1416'})
 
+    @patch('gordon.actions.boto3.resource')
+    @patch('gordon.actions.boto3.client')
+    @patch('gordon.actions.utils.get_zip_metadata')
+    def test_upload_to_s3(self, get_zip_metadata_mock, client_mock, resource_mock):
+        client = Mock()
+        resource = Mock()
+        client_mock.return_value = client
+        resource_mock.return_value = resource
 
-
-        # action_outputs = {}
-        # for action in self.actions:
-        #     action_outputs[action.name] = action.apply(context, project)
         #
-        # outputs = {}
-        # for name, output in self.outputs.iteritems():
-        #     if isinstance(output.value, GetAttr):
-        #         value = action_outputs[output.value.action].get(output.value.attr, output.default)
-        #     outputs[name] = value
-        # return outputs
+        # New file
+        #
+        client.get_object.side_effect = Exception()
+        get_zip_metadata_mock.return_value = {'sha1': '123'}
+        resource.Object.return_value.version_id = 'version123'
+        context = Mock()
+        project = Mock(region='eu-west-1', build_path='_build')
+
+        u = UploadToS3(name='name', bucket='bucket', key='key', filename='filename.zip')
+        output = u.apply(context, project)
+
+        self.assertEqual(
+            output,
+            {'s3url': 'https://s3-eu-west-1.amazonaws.com/bucket/key', 's3version': 'version123'}
+        )
+        resource.Object.assert_called_once_with(
+            'bucket', 'key'
+        )
+        resource.Object.return_value.upload_file.assert_called_once_with(
+            '_build/filename.zip',
+            ExtraArgs={'Metadata': {'sha1': '123'}}
+        )
+
+        #
+        # Existing file, but different hash
+        #
+        resource.Object.reset_mock()
+        resource.Object.return_value.upload_file.reset_mock()
+        client.get_object.side_effect = None
+        client.get_object.return_value = {'Metadata': {'sha1': '122'}}
+
+        u = UploadToS3(name='name', bucket='bucket', key='key', filename='filename.zip')
+        output = u.apply(context, project)
+
+        self.assertEqual(
+            output,
+            {'s3url': 'https://s3-eu-west-1.amazonaws.com/bucket/key', 's3version': 'version123'}
+        )
+        resource.Object.assert_called_once_with(
+            'bucket', 'key'
+        )
+        resource.Object.return_value.upload_file.assert_called_once_with(
+            '_build/filename.zip',
+            ExtraArgs={'Metadata': {'sha1': '123'}}
+        )
+
+        #
+        # Existing file, same hash
+        #
+        resource.Object.reset_mock()
+        resource.Object.return_value.upload_file.reset_mock()
+
+        client.get_object.return_value = {'Metadata': {'sha1': '123'}, 'VersionId': 'version123'}
+
+        u = UploadToS3(name='name', bucket='bucket', key='key', filename='filename.zip')
+        output = u.apply(context, project)
+
+        self.assertEqual(
+            output,
+            {'s3url': 'https://s3-eu-west-1.amazonaws.com/bucket/key', 's3version': 'version123'}
+        )
+        resource.Object.assert_not_called()
+        resource.Object.return_value.upload_file.assert_not_called()

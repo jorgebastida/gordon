@@ -2,6 +2,7 @@
 import os
 import json
 import hashlib
+import StringIO
 
 import boto3
 from clint.textui import colored, puts
@@ -188,7 +189,7 @@ class UploadToS3(BaseAction):
             extraargs = {'Metadata': metadata}
 
         obj.upload_file(self.filename, ExtraArgs=extraargs)
-        self._success(metadata.get('sha1'))
+        self._success(metadata.get('sha1', ''))
         return self.output(obj.version_id)
 
     def output(self, version):
@@ -211,6 +212,7 @@ class UploadToS3(BaseAction):
         # If there is a file in this key, check if the attached metadata sha1
         # matches with the sha1 inside the file zip
         zipmetadata = utils.get_zip_metadata(self.filename)
+
         if obj:
             if zipmetadata.get('sha1') and zipmetadata.get('sha1') == obj['Metadata'].get('sha1'):
                 self._success(zipmetadata.get('sha1'))
