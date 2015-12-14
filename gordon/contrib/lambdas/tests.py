@@ -176,7 +176,7 @@ class TestContribVersion(unittest.TestCase):
 
     @patch('gordon.contrib.lambdas.lambda_version.send')
     @patch('gordon.contrib.lambdas.lambda_version.boto3.client')
-    def test_version_create(self, boto3_client, send_mock):
+    def test_version_delete(self, boto3_client, send_mock):
         client = Mock()
         boto3_client.return_value = client
         context = MockContext()

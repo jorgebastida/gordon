@@ -11,9 +11,37 @@ from botocore.exceptions import ClientError
 from cfnresponse import SUCCESS, FAILED
 from gordon.utils_tests import MockContext
 from . import bucket_notification_configuration
+from . import resources
 
 
 class TestContribS3(unittest.TestCase):
+
+    def test_validate_key_filter_name(self):
+        self.assertEqual(resources.validate_key_filter_name('prefix'), 'prefix')
+        self.assertEqual(resources.validate_key_filter_name('prefix'), 'prefix')
+        self.assertRaises(ValueError, resources.validate_key_filter_name, 'aaa')
+
+    def test_S3BucketNotificationConfiguration(self):
+        conf = resources.S3BucketNotificationConfiguration(
+            "Name",
+            ServiceToken='service_token',
+            Bucket='bucket',
+        )
+        self.assertRaises(ValueError, conf.validate)
+
+        conf = resources.S3BucketNotificationConfiguration(
+            "Name",
+            ServiceToken='service_token',
+            Bucket='bucket',
+            TopicConfigurations=[
+                resources.NotificationConfiguration(
+                    Id='id',
+                    DestinationArn='arn',
+                    Events=['a']
+                )
+            ]
+        )
+        self.assertEqual(conf.validate(), None)
 
     def _test_bucket_notification_configuration(self, boto3_client, send_mock, request_type):
         client = Mock()

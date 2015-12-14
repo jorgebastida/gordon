@@ -19,6 +19,7 @@ class TestActions(unittest.TestCase):
         s = t.serialize()
         self.assertEqual(s, {'_type': 'Parameter', 'name': 'Name', 'default': 'Default'})
         self.assertEqual(t, Parameter.from_dict(s))
+        self.assertEqual(t.to_json(), '{"default": "Default", "_type": "Parameter", "name": "Name"}')
 
         t = Parameter(name="Name")
         s = t.serialize()
@@ -33,6 +34,7 @@ class TestActions(unittest.TestCase):
         s = t.serialize()
         self.assertEqual(s, {'_type': 'ActionsTemplate', 'actions': [], 'parameters': {}, 'outputs': {}, 'parallelizable': False})
         self.assertEqual(t, ActionsTemplate.from_dict(s))
+        self.assertFalse(t)
 
     def test_actions_template(self):
         context, project = Mock(), Mock()
@@ -131,3 +133,7 @@ class TestActions(unittest.TestCase):
         )
         resource.Object.assert_not_called()
         resource.Object.return_value.upload_file.assert_not_called()
+
+
+class TestBootstrap(unittest.TestCase):
+    pass
