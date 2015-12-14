@@ -6,7 +6,7 @@ import hashlib
 import boto3
 from clint.textui import colored, puts
 
-from gordon import utils
+from gordon import utils, exceptions
 
 
 class Serializable(object):
@@ -52,6 +52,9 @@ class Serializable(object):
 
     def to_json(self, *args, **kwargs):
         return json.dumps(self.serialize(), *args, **kwargs)
+
+    def __eq__(self, obj):
+        return all([getattr(self, p) == getattr(obj, p) for p, _, _ in self.properties])
 
     @classmethod
     def from_dict(cls, data):
@@ -102,7 +105,7 @@ class ActionsTemplate(Serializable):
         ('actions', list, False),
         ('parameters', dict, False),
         ('outputs', dict, False),
-        ('parallelizable', True, False),
+        ('parallelizable', False, False),
     )
 
     def add(self, action):
@@ -123,6 +126,8 @@ class ActionsTemplate(Serializable):
         for name, output in self.outputs.iteritems():
             if isinstance(output.value, GetAttr):
                 value = action_outputs[output.value.action].get(output.value.attr, output.default)
+            else:
+                value = output.value
             outputs[name] = value
         return outputs
 
