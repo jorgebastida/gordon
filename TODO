@@ -6,7 +6,6 @@ TBD
 Must
 -----
 
-- Tests contrib lambdas
 - Check S3 sqs/sns permissions
 
 - New Add Custom roles for lambdas
@@ -14,8 +13,6 @@ Must
 - New lambda settings. Inject settings to the .zip on deploy.
 - New protocols, lot's missing
 
-- Travis !integration
-- Check coverage
 - Doc CF gotchas.
 - Doc read lambda logs
 - Doc tutorial python lambda
@@ -38,6 +35,8 @@ Maybe
 - New optimize code?
 - Doc Illustrate examples / integrations
 - New other integrations
+- Improve coverage
+- Travis !integration
 
 After
 ------

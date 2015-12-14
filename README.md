@@ -27,9 +27,10 @@ Features
 * Supported integrations
   * Kinesis Streams
   * Dynamodb Streams
+  * S3
 * Dynamic stage parametrization including:
-  * jinja2 love
   * Environment variables
+  * Jinja2 values
   * ARN translation helpers (``dynamodb-starswith://clients-``, ``dynamodb-endswith://-clients``, ``dynamodb-match://clients-`` ...)
 * Love
 
