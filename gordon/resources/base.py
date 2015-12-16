@@ -215,9 +215,10 @@ class BaseStream(BaseResource):
         raise exceptions.InvalidStreamStartingPositionError(self.name, position)
 
     def get_function_name(self):
-        """Returns a reference to the lambda which will process this stream."""
+        """Returns a reference to the current alias of the lambda which will
+        process this stream."""
         return self.project.reference(
-            'lambda:{}'.format(self.settings.get('lambda'))
+            utils.lambda_friendly_name_to_grn(self.settings.get('lambda'))
         )
 
     def register_resources_template(self, template):
@@ -231,11 +232,12 @@ class BaseStream(BaseResource):
         Because the ``Lambda`` and the ``EventSourceMapping`` are created in
         the same stack we need to introduce this as palliative measure, sorry!
         """
-
+        sleep_lambda = 'lambda:helpers:sleep:current'
         sleep = Sleep.create_with(
             utils.valid_cloudformation_name(self.name, "Sleep"),
+            DependsOn=[self.project.reference(sleep_lambda)],
             lambda_arn=GetAtt(
-                self.project.reference('lambda:helpers:sleep'), 'Arn'
+                self.project.reference(sleep_lambda), 'Arn'
             ),
             Time=30
         )
@@ -248,7 +250,7 @@ class BaseStream(BaseResource):
                 BatchSize=self.get_batch_size(),
                 Enabled=self.get_enabled(),
                 EventSourceArn=self.settings.get('stream'),
-                FunctionName=troposphere.Ref(self.get_function_name()),
+                FunctionName=troposphere.GetAtt(self.get_function_name(), 'Arn'),
                 StartingPosition=self.get_starting_position()
             )
         )

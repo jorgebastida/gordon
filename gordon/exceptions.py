@@ -100,3 +100,17 @@ class ResourceValidationError(BaseGordonException):
 
     def get_hint(self):
         return self.args[0]
+
+
+class BaseProtocolError(BaseGordonException):
+
+    def get_hint(self):
+        return self.args[0]
+
+
+class ProtocolNotFoundlError(BaseProtocolError):
+    code = 16
+
+
+class ProtocolMultipleMatcheslError(BaseProtocolError):
+    code = 17

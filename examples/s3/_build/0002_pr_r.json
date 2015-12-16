@@ -1,21 +1,21 @@
 {
     "outputs": {
-        "HellopyS3Url": {
+        "BucketNotificationConfigurationS3Version": {
             "default": "", 
             "_type": "Output", 
-            "name": "HellopyS3Url", 
+            "name": "BucketNotificationConfigurationS3Version", 
             "value": {
-                "action": "hellopy-upload", 
+                "action": "bucket_notification_configuration-upload", 
                 "_type": "GetAttr", 
-                "attr": "s3url"
+                "attr": "s3version"
             }
         }, 
-        "HellojsS3Url": {
+        "SleepS3Url": {
             "default": "", 
             "_type": "Output", 
-            "name": "HellojsS3Url", 
+            "name": "SleepS3Url", 
             "value": {
-                "action": "hellojs-upload", 
+                "action": "sleep-upload", 
                 "_type": "GetAttr", 
                 "attr": "s3url"
             }
@@ -40,22 +40,22 @@
                 "attr": "s3url"
             }
         }, 
-        "HellojsS3Version": {
+        "SleepS3Version": {
             "default": "", 
             "_type": "Output", 
-            "name": "HellojsS3Version", 
+            "name": "SleepS3Version", 
             "value": {
-                "action": "hellojs-upload", 
+                "action": "sleep-upload", 
                 "_type": "GetAttr", 
                 "attr": "s3version"
             }
         }, 
-        "HellopyS3Version": {
+        "S3ConsumerS3Version": {
             "default": "", 
             "_type": "Output", 
-            "name": "HellopyS3Version", 
+            "name": "S3ConsumerS3Version", 
             "value": {
-                "action": "hellopy-upload", 
+                "action": "s3consumer-upload", 
                 "_type": "GetAttr", 
                 "attr": "s3version"
             }
@@ -68,6 +68,26 @@
                 "action": "lambda_version-upload", 
                 "_type": "GetAttr", 
                 "attr": "s3version"
+            }
+        }, 
+        "S3ConsumerS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "S3ConsumerS3Url", 
+            "value": {
+                "action": "s3consumer-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }, 
+        "BucketNotificationConfigurationS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "BucketNotificationConfigurationS3Url", 
+            "value": {
+                "action": "bucket_notification_configuration-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
             }
         }, 
         "LambdaVersionS3Url": {
@@ -83,6 +103,16 @@
     }, 
     "_type": "ActionsTemplate", 
     "actions": [
+        {
+            "_type": "UploadToS3", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "name": "sleep-upload", 
+            "key": "lambda_helpers_sleep.zip", 
+            "filename": "code/lambda_helpers_sleep.zip"
+        }, 
         {
             "_type": "UploadToS3", 
             "bucket": {
@@ -109,9 +139,9 @@
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
-            "name": "hellojs-upload", 
-            "key": "lambda_himachine_hellojs.zip", 
-            "filename": "code/lambda_himachine_hellojs.zip"
+            "name": "bucket_notification_configuration-upload", 
+            "key": "lambda_s3_bucket_notification_configuration.zip", 
+            "filename": "code/lambda_s3_bucket_notification_configuration.zip"
         }, 
         {
             "_type": "UploadToS3", 
@@ -119,9 +149,9 @@
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
-            "name": "hellopy-upload", 
-            "key": "lambda_himachine_hellopy.zip", 
-            "filename": "code/lambda_himachine_hellopy.zip"
+            "name": "s3consumer-upload", 
+            "key": "lambda_exampleapp_s3consumer.zip", 
+            "filename": "code/lambda_exampleapp_s3consumer.zip"
         }
     ], 
     "parameters": {
@@ -131,5 +161,5 @@
             "name": "CodeBucket"
         }
     }, 
-    "parallelizable": true
+    "parallelizable": false
 }

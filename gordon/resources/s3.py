@@ -98,12 +98,15 @@ class LambdaFunctionNotification(BaseNotification):
         )
 
     def get_destination_arn(self):
-        value = self.settings['lambda']
-        if value.startswith('arn:aws:'):
-            return value
         return troposphere.GetAtt(
-            self.bucket_notification_configuration.project.reference(value), 'Arn'
+            self.bucket_notification_configuration.project.reference(
+                utils.lambda_friendly_name_to_grn(
+                    self.settings['lambda']
+                )
+            ),
+            'Arn'
         )
+
 
 class QueueNotification(BaseNotification):
 
@@ -314,13 +317,14 @@ class BucketNotificationConfiguration(base.BaseResource):
                     KeyFilters=[KeyFilter(Name=name, Value=value) for name, value in notification.filters]
                 )
             )
-
+        
+        bucket_notification_configuration_lambda = 'lambda:s3:bucket_notification_configuration:current'
         template.add_resource(
             S3BucketNotificationConfiguration.create_with(
                 utils.valid_cloudformation_name(self.name),
-                DependsOn=[self.project.reference('s3.bucket_notification_configuration')],
+                DependsOn=[self.project.reference(bucket_notification_configuration_lambda)],
                 lambda_arn=troposphere.GetAtt(
-                    self.project.reference('s3.bucket_notification_configuration'), 'Arn'
+                    self.project.reference(bucket_notification_configuration_lambda), 'Arn'
                 ),
                 Bucket=self.get_bucket_name(),
                 **dict([[k, v] for k, v in extra.iteritems() if v])

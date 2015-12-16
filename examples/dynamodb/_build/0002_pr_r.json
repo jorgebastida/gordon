@@ -90,8 +90,8 @@
                 "name": "CodeBucket"
             }, 
             "name": "sleep-upload", 
-            "key": "helpers_sleep.zip", 
-            "filename": "code/helpers_sleep.zip"
+            "key": "lambda_helpers_sleep.zip", 
+            "filename": "code/lambda_helpers_sleep.zip"
         }, 
         {
             "_type": "UploadToS3", 
@@ -100,8 +100,8 @@
                 "name": "CodeBucket"
             }, 
             "name": "lambda_alias-upload", 
-            "key": "lambdas_lambda_alias.zip", 
-            "filename": "code/lambdas_lambda_alias.zip"
+            "key": "lambda_lambdas_lambda_alias.zip", 
+            "filename": "code/lambda_lambdas_lambda_alias.zip"
         }, 
         {
             "_type": "UploadToS3", 
@@ -110,8 +110,8 @@
                 "name": "CodeBucket"
             }, 
             "name": "lambda_version-upload", 
-            "key": "lambdas_lambda_version.zip", 
-            "filename": "code/lambdas_lambda_version.zip"
+            "key": "lambda_lambdas_lambda_version.zip", 
+            "filename": "code/lambda_lambdas_lambda_version.zip"
         }, 
         {
             "_type": "UploadToS3", 
@@ -120,8 +120,8 @@
                 "name": "CodeBucket"
             }, 
             "name": "dynamoconsumer-upload", 
-            "key": "exampleapp_dynamoconsumer.zip", 
-            "filename": "code/exampleapp_dynamoconsumer.zip"
+            "key": "lambda_exampleapp_dynamoconsumer.zip", 
+            "filename": "code/lambda_exampleapp_dynamoconsumer.zip"
         }
     ], 
     "parameters": {
@@ -131,5 +131,5 @@
             "name": "CodeBucket"
         }
     }, 
-    "parallelizable": true
+    "parallelizable": false
 }

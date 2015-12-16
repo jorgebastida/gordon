@@ -40,8 +40,16 @@ class Lambda(base.BaseResource):
             # TODO: Fix this self.name
             raise exceptions.InvalidLambdaCodeExtensionError(self.name, extension)
 
-    def get_update_current_alias(self):
-        return self._get_true_false('update_current_alias')
+    def __init__(self, *args, **kwargs):
+        super(Lambda, self).__init__(*args, **kwargs)
+
+        self.current_alias_project_name = '{}:current'.format(self.in_project_name)
+        self.current_alias_cf_name = utils.valid_cloudformation_name(self.name, "CurrentAlias")
+
+        self.project.register_resource_reference(
+            self.current_alias_project_name,
+            self.current_alias_cf_name
+        )
 
     def get_code(self):
         """Returns the sourcecode of the lambda."""
@@ -145,7 +153,7 @@ class Lambda(base.BaseResource):
             raise exceptions.InvalidLambdaRoleError(self.name, role)
 
         return iam.Role(
-                utils.valid_cloudformation_name(self.name, 'role'),
+            utils.valid_cloudformation_name(self.name, 'role'),
                 AssumeRolePolicyDocument={
                    "Version" : "2012-10-17",
                    "Statement": [ {
@@ -157,7 +165,7 @@ class Lambda(base.BaseResource):
                    } ]
                 },
                 Policies=self._get_policies()
-            )
+        )
 
     def get_bucket_key(self):
         """Return the S3 bucket key for this lambda."""
@@ -320,11 +328,16 @@ class Lambda(base.BaseResource):
             )
         )
 
+        lambda_version_lambda = 'lambda:lambdas:lambda_version'
+        if not self.in_project_name.startswith('lambda:lambdas:'):
+            lambda_version_lambda = '{}:current'.format(lambda_version_lambda)
+
         version = template.add_resource(
             LambdaVersion.create_with(
                 utils.valid_cloudformation_name(self.name, "Version"),
+                DependsOn=[self.project.reference(lambda_version_lambda)],
                 lambda_arn=troposphere.GetAtt(
-                    self.project.reference('lambda:lambdas:lambda_version'), 'Arn'
+                    self.project.reference(lambda_version_lambda), 'Arn'
                 ),
                 FunctionName=troposphere.Ref(
                     function
@@ -335,25 +348,29 @@ class Lambda(base.BaseResource):
             )
         )
 
-        if self.get_update_current_alias():
-            template.add_resource(
-                LambdaAlias.create_with(
-                    utils.valid_cloudformation_name(self.name, "CurrentAlias"),
-                    lambda_arn=troposphere.GetAtt(
-                        self.project.reference('lambda:lambdas:lambda_alias'), 'Arn'
-                    ),
-                    FunctionName=troposphere.Ref(
-                        function
-                    ),
-                    S3ObjectVersion=troposphere.Ref(
-                        utils.valid_cloudformation_name(self.name, "s3version")
-                    ),
-                    FunctionVersion=troposphere.GetAtt(
-                        version, "Version"
-                    ),
-                    Name="Current",
-                )
+        lambda_alias_lambda = 'lambda:lambdas:lambda_alias'
+        if not self.in_project_name.startswith('lambda:lambdas:'):
+            lambda_alias_lambda = '{}:current'.format(lambda_alias_lambda)
+
+        template.add_resource(
+            LambdaAlias.create_with(
+                self.current_alias_cf_name,
+                DependsOn=[self.project.reference(lambda_alias_lambda)],
+                lambda_arn=troposphere.GetAtt(
+                    self.project.reference(lambda_alias_lambda), 'Arn'
+                ),
+                FunctionName=troposphere.Ref(
+                    function
+                ),
+                S3ObjectVersion=troposphere.Ref(
+                    utils.valid_cloudformation_name(self.name, "s3version")
+                ),
+                FunctionVersion=troposphere.GetAtt(
+                    version, "Version"
+                ),
+                Name="Current",
             )
+        )
 
     def register_pre_resources_template(self, template):
         """Register one UploadToS3 action into the pre_resources template, as

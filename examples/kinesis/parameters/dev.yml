@@ -1,2 +1,2 @@
 ---
-KinesisIntegrationArn: arn:aws:kinesis:eu-west-1:936837623851:stream/kinesisexample
+KinesisIntegrationArn: arn:aws:kinesis:us-east-1:936837623851:stream/gordon-test

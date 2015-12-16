@@ -31,6 +31,9 @@
     },
     "Resources": {
         "BucketNotificationConfigurationCurrentalias": {
+            "DependsOn": [
+                "LambdaAliasCurrentalias"
+            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "S3BucketNotificationConfiguration"
@@ -47,7 +50,7 @@
                 },
                 "ServiceToken": {
                     "Fn::GetAtt": [
-                        "LambdasLambdaAlias",
+                        "LambdaAliasCurrentalias",
                         "Arn"
                     ]
                 }
@@ -120,6 +123,9 @@
             "Type": "AWS::IAM::Role"
         },
         "BucketNotificationConfigurationVersion": {
+            "DependsOn": [
+                "LambdaVersionCurrentalias"
+            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "S3BucketNotificationConfiguration"
@@ -129,7 +135,7 @@
                 },
                 "ServiceToken": {
                     "Fn::GetAtt": [
-                        "LambdasLambdaVersion",
+                        "LambdaVersionCurrentalias",
                         "Arn"
                     ]
                 }
@@ -138,20 +144,20 @@
         },
         "ExampleS3Integration": {
             "DependsOn": [
-                "S3BucketNotificationConfiguration"
+                "BucketNotificationConfigurationCurrentalias"
             ],
             "Properties": {
-                "Bucket": "gordon-s3-test",
+                "Bucket": "us-east-1-gordon-test",
                 "LambdaFunctionConfigurations": [
                     {
                         "DestinationArn": {
                             "Fn::GetAtt": [
-                                "ExampleappS3Consumer",
+                                "S3ConsumerCurrentalias",
                                 "Arn"
                             ]
                         },
                         "Events": [
-                            "s3:ObjectCreated:*"
+                            "s3:ObjectCreated:Put"
                         ],
                         "Id": {
                             "Fn::Join": [
@@ -174,19 +180,13 @@
                         ]
                     }
                 ],
-                "ServiceToken": {
-                    "Fn::GetAtt": [
-                        "S3BucketNotificationConfiguration",
-                        "Arn"
-                    ]
-                },
-                "TopicConfigurations": [
+                "QueueConfigurations": [
                     {
                         "DestinationArn": {
                             "Fn::Join": [
                                 ":",
                                 [
-                                    "arn:aws:sns",
+                                    "arn:aws:sqs",
                                     {
                                         "Ref": "AWS::Region"
                                     },
@@ -205,6 +205,44 @@
                                 "-",
                                 [
                                     "gordon",
+                                    "queue_on_delete"
+                                ]
+                            ]
+                        },
+                        "KeyFilters": []
+                    }
+                ],
+                "ServiceToken": {
+                    "Fn::GetAtt": [
+                        "BucketNotificationConfigurationCurrentalias",
+                        "Arn"
+                    ]
+                },
+                "TopicConfigurations": [
+                    {
+                        "DestinationArn": {
+                            "Fn::Join": [
+                                ":",
+                                [
+                                    "arn:aws:sns",
+                                    {
+                                        "Ref": "AWS::Region"
+                                    },
+                                    {
+                                        "Ref": "AWS::AccountId"
+                                    },
+                                    "gordon-s3"
+                                ]
+                            ]
+                        },
+                        "Events": [
+                            "s3:ReducedRedundancyLostObject"
+                        ],
+                        "Id": {
+                            "Fn::Join": [
+                                "-",
+                                [
+                                    "gordon",
                                     "topic_on_delete"
                                 ]
                             ]
@@ -215,12 +253,77 @@
             },
             "Type": "Custom::S3BucketNotificationConfiguration"
         },
+        "ExampleS3IntegrationQueueOnDeletePermission": {
+            "Properties": {
+                "PolicyDocument": {
+                    "Id": "PublicationPolicy",
+                    "Statement": [
+                        {
+                            "Action": [
+                                "sqs:SendMessage"
+                            ],
+                            "Condition": {
+                                "ArnEquals": {
+                                    "aws:SourceArn": {
+                                        "Fn::Join": [
+                                            "",
+                                            [
+                                                "arn:aws:s3:::",
+                                                "us-east-1-gordon-test"
+                                            ]
+                                        ]
+                                    }
+                                }
+                            },
+                            "Effect": "Allow",
+                            "Principal": {
+                                "AWS": "*"
+                            },
+                            "Resource": {
+                                "Fn::Join": [
+                                    ":",
+                                    [
+                                        "arn:aws:sqs",
+                                        {
+                                            "Ref": "AWS::Region"
+                                        },
+                                        {
+                                            "Ref": "AWS::AccountId"
+                                        },
+                                        "gordon-test"
+                                    ]
+                                ]
+                            }
+                        }
+                    ],
+                    "Version": "2008-10-17"
+                },
+                "Queues": [
+                    {
+                        "Fn::Join": [
+                            "",
+                            [
+                                "https://sqs.",
+                                {
+                                    "Ref": "AWS::Region"
+                                },
+                                ".amazonaws.com/",
+                                936837623851,
+                                "/",
+                                "gordon-test"
+                            ]
+                        ]
+                    }
+                ]
+            },
+            "Type": "AWS::SQS::QueuePolicy"
+        },
         "ExampleS3IntegrationS3ConsumerOnCreate2Permission": {
             "Properties": {
                 "Action": "lambda:InvokeFunction",
                 "FunctionName": {
                     "Fn::GetAtt": [
-                        "ExampleappS3Consumer",
+                        "S3ConsumerCurrentalias",
                         "Arn"
                     ]
                 },
@@ -247,7 +350,7 @@
                                             "",
                                             [
                                                 "arn:aws:s3:::",
-                                                "gordon-s3-test"
+                                                "us-east-1-gordon-test"
                                             ]
                                         ]
                                     }
@@ -268,7 +371,7 @@
                                         {
                                             "Ref": "AWS::AccountId"
                                         },
-                                        "gordon-test"
+                                        "gordon-s3"
                                     ]
                                 ]
                             }
@@ -288,7 +391,7 @@
                                 {
                                     "Ref": "AWS::AccountId"
                                 },
-                                "gordon-test"
+                                "gordon-s3"
                             ]
                         ]
                     }
@@ -305,14 +408,14 @@
                     "S3Bucket": {
                         "Ref": "CodeBucket"
                     },
-                    "S3Key": "exampleapp_s3consumer.zip",
+                    "S3Key": "lambda_exampleapp_s3consumer.zip",
                     "S3ObjectVersion": {
                         "Ref": "S3ConsumerS3Version"
                     }
                 },
                 "Description": "",
                 "Handler": "code.handler",
-                "MemorySize": 192,
+                "MemorySize": 128,
                 "Role": {
                     "Fn::GetAtt": [
                         "S3ConsumerRole",
@@ -333,14 +436,14 @@
                     "S3Bucket": {
                         "Ref": "CodeBucket"
                     },
-                    "S3Key": "helpers_sleep.zip",
+                    "S3Key": "lambda_helpers_sleep.zip",
                     "S3ObjectVersion": {
                         "Ref": "SleepS3Version"
                     }
                 },
                 "Description": "Sleeps several seconds before succeeding.",
                 "Handler": "code.handler",
-                "MemorySize": 192,
+                "MemorySize": 128,
                 "Role": {
                     "Fn::GetAtt": [
                         "SleepRole",
@@ -353,6 +456,9 @@
             "Type": "AWS::Lambda::Function"
         },
         "LambdaAliasCurrentalias": {
+            "DependsOn": [
+                "LambdasLambdaAlias"
+            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "LambdasLambdaAlias"
@@ -444,6 +550,9 @@
             "Type": "AWS::IAM::Role"
         },
         "LambdaAliasVersion": {
+            "DependsOn": [
+                "LambdasLambdaVersion"
+            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "LambdasLambdaAlias"
@@ -461,6 +570,9 @@
             "Type": "Custom::LambdaVersion"
         },
         "LambdaVersionCurrentalias": {
+            "DependsOn": [
+                "LambdasLambdaAlias"
+            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "LambdasLambdaVersion"
@@ -550,6 +662,9 @@
             "Type": "AWS::IAM::Role"
         },
         "LambdaVersionVersion": {
+            "DependsOn": [
+                "LambdasLambdaVersion"
+            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "LambdasLambdaVersion"
@@ -575,14 +690,14 @@
                     "S3Bucket": {
                         "Ref": "CodeBucket"
                     },
-                    "S3Key": "lambdas_lambda_alias.zip",
+                    "S3Key": "lambda_lambdas_lambda_alias.zip",
                     "S3ObjectVersion": {
                         "Ref": "LambdaAliasS3Version"
                     }
                 },
                 "Description": "Manages aliases of Lambdas.",
                 "Handler": "code.handler",
-                "MemorySize": 192,
+                "MemorySize": 128,
                 "Role": {
                     "Fn::GetAtt": [
                         "LambdaAliasRole",
@@ -603,14 +718,14 @@
                     "S3Bucket": {
                         "Ref": "CodeBucket"
                     },
-                    "S3Key": "lambdas_lambda_version.zip",
+                    "S3Key": "lambda_lambdas_lambda_version.zip",
                     "S3ObjectVersion": {
                         "Ref": "LambdaVersionS3Version"
                     }
                 },
                 "Description": "Publishes new versions of Lambdas.",
                 "Handler": "code.handler",
-                "MemorySize": 192,
+                "MemorySize": 128,
                 "Role": {
                     "Fn::GetAtt": [
                         "LambdaVersionRole",
@@ -631,14 +746,14 @@
                     "S3Bucket": {
                         "Ref": "CodeBucket"
                     },
-                    "S3Key": "s3_bucket_notification_configuration.zip",
+                    "S3Key": "lambda_s3_bucket_notification_configuration.zip",
                     "S3ObjectVersion": {
                         "Ref": "BucketNotificationConfigurationS3Version"
                     }
                 },
                 "Description": "Manages Bucket Notification Configurations",
                 "Handler": "code.handler",
-                "MemorySize": 192,
+                "MemorySize": 128,
                 "Role": {
                     "Fn::GetAtt": [
                         "BucketNotificationConfigurationRole",
@@ -651,6 +766,9 @@
             "Type": "AWS::Lambda::Function"
         },
         "S3ConsumerCurrentalias": {
+            "DependsOn": [
+                "LambdaAliasCurrentalias"
+            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "ExampleappS3Consumer"
@@ -667,7 +785,7 @@
                 },
                 "ServiceToken": {
                     "Fn::GetAtt": [
-                        "LambdasLambdaAlias",
+                        "LambdaAliasCurrentalias",
                         "Arn"
                     ]
                 }
@@ -718,12 +836,33 @@
                             "Version": "2012-10-17"
                         },
                         "PolicyName": "S3ConsumerLogsPolicy"
+                    },
+                    {
+                        "PolicyDocument": {
+                            "Statement": [
+                                {
+                                    "Action": [
+                                        "kinesis:DescribeStream",
+                                        "kinesis:ListStreams",
+                                        "kinesis:GetShardIterator",
+                                        "kinesis:GetRecords"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "arn:aws:kinesis:*:*:*"
+                                }
+                            ],
+                            "Version": "2012-10-17"
+                        },
+                        "PolicyName": "S3ConsumerReadKinesisNewPolicy"
                     }
                 ]
             },
             "Type": "AWS::IAM::Role"
         },
         "S3ConsumerVersion": {
+            "DependsOn": [
+                "LambdaVersionCurrentalias"
+            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "ExampleappS3Consumer"
@@ -733,7 +872,7 @@
                 },
                 "ServiceToken": {
                     "Fn::GetAtt": [
-                        "LambdasLambdaVersion",
+                        "LambdaVersionCurrentalias",
                         "Arn"
                     ]
                 }
@@ -741,6 +880,9 @@
             "Type": "Custom::LambdaVersion"
         },
         "SleepCurrentalias": {
+            "DependsOn": [
+                "LambdaAliasCurrentalias"
+            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "HelpersSleep"
@@ -757,7 +899,7 @@
                 },
                 "ServiceToken": {
                     "Fn::GetAtt": [
-                        "LambdasLambdaAlias",
+                        "LambdaAliasCurrentalias",
                         "Arn"
                     ]
                 }
@@ -814,6 +956,9 @@
             "Type": "AWS::IAM::Role"
         },
         "SleepVersion": {
+            "DependsOn": [
+                "LambdaVersionCurrentalias"
+            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "HelpersSleep"
@@ -823,7 +968,7 @@
                 },
                 "ServiceToken": {
                     "Fn::GetAtt": [
-                        "LambdasLambdaVersion",
+                        "LambdaVersionCurrentalias",
                         "Arn"
                     ]
                 }

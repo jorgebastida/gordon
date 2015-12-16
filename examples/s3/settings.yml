@@ -1,6 +1,6 @@
 ---
-project: s3example2
-default-region: eu-west-1
+project: s3example
+default-region: us-east-1
 apps:
   - gordon.contrib.helpers
   - gordon.contrib.lambdas
@@ -10,36 +10,32 @@ apps:
 # http://docs.aws.amazon.com/AmazonS3/latest/dev/NotificationHowTo.html
 s3:
   example_s3_integration:
-    bucket: gordon-s3-test
+    bucket: us-east-1-gordon-test
     notifications:
 
       - id: s3consumer_on_create2
         lambda: exampleapp.s3consumer
         events:
-          - s3:ObjectCreated:*
+          - s3:ObjectCreated:Put
         key_filters:
           - prefix: a
           - suffix: b
 
       - id: topic_on_delete
-        topic: gordon-test
+        topic: gordon-s3
+        events:
+          - s3:ReducedRedundancyLostObject
+
+      - id: queue_on_delete
+        queue:
+          name: gordon-test
+          account_id: 936837623851
         # queue:
         #   name: gordon-test
         #   account_id: 936837623851
         #queue: arn:aws:sqs:eu-west-1:936837623851:gordon-test
         events:
           - s3:ObjectRemoved:*
-
-      # - id: queue_on_delete
-      #   queue:
-      #     name: gordon-test
-      #     account_id: 936837623851
-      #   # queue:
-      #   #   name: gordon-test
-      #   #   account_id: 936837623851
-      #   #queue: arn:aws:sqs:eu-west-1:936837623851:gordon-test
-      #   events:
-      #     - s3:ObjectRemoved:*
 
 
       # - id: topic_on_all_create

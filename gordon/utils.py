@@ -45,6 +45,7 @@ STATUS_COLORS = {
 
 MILL_CHARS = ['|', '/', '-', '\\']
 
+
 def get_cf_color(status):
     if 'IN_PROGRESS' in status:
         return colored.yellow
@@ -179,6 +180,10 @@ def fix_troposphere_references(template):
     return template
 
 
+def lambda_friendly_name_to_grn(name, alias='current'):
+    return 'lambda:{}:{}'.format(name.replace('.', ':'), alias)
+
+
 def generate_stack_name(stage, project_name, step):
     return '-'.join([stage, project_name, step])
 
@@ -225,7 +230,7 @@ def create_stack(name, template_filename, context, **kwargs):
         StackName=name,
         TemplateBody=template_body,
         Parameters=[{'ParameterKey': k, 'ParameterValue': v} for k, v in parameters.iteritems()],
-        TimeoutInMinutes=kwargs.get('TimeoutInMinutes', 5),
+        TimeoutInMinutes=kwargs.get('TimeoutInMinutes', 10),
         Capabilities=['CAPABILITY_IAM'],
         #OnFailure='ROLLBACK'
         OnFailure='DO_NOTHING',

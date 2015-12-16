@@ -80,7 +80,7 @@ class BaseIntegrationTest(object):
     def __init__(self, *args, **kwargs):
         super(BaseIntegrationTest, self).__init__(*args, **kwargs)
         self.uid = 'gt{}'.format(hashlib.sha1(str(uuid.uuid4())).hexdigest()[:5])
-        self.test_path = os.path.join('tests', self.test)
+        self.test_path = os.path.join('integration', self.test)
         self.extra_env = {}
 
     @property

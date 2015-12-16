@@ -9,7 +9,7 @@ apps:
 
 kinesis:
   kinesis_integration:
-    lambda: kinesisconsumer:consumer
+    lambda: kinesisconsumer.consumer
     stream: ref://KinesisIntegrationArn
     batch_size: 1
     starting_position: LATEST

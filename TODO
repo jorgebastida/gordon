@@ -1,18 +1,10 @@
-
-TBD
------
-- folder based lambdas ??
-
 Must
 -----
 
-- Check S3 sqs/sns permissions
-
-- New Add Custom roles for lambdas
-- New Use lambda @current arn not the latests in the integrations
 - New lambda settings. Inject settings to the .zip on deploy.
-- New protocols, lot's missing
 
+- Doc lambdas, and how we use the current alias
+- Doc Protocols
 - Doc CF gotchas.
 - Doc read lambda logs
 - Doc tutorial python lambda
@@ -20,7 +12,8 @@ Must
 - Doc tutorial s3 integration
 - Doc tutorial kinesis integration
 - Doc tutorial dynamodb integration
-- Check TimeoutInMinutes. Is now 3, but might need to be higher / configurable
+- Check TimeoutInMinutes. Is now 10, but might need to be higher / configurable
+- Review TODO, FIX
 
 Maybe
 ------
@@ -30,14 +23,19 @@ Maybe
 - New SNS integration
 - New Run lambda locally
 - New pip/npm cache
+- New Improve CREATE_FAILED UPDATE_FAILED output, suggest next steps etc..
 - New Java8
 - New Logo
 - New optimize code?
 - Doc Illustrate examples / integrations
 - New other integrations
 - Improve coverage
+- New S3 protocol
+- New sns protocol
+- New sqs protocol
 - Travis !integration
 
 After
 ------
 - Travis integration
+- safe-net for common errors, such as pointing an eu-west-1 lambda to a us-east-1 stream, or s3 bucket.

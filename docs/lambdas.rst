@@ -59,7 +59,6 @@ Anatomy of a Lambda
       memory: { LAMBDA_MEMORY }
       timeout: { LAMBDA_TIMEOUT }
       description: { LAMBDA_DESCRIPTION }
-      update_current_alias: { UPDATE_CURRENT_ALIAS }
       python_requirements:
         - { PYTHON_REQUIREMENT_1 }
         - ...
@@ -143,20 +142,6 @@ Human-readable description for your lambda.
     hello_world:
       code: functions.py
       description: This is a really simple function which says hello
-
-
-update_current_alias
-^^^^^^^^^^^^^^^^^^^^^^
-
-Toggle if any subsequent ``apply`` should update the ``current`` alias of this function to the latest one. Valid values are (``true`` and ``false``).
-Default value is ``true``.
-
-.. code-block:: yaml
-
-  lambdas:
-    hello_world:
-      code: functions.py
-      update_current_alias: false
 
 python_requirements
 ^^^^^^^^^^^^^^^^^^^^^^

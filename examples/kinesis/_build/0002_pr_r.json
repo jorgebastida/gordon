@@ -1,13 +1,13 @@
 {
     "outputs": {
-        "BucketNotificationConfigurationS3Version": {
+        "KinesisconsumerS3Url": {
             "default": "", 
             "_type": "Output", 
-            "name": "BucketNotificationConfigurationS3Version", 
+            "name": "KinesisconsumerS3Url", 
             "value": {
-                "action": "bucket_notification_configuration-upload", 
+                "action": "kinesisconsumer-upload", 
                 "_type": "GetAttr", 
-                "attr": "s3version"
+                "attr": "s3url"
             }
         }, 
         "SleepS3Url": {
@@ -50,12 +50,12 @@
                 "attr": "s3version"
             }
         }, 
-        "S3ConsumerS3Version": {
+        "KinesisconsumerS3Version": {
             "default": "", 
             "_type": "Output", 
-            "name": "S3ConsumerS3Version", 
+            "name": "KinesisconsumerS3Version", 
             "value": {
-                "action": "s3consumer-upload", 
+                "action": "kinesisconsumer-upload", 
                 "_type": "GetAttr", 
                 "attr": "s3version"
             }
@@ -68,26 +68,6 @@
                 "action": "lambda_version-upload", 
                 "_type": "GetAttr", 
                 "attr": "s3version"
-            }
-        }, 
-        "S3ConsumerS3Url": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "S3ConsumerS3Url", 
-            "value": {
-                "action": "s3consumer-upload", 
-                "_type": "GetAttr", 
-                "attr": "s3url"
-            }
-        }, 
-        "BucketNotificationConfigurationS3Url": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "BucketNotificationConfigurationS3Url", 
-            "value": {
-                "action": "bucket_notification_configuration-upload", 
-                "_type": "GetAttr", 
-                "attr": "s3url"
             }
         }, 
         "LambdaVersionS3Url": {
@@ -110,8 +90,8 @@
                 "name": "CodeBucket"
             }, 
             "name": "sleep-upload", 
-            "key": "helpers_sleep.zip", 
-            "filename": "code/helpers_sleep.zip"
+            "key": "lambda_helpers_sleep.zip", 
+            "filename": "code/lambda_helpers_sleep.zip"
         }, 
         {
             "_type": "UploadToS3", 
@@ -120,8 +100,8 @@
                 "name": "CodeBucket"
             }, 
             "name": "lambda_alias-upload", 
-            "key": "lambdas_lambda_alias.zip", 
-            "filename": "code/lambdas_lambda_alias.zip"
+            "key": "lambda_lambdas_lambda_alias.zip", 
+            "filename": "code/lambda_lambdas_lambda_alias.zip"
         }, 
         {
             "_type": "UploadToS3", 
@@ -130,8 +110,8 @@
                 "name": "CodeBucket"
             }, 
             "name": "lambda_version-upload", 
-            "key": "lambdas_lambda_version.zip", 
-            "filename": "code/lambdas_lambda_version.zip"
+            "key": "lambda_lambdas_lambda_version.zip", 
+            "filename": "code/lambda_lambdas_lambda_version.zip"
         }, 
         {
             "_type": "UploadToS3", 
@@ -139,19 +119,9 @@
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
-            "name": "bucket_notification_configuration-upload", 
-            "key": "s3_bucket_notification_configuration.zip", 
-            "filename": "code/s3_bucket_notification_configuration.zip"
-        }, 
-        {
-            "_type": "UploadToS3", 
-            "bucket": {
-                "_type": "Ref", 
-                "name": "CodeBucket"
-            }, 
-            "name": "s3consumer-upload", 
-            "key": "exampleapp_s3consumer.zip", 
-            "filename": "code/exampleapp_s3consumer.zip"
+            "name": "kinesisconsumer-upload", 
+            "key": "lambda_exampleapp_kinesisconsumer.zip", 
+            "filename": "code/lambda_exampleapp_kinesisconsumer.zip"
         }
     ], 
     "parameters": {
@@ -161,5 +131,5 @@
             "name": "CodeBucket"
         }
     }, 
-    "parallelizable": true
+    "parallelizable": false
 }

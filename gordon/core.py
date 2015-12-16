@@ -87,6 +87,7 @@ class BaseProject(object):
 
     def __init__(self, path, *args, **kwargs):
         self.path = path
+        self.debug = kwargs.pop('debug', False)
         self.build_path = os.path.join(self.path, '_build')
         self.root = os.path.dirname(os.path.abspath(__file__))
         self.settings = utils.load_settings(
@@ -167,7 +168,7 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
         """Resolve ``name`` as a CloudFormation reference"""
         if name in self._in_project_resource_references:
             return self._in_project_resource_references[name]
-        raise KeyError(self._in_project_resource_references.keys())
+        raise KeyError(name, self._in_project_resource_references.keys())
 
     def get_resources(self, resource_type):
         """Returns all project and application resources"""
@@ -348,6 +349,8 @@ class ProjectApply(BaseProject):
             with indent(2):
                 puts(colored.cyan("{} ({})".format(filename, template_type)))
             with indent(4):
+                if self.debug:
+                    puts(colored.yellow(u"✸ Applying template {} with context {}".format(filename, context)))
                 getattr(self, 'apply_{}_template'.format(template_type))(name, filename, context)
 
     def collect_parameters(self):

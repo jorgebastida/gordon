@@ -8,7 +8,85 @@ except ImportError:
     from unittest.mock import patch, Mock, call
 
 from gordon.actions import Parameter, ActionsTemplate, GetAttr, UploadToS3
-from gordon import exceptions
+from gordon import exceptions, protocols
+
+
+class TestProtocols(unittest.TestCase):
+
+    @patch('gordon.protocols.boto3.client')
+    def test_kinesis_protocols(self, client_mock):
+        paginate = client_mock.return_value.get_paginator.return_value.paginate
+        paginate.return_value = [
+            {'StreamNames': ['aaa', 'abb']},
+            {'StreamNames': ['acc', 'abc']},
+        ]
+
+        # match
+        self.assertRaises(exceptions.ProtocolNotFoundlError, protocols.kinesis_match, 'xxx')
+        self.assertRaises(exceptions.ProtocolMultipleMatcheslError, protocols.kinesis_match, 'ab')
+        self.assertEqual(protocols.kinesis_match('aa'), 'aaa')
+        self.assertEqual(protocols.kinesis_match('bc$'), 'abc')
+
+        # startswith
+        self.assertRaises(exceptions.ProtocolNotFoundlError, protocols.kinesis_startswith, 'xxx')
+        self.assertRaises(exceptions.ProtocolMultipleMatcheslError, protocols.kinesis_startswith, 'a')
+        self.assertEqual(protocols.kinesis_startswith('aa'), 'aaa')
+
+        # endswith
+        self.assertRaises(exceptions.ProtocolNotFoundlError, protocols.kinesis_endswith, 'xxx')
+        self.assertRaises(exceptions.ProtocolMultipleMatcheslError, protocols.kinesis_endswith, 'c')
+        self.assertEqual(protocols.kinesis_endswith('b'), 'abb')
+
+    @patch('gordon.protocols.boto3.client')
+    def test_dynamodb_protocols(self, client_mock):
+        paginate = client_mock.return_value.get_paginator.return_value.paginate
+        paginate.return_value = [
+            {'TableNames': ['aaa', 'abb']},
+            {'TableNames': ['acc', 'abc']},
+        ]
+
+        # match
+        self.assertRaises(exceptions.ProtocolNotFoundlError, protocols.dynamodb_match, 'xxx')
+        self.assertRaises(exceptions.ProtocolMultipleMatcheslError, protocols.dynamodb_match, 'ab')
+        self.assertEqual(protocols.dynamodb_match('aa'), 'aaa')
+        self.assertEqual(protocols.dynamodb_match('bc$'), 'abc')
+
+        # startswith
+        self.assertRaises(exceptions.ProtocolNotFoundlError, protocols.dynamodb_startswith, 'xxx')
+        self.assertRaises(exceptions.ProtocolMultipleMatcheslError, protocols.dynamodb_startswith, 'a')
+        self.assertEqual(protocols.dynamodb_startswith('aa'), 'aaa')
+
+        # endswith
+        self.assertRaises(exceptions.ProtocolNotFoundlError, protocols.dynamodb_endswith, 'xxx')
+        self.assertRaises(exceptions.ProtocolMultipleMatcheslError, protocols.dynamodb_endswith, 'c')
+        self.assertEqual(protocols.dynamodb_endswith('b'), 'abb')
+
+    @patch('gordon.protocols.boto3.client')
+    def test_dynamodb_stream_protocols(self, client_mock):
+        client_mock.return_value.list_streams.return_value = {
+            'Streams': [
+                {'TableName': 'aaa', 'StreamArn': 'aaa'},
+                {'TableName': 'abb', 'StreamArn': 'abb'},
+                {'TableName': 'acc', 'StreamArn': 'acc'},
+                {'TableName': 'abc', 'StreamArn': 'abc'}
+            ]
+        }
+
+        # match
+        self.assertRaises(exceptions.ProtocolNotFoundlError, protocols.dynamodb_stream_match, 'xxx')
+        self.assertRaises(exceptions.ProtocolMultipleMatcheslError, protocols.dynamodb_stream_match, 'ab')
+        self.assertEqual(protocols.dynamodb_stream_match('aa'), 'aaa')
+        self.assertEqual(protocols.dynamodb_stream_match('bc$'), 'abc')
+
+        # startswith
+        self.assertRaises(exceptions.ProtocolNotFoundlError, protocols.dynamodb_stream_startswith, 'xxx')
+        self.assertRaises(exceptions.ProtocolMultipleMatcheslError, protocols.dynamodb_stream_startswith, 'a')
+        self.assertEqual(protocols.dynamodb_stream_startswith('aa'), 'aaa')
+
+        # endswith
+        self.assertRaises(exceptions.ProtocolNotFoundlError, protocols.dynamodb_stream_endswith, 'xxx')
+        self.assertRaises(exceptions.ProtocolMultipleMatcheslError, protocols.dynamodb_stream_endswith, 'c')
+        self.assertEqual(protocols.dynamodb_stream_endswith('b'), 'abb')
 
 
 class TestActions(unittest.TestCase):

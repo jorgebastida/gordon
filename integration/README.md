@@ -24,7 +24,7 @@ How to run one integration test?
 --------------------------------
 
 ```shell
-python setup.py nosetests -a 'integration' --stop --nologcapture --where=tests/lambdapython/
+python setup.py nosetests -a 'integration' --stop --nologcapture --where=integration/lambdapython/
 ```
 
 

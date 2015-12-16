@@ -1,21 +1,21 @@
 {
     "outputs": {
-        "KinesisconsumerS3Url": {
+        "HellopyS3Url": {
             "default": "", 
             "_type": "Output", 
-            "name": "KinesisconsumerS3Url", 
+            "name": "HellopyS3Url", 
             "value": {
-                "action": "kinesisconsumer-upload", 
+                "action": "hellopy-upload", 
                 "_type": "GetAttr", 
                 "attr": "s3url"
             }
         }, 
-        "SleepS3Url": {
+        "HellojsS3Url": {
             "default": "", 
             "_type": "Output", 
-            "name": "SleepS3Url", 
+            "name": "HellojsS3Url", 
             "value": {
-                "action": "sleep-upload", 
+                "action": "hellojs-upload", 
                 "_type": "GetAttr", 
                 "attr": "s3url"
             }
@@ -40,22 +40,22 @@
                 "attr": "s3url"
             }
         }, 
-        "SleepS3Version": {
+        "HellojsS3Version": {
             "default": "", 
             "_type": "Output", 
-            "name": "SleepS3Version", 
+            "name": "HellojsS3Version", 
             "value": {
-                "action": "sleep-upload", 
+                "action": "hellojs-upload", 
                 "_type": "GetAttr", 
                 "attr": "s3version"
             }
         }, 
-        "KinesisconsumerS3Version": {
+        "HellopyS3Version": {
             "default": "", 
             "_type": "Output", 
-            "name": "KinesisconsumerS3Version", 
+            "name": "HellopyS3Version", 
             "value": {
-                "action": "kinesisconsumer-upload", 
+                "action": "hellopy-upload", 
                 "_type": "GetAttr", 
                 "attr": "s3version"
             }
@@ -89,19 +89,9 @@
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
-            "name": "sleep-upload", 
-            "key": "helpers_sleep.zip", 
-            "filename": "code/helpers_sleep.zip"
-        }, 
-        {
-            "_type": "UploadToS3", 
-            "bucket": {
-                "_type": "Ref", 
-                "name": "CodeBucket"
-            }, 
             "name": "lambda_alias-upload", 
-            "key": "lambdas_lambda_alias.zip", 
-            "filename": "code/lambdas_lambda_alias.zip"
+            "key": "lambda_lambdas_lambda_alias.zip", 
+            "filename": "code/lambda_lambdas_lambda_alias.zip"
         }, 
         {
             "_type": "UploadToS3", 
@@ -110,8 +100,8 @@
                 "name": "CodeBucket"
             }, 
             "name": "lambda_version-upload", 
-            "key": "lambdas_lambda_version.zip", 
-            "filename": "code/lambdas_lambda_version.zip"
+            "key": "lambda_lambdas_lambda_version.zip", 
+            "filename": "code/lambda_lambdas_lambda_version.zip"
         }, 
         {
             "_type": "UploadToS3", 
@@ -119,9 +109,19 @@
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
-            "name": "kinesisconsumer-upload", 
-            "key": "exampleapp_kinesisconsumer.zip", 
-            "filename": "code/exampleapp_kinesisconsumer.zip"
+            "name": "hellojs-upload", 
+            "key": "lambda_himachine_hellojs.zip", 
+            "filename": "code/lambda_himachine_hellojs.zip"
+        }, 
+        {
+            "_type": "UploadToS3", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "name": "hellopy-upload", 
+            "key": "lambda_himachine_hellopy.zip", 
+            "filename": "code/lambda_himachine_hellopy.zip"
         }
     ], 
     "parameters": {
@@ -131,5 +131,5 @@
             "name": "CodeBucket"
         }
     }, 
-    "parallelizable": true
+    "parallelizable": false
 }

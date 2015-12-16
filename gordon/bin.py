@@ -18,9 +18,14 @@ def main(argv=None):
 
     def add_default_arguments(p):
         p.add_argument("--region",
-                       dest="region",
-                       type=str,
+                       dest="debug",
+                       action='store_true',
                        help="AWS region where this project should be applied")
+
+        p.add_argument("--debug",
+                       dest="debug",
+                       action="store_true",
+                       help="Verbose output for debugging purpouses.")
 
     startproject_parser = subparsers.add_parser('startproject', description='Start a new project')
     add_default_arguments(startproject_parser)

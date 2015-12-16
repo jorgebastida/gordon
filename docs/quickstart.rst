@@ -47,7 +47,7 @@ This will create a `firstapp` directory inside your project with the following s
 
 .. note::
 
-    If you pick ``java`` o ``js`` as runtime, the layout will not be 100% the same, but pretty similar.
+    If you pick ``java`` or ``js`` as runtime, the layout will not be 100% the same, but pretty similar.
 
 These files are:
 

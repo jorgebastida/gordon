@@ -31,6 +31,9 @@
     },
     "Resources": {
         "ConsumerCurrentalias": {
+            "DependsOn": [
+                "LambdaAliasCurrentalias"
+            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "KinesisconsumerConsumer"
@@ -47,7 +50,7 @@
                 },
                 "ServiceToken": {
                     "Fn::GetAtt": [
-                        "LambdasLambdaAlias",
+                        "LambdaAliasCurrentalias",
                         "Arn"
                     ]
                 }
@@ -124,6 +127,9 @@
             "Type": "AWS::IAM::Role"
         },
         "ConsumerVersion": {
+            "DependsOn": [
+                "LambdaVersionCurrentalias"
+            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "KinesisconsumerConsumer"
@@ -133,7 +139,7 @@
                 },
                 "ServiceToken": {
                     "Fn::GetAtt": [
-                        "LambdasLambdaVersion",
+                        "LambdaVersionCurrentalias",
                         "Arn"
                     ]
                 }
@@ -171,7 +177,7 @@
         "KinesisIntegration": {
             "DependsOn": [
                 "KinesisIntegrationSleep",
-                "KinesisconsumerConsumer"
+                "ConsumerCurrentalias"
             ],
             "Properties": {
                 "BatchSize": 1,
@@ -180,17 +186,23 @@
                     "Ref": "KinesisIntegrationArn"
                 },
                 "FunctionName": {
-                    "Ref": "KinesisconsumerConsumer"
+                    "Fn::GetAtt": [
+                        "ConsumerCurrentalias",
+                        "Arn"
+                    ]
                 },
                 "StartingPosition": "LATEST"
             },
             "Type": "AWS::Lambda::EventSourceMapping"
         },
         "KinesisIntegrationSleep": {
+            "DependsOn": [
+                "SleepCurrentalias"
+            ],
             "Properties": {
                 "ServiceToken": {
                     "Fn::GetAtt": [
-                        "HelpersSleep",
+                        "SleepCurrentalias",
                         "Arn"
                     ]
                 },
@@ -227,6 +239,9 @@
             "Type": "AWS::Lambda::Function"
         },
         "LambdaAliasCurrentalias": {
+            "DependsOn": [
+                "LambdasLambdaAlias"
+            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "LambdasLambdaAlias"
@@ -318,6 +333,9 @@
             "Type": "AWS::IAM::Role"
         },
         "LambdaAliasVersion": {
+            "DependsOn": [
+                "LambdasLambdaVersion"
+            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "LambdasLambdaAlias"
@@ -335,6 +353,9 @@
             "Type": "Custom::LambdaVersion"
         },
         "LambdaVersionCurrentalias": {
+            "DependsOn": [
+                "LambdasLambdaAlias"
+            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "LambdasLambdaVersion"
@@ -424,6 +445,9 @@
             "Type": "AWS::IAM::Role"
         },
         "LambdaVersionVersion": {
+            "DependsOn": [
+                "LambdasLambdaVersion"
+            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "LambdasLambdaVersion"
@@ -497,6 +521,9 @@
             "Type": "AWS::Lambda::Function"
         },
         "SleepCurrentalias": {
+            "DependsOn": [
+                "LambdaAliasCurrentalias"
+            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "HelpersSleep"
@@ -513,7 +540,7 @@
                 },
                 "ServiceToken": {
                     "Fn::GetAtt": [
-                        "LambdasLambdaAlias",
+                        "LambdaAliasCurrentalias",
                         "Arn"
                     ]
                 }
@@ -570,6 +597,9 @@
             "Type": "AWS::IAM::Role"
         },
         "SleepVersion": {
+            "DependsOn": [
+                "LambdaVersionCurrentalias"
+            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "HelpersSleep"
@@ -579,7 +609,7 @@
                 },
                 "ServiceToken": {
                     "Fn::GetAtt": [
-                        "LambdasLambdaVersion",
+                        "LambdaVersionCurrentalias",
                         "Arn"
                     ]
                 }
