@@ -25,7 +25,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="Gordon 0.0.1 documentation" href="index.html" />
     <link rel="next" title="Advanced Parameters" href="parameters_advanced.html" />
-    <link rel="prev" title="S3" href="integrations/s3.html" />
+    <link rel="prev" title="Settings" href="settings.html" />
    
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
@@ -41,7 +41,7 @@
   <div class="section" id="parameters">
 <h1>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h1>
 <p>Parameters are the artifact around the fact that project templates (what gordon generates into <code class="docutils literal"><span class="pre">_build</span></code>) should be immutable between stages.
-Parameters allow you to have specific stage settings.</p>
+Parameters allow you to have specific settings based on the stage where you are applying your project.</p>
 <div class="section" id="how-can-i-use-parameters">
 <h2>How can I use parameters?<a class="headerlink" href="#how-can-i-use-parameters" title="Permalink to this headline">¶</a></h2>
 <dl class="docutils">
@@ -54,6 +54,13 @@ Parameters allow you to have specific stage settings.</p>
 </ul>
 </dd>
 </dl>
+<div class="highlight-bash"><div class="highlight"><pre>...
+parameters
+├── dev.py
+├── prod.py
+└── common.yml
+</pre></div>
+</div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">You can create a file called <code class="docutils literal"><span class="pre">common.yml</span></code>, and place all shared parameters between stages on it. When this file is present, gordon will read it first, and then
@@ -63,17 +70,17 @@ update the parameters map using your stage-specific settings file (if pressent).
 </div>
 <div class="section" id="example">
 <h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
-<p>Let&#8217;s imagine you wan to call one lambda every time a file is created in one of your buckets.</p>
+<p>Let&#8217;s imagine you want to call one lambda every time a file is created in one of your buckets.</p>
 <blockquote>
 <div><ul class="simple">
-<li>First, you&#8217;ll create and register a lambda</li>
-<li>then you&#8217;ll create a new s3 integration which connects <code class="docutils literal"><span class="pre">my-production-bucket</span></code> with <code class="docutils literal"><span class="pre">app.mys3consumer</span></code> when a <code class="docutils literal"><span class="pre">s3:ObjectCreated:*</span></code> happens.</li>
+<li>First, you&#8217;ll create and register a lambda.</li>
+<li>Then you&#8217;ll create a new event source.</li>
 </ul>
 </div></blockquote>
 <p>Something like this:</p>
 <div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">s3</span><span class="p-Indicator">:</span>
   <span class="l-Scalar-Plain">my_s3_integration</span><span class="p-Indicator">:</span>
-    <span class="l-Scalar-Plain">bucket</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">my-production-bucket</span>
+    <span class="l-Scalar-Plain">bucket</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">my-dev-bucket</span>
     <span class="l-Scalar-Plain">notifications</span><span class="p-Indicator">:</span>
 
       <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">id</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">lambda_on_create_cat</span>
@@ -82,24 +89,23 @@ update the parameters map using your stage-specific settings file (if pressent).
           <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">s3:ObjectCreated:*</span>
 </pre></div>
 </div>
-<p>This is good to start with, but what about if once this is working great for a while... you want to test how a new lambda function works? You&#8217;ll probably need to:</p>
+<p>This is good to start with, but what about when you want to put this on production?  You&#8217;ll need to:</p>
 <blockquote>
 <div><ul class="simple">
-<li>Change the bucket name to a test one <code class="docutils literal"><span class="pre">my-production-bucket</span></code> -&gt; <code class="docutils literal"><span class="pre">my-dev-bucket</span></code></li>
+<li>Change the bucket to <code class="docutils literal"><span class="pre">my-production-bucket</span></code> instead of <code class="docutils literal"><span class="pre">my-dev-bucket</span></code></li>
 <li>Build your project <code class="docutils literal"><span class="pre">gordon</span> <span class="pre">build</span></code></li>
-<li>Apply the project into a test stage <code class="docutils literal"><span class="pre">gordon</span> <span class="pre">apply</span> <span class="pre">--stage=test</span></code></li>
-<li>Test your lambda</li>
-<li>If everything is ok, remember to change the name of the buckets back to the original, and deploy it to production again.</li>
+<li>Apply the project into production <code class="docutils literal"><span class="pre">gordon</span> <span class="pre">apply</span> <span class="pre">--stage=prod</span></code></li>
 </ul>
 </div></blockquote>
+<p>But... now every time you want to develop the lambda further in your <code class="docutils literal"><span class="pre">dev</span></code> stage, you&#8217;ll need to change the bucket... again and again back and forth.</p>
 <p>This is tedious and unmaintainable.</p>
 </div>
 <div class="section" id="solution">
 <h2>Solution<a class="headerlink" href="#solution" title="Permalink to this headline">¶</a></h2>
-<p>The solution is as simple as making your bucket name be a parameter. In this case we are calling the parameter <code class="docutils literal"><span class="pre">MyS3IntegrationBucket</span></code>.</p>
+<p>The solution is as simple as making your bucket name be a parameter. In this case we are calling the parameter <code class="docutils literal"><span class="pre">MyS3Bucket</span></code>.</p>
 <div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">s3</span><span class="p-Indicator">:</span>
   <span class="l-Scalar-Plain">my_s3_integration</span><span class="p-Indicator">:</span>
-    <span class="l-Scalar-Plain">bucket</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">ref://MyS3IntegrationBucket</span>
+    <span class="l-Scalar-Plain">bucket</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">ref://MyS3Bucket</span>
     <span class="l-Scalar-Plain">notifications</span><span class="p-Indicator">:</span>
 
       <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">id</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">lambda_on_create_cat</span>
@@ -115,15 +121,15 @@ parameters/
 └── dev.yml
 </pre></div>
 </div>
-<p>Then, we can define two different values for <code class="docutils literal"><span class="pre">MyS3IntegrationBucket</span></code> based on the stage where we are applying the project.</p>
+<p>Then, we can define two different values for <code class="docutils literal"><span class="pre">MyS3Bucket</span></code> based on the stage where we are applying the project.</p>
 <p><code class="docutils literal"><span class="pre">prod.yml</span></code> will have the production bucket:</p>
 <div class="highlight-yaml"><div class="highlight"><pre><span class="nn">---</span>
-<span class="l-Scalar-Plain">MyS3IntegrationBucket</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">my-production-bucket</span>
+<span class="l-Scalar-Plain">MyS3Bucket</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">my-production-bucket</span>
 </pre></div>
 </div>
 <p>and <code class="docutils literal"><span class="pre">dev.yml</span></code> will have the dev one:</p>
 <div class="highlight-yaml"><div class="highlight"><pre><span class="nn">---</span>
-<span class="l-Scalar-Plain">MyS3IntegrationBucket</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">my-dev-bucket</span>
+<span class="l-Scalar-Plain">MyS3Bucket</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">my-dev-bucket</span>
 </pre></div>
 </div>
 <p>Now we can simply run:</p>
@@ -139,6 +145,7 @@ parameters/
 <h2>How it works?<a class="headerlink" href="#how-it-works" title="Permalink to this headline">¶</a></h2>
 <p>When you define in your settings file a value as a reference <code class="docutils literal"><span class="pre">ref://</span></code>, gordon will automatically register (on <code class="docutils literal"><span class="pre">build</span></code> time) all required input parameters in your CloudFormation templates
 and collect  values from your parameters files when you call <code class="docutils literal"><span class="pre">apply</span></code>.</p>
+<p>Remember that you can create a file called <code class="docutils literal"><span class="pre">common.yml</span></code>, and place all shared parameters between stages on it.</p>
 </div>
 </div>
 
@@ -162,7 +169,7 @@ and collect  values from your parameters files when you call <code class="docuti
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="integrations/s3.html" title="previous chapter">S3</a></li>
+      <li>Previous: <a href="settings.html" title="previous chapter">Settings</a></li>
       <li>Next: <a href="parameters_advanced.html" title="next chapter">Advanced Parameters</a></li>
   </ul></li>
 </ul>

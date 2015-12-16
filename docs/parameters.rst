@@ -2,7 +2,7 @@ Parameters
 =============
 
 Parameters are the artifact around the fact that project templates (what gordon generates into ``_build``) should be immutable between stages.
-Parameters allow you to have specific stage settings.
+Parameters allow you to have specific settings based on the stage where you are applying your project.
 
 How can I use parameters?
 ---------------------------
@@ -12,6 +12,14 @@ In order to use parameters you only need to:
  * Inside of this directory, create ``.yml`` files for your different stages (``dev.yml``, ``prod.yml``, ...)
  * Replace values in your settings with ``ref://MyParameter``
  * Add values for ``MyParameter`` in ``dev.yml``, ``prod.yml`` ...
+
+.. code-block:: bash
+
+  ...
+  parameters
+  ├── dev.py
+  ├── prod.py
+  └── common.yml
 
 .. note::
 
@@ -24,10 +32,10 @@ If you want to customize your parameters further, read :doc:`parameters_advanced
 Example
 --------
 
-Let's imagine you wan to call one lambda every time a file is created in one of your buckets.
+Let's imagine you want to call one lambda every time a file is created in one of your buckets.
 
- * First, you'll create and register a lambda
- * then you'll create a new s3 integration which connects ``my-production-bucket`` with ``app.mys3consumer`` when a ``s3:ObjectCreated:*`` happens.
+ * First, you'll create and register a lambda.
+ * Then you'll create a new event source.
 
 Something like this:
 
@@ -35,7 +43,7 @@ Something like this:
 
   s3:
     my_s3_integration:
-      bucket: my-production-bucket
+      bucket: my-dev-bucket
       notifications:
 
         - id: lambda_on_create_cat
@@ -43,26 +51,26 @@ Something like this:
           events:
             - s3:ObjectCreated:*
 
-This is good to start with, but what about if once this is working great for a while... you want to test how a new lambda function works? You'll probably need to:
+This is good to start with, but what about when you want to put this on production?  You'll need to:
 
- * Change the bucket name to a test one ``my-production-bucket`` -> ``my-dev-bucket``
+ * Change the bucket to ``my-production-bucket`` instead of ``my-dev-bucket``
  * Build your project ``gordon build``
- * Apply the project into a test stage ``gordon apply --stage=test``
- * Test your lambda
- * If everything is ok, remember to change the name of the buckets back to the original, and deploy it to production again.
+ * Apply the project into production ``gordon apply --stage=prod``
+
+But... now every time you want to develop the lambda further in your ``dev`` stage, you'll need to change the bucket... again and again back and forth.
 
 This is tedious and unmaintainable.
 
 Solution
 ---------
 
-The solution is as simple as making your bucket name be a parameter. In this case we are calling the parameter ``MyS3IntegrationBucket``.
+The solution is as simple as making your bucket name be a parameter. In this case we are calling the parameter ``MyS3Bucket``.
 
 .. code-block:: yaml
 
   s3:
     my_s3_integration:
-      bucket: ref://MyS3IntegrationBucket
+      bucket: ref://MyS3Bucket
       notifications:
 
         - id: lambda_on_create_cat
@@ -79,14 +87,14 @@ Then, in the root of you project, create a new directory called ``parameters`` a
     ├── prod.yml
     └── dev.yml
 
-Then, we can define two different values for ``MyS3IntegrationBucket`` based on the stage where we are applying the project.
+Then, we can define two different values for ``MyS3Bucket`` based on the stage where we are applying the project.
 
 ``prod.yml`` will have the production bucket:
 
 .. code-block:: yaml
 
   ---
-  MyS3IntegrationBucket: my-production-bucket
+  MyS3Bucket: my-production-bucket
 
 
 and ``dev.yml`` will have the dev one:
@@ -94,7 +102,7 @@ and ``dev.yml`` will have the dev one:
 .. code-block:: yaml
 
   ---
-  MyS3IntegrationBucket: my-dev-bucket
+  MyS3Bucket: my-dev-bucket
 
 
 Now we can simply run:
@@ -109,3 +117,5 @@ How it works?
 
 When you define in your settings file a value as a reference ``ref://``, gordon will automatically register (on ``build`` time) all required input parameters in your CloudFormation templates
 and collect  values from your parameters files when you call ``apply``.
+
+Remember that you can create a file called ``common.yml``, and place all shared parameters between stages on it.

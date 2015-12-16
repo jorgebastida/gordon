@@ -24,7 +24,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="Gordon 0.0.1 documentation" href="index.html" />
-    <link rel="next" title="gordon.contrib" href="contrib.html" />
+    <link rel="next" title="Event Sources" href="eventsources.html" />
     <link rel="prev" title="Parameters" href="parameters.html" />
    
   
@@ -46,14 +46,113 @@ static makes quite hard to describe your needs.</p>
 <div class="section" id="protocols">
 <h2>Protocols<a class="headerlink" href="#protocols" title="Permalink to this headline">¶</a></h2>
 <p>Protocols are helpers which will allows you to make the value of one parameter be dynamic. Protocols are evaluated on <code class="docutils literal"><span class="pre">apply</span></code> time.</p>
-<div class="section" id="reference-env">
-<h3>Reference <code class="docutils literal"><span class="pre">env://</span></code><a class="headerlink" href="#reference-env" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="environment-variables">
+<h3>Environment Variables<a class="headerlink" href="#environment-variables" title="Permalink to this headline">¶</a></h3>
 <p>You can make the value of your parameter be based on any environment variable using the <code class="docutils literal"><span class="pre">env://</span></code> protocol.</p>
 <div class="highlight-yml"><div class="highlight"><pre>---
 MyParameter: env://MY_ENV_VARIABLE
 </pre></div>
 </div>
 <p>gordon will make the parameter <code class="docutils literal"><span class="pre">MyParameter</span></code> value be whatever <code class="docutils literal"><span class="pre">MY_ENV_VARIABLE</span></code> value is on <code class="docutils literal"><span class="pre">apply</span></code> time.</p>
+</div>
+<div class="section" id="dynamodb">
+<h3>Dynamodb<a class="headerlink" href="#dynamodb" title="Permalink to this headline">¶</a></h3>
+<p>You can dynamically lookup for dynamodb tables which name starts with, ends with or matches certain text.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="31%" />
+<col width="69%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Name</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">dynamodb-startswith://</span></code></td>
+<td>Table name startswith certain text</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">dynamodb-endswith://</span></code></td>
+<td>Table name ends with certain text</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">dynamodb-match://</span></code></td>
+<td>Table name match certain regular expression</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<div class="highlight-yml"><div class="highlight"><pre>---
+MyParameter: dynamodb-startswith://clients-
+</pre></div>
+</div>
+<p>gordon will make the parameter <code class="docutils literal"><span class="pre">MyParameter</span></code> value be the full name of the table which name starts with <code class="docutils literal"><span class="pre">clients-</span></code>.</p>
+<p>If several (or none) dynamodb tables match any of these criterias, gordon will fail before trying to apply this project.</p>
+</div>
+<div class="section" id="dynamodb-streams">
+<h3>Dynamodb Streams<a class="headerlink" href="#dynamodb-streams" title="Permalink to this headline">¶</a></h3>
+<p>You can dynamically lookup for dynamodb streams which table name starts with, ends with or matches certain text.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="36%" />
+<col width="64%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Name</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">dynamodb-stream-startswith://</span></code></td>
+<td>Table name startswith certain text</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">dynamodb-stream-endswith://</span></code></td>
+<td>Table name ends with certain text</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">dynamodb-stream-match://</span></code></td>
+<td>Table name match certain regular expression</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<div class="highlight-yml"><div class="highlight"><pre>---
+MyParameter: dynamodb-stream-startswith://clients-
+</pre></div>
+</div>
+<p>gordon will make the parameter <code class="docutils literal"><span class="pre">MyParameter</span></code> value be the <code class="docutils literal"><span class="pre">ARN</span></code> of the stream of which table name starts with <code class="docutils literal"><span class="pre">clients-</span></code>.</p>
+<p>If several (or none) dynamodb tables match any of these criterias, gordon will fail before trying to apply this project.</p>
+</div>
+<div class="section" id="kinesis">
+<h3>Kinesis<a class="headerlink" href="#kinesis" title="Permalink to this headline">¶</a></h3>
+<p>You can dynamically lookup for kinesis streams which name starts with, ends with or matches certain text.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="31%" />
+<col width="69%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Name</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">kinesis-startswith://</span></code></td>
+<td>Kinesis stream name startswith certain text</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">kinesis-endswith://</span></code></td>
+<td>Kinesis stream name ends with certain text</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">kinesis-match://</span></code></td>
+<td>Kinesis stream name match certain regular expression</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<div class="highlight-yml"><div class="highlight"><pre>---
+MyParameter: kinesis-startswith://events-
+</pre></div>
+</div>
+<p>gordon will make the parameter <code class="docutils literal"><span class="pre">MyParameter</span></code> value be the full name of the table which name starts with <code class="docutils literal"><span class="pre">events-</span></code>.</p>
+<p>If several (or none) kinesis streams match any of these criterias, gordon will fail before trying to apply this project.</p>
 </div>
 </div>
 <div class="section" id="jinja2-templates">
@@ -87,7 +186,10 @@ MyBucket: &quot;company-{{ stage }}-images&quot;
   <ul>
 <li><a class="reference internal" href="#">Advanced Parameters</a><ul>
 <li><a class="reference internal" href="#protocols">Protocols</a><ul>
-<li><a class="reference internal" href="#reference-env">Reference <code class="docutils literal"><span class="pre">env://</span></code></a></li>
+<li><a class="reference internal" href="#environment-variables">Environment Variables</a></li>
+<li><a class="reference internal" href="#dynamodb">Dynamodb</a></li>
+<li><a class="reference internal" href="#dynamodb-streams">Dynamodb Streams</a></li>
+<li><a class="reference internal" href="#kinesis">Kinesis</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#jinja2-templates">Jinja2 Templates</a></li>
@@ -99,7 +201,7 @@ MyBucket: &quot;company-{{ stage }}-images&quot;
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="parameters.html" title="previous chapter">Parameters</a></li>
-      <li>Next: <a href="contrib.html" title="next chapter">gordon.contrib</a></li>
+      <li>Next: <a href="eventsources.html" title="next chapter">Event Sources</a></li>
   </ul></li>
 </ul>
 </div>

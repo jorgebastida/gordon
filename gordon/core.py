@@ -317,6 +317,7 @@ class ProjectApply(BaseProject):
     def __init__(self, *args, **kwargs):
         super(ProjectApply, self).__init__(*args, **kwargs)
         self.stage = kwargs.pop('stage', None)
+        self.timeout_in_minutes = kwargs.pop('timeout_in_minutes', 15)
         self.region = utils.setup_region(kwargs.pop('region', None), self.settings)
 
     def apply(self):
@@ -398,7 +399,8 @@ class ProjectApply(BaseProject):
         stack = utils.create_or_update_cf_stack(
             name=stack_name,
             template_filename=os.path.join(self.build_path, filename),
-            context=context
+            context=context,
+            timeout_in_minutes=self.timeout_in_minutes
         )
 
         for output in stack.get('Outputs', []):

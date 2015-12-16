@@ -1,0 +1,286 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>S3 &mdash; Gordon 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Gordon 0.0.1 documentation" href="../index.html" />
+    <link rel="up" title="Event Sources" href="../eventsources.html" />
+    <link rel="next" title="gordon.contrib" href="../contrib.html" />
+    <link rel="prev" title="Kinesis" href="kinesis.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="s3">
+<h1>S3<a class="headerlink" href="#s3" title="Permalink to this headline">¶</a></h1>
+<p>Amazon Simple Storage Service (Amazon S3), provides developers and IT teams with secure, durable, highly-scalable object storage.
+Amazon S3 is easy to use, with a simple web service interface to store and retrieve any amount of data from anywhere on the web.</p>
+<p>Gordon allow you to integrate your lambdas with S3 using their notification service.
+The idea is simple, every time an object get&#8217;s created/deleted, S3, will trigger a notification which you can route to three different services:</p>
+<blockquote>
+<div><ul class="simple">
+<li><strong>Lambda</strong>: Your code will be triggered each time something happens. <em>(1 S3 event = 1 lambda executed)</em></li>
+<li><strong>SQS</strong>: S3 will create a message in a SQS queue every time something happens. Right now there is no any api for Lambdas to consume messages from a sqs queue, but because you need to define all bucket notification in the same place, we need to support this. In the future AWS will might support consuming SQS messages using lambda. <em>(1 S3 event = 1 message in a queue)</em></li>
+<li><strong>SNS</strong>: S3 will send a message to a SNS Topic. You can subscribe as many lambdas as you want to this topic and process those messages individually <em>(1 S3 event = N lambdas executed)</em></li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">As always, is not gordon&#8217;s business to create those <code class="docutils literal"><span class="pre">sqs</span></code> or <code class="docutils literal"><span class="pre">sns</span></code> resources. You should create them in advance. You can read Why in the <a class="reference internal" href="../faq.html"><em>FAQ</em></a></p>
+</div>
+</div></blockquote>
+<div class="section" id="limitations">
+<h2>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>This integration, has some limitations because how the AWS API is designed:</dt>
+<dd><ul class="first last simple">
+<li>You must define all notifications for a bucket within the same integration.</li>
+<li>Gordon will refuse to configure notifications in bucket if it already has some other notifications configured manually (this is a safe measure).</li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="anatomy-of-the-integration">
+<h2>Anatomy of the integration<a class="headerlink" href="#anatomy-of-the-integration" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">s3</span><span class="p-Indicator">:</span>
+
+  <span class="p-Indicator">{</span> <span class="nv">INTEGRATION_NAME</span> <span class="p-Indicator">}:</span>
+    <span class="l-Scalar-Plain">bucket</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">BUCKET_NAME</span> <span class="p-Indicator">}</span>
+    <span class="l-Scalar-Plain">notifications</span><span class="p-Indicator">:</span>
+
+      <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">id</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">NOTFICATION_ID</span>  <span class="p-Indicator">}</span>
+        <span class="p-Indicator">{</span> <span class="nv">DESTINATION_TYPE</span> <span class="p-Indicator">}:</span> <span class="p-Indicator">{</span> <span class="nv">DESTINATION</span> <span class="p-Indicator">}</span>
+
+        <span class="l-Scalar-Plain">events</span><span class="p-Indicator">:</span>
+          <span class="p-Indicator">-</span> <span class="p-Indicator">{</span> <span class="nv">EVENT_NAME</span> <span class="p-Indicator">}</span>
+          <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">...</span>
+
+        <span class="l-Scalar-Plain">key_filters</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">(optional)</span>
+          <span class="l-Scalar-Plain">- prefix</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">PREFIX</span>
+          <span class="l-Scalar-Plain">- suffix</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">SUFFIX</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="destinations">
+<h2>Destinations<a class="headerlink" href="#destinations" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>Valid destinations types are:</dt>
+<dd><ul class="first last simple">
+<li><code class="docutils literal"><span class="pre">lambda</span></code></li>
+<li><code class="docutils literal"><span class="pre">queue</span></code></li>
+<li><code class="docutils literal"><span class="pre">topic</span></code></li>
+</ul>
+</dd>
+</dl>
+<div class="section" id="destination-lambda">
+<h3>Destination: <code class="docutils literal"><span class="pre">lambda</span></code><a class="headerlink" href="#destination-lambda" title="Permalink to this headline">¶</a></h3>
+<p>You can reference lambdas by name</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">lambda</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">app.s3consumer</span>
+</pre></div>
+</div>
+<p>Or by their full <code class="docutils literal"><span class="pre">arn</span></code>:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">lambda</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">arn:aws:lambda:eu-west-1:123456789:function:function-name</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="destination-queue">
+<h3>Destination: <code class="docutils literal"><span class="pre">queue</span></code><a class="headerlink" href="#destination-queue" title="Permalink to this headline">¶</a></h3>
+<p>You can reference queues by name if they are in the same account than the bucket</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">queue</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">my-queue-name</span>
+</pre></div>
+</div>
+<p>If your queue is on a different account you can use the dictionary format:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">queue</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">my-queue-name</span>
+  <span class="l-Scalar-Plain">acount_id</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">123456789</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="destination-topic">
+<h3>Destination: <code class="docutils literal"><span class="pre">topic</span></code><a class="headerlink" href="#destination-topic" title="Permalink to this headline">¶</a></h3>
+<p>You can reference topics by name if they are in the same account than the bucket</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">topic</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">my-topic-name</span>
+</pre></div>
+</div>
+<p>If your topic is on a different account you can use the dictionary format:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">topic</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">my-topic-name</span>
+  <span class="l-Scalar-Plain">acount_id</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">123456789</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="events">
+<h2>Events<a class="headerlink" href="#events" title="Permalink to this headline">¶</a></h2>
+<p>It is mandatory you provide a list of events where your notification will be subscribed. The list of available events is the following:</p>
+<blockquote>
+<div><ul class="simple">
+<li><code class="docutils literal"><span class="pre">s3:ObjectCreated:*</span></code></li>
+</ul>
+<blockquote>
+<div><ul class="simple">
+<li><code class="docutils literal"><span class="pre">s3:ObjectCreated:Put</span></code></li>
+<li><code class="docutils literal"><span class="pre">s3:ObjectCreated:Post</span></code></li>
+<li><code class="docutils literal"><span class="pre">s3:ObjectCreated:Copy</span></code></li>
+<li><code class="docutils literal"><span class="pre">s3:ObjectCreated:CompleteMultipartUpload</span></code></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">s3:ObjectRemoved:*</span></code></li>
+</ul>
+<blockquote>
+<div><ul class="simple">
+<li><code class="docutils literal"><span class="pre">s3:ObjectRemoved:Delete</span></code></li>
+<li><code class="docutils literal"><span class="pre">s3:ObjectRemoved:DeleteMarkerCreated</span></code></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">s3:ReducedRedundancyLostObject</span></code></li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Remember that you can&#8217;t overlap events between notifications. So, if you for example subscribe a lambda to <code class="docutils literal"><span class="pre">s3:ObjectCreated:*</span></code>, you&#8217;ll not
+be able to subscribe any other notification to: <code class="docutils literal"><span class="pre">s3:ObjectCreated:Put</span></code>, <code class="docutils literal"><span class="pre">s3:ObjectCreated:Post</span></code>, etc...</p>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="filters">
+<h2>Filters<a class="headerlink" href="#filters" title="Permalink to this headline">¶</a></h2>
+<p>Filters are optional to all notifications. The current AWS API only allows you to filter events by the key&#8217;s <code class="docutils literal"><span class="pre">prefix</span></code> and <code class="docutils literal"><span class="pre">suffix</span></code>. One notification can&#8217;t define
+more than one of each (<code class="docutils literal"><span class="pre">prefix</span></code> and <code class="docutils literal"><span class="pre">suffix</span></code>) and  filters in a bucket can&#8217;t overlap one to each other.</p>
+</div>
+<div class="section" id="full-example">
+<h2>Full Example<a class="headerlink" href="#full-example" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">s3</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">my_s3_integration</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">bucket</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">my_bucket_name</span>
+    <span class="l-Scalar-Plain">notifications</span><span class="p-Indicator">:</span>
+
+      <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">id</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">lambda_on_create_cat</span>
+        <span class="l-Scalar-Plain">lambda</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">app.s3consumer</span>
+        <span class="l-Scalar-Plain">events</span><span class="p-Indicator">:</span>
+          <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">s3:ObjectCreated:*</span>
+        <span class="l-Scalar-Plain">key_filters</span><span class="p-Indicator">:</span>
+          <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">prefix</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">cat_</span>
+          <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">suffix</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">.png</span>
+
+      <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">id</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">queue_on_remove_dog</span>
+        <span class="l-Scalar-Plain">queue</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">removed_dogs_queue</span>
+        <span class="l-Scalar-Plain">events</span><span class="p-Indicator">:</span>
+          <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">s3:ObjectRemoved:*</span>
+        <span class="l-Scalar-Plain">key_filters</span><span class="p-Indicator">:</span>
+          <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">prefix</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">dog_</span>
+
+      <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">id</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">topic_on_redundacy_lost</span>
+        <span class="l-Scalar-Plain">topic</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">redundacy_lost_topic</span>
+        <span class="l-Scalar-Plain">events</span><span class="p-Indicator">:</span>
+          <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">s3:ReducedRedundancyLostObject:*</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">S3</a><ul>
+<li><a class="reference internal" href="#limitations">Limitations</a></li>
+<li><a class="reference internal" href="#anatomy-of-the-integration">Anatomy of the integration</a></li>
+<li><a class="reference internal" href="#destinations">Destinations</a><ul>
+<li><a class="reference internal" href="#destination-lambda">Destination: <code class="docutils literal"><span class="pre">lambda</span></code></a></li>
+<li><a class="reference internal" href="#destination-queue">Destination: <code class="docutils literal"><span class="pre">queue</span></code></a></li>
+<li><a class="reference internal" href="#destination-topic">Destination: <code class="docutils literal"><span class="pre">topic</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#events">Events</a></li>
+<li><a class="reference internal" href="#filters">Filters</a></li>
+<li><a class="reference internal" href="#full-example">Full Example</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="../eventsources.html">Event Sources</a><ul>
+      <li>Previous: <a href="kinesis.html" title="previous chapter">Kinesis</a></li>
+      <li>Next: <a href="../contrib.html" title="next chapter">gordon.contrib</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/eventsources/s3.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, Jorge Bastida.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="../_sources/eventsources/s3.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

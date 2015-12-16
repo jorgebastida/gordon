@@ -11,7 +11,7 @@ Every time on event gets published into the kinesis stream, one of our lambdas i
 
 .. note::
 
-  As always, is not gordon's business to create the source ``stream``. You should create them in advance. :doc:`../why_gordon_dont_create_other_resources`
+  As always, is not gordon's business to create the source ``stream``. You should create them in advance. You can read Why in the :doc:`../faq`
 
 
 Anatomy of the integration

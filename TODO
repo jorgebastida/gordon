@@ -3,10 +3,7 @@ Must
 
 - New lambda settings. Inject settings to the .zip on deploy.
 
-- Doc lambdas, and how we use the current alias
-- Doc Protocols
 - Doc CF gotchas.
-- Doc read lambda logs
 - Doc tutorial python lambda
 - Doc tutorial js lambda
 - Doc tutorial s3 integration
@@ -34,6 +31,7 @@ Maybe
 - New sns protocol
 - New sqs protocol
 - Travis !integration
+- New add enabled to all resources.
 
 After
 ------

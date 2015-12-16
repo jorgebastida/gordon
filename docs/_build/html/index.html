@@ -40,7 +40,8 @@
   <div class="section" id="welcome-to-gordon">
 <h1>Welcome to Gordon<a class="headerlink" href="#welcome-to-gordon" title="Permalink to this headline">¶</a></h1>
 <p>Welcome to Gordon&#8217;s documentation. I recommend that you get started with <a class="reference internal" href="installation.html"><em>Installation</em></a> and then head over to the <a class="reference internal" href="quickstart.html"><em>Quickstart</em></a>.
-Besides the Quickstart, there are also several <code class="xref doc docutils literal"><span class="pre">tutorials</span></code> for some of the different available integrations.</p>
+Besides the Quickstart, there are also several tutorials for some of the different available event sources.</p>
+<p>If you are the kind of person who wants to learn by example, there are lot&#8217;s in our <a class="reference external" href="https://github.com/jorgebastida/gordon/tree/master/examples">Examples</a> directory in github.</p>
 <div class="section" id="first-steps">
 <h2>First Steps<a class="headerlink" href="#first-steps" title="Permalink to this headline">¶</a></h2>
 <p>Your first steps using gordon.</p>
@@ -65,16 +66,25 @@ Besides the Quickstart, there are also several <code class="xref doc docutils li
 </div>
 <div class="section" id="in-detail">
 <h2>In detail<a class="headerlink" href="#in-detail" title="Permalink to this headline">¶</a></h2>
+<img alt="_images/general.png" src="_images/general.png" />
 <p>In detail explanations of how everything works together.</p>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="project.html">Project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="project.html">Project</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="project.html#how-can-i-create-a-new-project">How can I create a new project?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project.html#project-settings">Project Settings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project.html#project-actions">Project Actions</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="apps.html">Applications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lambdas.html">Lambdas</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lambdas.html#what-gordon-will-do-for-you">What gordon will do for you?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lambdas.html#why-the-current-alias-is-important">Why the current alias is important?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lambdas.html#anatomy-of-a-lambda">Anatomy of a Lambda</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lambdas.html#lambda-properties">Lambda Properties</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="settings.html">Settings</a></li>
 <li class="toctree-l1"><a class="reference internal" href="parameters.html">Parameters</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="parameters.html#how-can-i-use-parameters">How can I use parameters?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parameters.html#example">Example</a></li>
@@ -87,18 +97,19 @@ Besides the Quickstart, there are also several <code class="xref doc docutils li
 <li class="toctree-l2"><a class="reference internal" href="parameters_advanced.html#jinja2-templates">Jinja2 Templates</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="contrib.html">gordon.contrib</a></li>
+<li class="toctree-l1"><a class="reference internal" href="eventsources.html">Event Sources</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="eventsources/dynamodb.html">Dynamodb</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eventsources/kinesis.html">Kinesis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eventsources/s3.html">S3</a></li>
 </ul>
-</div>
-</div>
-<div class="section" id="integrations">
-<h2>Integrations<a class="headerlink" href="#integrations" title="Permalink to this headline">¶</a></h2>
-<p>Apart from creating lambdas, gordon can help you wiring your lambdas with lot&#8217;s of different AWS services.</p>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="integrations/dynamodb.html">Dynamodb</a></li>
-<li class="toctree-l1"><a class="reference internal" href="integrations/kinesis.html">Kinesis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="integrations/s3.html">S3</a></li>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contrib.html">gordon.contrib</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#why-my-project-has-some-lambdas-i-ve-not-defined">Why my project has some lambdas I&#8217;ve not defined?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#why-gordon-don-t-let-me-create-other-resources">Why gordon don&#8217;t let me create other resources</a></li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#how-can-i-read-the-logs-generated-by-my-lambdas">How can I read the logs generated by my Lambdas?</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -124,7 +135,6 @@ Besides the Quickstart, there are also several <code class="xref doc docutils li
 <li><a class="reference internal" href="#">Welcome to Gordon</a><ul>
 <li><a class="reference internal" href="#first-steps">First Steps</a></li>
 <li><a class="reference internal" href="#in-detail">In detail</a></li>
-<li><a class="reference internal" href="#integrations">Integrations</a></li>
 <li><a class="reference internal" href="#tutorials">Tutorials</a></li>
 </ul>
 </li>

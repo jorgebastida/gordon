@@ -141,4 +141,5 @@ You should have a basic understanding of how Gordon works. We recommend you to d
 
   * :doc:`project` Details about how you can customize your projects
   * :doc:`apps` Internals about how applications work.
-  * :doc:`resources` List of all resources and integrations you can create using Gordon.
+  * :doc:`lambdas` In-depth exmplanation of how lambdas work.
+  * :doc:`eventsources` List of all resources and integrations you can create using Gordon.

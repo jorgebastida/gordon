@@ -217,7 +217,7 @@ def filter_context_for_template(context, template_body):
     return dict(parameters)
 
 
-def create_stack(name, template_filename, context, **kwargs):
+def create_stack(name, template_filename, context, timeout_in_minutes, **kwargs):
     """Creates a new CloudFormation stack with name ``name`` using as template
     ``template_filename`` and ``context`` as parameters."""
 
@@ -230,7 +230,7 @@ def create_stack(name, template_filename, context, **kwargs):
         StackName=name,
         TemplateBody=template_body,
         Parameters=[{'ParameterKey': k, 'ParameterValue': v} for k, v in parameters.iteritems()],
-        TimeoutInMinutes=kwargs.get('TimeoutInMinutes', 10),
+        TimeoutInMinutes=timeout_in_minutes,
         Capabilities=['CAPABILITY_IAM'],
         #OnFailure='ROLLBACK'
         OnFailure='DO_NOTHING',

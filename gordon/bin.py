@@ -63,6 +63,12 @@ def main(argv=None):
                               type=str,
                               default='dev',
                               help="Stage where to apply this project")
+    apply_parser.add_argument("--cf-timeout",
+                              dest="timeout_in_minutes",
+                              type=int,
+                              default=15,
+                              help="CloudFormation timeout.")
+
 
     options, args = parser.parse_known_args(argv)
 

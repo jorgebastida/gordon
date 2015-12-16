@@ -2,12 +2,15 @@ Lambdas
 ========
 
 Gordon has two aims:
- * Create and deploy lambdas
+ * Easily deploy and manage lambdas.
  * Easily connect those lambdas to other AWS services (kinesis, dynamo, s3, etc...)
 
-They are the most basic element we'll create . Lambdas are simple functions
-written in any of the supported AWS languages (python, javascript and java)
-which we'll upload to AWS and then connect with several other services.
+Lambdas are simple functions written in any of the supported AWS languages (python, javascript and java).
+If you want to know more, you can read AWS documentation in the topic:
+
+  * `What Is AWS Lambda? <http://docs.aws.amazon.com/lambda/latest/dg/welcome.html>`_
+  * `AWS Lambda FAQs <https://aws.amazon.com/lambda/faqs/>`_
+  * `AWS Lambda Limits <http://docs.aws.amazon.com/lambda/latest/dg/limits.html>`_
 
 Working with lambdas is quite easy to start with, but once you want to develop
 some complex integrations, it becomes a bit of a burden to deal with all the
@@ -24,30 +27,48 @@ Term                   Description
 ``lambda alias``       Pointer to a lambda.
 ``code bucket``        S3 bucket where your lambda code is uploaded.
 ``code``               S3 Object which contains your lambda code and all required libraries/packages (zip)
-``code version``       S3 Object Version of one of your lambda codes.
+``code version``       S3 Object Version of one of your lambda code.
 ``runtime``            Language in which the lambda code is written (python, javascript or java)
 =====================  ================================================================================================
 
+What gordon will do for you?
+-----------------------------
 
-In short, every time you want to deploy your lambdas into AWS gordon will:
+* Download any external requirement you lambdas might have.
+* Create a zip file with your lambda, packages and libraries.
+* Upload this file to S3.
+* Create a lambda with your code and settings (memory, timeout...)
+* Publish a new version of the lambda.
+* Create an alias named ``current`` pointing to this new version.
+* Create a new IAM Role for this lambda and attach it.
 
-* Create a zip file with your code, packages and libraries.
-* Upload this file to S3 as new version of the same Object.
-* Modify the lambda code to point to the new package
-* Make any other required changes to the lambda (memory, etc..)
-* Create  a new version of the lambda
-* Move the ``current`` alias to this new version
+As result, your lambda will be up and running on AWS!
 
 .. image:: _static/lambdas.gif
 
+As you can imagine, this is quite a lot of things to do every time you want to simply deploy a new change! That's where gordon tries to help.
 
-As you can imagine, this is quite a lot of things to do every time you want to simply upload
-a new piece of code! That's where gordon tries to help.
+With simply two commands, ``build`` and ``apply`` you'll be able to deploy your changes again and again with no effort.
+
+
+Why the current alias is important?
+------------------------------------
+
+The ``Current`` alias gordon creates pointing to your most recent lambda is really important.
+When gordon creates a new event sources (like S3, Dynamo or Kinesis), it'll make those call the lambda aliased as ``Current`` instead of the ``$LATEST``.
+
+This is really important to know, because it enables you to (in case of neccesary) change your ``Current`` alias to point any previous version of the same lambda without
+needing to re-configure all related event sources.
+
+Any subsequent deploy to the same stage will point the ``Current`` alias to your latest function.
+
+For more information you can read `AWS Lambda Function Versioning and Aliases <http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html>`_.
 
 
 Anatomy of a Lambda
 --------------------
 
+The following is the anatomy of a lambda in gordon.
 
 .. code-block:: yaml
 
@@ -70,6 +91,10 @@ Anatomy of a Lambda
         { POLICY_NAME }:
           { POLICY_BODY }
         ...
+
+The best way to organize you lambdas is to register them inside the ``settings.yml`` file of your :doc:`apps` within your :doc:`project`.
+
+.. image:: _static/structure/lambdas.png
 
 
 Lambda Properties
@@ -177,8 +202,9 @@ using `npm <https://www.npmjs.com/>`_ syntax. gordon uses ``npm`` under the hood
 role
 ^^^^^^^^^^^^^^^^^^^^^^
 
-ARN of the lambda role this function will use. If not provided, gordon will create one role for this function and include all necessary ``policies``.
-This is the default behaviour.
+ARN of the lambda role this function will use.
+
+If not provided, gordon will create one role for this function for you and include all necessary ``policies`` *(This is the default and most likely behaviour you want).*
 
 .. code-block:: yaml
 
@@ -190,10 +216,11 @@ This is the default behaviour.
 policies
 ^^^^^^^^^^^^^^^^^^^^^^
 
-List of AWS policies to attach to the role of this lambda. This is the way you'll make it possible to you lambda to connect to other AWS services
-such as dynamodb, kinesis, s3, etc..
+List of AWS policies to attach to the role of this lambda. This is the way you'll give permissions to you lambda to connect to other AWS services
+such as dynamodb, kinesis, s3, etc... For more inforamtion `AWS IAM Policy Reference <http://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies.html>`_
 
-In the following example we attach one policy to our lambda ``hello_world`` in order to make it possible to read a dynamodb stream.
+In the following example we attach one policy called ``example_bucket_policy`` to our lambda ``hello_world`` in order to make it possible to read and write a
+S3 bucket called ``EXAMPLE-BUCKET-NAME``.
 
 .. code-block:: yaml
 
@@ -201,14 +228,20 @@ In the following example we attach one policy to our lambda ``hello_world`` in o
     hello_world:
       code: functions.py
       policies:
-        read_dynamodb:
+        example_bucket_policy:
           Version: "2012-10-17"
           Statement:
             -
               Action:
-                - "dynamodb:DescribeStream"
-                - "dynamodb:ListStreams"
-                - "dynamodb:GetShardIterator"
+                - "s3:ListBucket"
+                - "s3:GetBucketLocation"
+              Resource: "arn:aws:s3:::EXAMPLE-BUCKET-NAME"
+              Effect: "Allow"
+            -
+              Action:
+                - "s3:PutObject"
+                - "s3:GetObject"
+                - "s3:DeleteObject"
                 - "dynamodb:GetRecords"
-              Resource: "arn:aws:dynamodb:*:*:*"
+              Resource: "arn:aws:s3:::EXAMPLE-BUCKET-NAME/*"
               Effect: "Allow"

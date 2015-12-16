@@ -13,7 +13,7 @@ The idea is simple, every time an object get's created/deleted, S3, will trigger
 
   .. note::
 
-    As always, is not gordon's business to create those ``sqs`` or ``sns`` resources. You should create them in advance. :doc:`../why_gordon_dont_create_other_resources`
+    As always, is not gordon's business to create those ``sqs`` or ``sns`` resources. You should create them in advance. You can read Why in the :doc:`../faq`
 
 Limitations
 ------------
