@@ -61,6 +61,9 @@ If you want to know more, you can read AWS documentation in the topic:</p>
 some complex integrations, it becomes a bit of a burden to deal with all the
 required steps to put some changes live. Gordon tries to make the entire process
 as smooth as possible.</p>
+<p>In gordon, Lambdas are resources that you&#8217;ll group and define within <a class="reference internal" href="apps.html"><em>Applications</em></a>. The idea
+is to keep Lambdas with the same business domain close to each other in the same app.</p>
+<img alt="_images/lambdas.png" src="_images/lambdas.png" />
 <p>Before we continue there is a bit of terminology we need to make clear:</p>
 <table border="1" class="docutils">
 <colgroup>
@@ -107,18 +110,18 @@ as smooth as possible.</p>
 <li>Create an alias named <code class="docutils literal"><span class="pre">current</span></code> pointing to this new version.</li>
 <li>Create a new IAM Role for this lambda and attach it.</li>
 </ul>
-<p>As result, your lambda will be up and running on AWS!</p>
+<p>As result, your lambda will be ready to run on AWS!</p>
 <img alt="_images/lambdas.gif" src="_images/lambdas.gif" />
 <p>As you can imagine, this is quite a lot of things to do every time you want to simply deploy a new change! That&#8217;s where gordon tries to help.</p>
 <p>With simply two commands, <code class="docutils literal"><span class="pre">build</span></code> and <code class="docutils literal"><span class="pre">apply</span></code> you&#8217;ll be able to deploy your changes again and again with no effort.</p>
 </div>
 <div class="section" id="why-the-current-alias-is-important">
 <h2>Why the current alias is important?<a class="headerlink" href="#why-the-current-alias-is-important" title="Permalink to this headline">¶</a></h2>
-<p>The <code class="docutils literal"><span class="pre">Current</span></code> alias gordon creates pointing to your most recent lambda is really important.
-When gordon creates a new event sources (like S3, Dynamo or Kinesis), it&#8217;ll make those call the lambda aliased as <code class="docutils literal"><span class="pre">Current</span></code> instead of the <code class="docutils literal"><span class="pre">$LATEST</span></code>.</p>
-<p>This is really important to know, because it enables you to (in case of neccesary) change your <code class="docutils literal"><span class="pre">Current</span></code> alias to point any previous version of the same lambda without
+<p>The <code class="docutils literal"><span class="pre">current</span></code> alias gordon creates pointing to your most recent lambda is really important.
+When gordon creates a new event sources (like S3, Dynamo or Kinesis), it&#8217;ll make those call the lambda aliased as <code class="docutils literal"><span class="pre">current</span></code> instead of the <code class="docutils literal"><span class="pre">$LATEST</span></code>.</p>
+<p>This is really important to know, because it enables you to (in case of neccesary) change your <code class="docutils literal"><span class="pre">current</span></code> alias to point to any previous version of the same lambda without
 needing to re-configure all related event sources.</p>
-<p>Any subsequent deploy to the same stage will point the <code class="docutils literal"><span class="pre">Current</span></code> alias to your latest function.</p>
+<p>Any subsequent deploy to the same stage will point the <code class="docutils literal"><span class="pre">current</span></code> alias to your latest function.</p>
 <p>For more information you can read <a class="reference external" href="http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html">AWS Lambda Function Versioning and Aliases</a>.</p>
 </div>
 <div class="section" id="anatomy-of-a-lambda">
@@ -146,7 +149,6 @@ needing to re-configure all related event sources.</p>
 </pre></div>
 </div>
 <p>The best way to organize you lambdas is to register them inside the <code class="docutils literal"><span class="pre">settings.yml</span></code> file of your <a class="reference internal" href="apps.html"><em>Applications</em></a> within your <a class="reference internal" href="project.html"><em>Project</em></a>.</p>
-<img alt="_images/lambdas.png" src="_images/lambdas.png" />
 </div>
 <div class="section" id="lambda-properties">
 <h2>Lambda Properties<a class="headerlink" href="#lambda-properties" title="Permalink to this headline">¶</a></h2>

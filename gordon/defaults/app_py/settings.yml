@@ -1,6 +1,6 @@
 lambdas:
   helloworld:
-    code: lambdas.py
+    code: helloworld.py
     #description: Simple functions in python which says hello
     #handler: handler
     #role:

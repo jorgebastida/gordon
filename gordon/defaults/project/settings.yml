@@ -4,4 +4,4 @@ default-region: {{ default_region }}
 apps:
   - gordon.contrib.helpers
   - gordon.contrib.lambdas
-# - my_first_app
+# - firstapp

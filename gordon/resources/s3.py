@@ -317,8 +317,8 @@ class BucketNotificationConfiguration(base.BaseResource):
                     KeyFilters=[KeyFilter(Name=name, Value=value) for name, value in notification.filters]
                 )
             )
-        
-        bucket_notification_configuration_lambda = 'lambda:s3:bucket_notification_configuration:current'
+
+        bucket_notification_configuration_lambda = 'lambda:contrib_s3:bucket_notification_configuration:current'
         template.add_resource(
             S3BucketNotificationConfiguration.create_with(
                 utils.valid_cloudformation_name(self.name),

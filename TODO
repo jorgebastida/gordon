@@ -4,17 +4,18 @@ Must
 - New lambda settings. Inject settings to the .zip on deploy.
 
 - Doc CF gotchas.
-- Doc tutorial python lambda
-- Doc tutorial js lambda
 - Doc tutorial s3 integration
 - Doc tutorial kinesis integration
 - Doc tutorial dynamodb integration
-- Check TimeoutInMinutes. Is now 10, but might need to be higher / configurable
 - Review TODO, FIX
+- New app/lambdas name clash
+- UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS !
+- non-existing apps don't fail
+- error nicely when a contib resouce is not found
+
 
 Maybe
 ------
-- Doc lambda policies example is not great
 - New API Gateway
 - New API Gateway cors
 - New SNS integration

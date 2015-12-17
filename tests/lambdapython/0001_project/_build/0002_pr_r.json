@@ -1,0 +1,135 @@
+{
+    "outputs": {
+        "VersionS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "VersionS3Version", 
+            "value": {
+                "action": "version-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
+        "SleepS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "SleepS3Url", 
+            "value": {
+                "action": "sleep-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }, 
+        "PyexampleS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "PyexampleS3Url", 
+            "value": {
+                "action": "pyexample-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }, 
+        "PyexampleS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "PyexampleS3Version", 
+            "value": {
+                "action": "pyexample-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
+        "SleepS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "SleepS3Version", 
+            "value": {
+                "action": "sleep-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
+        "AliasS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "AliasS3Url", 
+            "value": {
+                "action": "alias-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }, 
+        "AliasS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "AliasS3Version", 
+            "value": {
+                "action": "alias-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
+        "VersionS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "VersionS3Url", 
+            "value": {
+                "action": "version-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }
+    }, 
+    "_type": "ActionsTemplate", 
+    "actions": [
+        {
+            "_type": "UploadToS3", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "name": "sleep-upload", 
+            "key": "contrib_helpers_sleep.zip", 
+            "filename": "code/contrib_helpers_sleep.zip"
+        }, 
+        {
+            "_type": "UploadToS3", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "name": "alias-upload", 
+            "key": "contrib_lambdas_alias.zip", 
+            "filename": "code/contrib_lambdas_alias.zip"
+        }, 
+        {
+            "_type": "UploadToS3", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "name": "version-upload", 
+            "key": "contrib_lambdas_version.zip", 
+            "filename": "code/contrib_lambdas_version.zip"
+        }, 
+        {
+            "_type": "UploadToS3", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "name": "pyexample-upload", 
+            "key": "pyexample_pyexample.zip", 
+            "filename": "code/pyexample_pyexample.zip"
+        }
+    ], 
+    "parameters": {
+        "CodeBucket": {
+            "default": "", 
+            "_type": "Parameter", 
+            "name": "CodeBucket"
+        }
+    }, 
+    "parallelizable": false
+}

@@ -133,10 +133,11 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
         for application in self.settings.get('apps', None) or []:
             path = None
             if isinstance(application, basestring):
-                if application.startswith('gordon.contrib.'):
-                    application = application[len('gordon.contrib.'):]
-                    path = os.path.join(self.root, 'contrib', application)
                 application_name = application
+                if application.startswith('gordon.contrib.'):
+                    app_parts = application.split('.')
+                    path = os.path.join(self.root, 'contrib', app_parts[-1])
+                    application_name = '_'.join(app_parts[1:])
                 settings = {}
             elif isinstance(application, dict):
                 application_name = application.keys()[0]

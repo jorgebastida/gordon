@@ -1,0 +1,274 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>My first Javascript Lambda &mdash; Gordon 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Gordon 0.0.1 documentation" href="../index.html" />
+    <link rel="next" title="My first Python Lambda" href="first_python_lambda.html" />
+    <link rel="prev" title="FAQ" href="../faq.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="my-first-javascript-lambda">
+<h1>My first Javascript Lambda<a class="headerlink" href="#my-first-javascript-lambda" title="Permalink to this headline">¶</a></h1>
+<p>In this example we are going to create our first javascript lambda using gordon. This lambda is going to do the same than the <code class="docutils literal"><span class="pre">Hello</span> <span class="pre">World</span></code> example AWS provides as blueprint. This
+is:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Receive an input message</li>
+<li>Log <code class="docutils literal"><span class="pre">key1</span></code>, <code class="docutils literal"><span class="pre">key2</span></code> and <code class="docutils literal"><span class="pre">key3</span></code> values.</li>
+<li>Return <code class="docutils literal"><span class="pre">key1</span></code> as result.</li>
+</ul>
+</div></blockquote>
+<p>The test message we&#8217;ll use to test this function is the following:</p>
+<div class="highlight-json"><div class="highlight"><pre><span class="p">{</span>
+  <span class="nt">&quot;key3&quot;</span><span class="p">:</span> <span class="s2">&quot;value3&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;key2&quot;</span><span class="p">:</span> <span class="s2">&quot;value2&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;key1&quot;</span><span class="p">:</span> <span class="s2">&quot;value1&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Before we start, make sure you have:</p>
+<blockquote>
+<div><ul class="simple">
+<li>An AWS Account</li>
+<li>You&#8217;ve setup your AWS credentials in your machine (<a class="reference internal" href="../setup_aws.html"><em>Setup AWS Credentials</em></a>)</li>
+<li>Gordon is installed (<a class="reference internal" href="../installation.html"><em>Installation</em></a>)</li>
+</ul>
+</div></blockquote>
+<div class="section" id="create-your-project">
+<h2>Create your Project<a class="headerlink" href="#create-your-project" title="Permalink to this headline">¶</a></h2>
+<p>From the command line, cd into a directory where you’d like to store your code, then run the following command:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>gordon startproject hellojs
+</pre></div>
+</div>
+<p>This will create a <cite>hellojs</cite> directory in your current directory with the following structure:</p>
+<div class="highlight-bash"><div class="highlight"><pre>hellojs
+└── settings.yml
+</pre></div>
+</div>
+<p>This is the minimal layout of a project. We are now going to create an application.</p>
+</div>
+<div class="section" id="create-your-application">
+<h2>Create your Application<a class="headerlink" href="#create-your-application" title="Permalink to this headline">¶</a></h2>
+<p>Run the following command from the command line:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>gordon startapp firstapp --runtime<span class="o">=</span>js
+</pre></div>
+</div>
+<p>This will create a <cite>firstapp</cite> directory inside your project with the following structure:</p>
+<div class="highlight-bash"><div class="highlight"><pre>firstapp/
+├── helloworld.js
+└── settings.yml
+</pre></div>
+</div>
+<p>By default, when you create a new application, gordon will create one really simple lambda called <code class="docutils literal"><span class="pre">helloworld</span></code>.</p>
+<p>In the next step we&#8217;ll install your application</p>
+</div>
+<div class="section" id="install-your-application">
+<h2>Install your application<a class="headerlink" href="#install-your-application" title="Permalink to this headline">¶</a></h2>
+<p>In order to install your application you need to add it to the <code class="docutils literal"><span class="pre">apps</span></code> list in the project <code class="docutils literal"><span class="pre">settings.yml</span></code>.</p>
+<p>Edit your project <code class="docutils literal"><span class="pre">settings.yml</span></code> file and add <code class="docutils literal"><span class="pre">firstapp</span></code> to the list of installed apps.</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="nn">---</span>
+<span class="l-Scalar-Plain">project</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">hellojs</span>
+<span class="l-Scalar-Plain">default-region</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">us-east-1</span>
+<span class="l-Scalar-Plain">apps</span><span class="p-Indicator">:</span>
+  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">gordon.contrib.helpers</span>
+  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">gordon.contrib.lambdas</span>
+  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">firstapp</span>
+</pre></div>
+</div>
+<p>In the next step we are going to make the default lambda gordon provides, do what we want it to do.</p>
+</div>
+<div class="section" id="create-your-lambda">
+<h2>Create your Lambda<a class="headerlink" href="#create-your-lambda" title="Permalink to this headline">¶</a></h2>
+<p>Open you <code class="docutils literal"><span class="pre">firstapp/helloworld.js</span></code> file and edit it until it looks to something like this:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="nx">exports</span><span class="p">.</span><span class="nx">handler</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">,</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;value1 =&#39;</span><span class="p">,</span> <span class="nx">event</span><span class="p">.</span><span class="nx">key1</span><span class="p">);</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;value2 =&#39;</span><span class="p">,</span> <span class="nx">event</span><span class="p">.</span><span class="nx">key2</span><span class="p">);</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;value3 =&#39;</span><span class="p">,</span> <span class="nx">event</span><span class="p">.</span><span class="nx">key3</span><span class="p">);</span>
+  <span class="nx">context</span><span class="p">.</span><span class="nx">succeed</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">key1</span><span class="p">);</span>  <span class="c1">// Echo back the first key value</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The code of our lambda is ready! We only need to double check it is correctly registered.</p>
+<p>Open your <code class="docutils literal"><span class="pre">firstapp/settings.yml</span></code>. It should look similar to this:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">lambdas</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">helloworld</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">helloworld.js</span>
+    <span class="c1">#description: Simple functions in js which says hello</span>
+    <span class="c1">#handler: handler</span>
+    <span class="c1">#role:</span>
+    <span class="c1">#memory:</span>
+</pre></div>
+</div>
+<p>This file is simply registering a lambda called <code class="docutils literal"><span class="pre">helloworld</span></code>, and telling gordon the source of the lambda is in <code class="docutils literal"><span class="pre">helloworld.js</span></code> file.</p>
+<p>The default behaviour for gordon is to assume the function to call in your source file is called <code class="docutils literal"><span class="pre">handler</span></code>. You can change this behaviour by changing the <code class="docutils literal"><span class="pre">handler</span></code> section
+in your lambda settings.</p>
+<p>Now we are ready to build your project!</p>
+</div>
+<div class="section" id="build-your-project">
+<h2>Build your project<a class="headerlink" href="#build-your-project" title="Permalink to this headline">¶</a></h2>
+<p>In the root of your project run the following command</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>gordon build
+</pre></div>
+</div>
+<p>This command will have an output similar to:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>gordon build
+Loading project resources
+Loading installed applications
+  contrib_helpers:
+    ✓ sleep
+  contrib_lambdas:
+    ✓ <span class="nb">alias</span>
+    ✓ version
+  firstapp:
+    ✓ helloworld
+Building project...
+  ✓ 0001_p.json
+  ✓ 0002_pr_r.json
+  ✓ 0003_r.json
+</pre></div>
+</div>
+<p>If that&#8217;s the case... great! Your project is ready to be deployed.</p>
+</div>
+<div class="section" id="deploy-your-project">
+<h2>Deploy your project<a class="headerlink" href="#deploy-your-project" title="Permalink to this headline">¶</a></h2>
+<p>Projects are deployed by calling the command <code class="docutils literal"><span class="pre">apply</span></code>. Apply will assume by default you want to deploy your project
+into a new stage called <code class="docutils literal"><span class="pre">dev</span></code>.</p>
+<p>Stages are 100% isolated deployments of the same project. The idea is that the same project
+can be deployed in the same AWS account in different stages (<code class="docutils literal"><span class="pre">dev</span></code>, <code class="docutils literal"><span class="pre">staging</span></code>, <code class="docutils literal"><span class="pre">production</span></code>...) in order to SAFELY test your lambda behaviour.</p>
+<p>If you don&#8217;t provive any stage using <code class="docutils literal"><span class="pre">--stage=STAGE_NAME</span></code> a default stage called <code class="docutils literal"><span class="pre">dev</span></code> will be used.</p>
+<p>Once you are ready, call the following command:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>gordon apply
+</pre></div>
+</div>
+<p>This command will have an output similar to:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>gordon apply
+Applying project...
+  0001_p.json <span class="o">(</span>cloudformation<span class="o">)</span>
+    CREATE_COMPLETE waiting... -
+  0002_pr_r.json <span class="o">(</span>custom<span class="o">)</span>
+    ✓ code/contrib_helpers_sleep.zip <span class="o">(</span>364c5f6d<span class="o">)</span>
+    ✓ code/contrib_lambdas_alias.zip <span class="o">(</span>e906090e<span class="o">)</span>
+    ✓ code/contrib_lambdas_version.zip <span class="o">(</span>c3137e97<span class="o">)</span>
+    ✓ code/firstapp_helloworld.zip <span class="o">(</span>db6f502e<span class="o">)</span>
+  0003_r.json <span class="o">(</span>cloudformation<span class="o">)</span>
+    CREATE_COMPLETE
+</pre></div>
+</div>
+<p>And you are done! Your lambda is ready to be used on AWS!</p>
+</div>
+<div class="section" id="test-your-lambda">
+<h2>Test your Lambda<a class="headerlink" href="#test-your-lambda" title="Permalink to this headline">¶</a></h2>
+<p>In order to test it, you can navigate into your <a class="reference external" href="https://console.aws.amazon.com/lambda/home?#/functions">Lambda Console</a> and:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Click on the lambda we have just created. It should be called something like: <code class="docutils literal"><span class="pre">dev-hellojs-r-FirstappHelloworld-XXXXXXXX</span></code></li>
+<li>Click the blue button named <code class="docutils literal"><span class="pre">Test</span></code></li>
+<li>Select the <code class="docutils literal"><span class="pre">Hello</span> <span class="pre">World</span></code> Sample event template (It should come selected by default)</li>
+<li>Click <code class="docutils literal"><span class="pre">Save</span> <span class="pre">and</span> <span class="pre">Test</span></code></li>
+<li>You should get a succeed message: <code class="docutils literal"><span class="pre">Execution</span> <span class="pre">result:</span> <span class="pre">succeeded</span></code>, and some log information.</li>
+</ul>
+</div></blockquote>
+<p>Congratulations! You&#8217;ve just deployed your first lambda into AWS using gordon!</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">My first Javascript Lambda</a><ul>
+<li><a class="reference internal" href="#create-your-project">Create your Project</a></li>
+<li><a class="reference internal" href="#create-your-application">Create your Application</a></li>
+<li><a class="reference internal" href="#install-your-application">Install your application</a></li>
+<li><a class="reference internal" href="#create-your-lambda">Create your Lambda</a></li>
+<li><a class="reference internal" href="#build-your-project">Build your project</a></li>
+<li><a class="reference internal" href="#deploy-your-project">Deploy your project</a></li>
+<li><a class="reference internal" href="#test-your-lambda">Test your Lambda</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../faq.html" title="previous chapter">FAQ</a></li>
+      <li>Next: <a href="first_python_lambda.html" title="next chapter">My first Python Lambda</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/tutorials/first_javascript_lambda.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, Jorge Bastida.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="../_sources/tutorials/first_javascript_lambda.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

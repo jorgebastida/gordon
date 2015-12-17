@@ -232,7 +232,7 @@ class BaseStream(BaseResource):
         Because the ``Lambda`` and the ``EventSourceMapping`` are created in
         the same stack we need to introduce this as palliative measure, sorry!
         """
-        sleep_lambda = 'lambda:helpers:sleep:current'
+        sleep_lambda = 'lambda:contrib_helpers:sleep:current'
         sleep = Sleep.create_with(
             utils.valid_cloudformation_name(self.name, "Sleep"),
             DependsOn=[self.project.reference(sleep_lambda)],

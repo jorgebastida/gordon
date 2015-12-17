@@ -67,7 +67,7 @@
 </div>
 <p>This will create a <cite>firstapp</cite> directory inside your project with the following structure:</p>
 <div class="highlight-bash"><div class="highlight"><pre>firstapp/
-├── lambdas.py
+├── helloworld.py
 └── settings.yml
 </pre></div>
 </div>
@@ -78,12 +78,12 @@
 <p>These files are:</p>
 <blockquote>
 <div><ul class="simple">
-<li><code class="docutils literal"><span class="pre">lambdas.py</span></code> : File where the source code of your lambdas will be. By default gordon creates a function called <code class="docutils literal"><span class="pre">handler</span></code> in this file.</li>
-<li><code class="docutils literal"><span class="pre">settings.py</span></code> : Configuration related to this application. By default gordon registers as <code class="docutils literal"><span class="pre">helloworld</span></code> the function within <code class="docutils literal"><span class="pre">lambdas.py</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">helloworld.py</span></code> : File where the source code of our first helloworld lambda will be. By default gordon creates a function called <code class="docutils literal"><span class="pre">handler</span></code> in this file.</li>
+<li><code class="docutils literal"><span class="pre">settings.py</span></code> : Configuration related to this application. By default gordon registers a <code class="docutils literal"><span class="pre">helloworld</span></code> lambda the function within <code class="docutils literal"><span class="pre">helloworld.py</span></code>.</li>
 </ul>
 </div></blockquote>
 <p>Once you understand how everything works, and you start developing your app, you&#8217;ll rename/remove this function, but to start with we think this is the easiest way for you to understand how everything works.</p>
-<p>Give it a look to <code class="docutils literal"><span class="pre">firstapp/settings.yml</span></code> and <code class="docutils literal"><span class="pre">firstapp/lambdas.py</span></code> files in order to get a better understanding of what gordon just created for you.</p>
+<p>Give it a look to <code class="docutils literal"><span class="pre">firstapp/settings.yml</span></code> and <code class="docutils literal"><span class="pre">firstapp/helloworld.py</span></code> files in order to get a better understanding of what gordon just created for you.</p>
 <p>Now that we know what these files does, we need to install this <code class="docutils literal"><span class="pre">firstapp</span></code>. In order to do so, open your project <code class="docutils literal"><span class="pre">settings.yml</span></code> and add <code class="docutils literal"><span class="pre">firstapp</span></code> to the <code class="docutils literal"><span class="pre">apps</span></code> list:</p>
 <div class="highlight-yml"><div class="highlight"><pre>---
 project: demo
@@ -107,28 +107,30 @@ apps:
 <div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>gordon build
 Loading project resources
 Loading installed applications
-  cloudformation:
-    ✓ lambda_alias
+  contrib_helpers:
     ✓ sleep
-    ✓ lambda_version
+  contrib_lambdas:
+    ✓ <span class="nb">alias</span>
+    ✓ version
   firstapp:
     ✓ helloworld
 Building project...
-  ✓ 0001_project.json
-  ✓ 0002_pre_resources.json
-  ✓ 0003_resources.json
+  ✓ 0001_p.json
+  ✓ 0002_pr_r.json
+  ✓ 0003_r.json
 </pre></div>
 </div>
 <dl class="docutils">
 <dt>What is all this? Well, without going into much detail, gordon has just decided that deploying you application implies three stages.</dt>
 <dd><ul class="first last simple">
-<li><code class="docutils literal"><span class="pre">0001_project.json</span></code> gordon is going to create a s3 bucket where the code of your lambdas will be uploaded.</li>
-<li><code class="docutils literal"><span class="pre">0002_pre_resources.json</span></code> gordon will upload the code of your lambdas to S3.</li>
-<li><code class="docutils literal"><span class="pre">0003_resources.json</span></code> gordon will create your lambdas.</li>
+<li><code class="docutils literal"><span class="pre">0001_p.json</span></code> gordon is going to create a s3 bucket where the code of your lambdas will be uploaded.</li>
+<li><code class="docutils literal"><span class="pre">0002_pr_r.json</span></code> gordon will upload the code of your lambdas to S3.</li>
+<li><code class="docutils literal"><span class="pre">0003_r.json</span></code> gordon will create your lambdas.</li>
 </ul>
 </dd>
 </dl>
 <p>But, should I care? <strong>No</strong> you should not really care much about what is going on. The only important part is that you&#8217;ll now see a new <code class="docutils literal"><span class="pre">_build</span></code> directory in your project path. That directory contains everything gordon needs to put your lambdas live.</p>
+<p>If you want to read more about the internals of gordon project, you read more in the <a class="reference internal" href="project.html"><em>Project</em></a> page.</p>
 </div>
 <div class="section" id="deploy-your-project">
 <h2>Deploy your project<a class="headerlink" href="#deploy-your-project" title="Permalink to this headline">¶</a></h2>
@@ -138,11 +140,20 @@ Building project...
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">It is important that you make your AWS credential available in your terminal before, so gordon can use them. For more information: <code class="xref doc docutils literal"><span class="pre">setup_aws</span></code></p>
+<p class="last">It is important that you make your AWS credential available in your terminal before, so gordon can use them. For more information: <a class="reference internal" href="setup_aws.html"><em>Setup AWS Credentials</em></a></p>
 </div>
 <p>This command will have an output similar to:</p>
 <div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>gordon apply
-...
+Applying project...
+0001_p.json <span class="o">(</span>cloudformation<span class="o">)</span>
+  CREATE_COMPLETE waiting... -
+0002_pr_r.json <span class="o">(</span>custom<span class="o">)</span>
+  ✓ code/contrib_helpers_sleep.zip <span class="o">(</span>364c5f6d<span class="o">)</span>
+  ✓ code/contrib_lambdas_alias.zip <span class="o">(</span>e906090e<span class="o">)</span>
+  ✓ code/contrib_lambdas_version.zip <span class="o">(</span>c3137e97<span class="o">)</span>
+  ✓ code/firstapp_helloworld.zip <span class="o">(</span>c7ec05a8<span class="o">)</span>
+0003_r.json <span class="o">(</span>cloudformation<span class="o">)</span>
+  CREATE_COMPLETE
 </pre></div>
 </div>
 <p>Your lambdas are ready to be used!</p>

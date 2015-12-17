@@ -10,14 +10,14 @@ except ImportError:
 from botocore.exceptions import ClientError
 from cfnresponse import SUCCESS
 from gordon.utils_tests import MockContext
-from . import lambda_alias
-from . import lambda_version
+from . import alias
+from . import version
 
 
 class TestContribLambdas(unittest.TestCase):
 
-    @patch('gordon.contrib.lambdas.lambda_alias.send')
-    @patch('gordon.contrib.lambdas.lambda_alias.boto3.client')
+    @patch('gordon.contrib.lambdas.alias.send')
+    @patch('gordon.contrib.lambdas.alias.boto3.client')
     def test_alias_create(self, boto3_client, send_mock):
         client = Mock()
         boto3_client.return_value = client
@@ -37,7 +37,7 @@ class TestContribLambdas(unittest.TestCase):
         )
         client.create_alias.return_value = {'AliasArn': 'alias_arn'}
 
-        lambda_alias.handler(event, context)
+        alias.handler(event, context)
 
         client.create_alias.assert_called_once_with(
             FunctionName='function_name',
@@ -50,8 +50,8 @@ class TestContribLambdas(unittest.TestCase):
             event, context, SUCCESS, response_data={'Arn': 'alias_arn'}
         )
 
-    @patch('gordon.contrib.lambdas.lambda_alias.send')
-    @patch('gordon.contrib.lambdas.lambda_alias.boto3.client')
+    @patch('gordon.contrib.lambdas.alias.send')
+    @patch('gordon.contrib.lambdas.alias.boto3.client')
     def test_alias_update(self, boto3_client, send_mock):
         client = Mock()
         boto3_client.return_value = client
@@ -68,7 +68,7 @@ class TestContribLambdas(unittest.TestCase):
         client.get_alias.return_value = True
         client.update_alias.return_value = {'AliasArn': 'alias_arn'}
 
-        lambda_alias.handler(event, context)
+        alias.handler(event, context)
 
         client.update_alias.assert_called_once_with(
             FunctionName='function_name',
@@ -81,8 +81,8 @@ class TestContribLambdas(unittest.TestCase):
             event, context, SUCCESS, response_data={'Arn': 'alias_arn'}
         )
 
-    @patch('gordon.contrib.lambdas.lambda_alias.send')
-    @patch('gordon.contrib.lambdas.lambda_alias.boto3.client')
+    @patch('gordon.contrib.lambdas.alias.send')
+    @patch('gordon.contrib.lambdas.alias.boto3.client')
     def test_alias_delete(self, boto3_client, send_mock):
         client = Mock()
         boto3_client.return_value = client
@@ -99,7 +99,7 @@ class TestContribLambdas(unittest.TestCase):
         client.get_alias.return_value = True
         client.update_alias.return_value = {'AliasArn': 'alias_arn'}
 
-        lambda_alias.handler(event, context)
+        alias.handler(event, context)
 
         client.update_alias.assert_not_called()
         client.create_alias.assert_not_called()
@@ -110,8 +110,8 @@ class TestContribLambdas(unittest.TestCase):
 
 class TestContribVersion(unittest.TestCase):
 
-    @patch('gordon.contrib.lambdas.lambda_version.send')
-    @patch('gordon.contrib.lambdas.lambda_version.boto3.client')
+    @patch('gordon.contrib.lambdas.version.send')
+    @patch('gordon.contrib.lambdas.version.boto3.client')
     def test_version_create(self, boto3_client, send_mock):
         client = Mock()
         boto3_client.return_value = client
@@ -131,7 +131,7 @@ class TestContribVersion(unittest.TestCase):
 
         client.publish_version.return_value = {'Version': 'version123'}
 
-        lambda_version.handler(event, context)
+        version.handler(event, context)
 
         client.publish_version.assert_called_once_with(
             FunctionName='function_name',
@@ -142,8 +142,8 @@ class TestContribVersion(unittest.TestCase):
             event, context, SUCCESS, response_data={'Version': 'version123'}
         )
 
-    @patch('gordon.contrib.lambdas.lambda_version.send')
-    @patch('gordon.contrib.lambdas.lambda_version.boto3.client')
+    @patch('gordon.contrib.lambdas.version.send')
+    @patch('gordon.contrib.lambdas.version.boto3.client')
     def test_version_update(self, boto3_client, send_mock):
         client = Mock()
         boto3_client.return_value = client
@@ -163,7 +163,7 @@ class TestContribVersion(unittest.TestCase):
 
         client.publish_version.return_value = {'Version': 'version123'}
 
-        lambda_version.handler(event, context)
+        version.handler(event, context)
 
         client.publish_version.assert_called_once_with(
             FunctionName='function_name',
@@ -174,8 +174,8 @@ class TestContribVersion(unittest.TestCase):
             event, context, SUCCESS, response_data={'Version': 'version123'}
         )
 
-    @patch('gordon.contrib.lambdas.lambda_version.send')
-    @patch('gordon.contrib.lambdas.lambda_version.boto3.client')
+    @patch('gordon.contrib.lambdas.version.send')
+    @patch('gordon.contrib.lambdas.version.boto3.client')
     def test_version_delete(self, boto3_client, send_mock):
         client = Mock()
         boto3_client.return_value = client
@@ -187,7 +187,7 @@ class TestContribVersion(unittest.TestCase):
             }
         }
 
-        lambda_version.handler(event, context)
+        version.handler(event, context)
 
         client.get_function.assert_not_called()
         client.publish_version.assert_not_called()

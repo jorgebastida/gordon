@@ -1,6 +1,6 @@
 lambdas:
   helloworld:
-    code: lambdas.js
+    code: helloworld.js
     #description: Simple functions in js which says hello
     #handler: handler
     #role:

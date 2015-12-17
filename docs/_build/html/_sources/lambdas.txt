@@ -17,6 +17,11 @@ some complex integrations, it becomes a bit of a burden to deal with all the
 required steps to put some changes live. Gordon tries to make the entire process
 as smooth as possible.
 
+In gordon, Lambdas are resources that you'll group and define within :doc:`apps`. The idea
+is to keep Lambdas with the same business domain close to each other in the same app.
+
+.. image:: _static/structure/lambdas.png
+
 Before we continue there is a bit of terminology we need to make clear:
 
 =====================  ================================================================================================
@@ -42,7 +47,7 @@ What gordon will do for you?
 * Create an alias named ``current`` pointing to this new version.
 * Create a new IAM Role for this lambda and attach it.
 
-As result, your lambda will be up and running on AWS!
+As result, your lambda will be ready to run on AWS!
 
 .. image:: _static/lambdas.gif
 
@@ -54,13 +59,13 @@ With simply two commands, ``build`` and ``apply`` you'll be able to deploy your 
 Why the current alias is important?
 ------------------------------------
 
-The ``Current`` alias gordon creates pointing to your most recent lambda is really important.
-When gordon creates a new event sources (like S3, Dynamo or Kinesis), it'll make those call the lambda aliased as ``Current`` instead of the ``$LATEST``.
+The ``current`` alias gordon creates pointing to your most recent lambda is really important.
+When gordon creates a new event sources (like S3, Dynamo or Kinesis), it'll make those call the lambda aliased as ``current`` instead of the ``$LATEST``.
 
-This is really important to know, because it enables you to (in case of neccesary) change your ``Current`` alias to point any previous version of the same lambda without
+This is really important to know, because it enables you to (in case of neccesary) change your ``current`` alias to point to any previous version of the same lambda without
 needing to re-configure all related event sources.
 
-Any subsequent deploy to the same stage will point the ``Current`` alias to your latest function.
+Any subsequent deploy to the same stage will point the ``current`` alias to your latest function.
 
 For more information you can read `AWS Lambda Function Versioning and Aliases <http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html>`_.
 
@@ -93,8 +98,6 @@ The following is the anatomy of a lambda in gordon.
         ...
 
 The best way to organize you lambdas is to register them inside the ``settings.yml`` file of your :doc:`apps` within your :doc:`project`.
-
-.. image:: _static/structure/lambdas.png
 
 
 Lambda Properties

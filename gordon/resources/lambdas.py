@@ -169,7 +169,8 @@ class Lambda(base.BaseResource):
 
     def get_bucket_key(self):
         """Return the S3 bucket key for this lambda."""
-        return "{}.zip".format(self.in_project_name.replace(':', '_'))
+        filename = '_'.join(self.in_project_name.split(':')[1:])
+        return "{}.zip".format(filename)
 
     def _collect_requirements(self, destination):
         """Collect runtime specific requirements."""
@@ -328,16 +329,16 @@ class Lambda(base.BaseResource):
             )
         )
 
-        lambda_version_lambda = 'lambda:lambdas:lambda_version'
-        if not self.in_project_name.startswith('lambda:lambdas:'):
-            lambda_version_lambda = '{}:current'.format(lambda_version_lambda)
+        lambda_version = 'lambda:contrib_lambdas:version'
+        if not self.in_project_name.startswith('lambda:contrib_lambdas:'):
+            lambda_version = '{}:current'.format(lambda_version)
 
         version = template.add_resource(
             LambdaVersion.create_with(
                 utils.valid_cloudformation_name(self.name, "Version"),
-                DependsOn=[self.project.reference(lambda_version_lambda)],
+                DependsOn=[self.project.reference(lambda_version)],
                 lambda_arn=troposphere.GetAtt(
-                    self.project.reference(lambda_version_lambda), 'Arn'
+                    self.project.reference(lambda_version), 'Arn'
                 ),
                 FunctionName=troposphere.Ref(
                     function
@@ -348,16 +349,16 @@ class Lambda(base.BaseResource):
             )
         )
 
-        lambda_alias_lambda = 'lambda:lambdas:lambda_alias'
-        if not self.in_project_name.startswith('lambda:lambdas:'):
-            lambda_alias_lambda = '{}:current'.format(lambda_alias_lambda)
+        lambda_alias = 'lambda:contrib_lambdas:alias'
+        if not self.in_project_name.startswith('lambda:contrib_lambdas:'):
+            lambda_alias = '{}:current'.format(lambda_alias)
 
         template.add_resource(
             LambdaAlias.create_with(
                 self.current_alias_cf_name,
-                DependsOn=[self.project.reference(lambda_alias_lambda)],
+                DependsOn=[self.project.reference(lambda_alias)],
                 lambda_arn=troposphere.GetAtt(
-                    self.project.reference(lambda_alias_lambda), 'Arn'
+                    self.project.reference(lambda_alias), 'Arn'
                 ),
                 FunctionName=troposphere.Ref(
                     function
@@ -368,7 +369,7 @@ class Lambda(base.BaseResource):
                 FunctionVersion=troposphere.GetAtt(
                     version, "Version"
                 ),
-                Name="Current",
+                Name="current",
             )
         )
 
