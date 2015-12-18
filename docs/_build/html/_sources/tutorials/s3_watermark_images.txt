@@ -137,7 +137,8 @@ Now, edit ``watermark/putwatermark.py`` and make it looks like this:
         raise e
 
 
-The code of our lambda is ready! Now we only need to register it, and make sure it can read and write our bucket.
+The code of our lambda is ready! Now we only need to register it, and make sure it can read and write our bucket. In order to do so
+we are going to create a new section called ``policies`` in our ``putwatermark`` lambda and make sure it can read and write our bucket ``EXAMPLE-BUCKET-NAME``.
 
 Open your ``watermark/settings.yml``. And make it look like this:
 
@@ -180,6 +181,7 @@ We need to create a new S3 event source in our gordon project. This event source
 In order to do so, open your project ``settings.yml`` file and make it look like this:
 
 .. code-block:: yaml
+
   ---
   project: images
   default-region: us-east-1
@@ -195,7 +197,7 @@ In order to do so, open your project ``settings.yml`` file and make it look like
         - id: image_upload
           lambda: watermark.putwatermark
           events:
-            - s3:ObjectCreated:Put
+            - s3:ObjectCreated:*
 
 
 Build your project

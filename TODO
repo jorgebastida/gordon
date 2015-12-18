@@ -33,6 +33,7 @@ Maybe
 - New sqs protocol
 - Travis !integration
 - New add enabled to all resources.
+- Doc custom CF resources
 
 After
 ------

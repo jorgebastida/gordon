@@ -17,22 +17,24 @@ $ gordon apply [--stage=dev|prod|...]
 Features
 ---------
 * 100% CloudFormation resource creation.
+* 100% Boilerplate free
 * Python/Javascript/Java runtimes supported.
 * Simple yml configuration
 * Seamless integration with package managers (``pip``,``npm``)
-* AWS Lambda Versioning
-* AWS Lambda Alias
 * Dead-simple custom multi-stage and multi region deployments ``--stage=prod``
-* S3 Versioning
 * Supported integrations
   * Kinesis Streams
   * Dynamodb Streams
   * S3
+* AWS Lambda Versions an Aliases
 * Dynamic stage parametrization including:
   * Environment variables
   * Jinja2 values
   * ARN translation helpers (``dynamodb-starswith://clients-``, ``dynamodb-endswith://-clients``, ``dynamodb-match://clients-`` ...)
+* Extensive Documentation
+* Massive test suite
 * Love
+
 
 Why?
 ------

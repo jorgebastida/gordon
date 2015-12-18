@@ -161,7 +161,8 @@ get rid of it.</p>
       <span class="k">raise</span> <span class="n">e</span>
 </pre></div>
 </div>
-<p>The code of our lambda is ready! Now we only need to register it, and make sure it can read and write our bucket.</p>
+<p>The code of our lambda is ready! Now we only need to register it, and make sure it can read and write our bucket. In order to do so
+we are going to create a new section called <code class="docutils literal"><span class="pre">policies</span></code> in our <code class="docutils literal"><span class="pre">putwatermark</span></code> lambda and make sure it can read and write our bucket <code class="docutils literal"><span class="pre">EXAMPLE-BUCKET-NAME</span></code>.</p>
 <p>Open your <code class="docutils literal"><span class="pre">watermark/settings.yml</span></code>. And make it look like this:</p>
 <div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">lambdas</span><span class="p-Indicator">:</span>
   <span class="l-Scalar-Plain">putwatermark</span><span class="p-Indicator">:</span>
@@ -196,6 +197,24 @@ Because we are going to need <code class="docutils literal"><span class="pre">Pi
 <h2>Create an event Source<a class="headerlink" href="#create-an-event-source" title="Permalink to this headline">¶</a></h2>
 <p>We need to create a new S3 event source in our gordon project. This event source will make S3 call our lambda every time we upload an object.</p>
 <p>In order to do so, open your project <code class="docutils literal"><span class="pre">settings.yml</span></code> file and make it look like this:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="nn">---</span>
+<span class="l-Scalar-Plain">project</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">images</span>
+<span class="l-Scalar-Plain">default-region</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">us-east-1</span>
+<span class="l-Scalar-Plain">apps</span><span class="p-Indicator">:</span>
+  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">gordon.contrib.helpers</span>
+  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">gordon.contrib.lambdas</span>
+  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">watermark</span>
+
+<span class="l-Scalar-Plain">s3</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">example_s3_integration</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">bucket</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">SOURCE-BUCKET</span>
+    <span class="l-Scalar-Plain">notifications</span><span class="p-Indicator">:</span>
+      <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">id</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">image_upload</span>
+        <span class="l-Scalar-Plain">lambda</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">watermark.putwatermark</span>
+        <span class="l-Scalar-Plain">events</span><span class="p-Indicator">:</span>
+          <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">s3:ObjectCreated:*</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="build-your-project">
 <h2>Build your project<a class="headerlink" href="#build-your-project" title="Permalink to this headline">¶</a></h2>
