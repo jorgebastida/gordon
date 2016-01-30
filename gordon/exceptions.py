@@ -114,3 +114,13 @@ class ProtocolNotFoundlError(BaseProtocolError):
 
 class ProtocolMultipleMatcheslError(BaseProtocolError):
     code = 17
+
+
+class DuplicateAppNameError(BaseGordonException):
+    hint = "An application with name {} is already installed."
+    code = 18
+
+
+class AppNotFoundError(BaseGordonException):
+    hint = "Application with name {} and path {} can't be found."
+    code = 19

@@ -73,6 +73,8 @@ class App(BaseResourceContainer):
         self.name = name
         self.project = project
         self.path = path or os.path.join(self.project.path, name)
+        if not os.path.exists(self.path):
+            raise exceptions.AppNotFoundError(self.name, self.path)
         self.settings = utils.load_settings(
             os.path.join(self.path, SETTINGS_FILE),
             default=self.DEFAULT_SETTINS,
@@ -150,7 +152,7 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
             with indent(2):
                 puts(colored.cyan("{}:".format(application_name)))
 
-            self.applications.append(
+            self.add_application(
                 App(
                     name=application_name,
                     settings=settings,
@@ -158,6 +160,12 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
                     path=path
                 )
             )
+
+    def add_application(self, new_app):
+        for app in self.applications:
+            if app.name == new_app.name:
+                raise exceptions.DuplicateAppNameError(new_app.name)
+        self.applications.append(new_app)
 
     def register_resource_reference(self, name, cf_name):
         """Register a resouce called ``name`` as ``cf_name``"""

@@ -7,6 +7,7 @@ Must
 - Doc tutorial s3 integration
 - Doc tutorial kinesis integration
 - Doc tutorial dynamodb integration
+
 - Review TODO, FIX
 - New app/lambdas name clash
 - UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS !

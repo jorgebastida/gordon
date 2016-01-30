@@ -73,8 +73,8 @@ def main(argv=None):
     options, args = parser.parse_known_args(argv)
 
     path = os.getcwd()
-    obj = options.cls(path=path, **vars(options))
     try:
+        obj = options.cls(path=path, **vars(options))
         getattr(obj, options.func)()
     except BaseGordonException, exc:
         puts(colored.red(exc.get_hint()))
