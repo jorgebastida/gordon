@@ -1,4 +1,5 @@
 ---
 project: empty
 default-region: us-east-1
+code-bucket: ref://CodeBucketName
 apps:

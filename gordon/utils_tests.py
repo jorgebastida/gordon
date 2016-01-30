@@ -4,6 +4,7 @@ import uuid
 import json
 import base64
 import hashlib
+import random
 import shutil
 import unittest
 from nose.plugins.attrib import attr
@@ -119,12 +120,16 @@ class BaseIntegrationTest(object):
             shutil.rmtree(build_path)
 
     def setUp(self):
+        self.extra_env['CODE_BUCKET_NAME'] = 'gordon-tests-{}'.format(
+            hashlib.sha1(str(random.random())).hexdigest()[:10]
+        )
         self._environ = dict(os.environ)
         os.environ.update(self.extra_env)
         self.addCleanup(self._restore_context)
         self.addCleanup(delete_test_stacks, self.uid)
         self.addCleanup(self._clean_build_path)
         self.addCleanup(self._clean_extra_env)
+
 
     def _test_build(self):
         pass

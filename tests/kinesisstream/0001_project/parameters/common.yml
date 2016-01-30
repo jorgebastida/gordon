@@ -1,2 +1,3 @@
 ---
+CodeBucketName: env://CODE_BUCKET_NAME
 KinesisIntegrationArn: env://KINESIS_INTEGRATION

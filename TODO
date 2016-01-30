@@ -2,8 +2,8 @@ Must
 -----
 
 - New lambda settings. Inject settings to the .zip on deploy.
-
 - Doc CF gotchas.
+
 - Doc tutorial s3 integration
 - Doc tutorial kinesis integration
 - Doc tutorial dynamodb integration

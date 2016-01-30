@@ -3,11 +3,14 @@
         "CodeBucket": {
             "Description": "CodeBucket name",
             "Value": {
-                "Ref": "CodeBucket"
+                "Ref": "CodeBucketName"
             }
         }
     },
     "Parameters": {
+        "CodeBucketName": {
+            "Type": "String"
+        },
         "Region": {
             "Description": "Name of the Stage",
             "Type": "String"
@@ -23,19 +26,7 @@
             "Properties": {
                 "AccessControl": "Private",
                 "BucketName": {
-                    "Fn::Join": [
-                        "-",
-                        [
-                            "gordon",
-                            {
-                                "Ref": "Region"
-                            },
-                            {
-                                "Ref": "Stage"
-                            },
-                            "empty"
-                        ]
-                    ]
+                    "Ref": "CodeBucketName"
                 },
                 "VersioningConfiguration": {
                     "Status": "Enabled"

@@ -169,7 +169,7 @@ class Lambda(base.BaseResource):
 
     def get_bucket_key(self):
         """Return the S3 bucket key for this lambda."""
-        filename = '_'.join(self.in_project_name.split(':')[1:])
+        filename = '_'.join(self.in_project_name.split(':')[1:])        
         return "{}.zip".format(filename)
 
     def _collect_requirements(self, destination):
@@ -275,7 +275,7 @@ class Lambda(base.BaseResource):
             troposphere.Output(
                 "CodeBucket",
                 Description="CodeBucket name",
-                Value=troposphere.Ref(code_bucket),
+                Value=project.settings['code-bucket'],
             )
         ])
 
