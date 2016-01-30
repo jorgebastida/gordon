@@ -77,7 +77,7 @@ def main(argv=None):
         obj = options.cls(path=path, **vars(options))
         getattr(obj, options.func)()
     except BaseGordonException, exc:
-        puts(colored.red(exc.get_hint()))
+        puts(colored.red("\n{}".format(exc.get_hint())))
         return exc.code
     except Exception:
         raise

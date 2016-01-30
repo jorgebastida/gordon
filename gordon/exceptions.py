@@ -23,7 +23,7 @@ class InvalidLambdaRoleError(BaseGordonException):
 
 
 class InvalidLambdaCodeExtensionError(BaseGordonException):
-    hint = "Resource {} extension is invalid '{}'."
+    hint = "{} extension is invalid."
     code = 5
 
 
@@ -124,3 +124,19 @@ class DuplicateAppNameError(BaseGordonException):
 class AppNotFoundError(BaseGordonException):
     hint = "Application with name {} and path {} can't be found."
     code = 19
+
+
+class ResourceNotFoundError(BaseGordonException):
+    code = 20
+
+    def get_hint(self):
+        hint = "Resource {} Not Found. Available {}".format(*self.args)
+
+        try:
+            resource = self.args[0].split(':')
+            if resource[1].startswith('contrib_'):
+                hint += "\n\nIt looks like {} is missing in your settings.yml file apps list".format(resource[1].replace('_', '.'))
+        except IndexError:
+            pass
+
+        return hint

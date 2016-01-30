@@ -8,11 +8,7 @@ Must
 - Doc tutorial kinesis integration
 - Doc tutorial dynamodb integration
 
-- Review TODO, FIX
-- New app/lambdas name clash
 - UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS !
-- non-existing apps don't fail
-- error nicely when a contib resouce is not found
 
 
 Maybe

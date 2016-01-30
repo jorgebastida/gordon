@@ -118,6 +118,9 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
         BaseResourceContainer.__init__(self, *args, **kwargs)
         puts(colored.blue("Loading installed applications"))
         self._load_installed_applications()
+        for resource_type in AVAILABLE_RESOURCES:
+            for resouce in self.get_resources(resource_type):
+                resouce.validate()
 
     def _load_installed_applications(self):
         """Loads all installed applications.
@@ -179,9 +182,9 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
         """Resolve ``name`` as a CloudFormation reference"""
         if name in self._in_project_resource_references:
             return self._in_project_resource_references[name]
-        raise KeyError(name, self._in_project_resource_references.keys())
+        raise exceptions.ResourceNotFoundError(name, self._in_project_resource_references.keys())
 
-    def get_resources(self, resource_type):
+    def get_resources(self, resource_type=None):
         """Returns all project and application resources"""
         for application in self.applications:
             for r in application.get_resources(resource_type):

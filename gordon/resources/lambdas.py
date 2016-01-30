@@ -37,8 +37,7 @@ class Lambda(base.BaseResource):
         elif extension == '.js':
             return NodeLambda(*args, **kwargs)
         else:
-            # TODO: Fix this self.name
-            raise exceptions.InvalidLambdaCodeExtensionError(self.name, extension)
+            raise exceptions.InvalidLambdaCodeExtensionError(extension)
 
     def __init__(self, *args, **kwargs):
         super(Lambda, self).__init__(*args, **kwargs)
@@ -169,7 +168,7 @@ class Lambda(base.BaseResource):
 
     def get_bucket_key(self):
         """Return the S3 bucket key for this lambda."""
-        filename = '_'.join(self.in_project_name.split(':')[1:])        
+        filename = '_'.join(self.in_project_name.split(':')[1:])
         return "{}.zip".format(filename)
 
     def _collect_requirements(self, destination):
