@@ -22,7 +22,7 @@ is to keep Lambdas with the same business domain close to each other in the same
 
 .. image:: _static/structure/lambdas.png
 
-Before we continue there is a bit of terminology we need to make clear:
+Before we continue, there is a bit of terminology we need to make clear:
 
 =====================  ================================================================================================
 Term                   Description

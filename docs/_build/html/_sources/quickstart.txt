@@ -65,6 +65,7 @@ Now that we know what these files does, we need to install this ``firstapp``. In
     ---
     project: demo
     default-region: us-east-1
+    code-bucket: gordon-demo-5f1fb41f
     apps:
       - gordon.contrib.helpers
       - gordon.contrib.lambdas

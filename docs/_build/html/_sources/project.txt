@@ -3,7 +3,7 @@ Project
 
 .. image:: _static/structure/project.png
 
-Projects are root concept which contain all other resources. Projects are composed of:
+Projects are the root container which contain all other resources. Projects are composed of:
 
   * :doc:`apps`
   * :doc:`settings`
@@ -41,6 +41,7 @@ You can read a full in-depth explanation of how settings works in the :doc:`sett
   ---
   project: { PROJECT_NAME }
   default-region: { PROJECT_DEFAULT_REGION }
+  code-bucket: { S3_BUCKET }
   apps:
     - { APPLICATION }
 
@@ -72,7 +73,7 @@ As well as creating these templates, gordon will create all necessary artifacts 
 At this point, gordon will not use any AWS credentials. This is important.
 
 What gordon generates in the build directory is merely declarative and completely agnostic of in which region or stage you'll (later)
-deploy it, as well as doesn't know/care what is the current status (if any) of all those resources.
+deploy it. Gordon doesn't know/care what is the current status (if any) of all those resources.
 
 This is one of the greatness (and technical challenges) of gordon.
 

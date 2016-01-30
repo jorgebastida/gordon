@@ -41,7 +41,7 @@
   <div class="section" id="project">
 <h1>Project<a class="headerlink" href="#project" title="Permalink to this headline">¶</a></h1>
 <img alt="_images/project.png" src="_images/project.png" />
-<p>Projects are root concept which contain all other resources. Projects are composed of:</p>
+<p>Projects are the root container which contain all other resources. Projects are composed of:</p>
 <blockquote>
 <div><ul class="simple">
 <li><a class="reference internal" href="apps.html"><em>Applications</em></a></li>
@@ -69,6 +69,7 @@
 <div class="highlight-yaml"><div class="highlight"><pre><span class="nn">---</span>
 <span class="l-Scalar-Plain">project</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">PROJECT_NAME</span> <span class="p-Indicator">}</span>
 <span class="l-Scalar-Plain">default-region</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">PROJECT_DEFAULT_REGION</span> <span class="p-Indicator">}</span>
+<span class="l-Scalar-Plain">code-bucket</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">S3_BUCKET</span> <span class="p-Indicator">}</span>
 <span class="l-Scalar-Plain">apps</span><span class="p-Indicator">:</span>
   <span class="p-Indicator">-</span> <span class="p-Indicator">{</span> <span class="nv">APPLICATION</span> <span class="p-Indicator">}</span>
 
@@ -95,7 +96,7 @@ templates in the <code class="docutils literal"><span class="pre">_build</span><
 As well as creating these templates, gordon will create all necessary artifacts that it&#8217;ll later upload to s3.</p>
 <p>At this point, gordon will not use any AWS credentials. This is important.</p>
 <p>What gordon generates in the build directory is merely declarative and completely agnostic of in which region or stage you&#8217;ll (later)
-deploy it, as well as doesn&#8217;t know/care what is the current status (if any) of all those resources.</p>
+deploy it. Gordon doesn&#8217;t know/care what is the current status (if any) of all those resources.</p>
 <p>This is one of the greatness (and technical challenges) of gordon.</p>
 <p>The number of required templates depend on you project, but these are all possible templates gordon will create:</p>
 <table border="1" class="docutils">

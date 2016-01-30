@@ -2,14 +2,14 @@ Must
 -----
 
 - New lambda settings. Inject settings to the .zip on deploy.
-- Doc CF gotchas.
 
+- Doc CF gotchas.
 - Doc tutorial s3 integration
 - Doc tutorial kinesis integration
 - Doc tutorial dynamodb integration
-
-- UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS !
-
+- Doc python and js requirements
+- Doc modules
+- New Java8
 
 Maybe
 ------
@@ -19,7 +19,7 @@ Maybe
 - New Run lambda locally
 - New pip/npm cache
 - New Improve CREATE_FAILED UPDATE_FAILED output, suggest next steps etc..
-- New Java8
+
 - New Logo
 - New optimize code?
 - Doc Illustrate examples / integrations
