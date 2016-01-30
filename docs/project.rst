@@ -41,6 +41,7 @@ You can read a full in-depth explanation of how settings works in the :doc:`sett
   ---
   project: { PROJECT_NAME }
   default-region: { PROJECT_DEFAULT_REGION }
+  code-bucket: { S3_BUCKET }
   apps:
     - { APPLICATION }
 

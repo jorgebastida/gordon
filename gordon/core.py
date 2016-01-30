@@ -3,6 +3,8 @@ import os
 import re
 import json
 import copy
+import random
+import hashlib
 import shutil
 from collections import defaultdict
 
@@ -430,7 +432,8 @@ class Bootstrap(object):
 
         context = {
             'project_name': self.project_name,
-            'default_region': self.region
+            'default_region': self.region,
+            'random': hashlib.sha1(str(random.random())).hexdigest()[:8]
         }
 
         self._clone_defaults(

@@ -264,7 +264,7 @@ class Lambda(base.BaseResource):
 
         code_bucket = s3.Bucket(
             "CodeBucket",
-            BucketName=troposphere.Join('-', ['gordon', troposphere.Ref("Region"), troposphere.Ref("Stage"), project.name]),
+            BucketName=project.settings['code-bucket'],
             AccessControl=s3.Private,
             VersioningConfiguration=s3.VersioningConfiguration(
                 Status='Enabled'
