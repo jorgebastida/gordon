@@ -1,0 +1,7 @@
+---
+project: simplejava
+default-region: eu-west-1
+code-bucket: gordon-simplejava-0do1mc7
+apps:
+  - gordon.contrib.lambdas
+  - helloworld

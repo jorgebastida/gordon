@@ -1,0 +1,5 @@
+lambdas:
+  byejs:
+    code: hello
+    runtime: javascript
+    handler: code.handler

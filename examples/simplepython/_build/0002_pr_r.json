@@ -1,0 +1,105 @@
+{
+    "outputs": {
+        "HellopyS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "HellopyS3Url", 
+            "value": {
+                "action": "hellopy-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }, 
+        "VersionS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "VersionS3Version", 
+            "value": {
+                "action": "version-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
+        "HellopyS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "HellopyS3Version", 
+            "value": {
+                "action": "hellopy-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
+        "AliasS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "AliasS3Url", 
+            "value": {
+                "action": "alias-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }, 
+        "AliasS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "AliasS3Version", 
+            "value": {
+                "action": "alias-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
+        "VersionS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "VersionS3Url", 
+            "value": {
+                "action": "version-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }
+    }, 
+    "_type": "ActionsTemplate", 
+    "actions": [
+        {
+            "_type": "UploadToS3", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "name": "alias-upload", 
+            "key": "contrib_lambdas_alias.zip", 
+            "filename": "code/contrib_lambdas_alias.zip"
+        }, 
+        {
+            "_type": "UploadToS3", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "name": "version-upload", 
+            "key": "contrib_lambdas_version.zip", 
+            "filename": "code/contrib_lambdas_version.zip"
+        }, 
+        {
+            "_type": "UploadToS3", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "name": "hellopy-upload", 
+            "key": "helloworld_hellopy.zip", 
+            "filename": "code/helloworld_hellopy.zip"
+        }
+    ], 
+    "parameters": {
+        "CodeBucket": {
+            "default": "", 
+            "_type": "Parameter", 
+            "name": "CodeBucket"
+        }
+    }, 
+    "parallelizable": false
+}

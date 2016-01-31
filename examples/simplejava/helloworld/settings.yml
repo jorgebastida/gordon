@@ -1,10 +1,4 @@
 lambdas:
-  hellojs:
-    code: hellojs.js
-
-  hellopy:
-    code: hellopy.py
-
   hellojava:
     code: hellojava
     runtime: java

@@ -2,7 +2,7 @@
     "Outputs": {
         "CodeBucket": {
             "Description": "CodeBucket name",
-            "Value": "gordon-helloworld-0do1mc7"
+            "Value": "gordon-simplepython-0do1mc7"
         }
     },
     "Parameters": {
@@ -20,7 +20,7 @@
         "CodeBucket": {
             "Properties": {
                 "AccessControl": "Private",
-                "BucketName": "gordon-helloworld-0do1mc7",
+                "BucketName": "gordon-simplepython-0do1mc7",
                 "VersioningConfiguration": {
                     "Status": "Enabled"
                 }

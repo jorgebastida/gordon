@@ -1,5 +1,5 @@
 ---
-project: dynamodbexample2
+project: dynamodbpython
 default-region: eu-west-1
 apps:
   - gordon.contrib.helpers
