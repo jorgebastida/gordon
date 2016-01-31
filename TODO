@@ -3,9 +3,6 @@ Must
 
 - New lambda settings. Inject settings to the .zip on deploy.
 
-- New --debug mode
-- New better error handling on build error
-
 - Doc CF gotchas.
 - Doc tutorial s3 integration
 - Doc tutorial kinesis integration
