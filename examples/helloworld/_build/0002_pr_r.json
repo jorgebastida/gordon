@@ -1,13 +1,23 @@
 {
     "outputs": {
-        "HellopyS3Url": {
+        "ByejsS3Url": {
             "default": "", 
             "_type": "Output", 
-            "name": "HellopyS3Url", 
+            "name": "ByejsS3Url", 
             "value": {
-                "action": "hellopy-upload", 
+                "action": "byejs-upload", 
                 "_type": "GetAttr", 
                 "attr": "s3url"
+            }
+        }, 
+        "VersionS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "VersionS3Version", 
+            "value": {
+                "action": "version-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
             }
         }, 
         "HellojsS3Url": {
@@ -20,22 +30,22 @@
                 "attr": "s3url"
             }
         }, 
-        "LambdaAliasS3Version": {
+        "HellojavaS3Version": {
             "default": "", 
             "_type": "Output", 
-            "name": "LambdaAliasS3Version", 
+            "name": "HellojavaS3Version", 
             "value": {
-                "action": "lambda_alias-upload", 
+                "action": "hellojava-upload", 
                 "_type": "GetAttr", 
                 "attr": "s3version"
             }
         }, 
-        "LambdaAliasS3Url": {
+        "HellopyS3Url": {
             "default": "", 
             "_type": "Output", 
-            "name": "LambdaAliasS3Url", 
+            "name": "HellopyS3Url", 
             "value": {
-                "action": "lambda_alias-upload", 
+                "action": "hellopy-upload", 
                 "_type": "GetAttr", 
                 "attr": "s3url"
             }
@@ -60,22 +70,72 @@
                 "attr": "s3version"
             }
         }, 
-        "LambdaVersionS3Version": {
+        "HellojavaS3Url": {
             "default": "", 
             "_type": "Output", 
-            "name": "LambdaVersionS3Version", 
+            "name": "HellojavaS3Url", 
             "value": {
-                "action": "lambda_version-upload", 
+                "action": "hellojava-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }, 
+        "ByepythonS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "ByepythonS3Url", 
+            "value": {
+                "action": "byepython-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }, 
+        "ByepythonS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "ByepythonS3Version", 
+            "value": {
+                "action": "byepython-upload", 
                 "_type": "GetAttr", 
                 "attr": "s3version"
             }
         }, 
-        "LambdaVersionS3Url": {
+        "ByejsS3Version": {
             "default": "", 
             "_type": "Output", 
-            "name": "LambdaVersionS3Url", 
+            "name": "ByejsS3Version", 
             "value": {
-                "action": "lambda_version-upload", 
+                "action": "byejs-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
+        "AliasS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "AliasS3Url", 
+            "value": {
+                "action": "alias-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }, 
+        "AliasS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "AliasS3Version", 
+            "value": {
+                "action": "alias-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
+        "VersionS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "VersionS3Url", 
+            "value": {
+                "action": "version-upload", 
                 "_type": "GetAttr", 
                 "attr": "s3url"
             }
@@ -89,9 +149,9 @@
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
-            "name": "lambda_alias-upload", 
-            "key": "lambda_lambdas_lambda_alias.zip", 
-            "filename": "code/lambda_lambdas_lambda_alias.zip"
+            "name": "alias-upload", 
+            "key": "contrib_lambdas_alias.zip", 
+            "filename": "code/contrib_lambdas_alias.zip"
         }, 
         {
             "_type": "UploadToS3", 
@@ -99,9 +159,19 @@
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
-            "name": "lambda_version-upload", 
-            "key": "lambda_lambdas_lambda_version.zip", 
-            "filename": "code/lambda_lambdas_lambda_version.zip"
+            "name": "version-upload", 
+            "key": "contrib_lambdas_version.zip", 
+            "filename": "code/contrib_lambdas_version.zip"
+        }, 
+        {
+            "_type": "UploadToS3", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "name": "hellojava-upload", 
+            "key": "himachine_hellojava.zip", 
+            "filename": "code/himachine_hellojava.zip"
         }, 
         {
             "_type": "UploadToS3", 
@@ -110,8 +180,8 @@
                 "name": "CodeBucket"
             }, 
             "name": "hellojs-upload", 
-            "key": "lambda_himachine_hellojs.zip", 
-            "filename": "code/lambda_himachine_hellojs.zip"
+            "key": "himachine_hellojs.zip", 
+            "filename": "code/himachine_hellojs.zip"
         }, 
         {
             "_type": "UploadToS3", 
@@ -120,8 +190,28 @@
                 "name": "CodeBucket"
             }, 
             "name": "hellopy-upload", 
-            "key": "lambda_himachine_hellopy.zip", 
-            "filename": "code/lambda_himachine_hellopy.zip"
+            "key": "himachine_hellopy.zip", 
+            "filename": "code/himachine_hellopy.zip"
+        }, 
+        {
+            "_type": "UploadToS3", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "name": "byejs-upload", 
+            "key": "byemachine_byejs.zip", 
+            "filename": "code/byemachine_byejs.zip"
+        }, 
+        {
+            "_type": "UploadToS3", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "name": "byepython-upload", 
+            "key": "byemachine_byepython.zip", 
+            "filename": "code/byemachine_byepython.zip"
         }
     ], 
     "parameters": {

@@ -1,7 +1,9 @@
 lambdas:
 
   bucket_notification_configuration:
-    code: bucket_notification_configuration.py
+    code: bucket_notification_configuration
+    handler: bucket_notification_configuration.handler
+    runtime: python
     description: Manages Bucket Notification Configurations
     timeout: 300
     policies:
@@ -14,6 +16,3 @@ lambdas:
               - "s3:GetBucketNotification"
             Resource: "arn:aws:s3:::*"
             Effect: "Allow"
-
-python_requirements:
-  - cfn-response

@@ -1,8 +1,7 @@
 lambdas:
   sleep:
-    code: sleep.py
+    code: sleep
+    handler: sleep.handler
+    runtime: python
     description: Sleeps several seconds before succeeding.
     timeout: 300
-
-python_requirements:
-  - cfn-response

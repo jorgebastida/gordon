@@ -1,0 +1,10 @@
+lambdas:
+  byejs:
+    code: byejs
+    runtime: javascript
+    handler: byejs.handler
+
+  byepython:
+    code: byepython
+    runtime: python
+    handler: byepython.handler

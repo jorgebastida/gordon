@@ -30,12 +30,15 @@ class Lambda(base.BaseResource):
     def factory(cls, *args, **kwargs):
         """Returns an instance of one of the severeal available Lambda
         resources based on the runtime."""
-        _, extension = os.path.splitext(kwargs['settings'].get('code'))
+        _, extension = os.path.splitext(kwargs['settings']['code'])
+        runtime = kwargs['settings'].get('runtime', None)
 
-        if extension == '.py':
+        if runtime == 'python' or extension == '.py':
             return PythonLambda(*args, **kwargs)
-        elif extension == '.js':
+        elif runtime == 'javascript' or extension == '.js':
             return NodeLambda(*args, **kwargs)
+        elif runtime == 'java':
+            return JavaLambda(*args, **kwargs)
         else:
             raise exceptions.InvalidLambdaCodeExtensionError(extension)
 
@@ -50,33 +53,10 @@ class Lambda(base.BaseResource):
             self.current_alias_cf_name
         )
 
-    def get_code(self):
-        """Returns the sourcecode of the lambda."""
-        with open(os.path.join(self.get_root(), self.settings['code']), 'r') as f:
-            return f.read()
-
-    def get_hash(self):
-        """Returns an consistent hash of the sourcecode of the lambda."""
-        return hashlib.sha1(self.get_code()).hexdigest()[:8]
-
     def get_handler(self):
         """Returns the name of the handler. If there is no any available in
         the settngs we assume is ``handler``."""
         return self.settings.get('handler', '{}.handler'.format(self.code_filename))
-
-    def get_requirements(self):
-        """Returns the requirements for this lambda based on the requirements
-        of the project, app and lambda."""
-        settings_name = '{}_requirements'.format(self.base_runtime)
-        sources = (
-            self.app.project.settings.get(settings_name, []),
-            self.app.settings.get(settings_name, []),
-            self.settings.get(settings_name, []),
-        )
-
-        for source in sources:
-            for requirement in source:
-                yield requirement
 
     def get_memory(self):
         """Returns the memory setting by rounding the actual value to the
@@ -170,90 +150,6 @@ class Lambda(base.BaseResource):
         """Return the S3 bucket key for this lambda."""
         filename = '_'.join(self.in_project_name.split(':')[1:])
         return "{}.zip".format(filename)
-
-    def _collect_requirements(self, destination):
-        """Collect runtime specific requirements."""
-        pass
-
-    def _collect_zip_content(self):
-        """Collects all required files to be included in the .zip file of the
-        lambda.
-
-        This includes:
-         - runtime requirements
-         - project modules
-         - app modules
-
-        Returns a temporal directory path
-        """
-        destination = tempfile.mkdtemp()
-        digest = hashlib.sha1()
-
-        # Collect runtime requirements
-        self._collect_requirements(destination)
-
-        # Add requirements to the digest. We don't digest the content of the
-        # required modules, but the name and version number (if included).
-        # We need to reiterate in the the documentation how importat is to
-        # freeze version numbers. In the future we could try to make the
-        # particular implementations of __collect_requirements yield the
-        # actual version numbers dowloaded, so we can make this more robust.
-        for requirement in self.get_requirements():
-            digest.update(requirement)
-
-        # Collect app modules
-        modules_paths = (
-            os.path.join(self.get_root(), 'modules'),
-            os.path.join(self.get_parent_root(), 'modules')
-
-        )
-        for path in modules_paths:
-
-            # Modules might or might not exist.
-            if not path or not os.path.exists(path):
-                continue
-
-            for base, dirs, files in os.walk(path):
-                relative = os.path.relpath(base, path)
-                for d in dirs:
-                    relative_destination = os.path.join(destination, relative, d)
-                    shutil.copytree(os.path.join(base, d), relative_destination)
-                    digest.update(utils.tree_hash(relative_destination))
-
-                for filename in files:
-                    relative_destination = os.path.join(destination, relative, filename)
-                    shutil.copyfile(os.path.join(base, filename), relative_destination)
-                    digest.update(utils.file_hash(relative_destination))
-
-        # Copy lambda code
-        filename = '{}.{}'.format(self.code_filename, self.extension)
-        shutil.copyfile(os.path.join(self.get_root(), self.settings['code']), os.path.join(destination, filename))
-        digest.update(utils.file_hash(os.path.join(destination, filename)))
-
-        # Calculate digest of destination
-        with open(os.path.join(destination, '.metadata'), 'w') as f:
-            f.write(json.dumps({'sha1': digest.hexdigest()}))
-
-        return destination
-
-    def get_zip_file(self):
-        """Returns a zip file file-like object with all the required source
-        on it."""
-        tmp_directory = self._collect_zip_content()
-        filename = '{}.{}'.format(self.code_filename, self.extension)
-        output = StringIO.StringIO()
-        zipzile = zipfile.ZipFile(output, 'w')
-
-        for base, dirs, files in os.walk(tmp_directory):
-            relative = os.path.relpath(base, tmp_directory)
-
-            for filename in files:
-                zipzile.write(os.path.join(tmp_directory, base, filename), os.path.join(relative, filename))
-
-        zipzile.close()
-        output.seek(0)
-        shutil.rmtree(tmp_directory)
-        return output
 
     @classmethod
     def register_type_project_template(cls, project, template):
@@ -422,6 +318,52 @@ class Lambda(base.BaseResource):
             )
         )
 
+    def get_zip_file(self):
+        """Returns a zip file file-like object with all the required source
+        on it."""
+        destination = tempfile.mkdtemp()
+        digest = hashlib.sha1()
+
+        self._collect_lambda_content(destination)
+
+        output = StringIO.StringIO()
+        zf = zipfile.ZipFile(output, 'w')
+
+        for base, dirs, files in os.walk(destination):
+            relative = os.path.relpath(base, destination)
+
+            for filename in files:
+                relative_destination = os.path.join(relative, filename)
+                zf.write(os.path.join(destination, base, filename), relative_destination)
+                digest.update(utils.tree_hash(relative_destination))
+
+        # Calculate digest of destination
+        metadata = {'sha1': digest.hexdigest()}
+        zf.writestr('.metadata', json.dumps(metadata))
+
+        zf.close()
+        output.seek(0)
+        shutil.rmtree(destination)
+        return output
+
+    def _collect_lambda_file_content(self, destination):
+        filename = '{}.{}'.format(self.code_filename, self.extension)
+        shutil.copyfile(os.path.join(self.get_root(), self.settings['code']), os.path.join(destination, filename))
+
+    def _collect_lambda_module_content(self, destination):
+        root = os.path.join(self.get_root(), self.settings['code'])
+        for base, dirs, files in os.walk(root):
+            relative = os.path.relpath(base, root)
+            for filename in files:
+                relative_destination = os.path.join(relative, filename)
+                shutil.copyfile(os.path.join(base, filename), os.path.join(destination, relative_destination))
+
+    def collect_lambda_content(self):
+        """Collects all required files to be included in the .zip file of the
+        lambda. Returns a temporal directory path
+        """
+        raise NotImplementedError
+
 
 class PythonLambda(Lambda):
 
@@ -429,22 +371,39 @@ class PythonLambda(Lambda):
     base_runtime = 'python'
     extension = 'py'
 
-    def _collect_requirements(self, destination):
-        """Collect python requirements using ``pip``"""
-        setup_cfg_path = os.path.join(destination, 'setup.cfg')
+    def _collect_lambda_content(self, destination):
 
-        with open(setup_cfg_path, 'w') as f:
-            f.write("[install]\nprefix=")
+        if os.path.isfile(os.path.join(self.get_root(), self.settings['code'])):
+            self._collect_lambda_file_content(destination)
+        else:
+            self._collect_lambda_module_content(destination)
+            code_root = os.path.join(self.get_root(), self.settings['code'])
+            requirements_path = os.path.join(code_root, 'requirements.txt')
 
-        for requirement in self.get_requirements():
-            subprocess.check_output("pip install -q {} -t {}".format(requirement, destination), shell=True, stderr=subprocess.STDOUT)
+            if os.path.isfile(requirements_path):
 
-        for name in os.listdir(destination):
-            dist_dir = os.path.join(destination, name)
-            if os.path.isdir(dist_dir) and name.endswith('.dist-info'):
-                shutil.rmtree(dist_dir)
+                setup_cfg_path = os.path.join(destination, 'setup.cfg')
 
-        os.remove(setup_cfg_path)
+                with open(setup_cfg_path, 'w') as f:
+                    f.write("[install]\nprefix=")
+
+                command = "pip install -r {} -q -t {}".format(
+                    requirements_path,
+                    destination
+                )
+
+                subprocess.check_output(
+                    command,
+                    shell=True,
+                    stderr=subprocess.STDOUT
+                )
+
+                os.remove(setup_cfg_path)
+            #
+            # for name in os.listdir(destination):
+            #     dist_dir = os.path.join(destination, name)
+            #     if os.path.isdir(dist_dir) and name.endswith('.dist-info'):
+            #         shutil.rmtree(dist_dir)
 
 
 class NodeLambda(Lambda):
@@ -453,8 +412,28 @@ class NodeLambda(Lambda):
     base_runtime = 'node'
     extension = 'js'
 
-    def _collect_requirements(self, destination):
+    def _collect_lambda_content(self, destination):
         """Collect node requirements using ``npm``"""
 
-        for requirement in self.get_requirements():
-            subprocess.check_output("cd {} && npm install {}".format(destination, requirement), shell=True, stderr=subprocess.STDOUT)
+        if os.path.isfile(os.path.join(self.get_root(), self.settings['code'])):
+            self._collect_lambda_file_content(destination)
+        else:
+            self._collect_lambda_module_content(destination)
+            code_root = os.path.join(self.get_root(), self.settings['code'])
+            package_json_path = os.path.join(destination, 'package.json')
+
+            if os.path.isfile(package_json_path):
+                command = "cd {} && npm install".format(destination)
+                subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
+
+
+class JavaLambda(Lambda):
+
+    runtime = 'java8'
+    base_runtime = 'java'
+    extension = 'java'
+
+    def _collect_lambda_content(self, destination):
+        root = os.path.join(self.get_root(), self.settings['code'])
+        command = "cd {} && gradle build -Pdest={}".format(root, destination)
+        output = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)

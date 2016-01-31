@@ -1,19 +1,25 @@
 {
     "Parameters": {
+        "AliasS3Version": {
+            "Type": "String"
+        },
+        "ByejsS3Version": {
+            "Type": "String"
+        },
+        "ByepythonS3Version": {
+            "Type": "String"
+        },
         "CodeBucket": {
             "Description": "Bucket where the code is located.",
+            "Type": "String"
+        },
+        "HellojavaS3Version": {
             "Type": "String"
         },
         "HellojsS3Version": {
             "Type": "String"
         },
         "HellopyS3Version": {
-            "Type": "String"
-        },
-        "LambdaAliasS3Version": {
-            "Type": "String"
-        },
-        "LambdaVersionS3Version": {
             "Type": "String"
         },
         "Region": {
@@ -24,10 +30,530 @@
             "Default": "dev",
             "Description": "Name of the Stage",
             "Type": "String"
+        },
+        "VersionS3Version": {
+            "Type": "String"
         }
     },
     "Resources": {
+        "AliasCurrentalias": {
+            "DependsOn": [
+                "ContribLambdasAlias"
+            ],
+            "Properties": {
+                "FunctionName": {
+                    "Ref": "ContribLambdasAlias"
+                },
+                "FunctionVersion": {
+                    "Fn::GetAtt": [
+                        "AliasVersion",
+                        "Version"
+                    ]
+                },
+                "Name": "current",
+                "S3ObjectVersion": {
+                    "Ref": "AliasS3Version"
+                },
+                "ServiceToken": {
+                    "Fn::GetAtt": [
+                        "ContribLambdasAlias",
+                        "Arn"
+                    ]
+                }
+            },
+            "Type": "Custom::LambdaAlias"
+        },
+        "AliasRole": {
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Statement": [
+                        {
+                            "Action": [
+                                "sts:AssumeRole"
+                            ],
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": [
+                                    "lambda.amazonaws.com"
+                                ]
+                            }
+                        }
+                    ],
+                    "Version": "2012-10-17"
+                },
+                "Policies": [
+                    {
+                        "PolicyDocument": {
+                            "Statement": [
+                                {
+                                    "Action": [
+                                        "lambda:InvokeFunction"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": [
+                                        "*"
+                                    ]
+                                },
+                                {
+                                    "Action": [
+                                        "logs:CreateLogGroup",
+                                        "logs:CreateLogStream",
+                                        "logs:PutLogEvents"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "arn:aws:logs:*:*:*"
+                                }
+                            ],
+                            "Version": "2012-10-17"
+                        },
+                        "PolicyName": "AliasLogsPolicy"
+                    },
+                    {
+                        "PolicyDocument": {
+                            "Statement": [
+                                {
+                                    "Action": [
+                                        "lambda:CreateAlias",
+                                        "lambda:DeleteAlias",
+                                        "lambda:GetAlias",
+                                        "lambda:UpdateAlias"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "arn:aws:lambda:*:*:*"
+                                }
+                            ],
+                            "Version": "2012-10-17"
+                        },
+                        "PolicyName": "AliasReadKinesisPolicy"
+                    }
+                ]
+            },
+            "Type": "AWS::IAM::Role"
+        },
+        "AliasVersion": {
+            "DependsOn": [
+                "ContribLambdasVersion"
+            ],
+            "Properties": {
+                "FunctionName": {
+                    "Ref": "ContribLambdasAlias"
+                },
+                "S3ObjectVersion": {
+                    "Ref": "AliasS3Version"
+                },
+                "ServiceToken": {
+                    "Fn::GetAtt": [
+                        "ContribLambdasVersion",
+                        "Arn"
+                    ]
+                }
+            },
+            "Type": "Custom::LambdaVersion"
+        },
+        "ByejsCurrentalias": {
+            "DependsOn": [
+                "AliasCurrentalias"
+            ],
+            "Properties": {
+                "FunctionName": {
+                    "Ref": "ByemachineByejs"
+                },
+                "FunctionVersion": {
+                    "Fn::GetAtt": [
+                        "ByejsVersion",
+                        "Version"
+                    ]
+                },
+                "Name": "current",
+                "S3ObjectVersion": {
+                    "Ref": "ByejsS3Version"
+                },
+                "ServiceToken": {
+                    "Fn::GetAtt": [
+                        "AliasCurrentalias",
+                        "Arn"
+                    ]
+                }
+            },
+            "Type": "Custom::LambdaAlias"
+        },
+        "ByejsRole": {
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Statement": [
+                        {
+                            "Action": [
+                                "sts:AssumeRole"
+                            ],
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": [
+                                    "lambda.amazonaws.com"
+                                ]
+                            }
+                        }
+                    ],
+                    "Version": "2012-10-17"
+                },
+                "Policies": [
+                    {
+                        "PolicyDocument": {
+                            "Statement": [
+                                {
+                                    "Action": [
+                                        "lambda:InvokeFunction"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": [
+                                        "*"
+                                    ]
+                                },
+                                {
+                                    "Action": [
+                                        "logs:CreateLogGroup",
+                                        "logs:CreateLogStream",
+                                        "logs:PutLogEvents"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "arn:aws:logs:*:*:*"
+                                }
+                            ],
+                            "Version": "2012-10-17"
+                        },
+                        "PolicyName": "ByejsLogsPolicy"
+                    }
+                ]
+            },
+            "Type": "AWS::IAM::Role"
+        },
+        "ByejsVersion": {
+            "DependsOn": [
+                "VersionCurrentalias"
+            ],
+            "Properties": {
+                "FunctionName": {
+                    "Ref": "ByemachineByejs"
+                },
+                "S3ObjectVersion": {
+                    "Ref": "ByejsS3Version"
+                },
+                "ServiceToken": {
+                    "Fn::GetAtt": [
+                        "VersionCurrentalias",
+                        "Arn"
+                    ]
+                }
+            },
+            "Type": "Custom::LambdaVersion"
+        },
+        "ByemachineByejs": {
+            "DependsOn": [
+                "ByejsRole"
+            ],
+            "Properties": {
+                "Code": {
+                    "S3Bucket": {
+                        "Ref": "CodeBucket"
+                    },
+                    "S3Key": "byemachine_byejs.zip",
+                    "S3ObjectVersion": {
+                        "Ref": "ByejsS3Version"
+                    }
+                },
+                "Description": "",
+                "Handler": "byejs.handler",
+                "MemorySize": 128,
+                "Role": {
+                    "Fn::GetAtt": [
+                        "ByejsRole",
+                        "Arn"
+                    ]
+                },
+                "Runtime": "nodejs",
+                "Timeout": 3
+            },
+            "Type": "AWS::Lambda::Function"
+        },
+        "ByemachineByepython": {
+            "DependsOn": [
+                "ByepythonRole"
+            ],
+            "Properties": {
+                "Code": {
+                    "S3Bucket": {
+                        "Ref": "CodeBucket"
+                    },
+                    "S3Key": "byemachine_byepython.zip",
+                    "S3ObjectVersion": {
+                        "Ref": "ByepythonS3Version"
+                    }
+                },
+                "Description": "",
+                "Handler": "byepython.handler",
+                "MemorySize": 128,
+                "Role": {
+                    "Fn::GetAtt": [
+                        "ByepythonRole",
+                        "Arn"
+                    ]
+                },
+                "Runtime": "python2.7",
+                "Timeout": 3
+            },
+            "Type": "AWS::Lambda::Function"
+        },
+        "ByepythonCurrentalias": {
+            "DependsOn": [
+                "AliasCurrentalias"
+            ],
+            "Properties": {
+                "FunctionName": {
+                    "Ref": "ByemachineByepython"
+                },
+                "FunctionVersion": {
+                    "Fn::GetAtt": [
+                        "ByepythonVersion",
+                        "Version"
+                    ]
+                },
+                "Name": "current",
+                "S3ObjectVersion": {
+                    "Ref": "ByepythonS3Version"
+                },
+                "ServiceToken": {
+                    "Fn::GetAtt": [
+                        "AliasCurrentalias",
+                        "Arn"
+                    ]
+                }
+            },
+            "Type": "Custom::LambdaAlias"
+        },
+        "ByepythonRole": {
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Statement": [
+                        {
+                            "Action": [
+                                "sts:AssumeRole"
+                            ],
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": [
+                                    "lambda.amazonaws.com"
+                                ]
+                            }
+                        }
+                    ],
+                    "Version": "2012-10-17"
+                },
+                "Policies": [
+                    {
+                        "PolicyDocument": {
+                            "Statement": [
+                                {
+                                    "Action": [
+                                        "lambda:InvokeFunction"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": [
+                                        "*"
+                                    ]
+                                },
+                                {
+                                    "Action": [
+                                        "logs:CreateLogGroup",
+                                        "logs:CreateLogStream",
+                                        "logs:PutLogEvents"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "arn:aws:logs:*:*:*"
+                                }
+                            ],
+                            "Version": "2012-10-17"
+                        },
+                        "PolicyName": "ByepythonLogsPolicy"
+                    }
+                ]
+            },
+            "Type": "AWS::IAM::Role"
+        },
+        "ByepythonVersion": {
+            "DependsOn": [
+                "VersionCurrentalias"
+            ],
+            "Properties": {
+                "FunctionName": {
+                    "Ref": "ByemachineByepython"
+                },
+                "S3ObjectVersion": {
+                    "Ref": "ByepythonS3Version"
+                },
+                "ServiceToken": {
+                    "Fn::GetAtt": [
+                        "VersionCurrentalias",
+                        "Arn"
+                    ]
+                }
+            },
+            "Type": "Custom::LambdaVersion"
+        },
+        "ContribLambdasAlias": {
+            "DependsOn": [
+                "AliasRole"
+            ],
+            "Properties": {
+                "Code": {
+                    "S3Bucket": {
+                        "Ref": "CodeBucket"
+                    },
+                    "S3Key": "contrib_lambdas_alias.zip",
+                    "S3ObjectVersion": {
+                        "Ref": "AliasS3Version"
+                    }
+                },
+                "Description": "Manages aliases of Lambdas.",
+                "Handler": "alias.handler",
+                "MemorySize": 128,
+                "Role": {
+                    "Fn::GetAtt": [
+                        "AliasRole",
+                        "Arn"
+                    ]
+                },
+                "Runtime": "python2.7",
+                "Timeout": 300
+            },
+            "Type": "AWS::Lambda::Function"
+        },
+        "ContribLambdasVersion": {
+            "DependsOn": [
+                "VersionRole"
+            ],
+            "Properties": {
+                "Code": {
+                    "S3Bucket": {
+                        "Ref": "CodeBucket"
+                    },
+                    "S3Key": "contrib_lambdas_version.zip",
+                    "S3ObjectVersion": {
+                        "Ref": "VersionS3Version"
+                    }
+                },
+                "Description": "Publishes new versions of Lambdas.",
+                "Handler": "version.handler",
+                "MemorySize": 128,
+                "Role": {
+                    "Fn::GetAtt": [
+                        "VersionRole",
+                        "Arn"
+                    ]
+                },
+                "Runtime": "python2.7",
+                "Timeout": 300
+            },
+            "Type": "AWS::Lambda::Function"
+        },
+        "HellojavaCurrentalias": {
+            "DependsOn": [
+                "AliasCurrentalias"
+            ],
+            "Properties": {
+                "FunctionName": {
+                    "Ref": "HimachineHellojava"
+                },
+                "FunctionVersion": {
+                    "Fn::GetAtt": [
+                        "HellojavaVersion",
+                        "Version"
+                    ]
+                },
+                "Name": "current",
+                "S3ObjectVersion": {
+                    "Ref": "HellojavaS3Version"
+                },
+                "ServiceToken": {
+                    "Fn::GetAtt": [
+                        "AliasCurrentalias",
+                        "Arn"
+                    ]
+                }
+            },
+            "Type": "Custom::LambdaAlias"
+        },
+        "HellojavaRole": {
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Statement": [
+                        {
+                            "Action": [
+                                "sts:AssumeRole"
+                            ],
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": [
+                                    "lambda.amazonaws.com"
+                                ]
+                            }
+                        }
+                    ],
+                    "Version": "2012-10-17"
+                },
+                "Policies": [
+                    {
+                        "PolicyDocument": {
+                            "Statement": [
+                                {
+                                    "Action": [
+                                        "lambda:InvokeFunction"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": [
+                                        "*"
+                                    ]
+                                },
+                                {
+                                    "Action": [
+                                        "logs:CreateLogGroup",
+                                        "logs:CreateLogStream",
+                                        "logs:PutLogEvents"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "arn:aws:logs:*:*:*"
+                                }
+                            ],
+                            "Version": "2012-10-17"
+                        },
+                        "PolicyName": "HellojavaLogsPolicy"
+                    }
+                ]
+            },
+            "Type": "AWS::IAM::Role"
+        },
+        "HellojavaVersion": {
+            "DependsOn": [
+                "VersionCurrentalias"
+            ],
+            "Properties": {
+                "FunctionName": {
+                    "Ref": "HimachineHellojava"
+                },
+                "S3ObjectVersion": {
+                    "Ref": "HellojavaS3Version"
+                },
+                "ServiceToken": {
+                    "Fn::GetAtt": [
+                        "VersionCurrentalias",
+                        "Arn"
+                    ]
+                }
+            },
+            "Type": "Custom::LambdaVersion"
+        },
         "HellojsCurrentalias": {
+            "DependsOn": [
+                "AliasCurrentalias"
+            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "HimachineHellojs"
@@ -38,13 +564,13 @@
                         "Version"
                     ]
                 },
-                "Name": "Current",
+                "Name": "current",
                 "S3ObjectVersion": {
                     "Ref": "HellojsS3Version"
                 },
                 "ServiceToken": {
                     "Fn::GetAtt": [
-                        "LambdasLambdaAlias",
+                        "AliasCurrentalias",
                         "Arn"
                     ]
                 }
@@ -101,6 +627,9 @@
             "Type": "AWS::IAM::Role"
         },
         "HellojsVersion": {
+            "DependsOn": [
+                "VersionCurrentalias"
+            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "HimachineHellojs"
@@ -110,7 +639,7 @@
                 },
                 "ServiceToken": {
                     "Fn::GetAtt": [
-                        "LambdasLambdaVersion",
+                        "VersionCurrentalias",
                         "Arn"
                     ]
                 }
@@ -118,6 +647,9 @@
             "Type": "Custom::LambdaVersion"
         },
         "HellopyCurrentalias": {
+            "DependsOn": [
+                "AliasCurrentalias"
+            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "HimachineHellopy"
@@ -128,13 +660,13 @@
                         "Version"
                     ]
                 },
-                "Name": "Current",
+                "Name": "current",
                 "S3ObjectVersion": {
                     "Ref": "HellopyS3Version"
                 },
                 "ServiceToken": {
                     "Fn::GetAtt": [
-                        "LambdasLambdaAlias",
+                        "AliasCurrentalias",
                         "Arn"
                     ]
                 }
@@ -191,6 +723,9 @@
             "Type": "AWS::IAM::Role"
         },
         "HellopyVersion": {
+            "DependsOn": [
+                "VersionCurrentalias"
+            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "HimachineHellopy"
@@ -200,12 +735,40 @@
                 },
                 "ServiceToken": {
                     "Fn::GetAtt": [
-                        "LambdasLambdaVersion",
+                        "VersionCurrentalias",
                         "Arn"
                     ]
                 }
             },
             "Type": "Custom::LambdaVersion"
+        },
+        "HimachineHellojava": {
+            "DependsOn": [
+                "HellojavaRole"
+            ],
+            "Properties": {
+                "Code": {
+                    "S3Bucket": {
+                        "Ref": "CodeBucket"
+                    },
+                    "S3Key": "himachine_hellojava.zip",
+                    "S3ObjectVersion": {
+                        "Ref": "HellojavaS3Version"
+                    }
+                },
+                "Description": "",
+                "Handler": "example.Hello.handler",
+                "MemorySize": 128,
+                "Role": {
+                    "Fn::GetAtt": [
+                        "HellojavaRole",
+                        "Arn"
+                    ]
+                },
+                "Runtime": "java8",
+                "Timeout": 3
+            },
+            "Type": "AWS::Lambda::Function"
         },
         "HimachineHellojs": {
             "DependsOn": [
@@ -216,7 +779,7 @@
                     "S3Bucket": {
                         "Ref": "CodeBucket"
                     },
-                    "S3Key": "lambda_himachine_hellojs.zip",
+                    "S3Key": "himachine_hellojs.zip",
                     "S3ObjectVersion": {
                         "Ref": "HellojsS3Version"
                     }
@@ -244,7 +807,7 @@
                     "S3Bucket": {
                         "Ref": "CodeBucket"
                     },
-                    "S3Key": "lambda_himachine_hellopy.zip",
+                    "S3Key": "himachine_hellopy.zip",
                     "S3ObjectVersion": {
                         "Ref": "HellopyS3Version"
                     }
@@ -263,31 +826,34 @@
             },
             "Type": "AWS::Lambda::Function"
         },
-        "LambdaAliasCurrentalias": {
+        "VersionCurrentalias": {
+            "DependsOn": [
+                "ContribLambdasAlias"
+            ],
             "Properties": {
                 "FunctionName": {
-                    "Ref": "LambdasLambdaAlias"
+                    "Ref": "ContribLambdasVersion"
                 },
                 "FunctionVersion": {
                     "Fn::GetAtt": [
-                        "LambdaAliasVersion",
+                        "VersionVersion",
                         "Version"
                     ]
                 },
-                "Name": "Current",
+                "Name": "current",
                 "S3ObjectVersion": {
-                    "Ref": "LambdaAliasS3Version"
+                    "Ref": "VersionS3Version"
                 },
                 "ServiceToken": {
                     "Fn::GetAtt": [
-                        "LambdasLambdaAlias",
+                        "ContribLambdasAlias",
                         "Arn"
                     ]
                 }
             },
             "Type": "Custom::LambdaAlias"
         },
-        "LambdaAliasRole": {
+        "VersionRole": {
             "Properties": {
                 "AssumeRolePolicyDocument": {
                     "Statement": [
@@ -330,115 +896,7 @@
                             ],
                             "Version": "2012-10-17"
                         },
-                        "PolicyName": "LambdaAliasLogsPolicy"
-                    },
-                    {
-                        "PolicyDocument": {
-                            "Statement": [
-                                {
-                                    "Action": [
-                                        "lambda:CreateAlias",
-                                        "lambda:DeleteAlias",
-                                        "lambda:GetAlias",
-                                        "lambda:UpdateAlias"
-                                    ],
-                                    "Effect": "Allow",
-                                    "Resource": "arn:aws:lambda:*:*:*"
-                                }
-                            ],
-                            "Version": "2012-10-17"
-                        },
-                        "PolicyName": "LambdaAliasReadKinesisPolicy"
-                    }
-                ]
-            },
-            "Type": "AWS::IAM::Role"
-        },
-        "LambdaAliasVersion": {
-            "Properties": {
-                "FunctionName": {
-                    "Ref": "LambdasLambdaAlias"
-                },
-                "S3ObjectVersion": {
-                    "Ref": "LambdaAliasS3Version"
-                },
-                "ServiceToken": {
-                    "Fn::GetAtt": [
-                        "LambdasLambdaVersion",
-                        "Arn"
-                    ]
-                }
-            },
-            "Type": "Custom::LambdaVersion"
-        },
-        "LambdaVersionCurrentalias": {
-            "Properties": {
-                "FunctionName": {
-                    "Ref": "LambdasLambdaVersion"
-                },
-                "FunctionVersion": {
-                    "Fn::GetAtt": [
-                        "LambdaVersionVersion",
-                        "Version"
-                    ]
-                },
-                "Name": "Current",
-                "S3ObjectVersion": {
-                    "Ref": "LambdaVersionS3Version"
-                },
-                "ServiceToken": {
-                    "Fn::GetAtt": [
-                        "LambdasLambdaAlias",
-                        "Arn"
-                    ]
-                }
-            },
-            "Type": "Custom::LambdaAlias"
-        },
-        "LambdaVersionRole": {
-            "Properties": {
-                "AssumeRolePolicyDocument": {
-                    "Statement": [
-                        {
-                            "Action": [
-                                "sts:AssumeRole"
-                            ],
-                            "Effect": "Allow",
-                            "Principal": {
-                                "Service": [
-                                    "lambda.amazonaws.com"
-                                ]
-                            }
-                        }
-                    ],
-                    "Version": "2012-10-17"
-                },
-                "Policies": [
-                    {
-                        "PolicyDocument": {
-                            "Statement": [
-                                {
-                                    "Action": [
-                                        "lambda:InvokeFunction"
-                                    ],
-                                    "Effect": "Allow",
-                                    "Resource": [
-                                        "*"
-                                    ]
-                                },
-                                {
-                                    "Action": [
-                                        "logs:CreateLogGroup",
-                                        "logs:CreateLogStream",
-                                        "logs:PutLogEvents"
-                                    ],
-                                    "Effect": "Allow",
-                                    "Resource": "arn:aws:logs:*:*:*"
-                                }
-                            ],
-                            "Version": "2012-10-17"
-                        },
-                        "PolicyName": "LambdaVersionLogsPolicy"
+                        "PolicyName": "VersionLogsPolicy"
                     },
                     {
                         "PolicyDocument": {
@@ -454,84 +912,31 @@
                             ],
                             "Version": "2012-10-17"
                         },
-                        "PolicyName": "LambdaVersionReadKinesisPolicy"
+                        "PolicyName": "VersionReadKinesisPolicy"
                     }
                 ]
             },
             "Type": "AWS::IAM::Role"
         },
-        "LambdaVersionVersion": {
+        "VersionVersion": {
+            "DependsOn": [
+                "ContribLambdasVersion"
+            ],
             "Properties": {
                 "FunctionName": {
-                    "Ref": "LambdasLambdaVersion"
+                    "Ref": "ContribLambdasVersion"
                 },
                 "S3ObjectVersion": {
-                    "Ref": "LambdaVersionS3Version"
+                    "Ref": "VersionS3Version"
                 },
                 "ServiceToken": {
                     "Fn::GetAtt": [
-                        "LambdasLambdaVersion",
+                        "ContribLambdasVersion",
                         "Arn"
                     ]
                 }
             },
             "Type": "Custom::LambdaVersion"
-        },
-        "LambdasLambdaAlias": {
-            "DependsOn": [
-                "LambdaAliasRole"
-            ],
-            "Properties": {
-                "Code": {
-                    "S3Bucket": {
-                        "Ref": "CodeBucket"
-                    },
-                    "S3Key": "lambda_lambdas_lambda_alias.zip",
-                    "S3ObjectVersion": {
-                        "Ref": "LambdaAliasS3Version"
-                    }
-                },
-                "Description": "Manages aliases of Lambdas.",
-                "Handler": "code.handler",
-                "MemorySize": 128,
-                "Role": {
-                    "Fn::GetAtt": [
-                        "LambdaAliasRole",
-                        "Arn"
-                    ]
-                },
-                "Runtime": "python2.7",
-                "Timeout": 300
-            },
-            "Type": "AWS::Lambda::Function"
-        },
-        "LambdasLambdaVersion": {
-            "DependsOn": [
-                "LambdaVersionRole"
-            ],
-            "Properties": {
-                "Code": {
-                    "S3Bucket": {
-                        "Ref": "CodeBucket"
-                    },
-                    "S3Key": "lambda_lambdas_lambda_version.zip",
-                    "S3ObjectVersion": {
-                        "Ref": "LambdaVersionS3Version"
-                    }
-                },
-                "Description": "Publishes new versions of Lambdas.",
-                "Handler": "code.handler",
-                "MemorySize": 128,
-                "Role": {
-                    "Fn::GetAtt": [
-                        "LambdaVersionRole",
-                        "Arn"
-                    ]
-                },
-                "Runtime": "python2.7",
-                "Timeout": 300
-            },
-            "Type": "AWS::Lambda::Function"
         }
     }
 }

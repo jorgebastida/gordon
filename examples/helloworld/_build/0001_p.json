@@ -2,9 +2,7 @@
     "Outputs": {
         "CodeBucket": {
             "Description": "CodeBucket name",
-            "Value": {
-                "Ref": "CodeBucket"
-            }
+            "Value": "gordon-helloworld-0do1mc7"
         }
     },
     "Parameters": {
@@ -22,21 +20,7 @@
         "CodeBucket": {
             "Properties": {
                 "AccessControl": "Private",
-                "BucketName": {
-                    "Fn::Join": [
-                        "-",
-                        [
-                            "gordon",
-                            {
-                                "Ref": "Region"
-                            },
-                            {
-                                "Ref": "Stage"
-                            },
-                            "helloworld"
-                        ]
-                    ]
-                },
+                "BucketName": "gordon-helloworld-0do1mc7",
                 "VersioningConfiguration": {
                     "Status": "Enabled"
                 }

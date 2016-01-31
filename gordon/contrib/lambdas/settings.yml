@@ -1,7 +1,9 @@
 lambdas:
 
   version:
-    code: version.py
+    code: version
+    handler: version.handler
+    runtime: python
     description: Publishes new versions of Lambdas.
     timeout: 300
     policies:
@@ -16,7 +18,9 @@ lambdas:
             Effect: "Allow"
 
   alias:
-    code: alias.py
+    code: alias
+    handler: alias.handler
+    runtime: python
     description: Manages aliases of Lambdas.
     timeout: 300
     policies:
@@ -31,7 +35,3 @@ lambdas:
               - "lambda:UpdateAlias"
             Resource: "arn:aws:lambda:*:*:*"
             Effect: "Allow"
-
-
-python_requirements:
-  - cfn-response

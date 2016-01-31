@@ -4,3 +4,4 @@
 htmlcov
 .coverage
 *.zip
+.gradle

@@ -1,9 +1,11 @@
 lambdas:
   hellojs:
     code: hellojs.js
-    node_requirements:
-      - async
 
   hellopy:
     code: hellopy.py
-    
+
+  hellojava:
+    code: hellojava
+    runtime: java
+    handler: example.Hello.handler

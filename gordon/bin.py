@@ -46,7 +46,7 @@ def main(argv=None):
                                  dest="runtime",
                                  default='py',
                                  type=str,
-                                 choices=('py', 'js'),
+                                 choices=('py', 'js', 'java'),
                                  help="App runtime")
 
     build_parser = subparsers.add_parser('build', description='Build')
