@@ -1,8 +1,8 @@
 lambdas:
   pyexample:
-    code: code.py
+    code: example
+    handler: code.handler
+    runtime: python
     description: My description
     memory: 192
     timeout: 123
-    python_requirements:
-      - requests
