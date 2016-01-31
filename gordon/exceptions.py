@@ -1,7 +1,7 @@
 class BaseGordonException(Exception):
 
     code = 1
-    hint = "Something went't wrong"
+    hint = u"Something went't wrong"
 
     def get_hint(self):
         return self.hint.format(*self.args)
@@ -9,46 +9,46 @@ class BaseGordonException(Exception):
 
 class ResourceSettingRequiredError(BaseGordonException):
     code = 2
-    hint = "Resource {} requires you to define '{}' in it's settings."
+    hint = u"Resource {} requires you to define '{}' in it's settings."
 
 
 class InvalidStreamStartingPositionError(BaseGordonException):
     code = 3
-    hint = "Resource {} starting position '{}' is invalid."
+    hint = u"Resource {} starting position '{}' is invalid."
 
 
 class InvalidLambdaRoleError(BaseGordonException):
-    hint = "Resource {} role is invalid '{}'."
+    hint = u"Resource {} role is invalid '{}'."
     code = 4
 
 
 class InvalidLambdaCodeExtensionError(BaseGordonException):
-    hint = "{} extension is invalid."
+    hint = u"{} extension is invalid."
     code = 5
 
 
 class PropertyRequiredError(BaseGordonException):
-    hint = "Action {} requires you to define '{}' property."
+    hint = u"Action {} requires you to define '{}' property."
     code = 6
 
 
 class InvalidAppFormatError(BaseGordonException):
-    hint = "Invalid app format {}."
+    hint = u"Invalid app format {}."
     code = 7
 
 
 class DuplicateResourceNameError(BaseGordonException):
-    hint = "Duplicate resource error {} {}"
+    hint = u"Duplicate resource error {} {}"
     code = 8
 
 
 class ProjectNotBuildError(BaseGordonException):
-    hint = "It looks you have not build your project yet! Run $ gordon build"
+    hint = u"It looks you have not build your project yet! Run $ gordon build"
     code = 9
 
 
 class AbnormalCloudFormationStatusError(BaseGordonException):
-    hint = """
+    hint = u"""
     Oh Oh!! You stack status is {1}... which is bad, quite bad.
     The stack cannot return to a good state. In other words, a dependent
     resource cannot return to its original state, which causes a failure.
@@ -76,22 +76,22 @@ class AbnormalCloudFormationStatusError(BaseGordonException):
 
 
 class ProjectDirectoryAlreadyExistsError(BaseGordonException):
-    hint = "A directory with name '{}' already exists."
+    hint = u"A directory with name '{}' already exists."
     code = 11
 
 
 class AppDirectoryAlreadyExistsError(BaseGordonException):
-    hint = "A directory with name '{}' already exists."
+    hint = u"A directory with name '{}' already exists."
     code = 12
 
 
 class UnknownProtocolError(BaseGordonException):
-    hint = "Unknown protocol {} with value {}."
+    hint = u"Unknown protocol {} with value {}."
     code = 13
 
 
 class CloudFormationStackInProgressError(BaseGordonException):
-    hint = "CloudFormation stack {} is in progress ({})."
+    hint = u"CloudFormation stack {} is in progress ({})."
     code = 14
 
 
@@ -117,12 +117,12 @@ class ProtocolMultipleMatcheslError(BaseProtocolError):
 
 
 class DuplicateAppNameError(BaseGordonException):
-    hint = "An application with name {} is already installed."
+    hint = u"An application with name {} is already installed."
     code = 18
 
 
 class AppNotFoundError(BaseGordonException):
-    hint = "Application with name {} and path {} can't be found."
+    hint = u"Application with name {} and path {} can't be found."
     code = 19
 
 
@@ -130,13 +130,27 @@ class ResourceNotFoundError(BaseGordonException):
     code = 20
 
     def get_hint(self):
-        hint = "Resource {} Not Found. Available {}".format(*self.args)
+        hint = u"Resource {} Not Found. Available {}".format(*self.args)
 
         try:
             resource = self.args[0].split(':')
             if resource[1].startswith('contrib_'):
-                hint += "\n\nIt looks like {} is missing in your settings.yml file apps list".format(resource[1].replace('_', '.'))
+                hint += u"\n\nIt looks like {} is missing in your settings.yml file apps list".format(resource[1].replace('_', '.'))
         except IndexError:
             pass
 
         return hint
+
+
+class LambdaBuildProcessError(BaseGordonException):
+
+    def get_hint(self):
+        return (
+            u"Error building lambda '{}'!\n"
+            u"cmd: {}\n\n"
+            u"{}\n"
+        ).format(
+            self.args[1].name,
+            self.args[0].cmd,
+            self.args[0].output,
+        )

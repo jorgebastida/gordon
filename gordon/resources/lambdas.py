@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 import shutil
 import tempfile
@@ -9,6 +10,7 @@ import subprocess
 
 import troposphere
 from troposphere import iam, awslambda, s3
+from clint.textui import colored, puts, indent
 
 from gordon import actions
 from gordon import utils
@@ -324,7 +326,13 @@ class Lambda(base.BaseResource):
         destination = tempfile.mkdtemp()
         digest = hashlib.sha1()
 
-        self._collect_lambda_content(destination)
+        with indent(2):
+            puts(colored.green(u"✓ {}".format(self.name)))
+
+        try:
+            self._collect_lambda_content(destination)
+        except subprocess.CalledProcessError, exc:
+            raise exceptions.LambdaBuildProcessError(exc, self)
 
         output = StringIO.StringIO()
         zf = zipfile.ZipFile(output, 'w')
@@ -381,7 +389,6 @@ class PythonLambda(Lambda):
             requirements_path = os.path.join(code_root, 'requirements.txt')
 
             if os.path.isfile(requirements_path):
-
                 setup_cfg_path = os.path.join(destination, 'setup.cfg')
 
                 with open(setup_cfg_path, 'w') as f:
@@ -399,12 +406,6 @@ class PythonLambda(Lambda):
                 )
 
                 os.remove(setup_cfg_path)
-            #
-            # for name in os.listdir(destination):
-            #     dist_dir = os.path.join(destination, name)
-            #     if os.path.isdir(dist_dir) and name.endswith('.dist-info'):
-            #         shutil.rmtree(dist_dir)
-
 
 class NodeLambda(Lambda):
 

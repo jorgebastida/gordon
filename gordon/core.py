@@ -250,7 +250,7 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
 
         if template:
             output_filename = output_filename.format(self._get_next_build_sequence_id())
-            puts(colored.green(u"✓ {}".format(output_filename)))
+            puts(colored.cyan(u"✓ {}".format(output_filename)))
             with open(os.path.join(self.build_path, output_filename), 'w') as f:
                 f.write(template.to_json(indent=4))
 
@@ -268,7 +268,7 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
 
         template = utils.fix_troposphere_references(template)
 
-        puts(colored.green(u"✓ {}".format(output_filename)))
+        puts(colored.cyan(u"✓ {}".format(output_filename)))
         with open(os.path.join(self.build_path, output_filename), 'w') as f:
             f.write(template.to_json())
 
@@ -284,7 +284,7 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
 
         if template:
             output_filename = output_filename.format(self._get_next_build_sequence_id())
-            puts(colored.green(u"✓ {}".format(output_filename)))
+            puts(colored.cyan(u"✓ {}".format(output_filename)))
             with open(os.path.join(self.build_path, output_filename), 'w') as f:
                 f.write(template.to_json(indent=4))
 
@@ -303,7 +303,7 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
 
         if template and template.resources:
             output_filename = output_filename.format(self._get_next_build_sequence_id())
-            puts(colored.green(u"✓ {}".format(output_filename)))
+            puts(colored.cyan(u"✓ {}".format(output_filename)))
             with open(os.path.join(self.build_path, output_filename), 'w') as f:
                 f.write(template.to_json())
 
@@ -320,7 +320,7 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
 
         if template:
             output_filename = output_filename.format(self._get_next_build_sequence_id())
-            puts(colored.green(u"✓ {}".format(output_filename)))
+            puts(colored.cyan(u"✓ {}".format(output_filename)))
             with open(os.path.join(self.build_path, output_filename), 'w') as f:
                 f.write(template.to_json(indent=4))
 

@@ -275,7 +275,7 @@
                     }
                 },
                 "Description": "Sleeps several seconds before succeeding.",
-                "Handler": "code.handler",
+                "Handler": "sleep.handler",
                 "MemorySize": 128,
                 "Role": {
                     "Fn::GetAtt": [
@@ -303,7 +303,7 @@
                     }
                 },
                 "Description": "Manages aliases of Lambdas.",
-                "Handler": "code.handler",
+                "Handler": "alias.handler",
                 "MemorySize": 128,
                 "Role": {
                     "Fn::GetAtt": [
@@ -331,7 +331,7 @@
                     }
                 },
                 "Description": "Publishes new versions of Lambdas.",
-                "Handler": "code.handler",
+                "Handler": "version.handler",
                 "MemorySize": 128,
                 "Role": {
                     "Fn::GetAtt": [
