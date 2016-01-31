@@ -6,9 +6,9 @@ Gordon is a high-level framework to create, wire and deploy AWS Lambdas in an ea
 Usage
 ------
 ```shell
-$ gordon startproject demo [--region=eu-west-1|...]
+$ gordon startproject demo [--region=eu-west-1]
 $ cd demo
-$ gordon startapp helloworld [--runtime=py|js]
+$ gordon startapp helloworld [--runtime=py|js|java]
 # ... Add helloword to demo/settings.yml installed apps.
 $ gordon build
 $ gordon apply [--stage=dev|prod|...]
@@ -20,7 +20,7 @@ Features
 * 100% Boilerplate free
 * Python/Javascript/Java runtimes supported.
 * Simple yml configuration
-* Seamless integration with package managers (``pip``,``npm``)
+* Seamless integration with (``pip``,``npm`` and ``gradle``)
 * Dead-simple custom multi-stage and multi region deployments ``--stage=prod``
 * Supported integrations
   * Kinesis Streams
@@ -32,7 +32,7 @@ Features
   * Jinja2 values
   * ARN translation helpers (``dynamodb-starswith://clients-``, ``dynamodb-endswith://-clients``, ``dynamodb-match://clients-`` ...)
 * Extensive Documentation
-* Massive test suite
+* Good test suite
 * Love
 
 
@@ -44,7 +44,7 @@ Then... why not use CloudFormation? Well, there are two reasons: First, not all 
 
 The second reason is complexity. CloudFormation stacks are defined using JSON templates which are a nightmare to write and maintain.
 
-This project tries to solve these two issues by working around the lack of CloudFormation/Framework APIs (keeping in mind they will happen eventually) and trying to create a high level abstraction on top of CloudFormation so people without a deep understanding of it can write and deploy lambdas without shooting their foot.
+This project tries to solve these two issues by working around the lack of CloudFormation/Framework APIs (keeping in mind they will happen eventually) and trying to create a high level abstraction on top of CloudFormation, so people without a deep understanding of it can write and deploy lambdas without shooting their foot.
 
 
 Why should you use this project?
@@ -62,4 +62,4 @@ Yes, we eat our own dog food; We use gordon to create gordon. The idea is that, 
 
 Those Custom CloudFormation resources are implemented using Lambdas (deployed by gordon)... crazy uh?!
 
-Why all this madness? Again... because reproducibility. If you manage some resources using CloudFormation, and some others streaming API commands, when you try to decommission your environment... you are pretty much f\*\*\*, and you MUST use the original tool to (hopefully) delete all resources. With Gordon this is not a problem. You delete our CloudFormation stacks and all our sh\*\* is gone.
+Why all this madness? Again... because reproducibility. If you manage some resources using CloudFormation, and some others streaming API commands, when you try to reproduce or decommission your environment... you are pretty much f\*\*\*.

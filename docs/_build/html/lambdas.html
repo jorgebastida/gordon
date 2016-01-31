@@ -134,13 +134,8 @@ needing to re-configure all related event sources.</p>
     <span class="l-Scalar-Plain">handler</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">LAMBDA_HANDLER</span> <span class="p-Indicator">}</span>
     <span class="l-Scalar-Plain">memory</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">LAMBDA_MEMORY</span> <span class="p-Indicator">}</span>
     <span class="l-Scalar-Plain">timeout</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">LAMBDA_TIMEOUT</span> <span class="p-Indicator">}</span>
+    <span class="l-Scalar-Plain">runtime</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">LAMBDA_RUNTIME</span> <span class="p-Indicator">}</span>
     <span class="l-Scalar-Plain">description</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">LAMBDA_DESCRIPTION</span> <span class="p-Indicator">}</span>
-    <span class="l-Scalar-Plain">python_requirements</span><span class="p-Indicator">:</span>
-      <span class="p-Indicator">-</span> <span class="p-Indicator">{</span> <span class="nv">PYTHON_REQUIREMENT_1</span> <span class="p-Indicator">}</span>
-      <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">...</span>
-    <span class="l-Scalar-Plain">node_requirements</span><span class="p-Indicator">:</span>
-      <span class="p-Indicator">-</span> <span class="p-Indicator">{</span> <span class="nv">NODE_REQUIREMENT_1</span> <span class="p-Indicator">}</span>
-      <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">...</span>
     <span class="l-Scalar-Plain">role</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">LAMBDA_ROLE</span> <span class="p-Indicator">}</span>
     <span class="l-Scalar-Plain">policies</span><span class="p-Indicator">:</span>
       <span class="p-Indicator">{</span> <span class="nv">POLICY_NAME</span> <span class="p-Indicator">}:</span>
@@ -174,6 +169,18 @@ needing to re-configure all related event sources.</p>
     <span class="l-Scalar-Plain">handler</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">my_handler</span>
 </pre></div>
 </div>
+<p>For the java runtime, this handler will need to have the following format (<code class="docutils literal"><span class="pre">package.class::method</span></code>):</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">lambdas</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">hello_world</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">helloworld</span>
+    <span class="l-Scalar-Plain">runtime</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">java</span>
+    <span class="l-Scalar-Plain">handler</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">helloworld.Hello::handler</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">For more information about Java handlers &lt;<a class="reference external" href="http://docs.aws.amazon.com/lambda/latest/dg/java-programming-model-handler-types.html">http://docs.aws.amazon.com/lambda/latest/dg/java-programming-model-handler-types.html</a>&gt;`_</p>
+</div>
 </div>
 <div class="section" id="memory">
 <h3>memory<a class="headerlink" href="#memory" title="Permalink to this headline">¶</a></h3>
@@ -197,6 +204,23 @@ on the function&#8217;s expected execution time. By default, Timeout is set to 3
 </pre></div>
 </div>
 </div>
+<div class="section" id="runtime">
+<h3>runtime<a class="headerlink" href="#runtime" title="Permalink to this headline">¶</a></h3>
+<p>Gordon auto detects runtimes based on the extensions of the <code class="docutils literal"><span class="pre">code</span></code> file. For folder based lambdas (like <code class="docutils literal"><span class="pre">java</span></code>) the code is a directory
+and not a file, so the runtime can&#8217;t be inferred. For this situations, you can specidy the runtime using this setting.</p>
+<div class="highlight-yaml"><div class="highlight"><pre>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>lambdas:</dt>
+<dd><dl class="first last docutils">
+<dt>hello_world:</dt>
+<dd>code: hellojava
+runtime: java</dd>
+</dl>
+</dd>
+</dl>
+</div>
 <div class="section" id="description">
 <h3>description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h3>
 <p>Human-readable description for your lambda.</p>
@@ -204,33 +228,6 @@ on the function&#8217;s expected execution time. By default, Timeout is set to 3
   <span class="l-Scalar-Plain">hello_world</span><span class="p-Indicator">:</span>
     <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">functions.py</span>
     <span class="l-Scalar-Plain">description</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">This is a really simple function which says hello</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="python-requirements">
-<h3>python_requirements<a class="headerlink" href="#python-requirements" title="Permalink to this headline">¶</a></h3>
-<p>List of <a class="reference external" href="https://pypi.python.org/pypi">PyPi</a> packages this function requires. You can specify specific versions of your packages
-using <a class="reference external" href="https://pip.pypa.io/en/stable/">PIP</a> syntax. gordon uses <code class="docutils literal"><span class="pre">pip</span></code> under the hood to download your required packages.</p>
-<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">lambdas</span><span class="p-Indicator">:</span>
-  <span class="l-Scalar-Plain">hello_world</span><span class="p-Indicator">:</span>
-    <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">functions.py</span>
-    <span class="l-Scalar-Plain">python_requirements</span><span class="p-Indicator">:</span>
-      <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">requests</span>
-      <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">python-dateutil==2.4.2</span>
-      <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">lxml&gt;=3.4</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="node-requirements">
-<h3>node_requirements<a class="headerlink" href="#node-requirements" title="Permalink to this headline">¶</a></h3>
-<p>List of <a class="reference external" href="https://www.npmjs.com/">npm</a> packages this function requires. You can specify specific versions of your packages
-using <a class="reference external" href="https://www.npmjs.com/">npm</a> syntax. gordon uses <code class="docutils literal"><span class="pre">npm</span></code> under the hood to download your required packages.</p>
-<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">lambdas</span><span class="p-Indicator">:</span>
-  <span class="l-Scalar-Plain">hello_world</span><span class="p-Indicator">:</span>
-    <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">functions.js</span>
-    <span class="l-Scalar-Plain">node_requirements</span><span class="p-Indicator">:</span>
-      <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">less</span>
-      <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">bower&gt;=1.7</span>
 </pre></div>
 </div>
 </div>
@@ -296,9 +293,8 @@ S3 bucket called <code class="docutils literal"><span class="pre">EXAMPLE-BUCKET
 <li><a class="reference internal" href="#handler">handler</a></li>
 <li><a class="reference internal" href="#memory">memory</a></li>
 <li><a class="reference internal" href="#timeout">timeout</a></li>
+<li><a class="reference internal" href="#runtime">runtime</a></li>
 <li><a class="reference internal" href="#description">description</a></li>
-<li><a class="reference internal" href="#python-requirements">python_requirements</a></li>
-<li><a class="reference internal" href="#node-requirements">node_requirements</a></li>
 <li><a class="reference internal" href="#role">role</a></li>
 <li><a class="reference internal" href="#policies">policies</a></li>
 </ul>

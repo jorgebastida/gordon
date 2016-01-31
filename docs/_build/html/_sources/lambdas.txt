@@ -84,13 +84,8 @@ The following is the anatomy of a lambda in gordon.
       handler: { LAMBDA_HANDLER }
       memory: { LAMBDA_MEMORY }
       timeout: { LAMBDA_TIMEOUT }
+      runtime: { LAMBDA_RUNTIME }
       description: { LAMBDA_DESCRIPTION }
-      python_requirements:
-        - { PYTHON_REQUIREMENT_1 }
-        - ...
-      node_requirements:
-        - { NODE_REQUIREMENT_1 }
-        - ...
       role: { LAMBDA_ROLE }
       policies:
         { POLICY_NAME }:
@@ -132,6 +127,21 @@ Name of the function within ``code`` which will be the entry point of you lambda
       code: functions.py
       handler: my_handler
 
+For the java runtime, this handler will need to have the following format (``package.class::method``):
+
+.. code-block:: yaml
+
+  lambdas:
+    hello_world:
+      code: helloworld
+      runtime: java
+      handler: helloworld.Hello::handler
+
+.. note::
+
+  For more information about Java handlers <http://docs.aws.amazon.com/lambda/latest/dg/java-programming-model-handler-types.html>`_
+
+
 memory
 ^^^^^^^^^^^^^^^^^^^^^^
 
@@ -158,6 +168,19 @@ on the function's expected execution time. By default, Timeout is set to 3 secon
       code: functions.py
       memory: 300
 
+runtime
+^^^^^^^^^^^^^^^^^^^^^^
+
+Gordon auto detects runtimes based on the extensions of the ``code`` file. For folder based lambdas (like ``java``) the code is a directory
+and not a file, so the runtime can't be inferred. For this situations, you can specidy the runtime using this setting.
+
+.. code-block:: yaml
+
+lambdas:
+  hello_world:
+    code: hellojava
+    runtime: java
+
 
 description
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -170,37 +193,6 @@ Human-readable description for your lambda.
     hello_world:
       code: functions.py
       description: This is a really simple function which says hello
-
-python_requirements
-^^^^^^^^^^^^^^^^^^^^^^
-
-List of `PyPi <https://pypi.python.org/pypi>`_ packages this function requires. You can specify specific versions of your packages
-using `PIP <https://pip.pypa.io/en/stable/>`_ syntax. gordon uses ``pip`` under the hood to download your required packages.
-
-.. code-block:: yaml
-
-  lambdas:
-    hello_world:
-      code: functions.py
-      python_requirements:
-        - requests
-        - python-dateutil==2.4.2
-        - lxml>=3.4
-
-node_requirements
-^^^^^^^^^^^^^^^^^^^^^^
-
-List of `npm <https://www.npmjs.com/>`_ packages this function requires. You can specify specific versions of your packages
-using `npm <https://www.npmjs.com/>`_ syntax. gordon uses ``npm`` under the hood to download your required packages.
-
-.. code-block:: yaml
-
-  lambdas:
-    hello_world:
-      code: functions.js
-      node_requirements:
-        - less
-        - bower>=1.7
 
 role
 ^^^^^^^^^^^^^^^^^^^^^^
