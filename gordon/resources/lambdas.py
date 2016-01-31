@@ -327,7 +327,7 @@ class Lambda(base.BaseResource):
         digest = hashlib.sha1()
 
         with indent(2):
-            puts(colored.green(u"✓ {}".format(self.name)))
+            puts(colored.green(u"✓ {}".format(self._get_in_project_name())))
 
         try:
             self._collect_lambda_content(destination)
