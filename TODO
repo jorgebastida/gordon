@@ -29,6 +29,7 @@ Maybe
 - Travis !integration
 - New add enabled to all resources.
 - Doc custom CF resources
+- Reuse generic Roles to save space
 
 After
 ------
