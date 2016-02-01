@@ -379,6 +379,17 @@ class PythonLambda(Lambda):
     base_runtime = 'python'
     extension = 'py'
 
+    def _pip_path(self):
+        return self.project.setting.get('pip_path', 'pip')
+
+    def _pip_extra(self):
+        extra = (
+            self.project.setting.get('pip_extra'),
+            self.app and self.app.setting.get('pip_extra'),
+            self.setting.get('pip_extra'),
+        )
+        return ' '.join([e for e in extra if e])
+
     def _collect_lambda_content(self, destination):
 
         if os.path.isfile(os.path.join(self.get_root(), self.settings['code'])):
@@ -394,9 +405,11 @@ class PythonLambda(Lambda):
                 with open(setup_cfg_path, 'w') as f:
                     f.write("[install]\nprefix=")
 
-                command = "pip install -r {} -q -t {}".format(
+                command = "{} install -r {} -q -t {} {}".format(
+                    self._pip_path(),
                     requirements_path,
-                    destination
+                    destination,
+                    self._pip_extra()
                 )
 
                 subprocess.check_output(
@@ -413,6 +426,17 @@ class NodeLambda(Lambda):
     base_runtime = 'node'
     extension = 'js'
 
+    def _npm_path(self):
+        return self.project.setting.get('npm_path', 'npm')
+
+    def _npm_extra(self):
+        extra = (
+            self.project.setting.get('npm_extra'),
+            self.app and self.app.setting.get('npm_extra'),
+            self.setting.get('npm_extra'),
+        )
+        return ' '.join([e for e in extra if e])
+
     def _collect_lambda_content(self, destination):
         """Collect node requirements using ``npm``"""
 
@@ -424,8 +448,16 @@ class NodeLambda(Lambda):
             package_json_path = os.path.join(destination, 'package.json')
 
             if os.path.isfile(package_json_path):
-                command = "cd {} && npm install".format(destination)
-                subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
+                command = "cd {} && {} install {}".format(
+                    destination,
+                    self._npm_path(),
+                    self._npm_extra()
+                )
+                subprocess.check_output(
+                    command,
+                    shell=True,
+                    stderr=subprocess.STDOUT
+                )
 
 
 class JavaLambda(Lambda):
@@ -434,7 +466,27 @@ class JavaLambda(Lambda):
     base_runtime = 'java'
     extension = 'java'
 
+    def _gradle_path(self):
+        return self.project.setting.get('gradle_path', 'gradle')
+
+    def _gradle_extra(self):
+        extra = (
+            self.project.setting.get('gradle_extra'),
+            self.app and self.app.setting.get('gradle_extra'),
+            self.setting.get('gradle_extra'),
+        )
+        return ' '.join([e for e in extra if e])
+
     def _collect_lambda_content(self, destination):
         root = os.path.join(self.get_root(), self.settings['code'])
-        command = "cd {} && gradle build -Pdest={}".format(root, destination)
-        output = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
+        command = "cd {} && {} build -Pdest={} {}".format(
+            root,
+            self._gradle_path(),
+            destination,
+            self._gradle_extra()
+        )
+        output = subprocess.check_output(
+            command,
+            shell=True,
+            stderr=subprocess.STDOUT
+        )
