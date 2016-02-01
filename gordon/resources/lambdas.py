@@ -380,13 +380,13 @@ class PythonLambda(Lambda):
     extension = 'py'
 
     def _pip_path(self):
-        return self.project.setting.get('pip_path', 'pip')
+        return self.project.settings.get('pip-path', 'pip')
 
     def _pip_extra(self):
         extra = (
-            self.project.setting.get('pip_extra'),
-            self.app and self.app.setting.get('pip_extra'),
-            self.setting.get('pip_extra'),
+            self.project.settings.get('pip-extra'),
+            self.app and self.app.settings.get('pip-extra'),
+            self.settings.get('pip-extra'),
         )
         return ' '.join([e for e in extra if e])
 
@@ -411,7 +411,7 @@ class PythonLambda(Lambda):
                     destination,
                     self._pip_extra()
                 )
-
+                print command
                 subprocess.check_output(
                     command,
                     shell=True,
@@ -427,13 +427,13 @@ class NodeLambda(Lambda):
     extension = 'js'
 
     def _npm_path(self):
-        return self.project.setting.get('npm_path', 'npm')
+        return self.project.settings.get('npm-path', 'npm')
 
     def _npm_extra(self):
         extra = (
-            self.project.setting.get('npm_extra'),
-            self.app and self.app.setting.get('npm_extra'),
-            self.setting.get('npm_extra'),
+            self.project.settings.get('npm-extra'),
+            self.app and self.app.settings.get('npm-extra'),
+            self.settings.get('npm-extra'),
         )
         return ' '.join([e for e in extra if e])
 
@@ -467,13 +467,13 @@ class JavaLambda(Lambda):
     extension = 'java'
 
     def _gradle_path(self):
-        return self.project.setting.get('gradle_path', 'gradle')
+        return self.project.settings.get('gradle-path', 'gradle')
 
     def _gradle_extra(self):
         extra = (
-            self.project.setting.get('gradle_extra'),
-            self.app and self.app.setting.get('gradle_extra'),
-            self.setting.get('gradle_extra'),
+            self.project.settings.get('gradle-extra'),
+            self.app and self.app.settings.get('gradle-extra'),
+            self.settings.get('gradle-extra'),
         )
         return ' '.join([e for e in extra if e])
 
