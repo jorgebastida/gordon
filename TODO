@@ -16,7 +16,6 @@ Maybe
 - New API Gateway cors
 - New SNS integration
 - New Run lambda locally
-- New pip/npm cache
 - New Improve CREATE_FAILED UPDATE_FAILED output, suggest next steps etc..
 
 - New Logo
