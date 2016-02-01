@@ -7,6 +7,7 @@ import copy
 import json
 import hashlib
 import zipfile
+from datetime import datetime
 
 import boto3
 from botocore.exceptions import ClientError
@@ -217,7 +218,21 @@ def filter_context_for_template(context, template_body):
     return dict(parameters)
 
 
-def create_stack(name, template_filename, context, timeout_in_minutes, **kwargs):
+def upload_to_s3(bucket, key, data):
+    s3 = boto3.resource('s3')
+    s3.Bucket(bucket).put_object(Key=key, Body=data)
+    return 'https://s3.amazonaws.com/{}/{}'.format(bucket, key)
+
+
+def get_template_s3_key(filename):
+    with open(filename, 'r') as f:
+        data = f.read()
+    return 'cf_templates/{}/{}.json'.format(
+        datetime.now().strftime("%Y-%m-%d"),
+        hashlib.sha1(data).hexdigest()[:8]
+    )
+
+def create_stack(name, template_filename, bucket, context, timeout_in_minutes, **kwargs):
     """Creates a new CloudFormation stack with name ``name`` using as template
     ``template_filename`` and ``context`` as parameters."""
 
@@ -225,26 +240,35 @@ def create_stack(name, template_filename, context, timeout_in_minutes, **kwargs)
     with open(template_filename, 'r') as f:
         template_body = f.read()
 
+    extra = {}
+    if bucket:
+        extra['TemplateURL'] = upload_to_s3(
+            bucket,
+            get_template_s3_key(template_filename),
+            template_body
+        )
+    else:
+        extra['TemplateBody'] = template_body
+
     parameters = filter_context_for_template(context, template_body)
     stack = client.create_stack(
         StackName=name,
-        TemplateBody=template_body,
         Parameters=[{'ParameterKey': k, 'ParameterValue': v} for k, v in parameters.iteritems()],
         TimeoutInMinutes=timeout_in_minutes,
         Capabilities=['CAPABILITY_IAM'],
-        #OnFailure='ROLLBACK'
         OnFailure='DO_NOTHING',
         Tags=[
-        {
-            'Key': 'GordonVersion',
-            'Value': get_version()
-        },
-    ]
+            {
+                'Key': 'GordonVersion',
+                'Value': get_version()
+            }
+        ],
+        **extra
     )
     return get_cf_stack(stack['StackId'])
 
 
-def update_stack(name, template_filename, context, **kwargs):
+def update_stack(name, template_filename, bucket, context, **kwargs):
     """Updates the stack ``name`` using ``template_filename`` as template and
     ``context`` as parameters"""
 
@@ -252,13 +276,22 @@ def update_stack(name, template_filename, context, **kwargs):
     with open(template_filename, 'r') as f:
         template_body = f.read()
 
+    extra = {}
+    if bucket:
+        extra['TemplateURL'] = upload_to_s3(
+            bucket, get_template_s3_key(template_filename),
+            template_body
+    )
+    else:
+        extra['TemplateBody'] = template_body
+
     parameters = filter_context_for_template(context, template_body)
     try:
         stack = client.update_stack(
             StackName=name,
-            TemplateBody=template_body,
             Parameters=[{'ParameterKey': k, 'ParameterValue': v} for k, v in parameters.iteritems()],
             Capabilities=['CAPABILITY_IAM'],
+            **extra
         )
     except ClientError, e:
         if e.response['Error']['Message'] == 'No updates are to be performed.':
@@ -297,7 +330,7 @@ def wait_for_cf_status(stack_id, success_if, abort_if=None, every=1, limit=60 * 
     puts("")
 
 
-def create_or_update_cf_stack(name, template_filename, context=None, **kwargs):
+def create_or_update_cf_stack(name, template_filename, bucket=None, context=None, **kwargs):
     """Creates or updates the stack called ``name`` using ``template_filename``
     as template and ``context`` as parameters."""
     context = context or {}
@@ -307,9 +340,9 @@ def create_or_update_cf_stack(name, template_filename, context=None, **kwargs):
         raise exceptions.CloudFormationStackInProgressError(stack['StackId'], stack['StackStatus'])
 
     if stack:
-        stack = update_stack(name, template_filename, context=context, **kwargs)
+        stack = update_stack(name, template_filename, bucket=bucket, context=context, **kwargs)
     else:
-        stack = create_stack(name, template_filename, context=context, **kwargs)
+        stack = create_stack(name, template_filename, bucket=bucket, context=context, **kwargs)
 
     stack = wait_for_cf_status(stack['StackId'], FINAL_STATUS)
 

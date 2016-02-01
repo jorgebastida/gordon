@@ -414,7 +414,8 @@ class ProjectApply(BaseProject):
             name=stack_name,
             template_filename=os.path.join(self.build_path, filename),
             context=context,
-            timeout_in_minutes=self.timeout_in_minutes
+            timeout_in_minutes=self.timeout_in_minutes,
+            bucket=context.get('CodeBucket')
         )
 
         for output in stack.get('Outputs', []):
