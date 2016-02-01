@@ -411,7 +411,7 @@ class PythonLambda(Lambda):
                     destination,
                     self._pip_extra()
                 )
-                print command
+
                 subprocess.check_output(
                     command,
                     shell=True,
