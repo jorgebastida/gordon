@@ -267,7 +267,7 @@
                     }
                 },
                 "Description": "My description",
-                "Handler": "helloworld.Hello::handler",
+                "Handler": "example.Hello::handler",
                 "MemorySize": 192,
                 "Role": {
                     "Fn::GetAtt": [

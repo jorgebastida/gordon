@@ -2,7 +2,7 @@ lambdas:
   javaexample:
     code: helloworld
     runtime: java
-    handler: helloworld.Hello::handler
+    handler: example.Hello::handler
     description: My description
     memory: 192
     timeout: 123
