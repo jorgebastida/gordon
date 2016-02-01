@@ -341,9 +341,11 @@ class Lambda(base.BaseResource):
             relative = os.path.relpath(base, destination)
 
             for filename in files:
+                source = os.path.join(destination, base, filename)
                 relative_destination = os.path.join(relative, filename)
-                zf.write(os.path.join(destination, base, filename), relative_destination)
-                digest.update(utils.tree_hash(relative_destination))
+                zf.write(source, relative_destination)
+                with open(source, 'rb') as f:
+                    digest.update(f.read())
 
         # Calculate digest of destination
         metadata = {'sha1': digest.hexdigest()}
