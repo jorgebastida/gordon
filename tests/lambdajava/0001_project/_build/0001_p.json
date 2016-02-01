@@ -1,0 +1,38 @@
+{
+    "Outputs": {
+        "CodeBucket": {
+            "Description": "CodeBucket name",
+            "Value": {
+                "Ref": "CodeBucketName"
+            }
+        }
+    },
+    "Parameters": {
+        "CodeBucketName": {
+            "Type": "String"
+        },
+        "Region": {
+            "Description": "Name of the Stage",
+            "Type": "String"
+        },
+        "Stage": {
+            "Default": "dev",
+            "Description": "Name of the Stage",
+            "Type": "String"
+        }
+    },
+    "Resources": {
+        "CodeBucket": {
+            "Properties": {
+                "AccessControl": "Private",
+                "BucketName": {
+                    "Ref": "CodeBucketName"
+                },
+                "VersioningConfiguration": {
+                    "Status": "Enabled"
+                }
+            },
+            "Type": "AWS::S3::Bucket"
+        }
+    }
+}

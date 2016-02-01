@@ -1,0 +1,8 @@
+---
+project: lambdajava
+default-region: us-east-1
+code-bucket: ref://CodeBucketName
+apps:
+  - gordon.contrib.helpers
+  - gordon.contrib.lambdas
+  - javaexample
