@@ -338,6 +338,8 @@ def create_or_update_cf_stack(name, template_filename, bucket=None, context=None
 
     if stack and stack['StackStatus'] in IN_PROGRESS_STATUS:
         raise exceptions.CloudFormationStackInProgressError(stack['StackId'], stack['StackStatus'])
+    elif stack and stack['StackStatus'] in DELETE_STACK_STATUS:
+        raise exceptions.AbnormalCloudFormationStatusError(stack['StackId'], stack['StackStatus'])
 
     if stack:
         stack = update_stack(name, template_filename, bucket=bucket, context=context, **kwargs)
