@@ -159,9 +159,17 @@ class Lambda(base.BaseResource):
         code will be stored, as well as an output so any subsequent template
         can have a reference to this resource."""
 
+        bucket_name = troposphere.Join(
+            "-",
+            [
+                project.settings['code-bucket'],
+                troposphere.Ref(troposphere.AWS_REGION),
+                troposphere.Ref('Stage')
+            ]
+        )
         code_bucket = s3.Bucket(
             "CodeBucket",
-            BucketName=project.settings['code-bucket'],
+            BucketName=bucket_name,
             AccessControl=s3.Private,
             VersioningConfiguration=s3.VersioningConfiguration(
                 Status='Enabled'
@@ -172,7 +180,7 @@ class Lambda(base.BaseResource):
             troposphere.Output(
                 "CodeBucket",
                 Description="CodeBucket name",
-                Value=project.settings['code-bucket'],
+                Value=bucket_name,
             )
         ])
 
