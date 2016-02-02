@@ -23,6 +23,13 @@ from . import protocols
 
 SETTINGS_FILE = 'settings.yml'
 
+AWS_LAMBDA_REGIONS = (
+    'eu-west-1',
+    'ap-northeast-1',
+    'us-east-1',
+    'us-west-2',
+)
+
 AVAILABLE_RESOURCES = {
     'lambdas': resources.lambdas.Lambda,
     'dynamodb': resources.dynamodb.Dynamodb,
@@ -333,6 +340,8 @@ class ProjectApply(BaseProject):
         self.stage = kwargs.pop('stage', None)
         self.timeout_in_minutes = kwargs.pop('timeout_in_minutes', 15)
         self.region = utils.setup_region(kwargs.pop('region', None), self.settings)
+        if self.region not in AWS_LAMBDA_REGIONS:
+            puts(colored.yellow("Note: You are trying to use gordon in a region were Lambdas are not supported. This might not end nicely!"))
 
     def apply(self):
         """Loop all over the .json files in the build folder and apply each of
@@ -365,7 +374,7 @@ class ProjectApply(BaseProject):
                 puts(colored.cyan("{} ({})".format(filename, template_type)))
             with indent(4):
                 if self.debug:
-                    puts(colored.yellow(u"✸ Applying template {} with context {}".format(filename, context)))
+                    puts(colored.white(u"✸ Applying template {} with context {}".format(filename, context)))
                 getattr(self, 'apply_{}_template'.format(template_type))(name, filename, context)
 
     def collect_parameters(self):
