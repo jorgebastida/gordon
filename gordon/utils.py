@@ -161,22 +161,28 @@ def fix_troposphere_references(template):
     """"Tranverse the troposphere ``template`` looking missing references.
     Fix them by adding a new parameter for those references."""
 
-    def _fix_references(obj, template):
-        for prop, value in obj.properties.iteritems():
-            if isinstance(value, troposphere.Ref):
-                name = value.data['Ref']
-                if name not in (template.parameters.keys() + template.resources.keys()) and not name.startswith('AWS::'):
-                    template.add_parameter(
-                        troposphere.Parameter(
-                            name,
-                            Type="String",
-                        )
+    def _fix_references(value):
+        if isinstance(value, troposphere.Ref):
+            name = value.data['Ref']
+            if name not in (template.parameters.keys() + template.resources.keys()) and not name.startswith('AWS::'):
+                template.add_parameter(
+                    troposphere.Parameter(
+                        name,
+                        Type="String",
                     )
-            elif isinstance(value, troposphere.BaseAWSObject):
-                _fix_references(value, template)
+                )
+
+        elif isinstance(value, troposphere.Join):
+            for v in value.data['Fn::Join'][1]:
+                _fix_references(v)
+
+        elif isinstance(value, troposphere.BaseAWSObject):
+            for _, v in value.properties.iteritems():
+                _fix_references(v)
 
     for _, resource in template.resources.iteritems():
-        _fix_references(resource, template)
+        for _, value in resource.properties.iteritems():
+            _fix_references(value)
 
     return template
 
