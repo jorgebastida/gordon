@@ -150,7 +150,7 @@ class TestActions(unittest.TestCase):
         #
         # New file
         #
-        client.get_object.side_effect = Exception()
+        client.head_object.side_effect = Exception()
         get_zip_metadata_mock.return_value = {'sha1': '123'}
         resource.Object.return_value.version_id = 'version123'
         context = Mock()
@@ -176,8 +176,8 @@ class TestActions(unittest.TestCase):
         #
         resource.Object.reset_mock()
         resource.Object.return_value.upload_file.reset_mock()
-        client.get_object.side_effect = None
-        client.get_object.return_value = {'Metadata': {'sha1': '122'}}
+        client.head_object.side_effect = None
+        client.head_object.return_value = {'Metadata': {'sha1': '122'}}
 
         u = UploadToS3(name='name', bucket='bucket', key='key', filename='filename.zip')
         output = u.apply(context, project)
@@ -200,7 +200,7 @@ class TestActions(unittest.TestCase):
         resource.Object.reset_mock()
         resource.Object.return_value.upload_file.reset_mock()
 
-        client.get_object.return_value = {'Metadata': {'sha1': '123'}, 'VersionId': 'version123'}
+        client.head_object.return_value = {'Metadata': {'sha1': '123'}, 'VersionId': 'version123'}
 
         u = UploadToS3(name='name', bucket='bucket', key='key', filename='filename.zip')
         output = u.apply(context, project)
