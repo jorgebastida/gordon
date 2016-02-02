@@ -21,6 +21,11 @@ def handler(event, context):
         return
 
     output = publish_version(function_name=event['ResourceProperties']['FunctionName'])
+
+    # Wait a bit until the version becomes available.
+    # FUTURE: Loop until available
+    time.sleep(5)
+
     send(event, context, SUCCESS,
         response_data={'Version': output['Version']}
     )
