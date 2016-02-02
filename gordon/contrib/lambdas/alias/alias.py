@@ -71,4 +71,8 @@ def handler(event, context):
         description=properties.get('Description', '')
     )
 
+    # Wait a bit until the alias becomes available.
+    # FUTURE: Loop until available
+    time.sleep(5)
+
     send(event, context, SUCCESS, response_data={'Arn': output['AliasArn']})
