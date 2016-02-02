@@ -18,8 +18,7 @@ def main(argv=None):
 
     def add_default_arguments(p):
         p.add_argument("--region",
-                       dest="debug",
-                       action='store_true',
+                       dest="region",
                        help="AWS region where this project should be applied")
 
         p.add_argument("--debug",
