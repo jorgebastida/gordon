@@ -38,7 +38,7 @@ def update_alias(function_name, alias_name, function_version, description=''):
         Description=description
     )
 
-def handler(event, context):
+def handler(event, context, sleep=5):
     properties = event['ResourceProperties']
     alias = get_alias(properties['FunctionName'], properties['Name'])
 
@@ -73,6 +73,6 @@ def handler(event, context):
 
     # Wait a bit until the alias becomes available.
     # FUTURE: Loop until available
-    time.sleep(5)
+    time.sleep(sleep)
 
     send(event, context, SUCCESS, response_data={'Arn': output['AliasArn']})

@@ -3,7 +3,20 @@
         "CodeBucket": {
             "Description": "CodeBucket name",
             "Value": {
-                "Ref": "CodeBucketName"
+                "Fn::Join": [
+                    "-",
+                    [
+                        {
+                            "Ref": "CodeBucketName"
+                        },
+                        {
+                            "Ref": "AWS::Region"
+                        },
+                        {
+                            "Ref": "Stage"
+                        }
+                    ]
+                ]
             }
         }
     },
@@ -26,7 +39,20 @@
             "Properties": {
                 "AccessControl": "Private",
                 "BucketName": {
-                    "Ref": "CodeBucketName"
+                    "Fn::Join": [
+                        "-",
+                        [
+                            {
+                                "Ref": "CodeBucketName"
+                            },
+                            {
+                                "Ref": "AWS::Region"
+                            },
+                            {
+                                "Ref": "Stage"
+                            }
+                        ]
+                    ]
                 },
                 "VersioningConfiguration": {
                     "Status": "Enabled"

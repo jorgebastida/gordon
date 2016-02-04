@@ -10,7 +10,7 @@ except ImportError:
 from botocore.exceptions import ClientError
 from cfnresponse import SUCCESS, FAILED
 from gordon.utils_tests import MockContext
-from . import bucket_notification_configuration
+from .bucket_notification_configuration import bucket_notification_configuration
 from . import resources
 
 
@@ -162,18 +162,18 @@ class TestContribS3(unittest.TestCase):
             physical_resource_id='bucket-bucket-notification-configuration'
         )
 
-    @patch('gordon.contrib.s3.bucket_notification_configuration.send')
-    @patch('gordon.contrib.s3.bucket_notification_configuration.boto3.client')
+    @patch('gordon.contrib.s3.bucket_notification_configuration.bucket_notification_configuration.send')
+    @patch('gordon.contrib.s3.bucket_notification_configuration.bucket_notification_configuration.boto3.client')
     def test_bucket_notification_configuration_create(self, boto3_client, send_mock):
         self._test_bucket_notification_configuration(boto3_client, send_mock, 'Create')
 
-    @patch('gordon.contrib.s3.bucket_notification_configuration.send')
-    @patch('gordon.contrib.s3.bucket_notification_configuration.boto3.client')
+    @patch('gordon.contrib.s3.bucket_notification_configuration.bucket_notification_configuration.send')
+    @patch('gordon.contrib.s3.bucket_notification_configuration.bucket_notification_configuration.boto3.client')
     def test_bucket_notification_configuration_update(self, boto3_client, send_mock):
         self._test_bucket_notification_configuration(boto3_client, send_mock, 'Update')
 
-    @patch('gordon.contrib.s3.bucket_notification_configuration.send')
-    @patch('gordon.contrib.s3.bucket_notification_configuration.boto3.client')
+    @patch('gordon.contrib.s3.bucket_notification_configuration.bucket_notification_configuration.send')
+    @patch('gordon.contrib.s3.bucket_notification_configuration.bucket_notification_configuration.boto3.client')
     def test_bucket_notification_configuration_delete(self, boto3_client, send_mock):
         client = Mock()
         boto3_client.return_value = client
@@ -198,8 +198,8 @@ class TestContribS3(unittest.TestCase):
             physical_resource_id='bucket-bucket-notification-configuration'
         )
 
-    @patch('gordon.contrib.s3.bucket_notification_configuration.send')
-    @patch('gordon.contrib.s3.bucket_notification_configuration.boto3.client')
+    @patch('gordon.contrib.s3.bucket_notification_configuration.bucket_notification_configuration.send')
+    @patch('gordon.contrib.s3.bucket_notification_configuration.bucket_notification_configuration.boto3.client')
     def test_bucket_notification_configuration_existing_non_gordon_configuration(self, boto3_client, send_mock):
         client = Mock()
         boto3_client.return_value = client

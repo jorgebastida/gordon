@@ -15,7 +15,7 @@ def publish_version(function_name):
     )
 
 
-def handler(event, context):
+def handler(event, context, sleep=5):
     if event['RequestType'] == 'Delete':
         send(event, context, SUCCESS)
         return
@@ -24,7 +24,7 @@ def handler(event, context):
 
     # Wait a bit until the version becomes available.
     # FUTURE: Loop until available
-    time.sleep(5)
+    time.sleep(sleep)
 
     send(event, context, SUCCESS,
         response_data={'Version': output['Version']}
