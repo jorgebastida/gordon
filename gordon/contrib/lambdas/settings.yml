@@ -7,7 +7,7 @@ lambdas:
     description: Publishes new versions of Lambdas.
     timeout: 300
     policies:
-      read_kinesis:
+      manage_version:
         Version: "2012-10-17"
         Statement:
           -
@@ -24,7 +24,7 @@ lambdas:
     description: Manages aliases of Lambdas.
     timeout: 300
     policies:
-      read_kinesis:
+      manage_alias:
         Version: "2012-10-17"
         Statement:
           -

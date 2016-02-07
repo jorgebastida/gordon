@@ -7,7 +7,7 @@ lambdas:
     description: Manages Bucket Notification Configurations
     timeout: 300
     policies:
-      read_kinesis:
+      manage_bucket_notification:
         Version: "2012-10-17"
         Statement:
           -

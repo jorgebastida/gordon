@@ -1,0 +1,26 @@
+---
+project: cron3
+default-region: eu-west-1
+code-bucket: gordon-cron3-0do1mc7
+apps:
+  - gordon.contrib.lambdas
+  - gordon.contrib.events
+  - helloworld
+
+# event:
+#   every_night:
+#     schedule_expression: cron(0 20 * * ? *)
+#     # role:
+#     # event_pattern:
+#     # state:
+#     # description:
+#     targets:
+#         mi_lambda:
+#             arn: exampleapp.s3consumer
+#             #input:
+#             #input_path:
+
+cron:
+  every_night:
+    expression: cron(0 20 * * ? *)
+    lambda: helloworld.hellopy

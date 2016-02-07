@@ -34,7 +34,8 @@ AVAILABLE_RESOURCES = {
     'lambdas': resources.lambdas.Lambda,
     'dynamodb': resources.dynamodb.Dynamodb,
     'kinesis': resources.kinesis.Kinesis,
-    's3': resources.s3.BucketNotificationConfiguration
+    's3': resources.s3.BucketNotificationConfiguration,
+    'cron': resources.events.CloudWatchScheduledEvent
 }
 
 
@@ -239,7 +240,7 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
         template.add_parameter(
             troposphere.Parameter(
                 "Region",
-                Description="Name of the Stage",
+                Description="AWS Region",
                 Type="String",
             )
         )

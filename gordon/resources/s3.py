@@ -6,8 +6,10 @@ from troposphere import sqs, sns, awslambda
 from . import base
 from gordon import exceptions
 from gordon import utils
-from gordon.contrib.s3.resources import (S3BucketNotificationConfiguration,
-    NotificationConfiguration, KeyFilter)
+from gordon.contrib.s3.resources import (
+    S3BucketNotificationConfiguration,
+    NotificationConfiguration, KeyFilter
+)
 
 
 class BaseNotification(object):
@@ -23,9 +25,10 @@ class BaseNotification(object):
             self.id = self.settings['id']
         else:
             raise exceptions.ResourceValidationError(
-                ("You need to define an id which identifies the "
-                "notification {}").format(self.settings)
-            )
+                (
+                    "You need to define an id which identifies the "
+                    "notification {}").format(self.settings)
+                )
 
         # Validate that events is present, and that it contains valid values
         if 'events' in self.settings and self.settings['events']:
@@ -40,7 +43,7 @@ class BaseNotification(object):
         else:
             raise exceptions.ResourceValidationError(
                 ("You need to define a list of events for the "
-                 "notification {}").format(notification)
+                 "notification {}").format(self.name)
             )
 
         # Validate that filters are a subset of (prefix, suffix) and keys
@@ -49,8 +52,11 @@ class BaseNotification(object):
         _filters_keys = [f.keys()[0] for f in _filters]
         if set(_filters_keys) > set(('prefix', 'suffix')) or\
            any([v > 1 for v in dict(Counter(_filters_keys)).values()]):
-            raise exceptions.ResourceValidationError("""You can't create
-            filters for '{}'.""".format(', '.join(_filter_keys)))
+            raise exceptions.ResourceValidationError(
+                """You can't create filters for '{}'.""".format(
+                    ', '.join(_filters_keys)
+                )
+            )
         else:
             self.filters = [(f.keys()[0], f.values()[0]) for f in _filters]
 
@@ -60,8 +66,10 @@ class BaseNotification(object):
 
         if len(notification_type) != 1:
             raise exceptions.ResourceValidationError(
-                ("You need to define either a lamda, a queue or a topic "
-                "as destination of your notification {}").format(notification)
+                (
+                    "You need to define either a lamda, a queue or a topic "
+                    "as destination of your notification {}"
+                ).format(bucket_notification_configuration)
             )
 
         return {'lambda': LambdaFunctionNotification,
@@ -128,8 +136,8 @@ class QueueNotification(BaseNotification):
 
         return troposphere.Join(":", [
             "arn:aws:sqs",
-            troposphere.Ref(troposphere.AWS_REGION),
-            troposphere.Ref(troposphere.AWS_ACCOUNT_ID),
+            region,
+            account,
             destination
         ])
 
@@ -149,7 +157,7 @@ class QueueNotification(BaseNotification):
 
         return troposphere.Join("", [
             "https://sqs.",
-            troposphere.Ref(troposphere.AWS_REGION),
+            region,
             ".amazonaws.com/",
             account,
             "/",
@@ -183,6 +191,7 @@ class QueueNotification(BaseNotification):
             )
         )
 
+
 class TopicNotification(BaseNotification):
     api_property = 'TopicConfigurations'
 
@@ -202,8 +211,8 @@ class TopicNotification(BaseNotification):
 
         return troposphere.Join(":", [
             "arn:aws:sns",
-            troposphere.Ref(troposphere.AWS_REGION),
-            troposphere.Ref(troposphere.AWS_ACCOUNT_ID),
+            region,
+            account,
             destination
         ])
 
@@ -278,10 +287,12 @@ class BucketNotificationConfiguration(base.BaseResource):
                 if top in top_events_for_bucket or \
                    top in sub_events_for_top or\
                    sub in sub_events_for_top.get(top, []):
-                   raise exceptions.ResourceValidationError(
-                    ("Event {} overlaps with some other event "
-                     "registered for the same bucket.").format(event)
-                   )
+                    raise exceptions.ResourceValidationError(
+                        (
+                            "Event {} overlaps with some other event "
+                            "registered for the same bucket."
+                        ).format(event)
+                    )
                 else:
                     top_events_for_bucket.add(top)
                     sub_events_for_top[top].append(sub)
@@ -299,8 +310,10 @@ class BucketNotificationConfiguration(base.BaseResource):
             overlaps = [sum([int(getattr(v, check)(z)) for z in values]) for v in values]
             if sum(overlaps) > len(values):
                 raise exceptions.ResourceValidationError(
-                "One or more {} filters overlap one to each other {}.".format(
-                    filter_type, ', '.join(values))
+                    "One or more {} filters overlap one to each other {}.".format(
+                        filter_type,
+                        ', '.join(values)
+                    )
                 )
 
     def register_resources_template(self, template):

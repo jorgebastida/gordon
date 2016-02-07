@@ -1,33 +1,25 @@
-import time
-import json
 import boto3
-from botocore.exceptions import ClientError
 
-from cfnresponse import send, SUCCESS, FAILED
+from cfnresponse import send, SUCCESS
 
 
-def get_rule(rule_name):
+def create_or_update_rule(rule_name, role_arn='', schedule_expression='',
+                          event_pattern='', state='ENABLED', description=''):
     client = boto3.client('events')
-    try:
-        return client.describe_rule(
-            Name=rule_name
-        )
-    except ClientError, exc:
-        if exc.response['Error']['Code'] == 'ResourceNotFoundException':
-            return None
-        raise
-
-
-def create_or_update_rule(rule_name, role_arn='', schedule_expression='', event_pattern='', state='ENABLED', description=''):
-    client = boto3.client('events')
+    extra = {}
+    if schedule_expression:
+        extra['ScheduleExpression'] = schedule_expression
+    if event_pattern:
+        extra['EventPattern'] = event_pattern
+    if role_arn:
+        extra['RoleArn'] = role_arn
     return client.put_rule(
         Name=rule_name,
         State=state,
-        ScheduleExpression=schedule_expression,
-        EventPattern=event_pattern,
         Description=description,
-        RoleArn=role_arn
+        **extra
     )
+
 
 def delete_rule(rule_name):
     client = boto3.client('events')
@@ -38,17 +30,18 @@ def delete_rule(rule_name):
 
 def handler(event, context):
     properties = event['ResourceProperties']
-    rule = get_rule(properties['RuleName'])
+    rule_name = properties['Name'][:64]  # Rule Names can't be longer than 64 characters.
+    physical_resource_id = 'rule-{}'.format(rule_name)
 
     if event['RequestType'] == 'Delete':
-        delete_rule(properties['RuleName'])
+        delete_rule(rule_name)
         send(event, context, SUCCESS)
         return
 
     # We don't check if RequestType is Create or Update, because we don't care
     # much... as regardless of what CF thinks.
     output = create_or_update_rule(
-        rule_name=properties['RuleName'],
+        rule_name=rule_name,
         role_arn=properties.get('RoleArn', ''),
         schedule_expression=properties.get('ScheduleExpression', ''),
         event_pattern=properties.get('EventPattern', ''),
@@ -56,4 +49,4 @@ def handler(event, context):
         description=properties.get('Description', '')
     )
 
-    send(event, context, SUCCESS, response_data={'Arn': output['RuleArn']})
+    send(event, context, SUCCESS, physical_resource_id=physical_resource_id, response_data={'Arn': output['RuleArn']})
