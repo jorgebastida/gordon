@@ -98,7 +98,8 @@ class BaseIntegrationTest(object):
         steps = sorted(steps, key=lambda x:x[0])
         for _, filename in steps:
             with cd(os.path.join(self.test_path, filename)):
-                gordon(['gordon', 'build'])
+                code = gordon(['gordon', 'build'])
+                self.assertEqual(code, 0)
                 self._test_build()
                 gordon([
                     'gordon',
@@ -157,6 +158,23 @@ class BaseIntegrationTest(object):
         elif len(matches) > 1:
             raise KeyError("Ambiguous lambda {}".format(function_name))
         raise KeyError(function_name)
+
+    def get_rule(self, rule_name):
+        client = boto3.client('events')
+        matches = []
+        for f in client.list_rules().get('Rules', []):
+            name = f['Name'].split('-')
+            if name[0] == self.uid and rule_name.startswith(name[-1]):
+                matches.append(f)
+        if len(matches) == 1:
+            return matches[0]
+        elif len(matches) > 1:
+            raise KeyError("Ambiguous rule {}".format(rule_name))
+        raise KeyError(rule_name)
+
+    def get_rule_targets(self, rule_name):
+        client = boto3.client('events')
+        return client.list_targets_by_rule(Rule=rule_name).get('Targets', [])
 
     def invoke_lambda(self, function_name, payload=None):
         client = boto3.client('lambda')

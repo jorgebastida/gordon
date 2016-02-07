@@ -1,0 +1,8 @@
+lambdas:
+  example:
+    code: example.py
+    handler: code.handler
+    runtime: python
+    description: My description
+    memory: 192
+    timeout: 123

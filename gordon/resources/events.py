@@ -39,7 +39,7 @@ class CloudWatchScheduledEvent(BaseResource):
         rule_resource_name = utils.valid_cloudformation_name(self.name, "Rule")
         rule_name = troposphere.Join(
             "-",
-            [rule_resource_name, troposphere.Ref(troposphere.AWS_STACK_NAME)]
+            [troposphere.Ref(troposphere.AWS_STACK_NAME), rule_resource_name]
         )
 
         events_rule_lambda = 'lambda:contrib_events:rule:current'

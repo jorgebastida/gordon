@@ -1,0 +1,195 @@
+{
+    "outputs": {
+        "ExampleS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "ExampleS3Version", 
+            "value": {
+                "action": "example-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
+        "VersionS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "VersionS3Version", 
+            "value": {
+                "action": "version-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
+        "AliasS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "AliasS3Url", 
+            "value": {
+                "action": "alias-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }, 
+        "SleepS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "SleepS3Url", 
+            "value": {
+                "action": "sleep-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }, 
+        "AliasS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "AliasS3Version", 
+            "value": {
+                "action": "alias-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
+        "ExampleS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "ExampleS3Url", 
+            "value": {
+                "action": "example-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }, 
+        "RuleS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "RuleS3Version", 
+            "value": {
+                "action": "rule-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
+        "SleepS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "SleepS3Version", 
+            "value": {
+                "action": "sleep-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
+        "TargetS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "TargetS3Url", 
+            "value": {
+                "action": "target-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }, 
+        "TargetS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "TargetS3Version", 
+            "value": {
+                "action": "target-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
+        "VersionS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "VersionS3Url", 
+            "value": {
+                "action": "version-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }, 
+        "RuleS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "RuleS3Url", 
+            "value": {
+                "action": "rule-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }
+    }, 
+    "_type": "ActionsTemplate", 
+    "actions": [
+        {
+            "_type": "UploadToS3", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "name": "sleep-upload", 
+            "key": "contrib_helpers_sleep.zip", 
+            "filename": "code/contrib_helpers_sleep.zip"
+        }, 
+        {
+            "_type": "UploadToS3", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "name": "alias-upload", 
+            "key": "contrib_lambdas_alias.zip", 
+            "filename": "code/contrib_lambdas_alias.zip"
+        }, 
+        {
+            "_type": "UploadToS3", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "name": "version-upload", 
+            "key": "contrib_lambdas_version.zip", 
+            "filename": "code/contrib_lambdas_version.zip"
+        }, 
+        {
+            "_type": "UploadToS3", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "name": "target-upload", 
+            "key": "contrib_events_target.zip", 
+            "filename": "code/contrib_events_target.zip"
+        }, 
+        {
+            "_type": "UploadToS3", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "name": "rule-upload", 
+            "key": "contrib_events_rule.zip", 
+            "filename": "code/contrib_events_rule.zip"
+        }, 
+        {
+            "_type": "UploadToS3", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "name": "example-upload", 
+            "key": "cron_example.zip", 
+            "filename": "code/cron_example.zip"
+        }
+    ], 
+    "parameters": {
+        "CodeBucket": {
+            "default": "", 
+            "_type": "Parameter", 
+            "name": "CodeBucket"
+        }
+    }, 
+    "parallelizable": false
+}

@@ -1,0 +1,14 @@
+---
+project: cron
+default-region: us-east-1
+code-bucket: ref://CodeBucketName
+apps:
+  - gordon.contrib.helpers
+  - gordon.contrib.lambdas
+  - gordon.contrib.events
+  - cron
+
+cron:
+  every_night:
+    expression: cron(0 20 * * ? *)
+    lambda: cron.example

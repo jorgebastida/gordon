@@ -3,7 +3,7 @@ import sys
 from setuptools import setup, find_packages
 
 install_requires = [
-    'boto3>=1.2.1',
+    'boto3>=1.2.3',
     'clint',
     'PyYAML>=3',
     'troposphere>=1.3',
