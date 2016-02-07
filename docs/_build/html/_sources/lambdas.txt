@@ -80,7 +80,7 @@ The following is the anatomy of a lambda in gordon.
   lambdas:
 
     { LAMBDA_NAME }:
-      code: { CODE_FILENAME }
+      code: { CODE_PATH }
       handler: { LAMBDA_HANDLER }
       memory: { LAMBDA_MEMORY }
       timeout: { LAMBDA_TIMEOUT }
@@ -107,13 +107,46 @@ Name for your lambda. Try to keep it as descriptive as possible.
 code
 ^^^^^^^^^^^^^^^^^^^^^^
 
-Filename where the code of your lambda is.
+Path where the code of your lambda is. When creating lambdas you can:
+
+    * Put all the code of your lambda in the same file and point to it:
+        * ``code: code.py``
+        * ``code: example.js``
+    * Create a folder and put several files on it
+        * ``code: myfolder``
+        * When you point ``code`` to a folder you need to remember to specify the ``runtime`` of your lambda as gordon can't infer it from the filename.
+
+
+Simple python lambda:
 
 .. code-block:: yaml
 
-  lambdas:
-    hello_world:
-      code: functions.py
+    lambdas:
+      hello_world:
+        code: functions.py
+
+
+Folder javascript lambda:
+
+.. code-block:: yaml
+
+    lambdas:
+      hello_world:
+        code: myfolder
+        handler: file.handler
+        runtime: javascript
+
+
+Java lambda:
+
+.. code-block:: yaml
+
+    lambdas:
+      hello_world:
+        code: myfolder
+        handler: example.Hello::handler
+        runtime: java
+
 
 handler
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -172,7 +205,7 @@ runtime
 ^^^^^^^^^^^^^^^^^^^^^^
 
 Gordon auto detects runtimes based on the extensions of the ``code`` file. For folder based lambdas (like ``java``) the code is a directory
-and not a file, so the runtime can't be inferred. For this situations, you can specidy the runtime using this setting.
+and not a file, so the runtime can't be inferred. For this situations, you can specify the runtime using this setting.
 
 .. code-block:: yaml
 

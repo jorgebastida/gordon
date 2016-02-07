@@ -2,4 +2,4 @@ lambdas:
   hellojava:
     code: hellojava
     runtime: java
-    handler: example.Hello.handler
+    handler: example.Hello::handler

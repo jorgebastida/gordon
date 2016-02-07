@@ -130,7 +130,7 @@ needing to re-configure all related event sources.</p>
 <div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">lambdas</span><span class="p-Indicator">:</span>
 
   <span class="p-Indicator">{</span> <span class="nv">LAMBDA_NAME</span> <span class="p-Indicator">}:</span>
-    <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">CODE_FILENAME</span> <span class="p-Indicator">}</span>
+    <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">CODE_PATH</span> <span class="p-Indicator">}</span>
     <span class="l-Scalar-Plain">handler</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">LAMBDA_HANDLER</span> <span class="p-Indicator">}</span>
     <span class="l-Scalar-Plain">memory</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">LAMBDA_MEMORY</span> <span class="p-Indicator">}</span>
     <span class="l-Scalar-Plain">timeout</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">LAMBDA_TIMEOUT</span> <span class="p-Indicator">}</span>
@@ -153,10 +153,49 @@ needing to re-configure all related event sources.</p>
 </div>
 <div class="section" id="code">
 <h3>code<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h3>
-<p>Filename where the code of your lambda is.</p>
+<p>Path where the code of your lambda is. When creating lambdas you can:</p>
+<blockquote>
+<div><ul>
+<li><dl class="first docutils">
+<dt>Put all the code of your lambda in the same file and point to it:</dt>
+<dd><ul class="first last simple">
+<li><code class="docutils literal"><span class="pre">code:</span> <span class="pre">code.py</span></code></li>
+<li><code class="docutils literal"><span class="pre">code:</span> <span class="pre">example.js</span></code></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Create a folder and put several files on it</dt>
+<dd><ul class="first last simple">
+<li><code class="docutils literal"><span class="pre">code:</span> <span class="pre">myfolder</span></code></li>
+<li>When you point <code class="docutils literal"><span class="pre">code</span></code> to a folder you need to remember to specify the <code class="docutils literal"><span class="pre">runtime</span></code> of your lambda as gordon can&#8217;t infer it from the filename.</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<p>Simple python lambda:</p>
 <div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">lambdas</span><span class="p-Indicator">:</span>
   <span class="l-Scalar-Plain">hello_world</span><span class="p-Indicator">:</span>
     <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">functions.py</span>
+</pre></div>
+</div>
+<p>Folder javascript lambda:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">lambdas</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">hello_world</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">myfolder</span>
+    <span class="l-Scalar-Plain">handler</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">file.handler</span>
+    <span class="l-Scalar-Plain">runtime</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">javascript</span>
+</pre></div>
+</div>
+<p>Java lambda:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">lambdas</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">hello_world</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">myfolder</span>
+    <span class="l-Scalar-Plain">handler</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">example.Hello::handler</span>
+    <span class="l-Scalar-Plain">runtime</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">java</span>
 </pre></div>
 </div>
 </div>
@@ -207,7 +246,7 @@ on the function&#8217;s expected execution time. By default, Timeout is set to 3
 <div class="section" id="runtime">
 <h3>runtime<a class="headerlink" href="#runtime" title="Permalink to this headline">¶</a></h3>
 <p>Gordon auto detects runtimes based on the extensions of the <code class="docutils literal"><span class="pre">code</span></code> file. For folder based lambdas (like <code class="docutils literal"><span class="pre">java</span></code>) the code is a directory
-and not a file, so the runtime can&#8217;t be inferred. For this situations, you can specidy the runtime using this setting.</p>
+and not a file, so the runtime can&#8217;t be inferred. For this situations, you can specify the runtime using this setting.</p>
 <div class="highlight-yaml"><div class="highlight"><pre>
 </pre></div>
 </div>
