@@ -15,7 +15,14 @@ Your first steps using gordon.
    :maxdepth: 2
 
    installation
-   quickstart
+
+
+.. toctree::
+   :maxdepth: 1
+
+   quickstart_py
+   quickstart_js
+   quickstart_java
 
 
 In detail
