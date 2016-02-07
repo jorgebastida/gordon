@@ -2,18 +2,15 @@
 import os
 import re
 import json
-import copy
 import random
 import hashlib
 import shutil
 from collections import defaultdict
 
-import yaml
 import boto3
 import jinja2
 import troposphere
-from troposphere import iam, awslambda, s3
-from clint.textui import colored, puts, progress, indent
+from clint.textui import colored, puts, indent
 
 from . import exceptions
 from . import utils
@@ -342,7 +339,12 @@ class ProjectApply(BaseProject):
         self.timeout_in_minutes = kwargs.pop('timeout_in_minutes', 15)
         self.region = utils.setup_region(kwargs.pop('region', None), self.settings)
         if self.region not in AWS_LAMBDA_REGIONS:
-            puts(colored.yellow("Note: You are trying to use gordon in a region were Lambdas are not supported. This might not end nicely!"))
+            puts(
+                colored.yellow(
+                    ("Note: You are trying to use gordon in a region "
+                     "were Lambdas are not supported. This might not end nicely!")
+                )
+            )
 
     def apply(self):
         """Loop all over the .json files in the build folder and apply each of
@@ -365,7 +367,7 @@ class ProjectApply(BaseProject):
 
             template_type = 'custom' if '_type' in template else 'cloudformation'
             steps.append((int(match.groups()[0]), match.groups()[1], filename, template_type))
-            steps = sorted(steps, key=lambda x:x[0])
+            steps = sorted(steps, key=lambda x: x[0])
 
         context = {"Stage": self.stage, 'Region': self.region}
         context.update(self.collect_parameters())

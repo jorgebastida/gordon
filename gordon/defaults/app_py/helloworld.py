@@ -1,5 +1,6 @@
 import json
 
+
 def handler(event, context):
     data = "Hello World!"
     print(data)

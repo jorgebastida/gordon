@@ -1,7 +1,4 @@
-import time
-import json
 import boto3
-from botocore.exceptions import ClientError
 
 from cfnresponse import send, SUCCESS, FAILED
 
@@ -10,6 +7,7 @@ AVAILABLE_CONFIGURATIONS = (
     'TopicConfigurations',
     'QueueConfigurations'
 )
+
 
 def handler(event, context):
     """
@@ -56,16 +54,19 @@ def handler(event, context):
     for _type in AVAILABLE_CONFIGURATIONS:
         for notification in existing_notifications.get(_type, []):
             if not notification.get('Id', '').startswith('gordon-'):
-                send(event, context, FAILED,
-                     physical_resource_id=physical_resource_id,
-                     reason=("Bucket {} contains a notification called {} "
-                             "which was not created by gordon, hence the risk "
-                             "of trying it to add/modify/delete new notifications. "
-                             "Please check the documentation in order to understand "
-                             "why gordon refuses to proceed.").format(
+                send(
+                    event,
+                    context,
+                    FAILED,
+                    physical_resource_id=physical_resource_id,
+                    reason=("Bucket {} contains a notification called {} "
+                            "which was not created by gordon, hence the risk "
+                            "of trying it to add/modify/delete new notifications. "
+                            "Please check the documentation in order to understand "
+                            "why gordon refuses to proceed.").format(
                                 buckent_name,
                                 notification.get('Id', '')
-                             )
+                     )
                 )
                 return
 

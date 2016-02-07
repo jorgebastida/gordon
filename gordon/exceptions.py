@@ -135,7 +135,8 @@ class ResourceNotFoundError(BaseGordonException):
         try:
             resource = self.args[0].split(':')
             if resource[1].startswith('contrib_'):
-                hint += u"\n\nIt looks like {} is missing in your settings.yml file apps list".format(resource[1].replace('_', '.'))
+                hint += (u"\n\nIt looks like {} is missing in your settings.yml "
+                         u"file apps list").format(resource[1].replace('_', '.'))
         except IndexError:
             pass
 

@@ -26,7 +26,9 @@ def kinesis_match(value):
     if not matches:
         raise exceptions.ProtocolNotFoundlError("Not found Error: No kinesis stream matches {}".format(value))
     elif len(matches) > 1:
-        raise exceptions.ProtocolMultipleMatcheslError("Multiple Matches Error: Several kinesis streams matches {} ({}).".format(value, ','.join(matches)))
+        raise exceptions.ProtocolMultipleMatcheslError(
+            "Multiple Matches Error: Several kinesis streams matches {} ({}).".format(value, ','.join(matches))
+        )
     return matches[0]
 
 
@@ -51,7 +53,9 @@ def dynamodb_match(value):
     if not matches:
         raise exceptions.ProtocolNotFoundlError("Not Found Error: No dynamodb table matches {}".format(value))
     elif len(matches) > 1:
-        raise exceptions.ProtocolMultipleMatcheslError("Multiple Matches Error: Several dynamodb tables matches {} ({}).".format(value, ','.join(matches)))
+        raise exceptions.ProtocolMultipleMatcheslError(
+            "Multiple Matches Error: Several dynamodb tables matches {} ({}).".format(value, ','.join(matches))
+        )
     return matches[0]
 
 
@@ -73,7 +77,9 @@ def dynamodb_stream_match(value):
     if not matches:
         raise exceptions.ProtocolNotFoundlError("Not found Error: No dynamodb stream matches {}".format(value))
     elif len(matches) > 1:
-        raise exceptions.ProtocolMultipleMatcheslError("Multiple Matches Error: Several dynamodb stream matches {} ({}).".format(value, ','.join(matches)))
+        raise exceptions.ProtocolMultipleMatcheslError(
+            "Multiple Matches Error: Several dynamodb stream matches {} ({}).".format(value, ','.join(matches))
+        )
     return matches[0]
 
 

@@ -1,7 +1,5 @@
 import unittest
 
-import boto3
-
 from gordon.utils_tests import BaseIntegrationTest
 from gordon.utils import valid_cloudformation_name
 

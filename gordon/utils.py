@@ -14,8 +14,8 @@ from botocore.exceptions import ClientError
 import yaml
 import jinja2
 import troposphere
-from troposphere import cloudformation, Join, Ref
-from clint.textui import colored, puts, progress, indent
+from troposphere import cloudformation
+from clint.textui import colored, puts
 
 from . import exceptions
 from gordon import get_version
@@ -61,7 +61,7 @@ def mill(iterable):
 
 
 def split_arn(arn):
-    match = re.match(r'arn\:aws\:(.+)\:(.+):(\d+):(.+)', value)
+    match = re.match(r'arn\:aws\:(.+)\:(.+):(\d+):(.+)', arn)
     if not match:
         raise exceptions.ResourceValidationError(
             "{} is a don't a valid arn.".format(arn)
@@ -99,7 +99,8 @@ def tree_hash(path):
 def setup_region(region, settings=None):
     """Returns which region should be used and sets ``AWS_DEFAULT_REGION`` in
     order to configure ``boto3``."""
-    region = region or os.environ.get('AWS_DEFAULT_REGION', None) or (settings and settings.get('default-region', None)) or 'us-east-1'
+    region = region or os.environ.get('AWS_DEFAULT_REGION', None) or \
+        (settings and settings.get('default-region', None)) or 'us-east-1'
     os.environ['AWS_DEFAULT_REGION'] = region
     return region
 
@@ -118,7 +119,7 @@ def load_settings(filename, default=None, jinja2_enrich=False, context=None, pro
     settings = copy.copy(default or {})
 
     if not os.path.isfile(filename):
-        custom_settings =  {}
+        custom_settings = {}
     else:
         with open(filename, 'r') as f:
             custom_settings = yaml.load(f) or {}
@@ -201,10 +202,9 @@ def valid_cloudformation_name(*elements):
     characters per group, except for the last one, which hopefully is the
     most representative one
     """
-    last = len(elements) - 1
     elements = sum([re.split(r'[^a-zA-Z0-9]', e.title()) for e in elements], [])
-    #elements = [e[:(6 if i != last else None)] for i, e in enumerate(elements)]
     return ''.join(elements)
+
 
 def get_cf_stack(name):
     """Returns the CloudFormation stack with name ``name``. If it doesn't exit
@@ -216,6 +216,7 @@ def get_cf_stack(name):
         if e.response['Error']['Code'] == 'ValidationError':
             return None
         raise
+
 
 def filter_context_for_template(context, template_body):
     """Extracts all required parameter of ``template_body`` from ``context``."""
@@ -237,6 +238,7 @@ def get_template_s3_key(filename):
         datetime.now().strftime("%Y-%m-%d"),
         hashlib.sha1(data).hexdigest()[:8]
     )
+
 
 def create_stack(name, template_filename, bucket, context, timeout_in_minutes, **kwargs):
     """Creates a new CloudFormation stack with name ``name`` using as template
@@ -287,7 +289,7 @@ def update_stack(name, template_filename, bucket, context, **kwargs):
         extra['TemplateURL'] = upload_to_s3(
             bucket, get_template_s3_key(template_filename),
             template_body
-    )
+        )
     else:
         extra['TemplateBody'] = template_body
 
@@ -314,7 +316,6 @@ def wait_for_cf_status(stack_id, success_if, abort_if=None, every=1, limit=60 * 
     ``abort_if``.
     """
     abort_if = abort_if or DELETE_STACK_STATUS
-    client = boto3.client('cloudformation')
     clean_output = False
     for m, i in mill(xrange(0, limit, every)):
         stack = get_cf_stack(name=stack_id)

@@ -135,17 +135,17 @@ class Lambda(base.BaseResource):
 
         return iam.Role(
             utils.valid_cloudformation_name(self.name, 'role'),
-                AssumeRolePolicyDocument={
-                   "Version" : "2012-10-17",
-                   "Statement": [ {
-                      "Effect": "Allow",
-                      "Principal": {
-                         "Service": [ "lambda.amazonaws.com" ]
-                      },
-                      "Action": [ "sts:AssumeRole" ]
-                   } ]
-                },
-                Policies=self._get_policies()
+            AssumeRolePolicyDocument={
+                "Version": "2012-10-17",
+                "Statement": [{
+                    "Effect": "Allow",
+                    "Principal": {
+                        "Service": ["lambda.amazonaws.com"]
+                    },
+                    "Action": ["sts:AssumeRole"]
+                }]
+            },
+            Policies=self._get_policies()
         )
 
     def get_bucket_key(self):
@@ -345,11 +345,11 @@ class Lambda(base.BaseResource):
         output = StringIO.StringIO()
         zf = zipfile.ZipFile(output, 'w')
 
-        for base, dirs, files in os.walk(destination):
-            relative = os.path.relpath(base, destination)
+        for basedir, dirs, files in os.walk(destination):
+            relative = os.path.relpath(basedir, destination)
 
             for filename in files:
-                source = os.path.join(destination, base, filename)
+                source = os.path.join(destination, basedir, filename)
                 relative_destination = os.path.join(relative, filename)
                 zf.write(source, relative_destination)
                 with open(source, 'rb') as f:
@@ -370,11 +370,11 @@ class Lambda(base.BaseResource):
 
     def _collect_lambda_module_content(self, destination):
         root = os.path.join(self.get_root(), self.settings['code'])
-        for base, dirs, files in os.walk(root):
-            relative = os.path.relpath(base, root)
+        for basedir, dirs, files in os.walk(root):
+            relative = os.path.relpath(basedir, root)
             for filename in files:
                 relative_destination = os.path.join(relative, filename)
-                shutil.copyfile(os.path.join(base, filename), os.path.join(destination, relative_destination))
+                shutil.copyfile(os.path.join(basedir, filename), os.path.join(destination, relative_destination))
 
     def collect_lambda_content(self):
         """Collects all required files to be included in the .zip file of the
@@ -430,6 +430,7 @@ class PythonLambda(Lambda):
 
                 os.remove(setup_cfg_path)
 
+
 class NodeLambda(Lambda):
 
     runtime = 'nodejs'
@@ -454,7 +455,6 @@ class NodeLambda(Lambda):
             self._collect_lambda_file_content(destination)
         else:
             self._collect_lambda_module_content(destination)
-            code_root = os.path.join(self.get_root(), self.settings['code'])
             package_json_path = os.path.join(destination, 'package.json')
 
             if os.path.isfile(package_json_path):
@@ -495,7 +495,7 @@ class JavaLambda(Lambda):
             destination,
             self._gradle_extra()
         )
-        output = subprocess.check_output(
+        subprocess.check_output(
             command,
             shell=True,
             stderr=subprocess.STDOUT

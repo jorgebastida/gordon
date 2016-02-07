@@ -1,11 +1,9 @@
-import sys
 import unittest
-import urllib2
 
 try:
-    from mock import patch, Mock, call
+    from mock import patch, Mock
 except ImportError:
-    from unittest.mock import patch, Mock, call
+    from unittest.mock import patch, Mock
 
 from gordon.actions import Parameter, ActionsTemplate, GetAttr, UploadToS3
 from gordon import exceptions, protocols
@@ -110,7 +108,16 @@ class TestActions(unittest.TestCase):
 
         t = ActionsTemplate()
         s = t.serialize()
-        self.assertEqual(s, {'_type': 'ActionsTemplate', 'actions': [], 'parameters': {}, 'outputs': {}, 'parallelizable': False})
+        self.assertEqual(
+            s,
+            {
+                '_type': 'ActionsTemplate',
+                'actions': [],
+                'parameters': {},
+                'outputs': {},
+                'parallelizable': False
+            }
+        )
         self.assertEqual(t, ActionsTemplate.from_dict(s))
         self.assertFalse(t)
 

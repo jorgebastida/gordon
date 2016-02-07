@@ -1,13 +1,10 @@
-import sys
 import unittest
-import urllib2
 
 try:
-    from mock import patch, Mock, call
+    from mock import patch, Mock
 except ImportError:
-    from unittest.mock import patch, Mock, call
+    from unittest.mock import patch, Mock
 
-from botocore.exceptions import ClientError
 from cfnresponse import SUCCESS, FAILED
 from gordon.utils_tests import MockContext
 from .bucket_notification_configuration import bucket_notification_configuration

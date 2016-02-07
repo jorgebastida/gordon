@@ -1,11 +1,9 @@
-import sys
 import unittest
-import urllib2
 
 try:
-    from mock import patch, Mock, call
+    from mock import patch
 except ImportError:
-    from unittest.mock import patch, Mock, call
+    from unittest.mock import patch
 
 from cfnresponse import SUCCESS
 from gordon.utils_tests import MockContext

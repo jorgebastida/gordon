@@ -1,6 +1,7 @@
 from gordon.utils import BaseLambdaAWSCustomObject
 from troposphere import AWSProperty
 
+
 def validate_key_filter_name(value):
     if value in ('prefix', 'suffix'):
         return value
@@ -42,4 +43,5 @@ class S3BucketNotificationConfiguration(BaseLambdaAWSCustomObject):
         if not [p for p in self.properties if p in required_any_properties]:
             raise ValueError("""You need to specify any of {} in
             Custom::S3BucketNotificationConfiguration""".format(
-            ', '.join(required_any_properties)))
+                ', '.join(required_any_properties))
+            )

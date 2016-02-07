@@ -1,9 +1,8 @@
 import time
-import json
 import boto3
 from botocore.exceptions import ClientError
 
-from cfnresponse import send, SUCCESS, FAILED
+from cfnresponse import send, SUCCESS
 
 
 def get_alias(function_name, alias_name):
@@ -37,6 +36,7 @@ def update_alias(function_name, alias_name, function_version, description=''):
         FunctionVersion=function_version,
         Description=description
     )
+
 
 def handler(event, context, sleep=5):
     properties = event['ResourceProperties']

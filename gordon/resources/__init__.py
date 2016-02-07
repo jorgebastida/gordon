@@ -1,3 +1,4 @@
+# flake8: noqa
 from . import base
 from . import dynamodb
 from . import lambdas

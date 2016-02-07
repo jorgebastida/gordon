@@ -1,6 +1,7 @@
 from gordon.utils import BaseLambdaAWSCustomObject
 from troposphere import AWSProperty
 
+
 class EventsRule(BaseLambdaAWSCustomObject):
     """
     CloudFormation Custom resource which creates a new CloudWatch events rule
@@ -24,7 +25,8 @@ class EventsRule(BaseLambdaAWSCustomObject):
         if not [p for p in self.properties if p in required_any_properties]:
             raise ValueError("""You need to specify any of {} in
             Custom::EventsRule""".format(
-            ', '.join(required_any_properties)))
+                ', '.join(required_any_properties))
+            )
 
 
 class Target(AWSProperty):
@@ -42,7 +44,8 @@ class Target(AWSProperty):
         if len([p for p in self.properties if p in required_one_properties]) > 1:
             raise ValueError("""You need to specify one of {} in
             Custom::Target""".format(
-            ', '.join(required_one_properties)))
+                ', '.join(required_one_properties))
+            )
 
 
 class EventsTargets(BaseLambdaAWSCustomObject):

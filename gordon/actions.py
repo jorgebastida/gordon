@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
 import json
-import hashlib
-import StringIO
 
 import boto3
 from clint.textui import colored, puts
@@ -206,7 +204,7 @@ class UploadToS3(BaseAction):
         s3client = boto3.client('s3')
         try:
             obj = s3client.head_object(Bucket=self.bucket, Key=self.key)
-        except Exception, exc:
+        except Exception:
             obj = None
 
         # If there is a file in this key, check if the attached metadata sha1
@@ -217,9 +215,14 @@ class UploadToS3(BaseAction):
             if zipmetadata.get('sha1') and zipmetadata.get('sha1') == obj['Metadata'].get('sha1'):
                 self._success(zipmetadata.get('sha1'))
                 if self.project.debug:
-                    puts(colored.white(u"✸ File with hash {} already present in {}/{}.".format(zipmetadata.get('sha1')[:8], self.bucket, self.key)))
+                    puts(colored.white(u"✸ File with hash {} already present in {}/{}.".format(
+                        zipmetadata.get('sha1')[:8], self.bucket, self.key))
+                    )
                 return self.output(obj['VersionId'])
-        puts(colored.white(u"✸ Uploading file with hash {} to {}/{}.".format(zipmetadata.get('sha1')[:8], self.bucket, self.key)))
+        if self.project.debug:
+            puts(colored.white(u"✸ Uploading file with hash {} to {}/{}.".format(
+                zipmetadata.get('sha1')[:8], self.bucket, self.key))
+            )
         return self.apply_general(metadata=zipmetadata)
 
     def _success(self, metadata):

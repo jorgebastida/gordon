@@ -7,19 +7,6 @@ apps:
   - gordon.contrib.events
   - helloworld
 
-# event:
-#   every_night:
-#     schedule_expression: cron(0 20 * * ? *)
-#     # role:
-#     # event_pattern:
-#     # state:
-#     # description:
-#     targets:
-#         mi_lambda:
-#             arn: exampleapp.s3consumer
-#             #input:
-#             #input_path:
-
 cron:
   every_night:
     expression: cron(0 20 * * ? *)

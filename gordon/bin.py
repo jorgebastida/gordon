@@ -2,8 +2,6 @@ import os
 import sys
 import argparse
 
-import boto3
-from botocore.client import ClientError
 from clint.textui import colored, puts
 
 from .core import Bootstrap, ProjectBuild, ProjectApply
@@ -39,8 +37,8 @@ def main(argv=None):
     startapp_parser.set_defaults(cls=Bootstrap)
     startapp_parser.set_defaults(func="startapp")
     startapp_parser.add_argument("app_name",
-                                     type=str,
-                                     help="Name of the application.")
+                                 type=str,
+                                 help="Name of the application.")
     startapp_parser.add_argument("--runtime",
                                  dest="runtime",
                                  default='py',
@@ -67,7 +65,6 @@ def main(argv=None):
                               type=int,
                               default=15,
                               help="CloudFormation timeout.")
-
 
     options, args = parser.parse_known_args(argv)
 

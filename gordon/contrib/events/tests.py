@@ -1,11 +1,9 @@
-import sys
 import unittest
-import urllib2
 
 try:
-    from mock import patch, Mock, call
+    from mock import patch, Mock
 except ImportError:
-    from unittest.mock import patch, Mock, call
+    from unittest.mock import patch, Mock
 
 from botocore.exceptions import ClientError
 from cfnresponse import SUCCESS
@@ -43,9 +41,7 @@ class TestContribEventsRule(unittest.TestCase):
             Name='rule_name',
             State='ENABLED',
             ScheduleExpression='cron(0 20 * * ? *)',
-            EventPattern='',
-            Description='My description',
-            RoleArn=''
+            Description='My description'
         )
 
         send_mock.assert_called_once_with(
@@ -76,9 +72,7 @@ class TestContribEventsRule(unittest.TestCase):
             Name='rule_name',
             State='ENABLED',
             ScheduleExpression='cron(0 20 * * ? *)',
-            EventPattern='',
-            Description='My description',
-            RoleArn=''
+            Description='My description'
         )
 
         send_mock.assert_called_once_with(
@@ -109,7 +103,6 @@ class TestContribEventsRule(unittest.TestCase):
         send_mock.assert_called_once_with(
             event, context, SUCCESS
         )
-
 
 
 class TestContribEventsTarget(unittest.TestCase):

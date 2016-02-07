@@ -2,11 +2,9 @@ import os
 import re
 import uuid
 import json
-import base64
 import hashlib
 import random
 import shutil
-import unittest
 from nose.plugins.attrib import attr
 from nose.tools import nottest
 
@@ -14,7 +12,6 @@ import boto3
 
 from gordon.bin import main as gordon
 from gordon.utils import cd, generate_stack_name
-
 
 
 class MockContext(object):
@@ -63,9 +60,6 @@ def delete_test_stacks(name):
             print stack['StackName']
             if stack['StackName'].startswith(name) and\
                [t for t in stack['Tags'] if t['Key'] == 'GordonVersion']:
-
-                # Empty S3 buckets
-                s3client = boto3.client('s3')
                 for resource in client.describe_stack_resources(StackName=stack['StackName'])['StackResources']:
                     if resource['ResourceType'] == 'AWS::S3::Bucket':
                         delete_s3_bucket(resource['PhysicalResourceId'])
@@ -95,7 +89,7 @@ class BaseIntegrationTest(object):
             if match and os.path.isdir(os.path.join(self.test_path, filename)):
                 steps.append((int(match.groups()[0]), filename))
 
-        steps = sorted(steps, key=lambda x:x[0])
+        steps = sorted(steps, key=lambda x: x[0])
         for _, filename in steps:
             with cd(os.path.join(self.test_path, filename)):
                 code = gordon(['gordon', 'build'])
@@ -130,7 +124,6 @@ class BaseIntegrationTest(object):
         self.addCleanup(delete_test_stacks, self.uid)
         self.addCleanup(self._clean_build_path)
         self.addCleanup(self._clean_extra_env)
-
 
     def _test_build(self):
         pass

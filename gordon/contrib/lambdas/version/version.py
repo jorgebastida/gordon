@@ -1,5 +1,4 @@
 import time
-import json
 import boto3
 
 from cfnresponse import send, SUCCESS
@@ -26,6 +25,4 @@ def handler(event, context, sleep=5):
     # FUTURE: Loop until available
     time.sleep(sleep)
 
-    send(event, context, SUCCESS,
-        response_data={'Version': output['Version']}
-    )
+    send(event, context, SUCCESS, response_data={'Version': output['Version']})

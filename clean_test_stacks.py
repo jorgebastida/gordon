@@ -1,6 +1,5 @@
 import os
 import sys
-import boto3
 from gordon.utils_tests import delete_test_stacks
 
 

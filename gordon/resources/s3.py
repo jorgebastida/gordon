@@ -147,8 +147,6 @@ class QueueNotification(BaseNotification):
 
         if isinstance(destination, basestring):
             account = troposphere.Ref(troposphere.AWS_ACCOUNT_ID)
-            if destination.startswith('arn:aws:'):
-                destination = bucket.rsplit(':', 1)[1]
         elif isinstance(destination, dict):
             account = destination['account_id']
             destination = destination['name']
@@ -347,12 +345,11 @@ class BucketNotificationConfiguration(base.BaseResource):
     def validate(self):
         """Validate that there are no any other resources in the project which
         try to register notifications for the same bucket than this resource"""
-
-        for resource in (r for r in self.project.get_resources() if \
-                isinstance(r, self.__class__) and r.bucket == self.bucket):
+        for resource in \
+                (r for r in self.project.get_resources() if isinstance(r, self.__class__) and r.bucket == self.bucket):
             raise exceptions.ResourceValidationError(
                 ("Both resources '{}' and '{}', registers notifications for "
-                "the bucket '{}'. Because AWS API limitations we need you to "
-                "register all notifications of one bucket in the same "
-                "resource.").format(self, resource, self.bucket)
+                 "the bucket '{}'. Because AWS API limitations we need you to "
+                 "register all notifications of one bucket in the same "
+                 "resource.").format(self, resource, self.bucket)
             )
