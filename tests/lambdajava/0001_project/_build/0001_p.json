@@ -25,7 +25,7 @@
             "Type": "String"
         },
         "Region": {
-            "Description": "Name of the Stage",
+            "Description": "AWS Region",
             "Type": "String"
         },
         "Stage": {

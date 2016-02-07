@@ -11,7 +11,7 @@
             "Type": "String"
         },
         "Region": {
-            "Description": "Name of the Stage",
+            "Description": "AWS Region",
             "Type": "String"
         },
         "SleepS3Version": {
@@ -115,7 +115,7 @@
                             ],
                             "Version": "2012-10-17"
                         },
-                        "PolicyName": "AliasReadKinesisPolicy"
+                        "PolicyName": "AliasManageAliasPolicy"
                     }
                 ]
             },
@@ -531,7 +531,7 @@
                             ],
                             "Version": "2012-10-17"
                         },
-                        "PolicyName": "VersionReadKinesisPolicy"
+                        "PolicyName": "VersionManageVersionPolicy"
                     }
                 ]
             },
