@@ -4,7 +4,8 @@ FAQ
 Why my project has some lambdas I've not defined?
 ---------------------------------------------------
 
-You'll get an in-depth explanation of what these lambdas are in the :doc:`contrib` section, but this...
+You'll get an in-depth explanation of what these lambdas are in the :doc:`contrib` section, but the tl;dr version
+is that gordon needs those in order to be able to only use CloudFormation to create your resources.
 
 
 Why gordon don't let me create other resources

@@ -38,6 +38,7 @@ In detail explanations of how everything works together.
    project
    apps
    lambdas
+   requirements
    settings
    parameters
    parameters_advanced
