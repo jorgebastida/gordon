@@ -3,13 +3,24 @@
         "CodeBucket": {
             "Description": "CodeBucket name",
             "Value": {
-                "Ref": "CodeBucket"
+                "Fn::Join": [
+                    "-",
+                    [
+                        "gordon-kinesispython-0do1mc7",
+                        {
+                            "Ref": "AWS::Region"
+                        },
+                        {
+                            "Ref": "Stage"
+                        }
+                    ]
+                ]
             }
         }
     },
     "Parameters": {
         "Region": {
-            "Description": "Name of the Stage",
+            "Description": "AWS Region",
             "Type": "String"
         },
         "Stage": {
@@ -26,14 +37,13 @@
                     "Fn::Join": [
                         "-",
                         [
-                            "gordon",
+                            "gordon-kinesispython-0do1mc7",
                             {
-                                "Ref": "Region"
+                                "Ref": "AWS::Region"
                             },
                             {
                                 "Ref": "Stage"
-                            },
-                            "kinesisexample"
+                            }
                         ]
                     ]
                 },

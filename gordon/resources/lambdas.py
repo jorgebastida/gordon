@@ -15,7 +15,6 @@ from clint.textui import colored, puts, indent
 from gordon import actions
 from gordon import utils
 from gordon import exceptions
-from gordon.contrib.lambdas.resources import LambdaVersion, LambdaAlias
 from . import base
 
 
@@ -234,42 +233,20 @@ class Lambda(base.BaseResource):
             )
         )
 
-        lambda_version = 'lambda:contrib_lambdas:version'
-        if not self.in_project_name.startswith('lambda:contrib_lambdas:'):
-            lambda_version = '{}:current'.format(lambda_version)
-
         version = template.add_resource(
-            LambdaVersion.create_with(
+            awslambda.Version(
                 utils.valid_cloudformation_name(self.name, "Version"),
-                DependsOn=[self.project.reference(lambda_version)],
-                lambda_arn=troposphere.GetAtt(
-                    self.project.reference(lambda_version), 'Arn'
-                ),
                 FunctionName=troposphere.Ref(
                     function
-                ),
-                S3ObjectVersion=troposphere.Ref(
-                    utils.valid_cloudformation_name(self.name, "s3version")
-                ),
+                )
             )
         )
 
-        lambda_alias = 'lambda:contrib_lambdas:alias'
-        if not self.in_project_name.startswith('lambda:contrib_lambdas:'):
-            lambda_alias = '{}:current'.format(lambda_alias)
-
         template.add_resource(
-            LambdaAlias.create_with(
+            awslambda.Alias(
                 self.current_alias_cf_name,
-                DependsOn=[self.project.reference(lambda_alias)],
-                lambda_arn=troposphere.GetAtt(
-                    self.project.reference(lambda_alias), 'Arn'
-                ),
                 FunctionName=troposphere.Ref(
                     function
-                ),
-                S3ObjectVersion=troposphere.Ref(
-                    utils.valid_cloudformation_name(self.name, "s3version")
                 ),
                 FunctionVersion=troposphere.GetAtt(
                     version, "Version"

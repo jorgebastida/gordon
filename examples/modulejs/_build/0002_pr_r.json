@@ -1,23 +1,23 @@
 {
     "outputs": {
-        "HellopyS3Version": {
+        "ByejsS3Url": {
             "default": "", 
             "_type": "Output", 
-            "name": "HellopyS3Version", 
+            "name": "ByejsS3Url", 
             "value": {
-                "action": "hellopy-upload", 
-                "_type": "GetAttr", 
-                "attr": "s3version"
-            }
-        }, 
-        "HellopyS3Url": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "HellopyS3Url", 
-            "value": {
-                "action": "hellopy-upload", 
+                "action": "byejs-upload", 
                 "_type": "GetAttr", 
                 "attr": "s3url"
+            }
+        }, 
+        "ByejsS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "ByejsS3Version", 
+            "value": {
+                "action": "byejs-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
             }
         }
     }, 
@@ -29,9 +29,9 @@
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
-            "name": "hellopy-upload", 
-            "key": "helloworld_hellopy.zip", 
-            "filename": "code/helloworld_hellopy.zip"
+            "name": "byejs-upload", 
+            "key": "helloworld_byejs.zip", 
+            "filename": "code/helloworld_byejs.zip"
         }
     ], 
     "parameters": {

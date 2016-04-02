@@ -4,11 +4,11 @@
             "Description": "Bucket where the code is located.",
             "Type": "String"
         },
-        "Region": {
-            "Description": "AWS Region",
+        "HellojavaS3Version": {
             "Type": "String"
         },
-        "SleepS3Version": {
+        "Region": {
+            "Description": "AWS Region",
             "Type": "String"
         },
         "Stage": {
@@ -18,42 +18,14 @@
         }
     },
     "Resources": {
-        "ContribHelpersSleep": {
-            "DependsOn": [
-                "SleepRole"
-            ],
-            "Properties": {
-                "Code": {
-                    "S3Bucket": {
-                        "Ref": "CodeBucket"
-                    },
-                    "S3Key": "contrib_helpers_sleep.zip",
-                    "S3ObjectVersion": {
-                        "Ref": "SleepS3Version"
-                    }
-                },
-                "Description": "Sleeps several seconds before succeeding.",
-                "Handler": "sleep.handler",
-                "MemorySize": 128,
-                "Role": {
-                    "Fn::GetAtt": [
-                        "SleepRole",
-                        "Arn"
-                    ]
-                },
-                "Runtime": "python2.7",
-                "Timeout": 300
-            },
-            "Type": "AWS::Lambda::Function"
-        },
-        "SleepCurrentalias": {
+        "HellojavaCurrentalias": {
             "Properties": {
                 "FunctionName": {
-                    "Ref": "ContribHelpersSleep"
+                    "Ref": "HelloworldHellojava"
                 },
                 "FunctionVersion": {
                     "Fn::GetAtt": [
-                        "SleepVersion",
+                        "HellojavaVersion",
                         "Version"
                     ]
                 },
@@ -61,7 +33,7 @@
             },
             "Type": "AWS::Lambda::Alias"
         },
-        "SleepRole": {
+        "HellojavaRole": {
             "Properties": {
                 "AssumeRolePolicyDocument": {
                     "Statement": [
@@ -104,19 +76,47 @@
                             ],
                             "Version": "2012-10-17"
                         },
-                        "PolicyName": "SleepLogsPolicy"
+                        "PolicyName": "HellojavaLogsPolicy"
                     }
                 ]
             },
             "Type": "AWS::IAM::Role"
         },
-        "SleepVersion": {
+        "HellojavaVersion": {
             "Properties": {
                 "FunctionName": {
-                    "Ref": "ContribHelpersSleep"
+                    "Ref": "HelloworldHellojava"
                 }
             },
             "Type": "AWS::Lambda::Version"
+        },
+        "HelloworldHellojava": {
+            "DependsOn": [
+                "HellojavaRole"
+            ],
+            "Properties": {
+                "Code": {
+                    "S3Bucket": {
+                        "Ref": "CodeBucket"
+                    },
+                    "S3Key": "helloworld_hellojava.zip",
+                    "S3ObjectVersion": {
+                        "Ref": "HellojavaS3Version"
+                    }
+                },
+                "Description": "",
+                "Handler": "example.Hello::handler",
+                "MemorySize": 128,
+                "Role": {
+                    "Fn::GetAtt": [
+                        "HellojavaRole",
+                        "Arn"
+                    ]
+                },
+                "Runtime": "java8",
+                "Timeout": 3
+            },
+            "Type": "AWS::Lambda::Function"
         }
     }
 }
