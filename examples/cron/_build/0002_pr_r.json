@@ -10,6 +10,36 @@
                 "attr": "s3url"
             }
         }, 
+        "AliasS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "AliasS3Url", 
+            "value": {
+                "action": "alias-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }, 
+        "TargetS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "TargetS3Version", 
+            "value": {
+                "action": "target-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
+        "VersionS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "VersionS3Version", 
+            "value": {
+                "action": "version-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
         "RuleS3Version": {
             "default": "", 
             "_type": "Output", 
@@ -40,14 +70,24 @@
                 "attr": "s3url"
             }
         }, 
-        "TargetS3Version": {
+        "AliasS3Version": {
             "default": "", 
             "_type": "Output", 
-            "name": "TargetS3Version", 
+            "name": "AliasS3Version", 
             "value": {
-                "action": "target-upload", 
+                "action": "alias-upload", 
                 "_type": "GetAttr", 
                 "attr": "s3version"
+            }
+        }, 
+        "VersionS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "VersionS3Url", 
+            "value": {
+                "action": "version-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
             }
         }, 
         "RuleS3Url": {
@@ -63,6 +103,26 @@
     }, 
     "_type": "ActionsTemplate", 
     "actions": [
+        {
+            "_type": "UploadToS3", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "name": "alias-upload", 
+            "key": "contrib_lambdas_alias.zip", 
+            "filename": "code/contrib_lambdas_alias.zip"
+        }, 
+        {
+            "_type": "UploadToS3", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "name": "version-upload", 
+            "key": "contrib_lambdas_version.zip", 
+            "filename": "code/contrib_lambdas_version.zip"
+        }, 
         {
             "_type": "UploadToS3", 
             "bucket": {

@@ -1,5 +1,15 @@
 {
     "outputs": {
+        "SleepS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "SleepS3Url", 
+            "value": {
+                "action": "sleep-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }, 
         "DynamoconsumerS3Url": {
             "default": "", 
             "_type": "Output", 
@@ -10,22 +20,22 @@
                 "attr": "s3url"
             }
         }, 
-        "DynamoconsumerS3Version": {
+        "LambdaAliasS3Version": {
             "default": "", 
             "_type": "Output", 
-            "name": "DynamoconsumerS3Version", 
+            "name": "LambdaAliasS3Version", 
             "value": {
-                "action": "dynamoconsumer-upload", 
+                "action": "lambda_alias-upload", 
                 "_type": "GetAttr", 
                 "attr": "s3version"
             }
         }, 
-        "SleepS3Url": {
+        "LambdaAliasS3Url": {
             "default": "", 
             "_type": "Output", 
-            "name": "SleepS3Url", 
+            "name": "LambdaAliasS3Url", 
             "value": {
-                "action": "sleep-upload", 
+                "action": "lambda_alias-upload", 
                 "_type": "GetAttr", 
                 "attr": "s3url"
             }
@@ -39,6 +49,36 @@
                 "_type": "GetAttr", 
                 "attr": "s3version"
             }
+        }, 
+        "DynamoconsumerS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "DynamoconsumerS3Version", 
+            "value": {
+                "action": "dynamoconsumer-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
+        "LambdaVersionS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "LambdaVersionS3Version", 
+            "value": {
+                "action": "lambda_version-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
+        "LambdaVersionS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "LambdaVersionS3Url", 
+            "value": {
+                "action": "lambda_version-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
         }
     }, 
     "_type": "ActionsTemplate", 
@@ -50,8 +90,28 @@
                 "name": "CodeBucket"
             }, 
             "name": "sleep-upload", 
-            "key": "contrib_helpers_sleep.zip", 
-            "filename": "code/contrib_helpers_sleep.zip"
+            "key": "lambda_helpers_sleep.zip", 
+            "filename": "code/lambda_helpers_sleep.zip"
+        }, 
+        {
+            "_type": "UploadToS3", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "name": "lambda_alias-upload", 
+            "key": "lambda_lambdas_lambda_alias.zip", 
+            "filename": "code/lambda_lambdas_lambda_alias.zip"
+        }, 
+        {
+            "_type": "UploadToS3", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "name": "lambda_version-upload", 
+            "key": "lambda_lambdas_lambda_version.zip", 
+            "filename": "code/lambda_lambdas_lambda_version.zip"
         }, 
         {
             "_type": "UploadToS3", 
@@ -60,8 +120,8 @@
                 "name": "CodeBucket"
             }, 
             "name": "dynamoconsumer-upload", 
-            "key": "exampleapp_dynamoconsumer.zip", 
-            "filename": "code/exampleapp_dynamoconsumer.zip"
+            "key": "lambda_exampleapp_dynamoconsumer.zip", 
+            "filename": "code/lambda_exampleapp_dynamoconsumer.zip"
         }
     ], 
     "parameters": {

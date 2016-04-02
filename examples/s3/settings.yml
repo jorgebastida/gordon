@@ -1,9 +1,9 @@
 ---
 project: s3example
 default-region: us-east-1
-code-bucket: gordon-s3-0do1mc7
 apps:
   - gordon.contrib.helpers
+  - gordon.contrib.lambdas
   - gordon.contrib.s3
   - exampleapp
 

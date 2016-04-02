@@ -3,6 +3,7 @@ project: cron3
 default-region: eu-west-1
 code-bucket: gordon-cron3-0do1mc7
 apps:
+  - gordon.contrib.lambdas
   - gordon.contrib.events
   - helloworld
 

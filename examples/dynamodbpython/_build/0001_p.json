@@ -3,24 +3,13 @@
         "CodeBucket": {
             "Description": "CodeBucket name",
             "Value": {
-                "Fn::Join": [
-                    "-",
-                    [
-                        "gordon-dynamodbpython-0do1mc7",
-                        {
-                            "Ref": "AWS::Region"
-                        },
-                        {
-                            "Ref": "Stage"
-                        }
-                    ]
-                ]
+                "Ref": "CodeBucket"
             }
         }
     },
     "Parameters": {
         "Region": {
-            "Description": "AWS Region",
+            "Description": "Name of the Stage",
             "Type": "String"
         },
         "Stage": {
@@ -37,13 +26,14 @@
                     "Fn::Join": [
                         "-",
                         [
-                            "gordon-dynamodbpython-0do1mc7",
+                            "gordon",
                             {
-                                "Ref": "AWS::Region"
+                                "Ref": "Region"
                             },
                             {
                                 "Ref": "Stage"
-                            }
+                            },
+                            "dynamodbexample2"
                         ]
                     ]
                 },

@@ -2,25 +2,12 @@
     "Outputs": {
         "CodeBucket": {
             "Description": "CodeBucket name",
-            "Value": {
-                "Fn::Join": [
-                    "-",
-                    [
-                        "gordon-simplepython-0do1mc7",
-                        {
-                            "Ref": "AWS::Region"
-                        },
-                        {
-                            "Ref": "Stage"
-                        }
-                    ]
-                ]
-            }
+            "Value": "gordon-simplepython-0do1mc7"
         }
     },
     "Parameters": {
         "Region": {
-            "Description": "AWS Region",
+            "Description": "Name of the Stage",
             "Type": "String"
         },
         "Stage": {
@@ -33,20 +20,7 @@
         "CodeBucket": {
             "Properties": {
                 "AccessControl": "Private",
-                "BucketName": {
-                    "Fn::Join": [
-                        "-",
-                        [
-                            "gordon-simplepython-0do1mc7",
-                            {
-                                "Ref": "AWS::Region"
-                            },
-                            {
-                                "Ref": "Stage"
-                            }
-                        ]
-                    ]
-                },
+                "BucketName": "gordon-simplepython-0do1mc7",
                 "VersioningConfiguration": {
                     "Status": "Enabled"
                 }
