@@ -10,46 +10,6 @@
                 "attr": "s3version"
             }
         }, 
-        "SleepS3Url": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "SleepS3Url", 
-            "value": {
-                "action": "sleep-upload", 
-                "_type": "GetAttr", 
-                "attr": "s3url"
-            }
-        }, 
-        "DynamoconsumerS3Url": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "DynamoconsumerS3Url", 
-            "value": {
-                "action": "dynamoconsumer-upload", 
-                "_type": "GetAttr", 
-                "attr": "s3url"
-            }
-        }, 
-        "SleepS3Version": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "SleepS3Version", 
-            "value": {
-                "action": "sleep-upload", 
-                "_type": "GetAttr", 
-                "attr": "s3version"
-            }
-        }, 
-        "DynamoconsumerS3Version": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "DynamoconsumerS3Version", 
-            "value": {
-                "action": "dynamoconsumer-upload", 
-                "_type": "GetAttr", 
-                "attr": "s3version"
-            }
-        }, 
         "VersionS3Url": {
             "default": "", 
             "_type": "Output", 
@@ -59,20 +19,30 @@
                 "_type": "GetAttr", 
                 "attr": "s3url"
             }
+        }, 
+        "HellojsS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "HellojsS3Url", 
+            "value": {
+                "action": "hellojs-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }, 
+        "HellojsS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "HellojsS3Version", 
+            "value": {
+                "action": "hellojs-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
         }
     }, 
     "_type": "ActionsTemplate", 
     "actions": [
-        {
-            "_type": "UploadToS3", 
-            "bucket": {
-                "_type": "Ref", 
-                "name": "CodeBucket"
-            }, 
-            "name": "sleep-upload", 
-            "key": "contrib_helpers_sleep.zip", 
-            "filename": "code/contrib_helpers_sleep.zip"
-        }, 
         {
             "_type": "UploadToS3", 
             "bucket": {
@@ -89,9 +59,9 @@
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
-            "name": "dynamoconsumer-upload", 
-            "key": "exampleapp_dynamoconsumer.zip", 
-            "filename": "code/exampleapp_dynamoconsumer.zip"
+            "name": "hellojs-upload", 
+            "key": "helloworld_hellojs.zip", 
+            "filename": "code/helloworld_hellojs.zip"
         }
     ], 
     "parameters": {

@@ -6,7 +6,7 @@
                 "Fn::Join": [
                     "-",
                     [
-                        "gordon-cron-0do1mc7",
+                        "gordon-simplejava-0do1mc7",
                         {
                             "Ref": "AWS::Region"
                         },
@@ -37,7 +37,7 @@
                     "Fn::Join": [
                         "-",
                         [
-                            "gordon-cron-0do1mc7",
+                            "gordon-simplejava-0do1mc7",
                             {
                                 "Ref": "AWS::Region"
                             },

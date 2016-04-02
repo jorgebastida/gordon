@@ -1,5 +1,25 @@
 {
     "outputs": {
+        "VersionS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "VersionS3Version", 
+            "value": {
+                "action": "version-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
+        "BucketNotificationConfigurationS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "BucketNotificationConfigurationS3Url", 
+            "value": {
+                "action": "bucket_notification_configuration-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }, 
         "BucketNotificationConfigurationS3Version": {
             "default": "", 
             "_type": "Output", 
@@ -8,36 +28,6 @@
                 "action": "bucket_notification_configuration-upload", 
                 "_type": "GetAttr", 
                 "attr": "s3version"
-            }
-        }, 
-        "SleepS3Url": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "SleepS3Url", 
-            "value": {
-                "action": "sleep-upload", 
-                "_type": "GetAttr", 
-                "attr": "s3url"
-            }
-        }, 
-        "LambdaAliasS3Version": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "LambdaAliasS3Version", 
-            "value": {
-                "action": "lambda_alias-upload", 
-                "_type": "GetAttr", 
-                "attr": "s3version"
-            }
-        }, 
-        "LambdaAliasS3Url": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "LambdaAliasS3Url", 
-            "value": {
-                "action": "lambda_alias-upload", 
-                "_type": "GetAttr", 
-                "attr": "s3url"
             }
         }, 
         "SleepS3Version": {
@@ -60,16 +50,6 @@
                 "attr": "s3version"
             }
         }, 
-        "LambdaVersionS3Version": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "LambdaVersionS3Version", 
-            "value": {
-                "action": "lambda_version-upload", 
-                "_type": "GetAttr", 
-                "attr": "s3version"
-            }
-        }, 
         "S3ConsumerS3Url": {
             "default": "", 
             "_type": "Output", 
@@ -80,22 +60,22 @@
                 "attr": "s3url"
             }
         }, 
-        "BucketNotificationConfigurationS3Url": {
+        "SleepS3Url": {
             "default": "", 
             "_type": "Output", 
-            "name": "BucketNotificationConfigurationS3Url", 
+            "name": "SleepS3Url", 
             "value": {
-                "action": "bucket_notification_configuration-upload", 
+                "action": "sleep-upload", 
                 "_type": "GetAttr", 
                 "attr": "s3url"
             }
         }, 
-        "LambdaVersionS3Url": {
+        "VersionS3Url": {
             "default": "", 
             "_type": "Output", 
-            "name": "LambdaVersionS3Url", 
+            "name": "VersionS3Url", 
             "value": {
-                "action": "lambda_version-upload", 
+                "action": "version-upload", 
                 "_type": "GetAttr", 
                 "attr": "s3url"
             }
@@ -110,8 +90,8 @@
                 "name": "CodeBucket"
             }, 
             "name": "sleep-upload", 
-            "key": "lambda_helpers_sleep.zip", 
-            "filename": "code/lambda_helpers_sleep.zip"
+            "key": "contrib_helpers_sleep.zip", 
+            "filename": "code/contrib_helpers_sleep.zip"
         }, 
         {
             "_type": "UploadToS3", 
@@ -119,19 +99,9 @@
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
-            "name": "lambda_alias-upload", 
-            "key": "lambda_lambdas_lambda_alias.zip", 
-            "filename": "code/lambda_lambdas_lambda_alias.zip"
-        }, 
-        {
-            "_type": "UploadToS3", 
-            "bucket": {
-                "_type": "Ref", 
-                "name": "CodeBucket"
-            }, 
-            "name": "lambda_version-upload", 
-            "key": "lambda_lambdas_lambda_version.zip", 
-            "filename": "code/lambda_lambdas_lambda_version.zip"
+            "name": "version-upload", 
+            "key": "contrib_lambdas_version.zip", 
+            "filename": "code/contrib_lambdas_version.zip"
         }, 
         {
             "_type": "UploadToS3", 
@@ -140,8 +110,8 @@
                 "name": "CodeBucket"
             }, 
             "name": "bucket_notification_configuration-upload", 
-            "key": "lambda_s3_bucket_notification_configuration.zip", 
-            "filename": "code/lambda_s3_bucket_notification_configuration.zip"
+            "key": "contrib_s3_bucket_notification_configuration.zip", 
+            "filename": "code/contrib_s3_bucket_notification_configuration.zip"
         }, 
         {
             "_type": "UploadToS3", 
@@ -150,8 +120,8 @@
                 "name": "CodeBucket"
             }, 
             "name": "s3consumer-upload", 
-            "key": "lambda_exampleapp_s3consumer.zip", 
-            "filename": "code/lambda_exampleapp_s3consumer.zip"
+            "key": "exampleapp_s3consumer.zip", 
+            "filename": "code/exampleapp_s3consumer.zip"
         }
     ], 
     "parameters": {

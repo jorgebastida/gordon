@@ -1,20 +1,14 @@
 {
     "Parameters": {
+        "ByepythonS3Version": {
+            "Type": "String"
+        },
         "CodeBucket": {
             "Description": "Bucket where the code is located.",
             "Type": "String"
         },
-        "DynamoIntegrationArn": {
-            "Type": "String"
-        },
-        "DynamoconsumerS3Version": {
-            "Type": "String"
-        },
         "Region": {
             "Description": "AWS Region",
-            "Type": "String"
-        },
-        "SleepS3Version": {
             "Type": "String"
         },
         "Stage": {
@@ -27,33 +21,86 @@
         }
     },
     "Resources": {
-        "ContribHelpersSleep": {
-            "DependsOn": [
-                "SleepRole"
-            ],
+        "ByepythonCurrentalias": {
             "Properties": {
-                "Code": {
-                    "S3Bucket": {
-                        "Ref": "CodeBucket"
-                    },
-                    "S3Key": "contrib_helpers_sleep.zip",
-                    "S3ObjectVersion": {
-                        "Ref": "SleepS3Version"
-                    }
+                "FunctionName": {
+                    "Ref": "HelloworldByepython"
                 },
-                "Description": "Sleeps several seconds before succeeding.",
-                "Handler": "sleep.handler",
-                "MemorySize": 128,
-                "Role": {
+                "FunctionVersion": {
                     "Fn::GetAtt": [
-                        "SleepRole",
-                        "Arn"
+                        "ByepythonVersion",
+                        "Version"
                     ]
                 },
-                "Runtime": "python2.7",
-                "Timeout": 300
+                "Name": "current"
             },
-            "Type": "AWS::Lambda::Function"
+            "Type": "AWS::Lambda::Alias"
+        },
+        "ByepythonRole": {
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Statement": [
+                        {
+                            "Action": [
+                                "sts:AssumeRole"
+                            ],
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": [
+                                    "lambda.amazonaws.com"
+                                ]
+                            }
+                        }
+                    ],
+                    "Version": "2012-10-17"
+                },
+                "Policies": [
+                    {
+                        "PolicyDocument": {
+                            "Statement": [
+                                {
+                                    "Action": [
+                                        "lambda:InvokeFunction"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": [
+                                        "*"
+                                    ]
+                                },
+                                {
+                                    "Action": [
+                                        "logs:CreateLogGroup",
+                                        "logs:CreateLogStream",
+                                        "logs:PutLogEvents"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "arn:aws:logs:*:*:*"
+                                }
+                            ],
+                            "Version": "2012-10-17"
+                        },
+                        "PolicyName": "ByepythonLogsPolicy"
+                    }
+                ]
+            },
+            "Type": "AWS::IAM::Role"
+        },
+        "ByepythonVersion": {
+            "DependsOn": [
+                "VersionCurrentalias"
+            ],
+            "Properties": {
+                "FunctionName": {
+                    "Ref": "HelloworldByepython"
+                },
+                "S3ObjectVersion": {
+                    "Ref": "ByepythonS3Version"
+                },
+                "ServiceToken": {
+                    "Ref": "VersionCurrentalias"
+                }
+            },
+            "Type": "Custom::LambdaVersion"
         },
         "ContribLambdasVersion": {
             "DependsOn": [
@@ -83,153 +130,18 @@
             },
             "Type": "AWS::Lambda::Function"
         },
-        "DynamoconsumerCurrentalias": {
-            "Properties": {
-                "FunctionName": {
-                    "Ref": "ExampleappDynamoconsumer"
-                },
-                "FunctionVersion": {
-                    "Fn::GetAtt": [
-                        "DynamoconsumerVersion",
-                        "Version"
-                    ]
-                },
-                "Name": "current"
-            },
-            "Type": "AWS::Lambda::Alias"
-        },
-        "DynamoconsumerRole": {
-            "Properties": {
-                "AssumeRolePolicyDocument": {
-                    "Statement": [
-                        {
-                            "Action": [
-                                "sts:AssumeRole"
-                            ],
-                            "Effect": "Allow",
-                            "Principal": {
-                                "Service": [
-                                    "lambda.amazonaws.com"
-                                ]
-                            }
-                        }
-                    ],
-                    "Version": "2012-10-17"
-                },
-                "Policies": [
-                    {
-                        "PolicyDocument": {
-                            "Statement": [
-                                {
-                                    "Action": [
-                                        "lambda:InvokeFunction"
-                                    ],
-                                    "Effect": "Allow",
-                                    "Resource": [
-                                        "*"
-                                    ]
-                                },
-                                {
-                                    "Action": [
-                                        "logs:CreateLogGroup",
-                                        "logs:CreateLogStream",
-                                        "logs:PutLogEvents"
-                                    ],
-                                    "Effect": "Allow",
-                                    "Resource": "arn:aws:logs:*:*:*"
-                                }
-                            ],
-                            "Version": "2012-10-17"
-                        },
-                        "PolicyName": "DynamoconsumerLogsPolicy"
-                    },
-                    {
-                        "PolicyDocument": {
-                            "Statement": [
-                                {
-                                    "Action": [
-                                        "dynamodb:DescribeStream",
-                                        "dynamodb:ListStreams",
-                                        "dynamodb:GetShardIterator",
-                                        "dynamodb:GetRecords"
-                                    ],
-                                    "Effect": "Allow",
-                                    "Resource": "arn:aws:dynamodb:*:*:*"
-                                }
-                            ],
-                            "Version": "2012-10-17"
-                        },
-                        "PolicyName": "DynamoconsumerReadDynamoPolicy"
-                    }
-                ]
-            },
-            "Type": "AWS::IAM::Role"
-        },
-        "DynamoconsumerVersion": {
+        "HelloworldByepython": {
             "DependsOn": [
-                "VersionCurrentalias"
-            ],
-            "Properties": {
-                "FunctionName": {
-                    "Ref": "ExampleappDynamoconsumer"
-                },
-                "S3ObjectVersion": {
-                    "Ref": "DynamoconsumerS3Version"
-                },
-                "ServiceToken": {
-                    "Ref": "VersionCurrentalias"
-                }
-            },
-            "Type": "Custom::LambdaVersion"
-        },
-        "ExampleDynamoIntegration": {
-            "DependsOn": [
-                "ExampleDynamoIntegrationSleep",
-                "DynamoconsumerCurrentalias"
-            ],
-            "Properties": {
-                "BatchSize": 1,
-                "Enabled": true,
-                "EventSourceArn": {
-                    "Ref": "DynamoIntegrationArn"
-                },
-                "FunctionName": {
-                    "Fn::GetAtt": [
-                        "DynamoconsumerCurrentalias",
-                        "Arn"
-                    ]
-                },
-                "StartingPosition": "LATEST"
-            },
-            "Type": "AWS::Lambda::EventSourceMapping"
-        },
-        "ExampleDynamoIntegrationSleep": {
-            "DependsOn": [
-                "SleepCurrentalias"
-            ],
-            "Properties": {
-                "ServiceToken": {
-                    "Fn::GetAtt": [
-                        "SleepCurrentalias",
-                        "Arn"
-                    ]
-                },
-                "Time": 30
-            },
-            "Type": "Custom::Sleep"
-        },
-        "ExampleappDynamoconsumer": {
-            "DependsOn": [
-                "DynamoconsumerRole"
+                "ByepythonRole"
             ],
             "Properties": {
                 "Code": {
                     "S3Bucket": {
                         "Ref": "CodeBucket"
                     },
-                    "S3Key": "exampleapp_dynamoconsumer.zip",
+                    "S3Key": "helloworld_byepython.zip",
                     "S3ObjectVersion": {
-                        "Ref": "DynamoconsumerS3Version"
+                        "Ref": "ByepythonS3Version"
                     }
                 },
                 "Description": "",
@@ -237,7 +149,7 @@
                 "MemorySize": 128,
                 "Role": {
                     "Fn::GetAtt": [
-                        "DynamoconsumerRole",
+                        "ByepythonRole",
                         "Arn"
                     ]
                 },
@@ -245,87 +157,6 @@
                 "Timeout": 3
             },
             "Type": "AWS::Lambda::Function"
-        },
-        "SleepCurrentalias": {
-            "Properties": {
-                "FunctionName": {
-                    "Ref": "ContribHelpersSleep"
-                },
-                "FunctionVersion": {
-                    "Fn::GetAtt": [
-                        "SleepVersion",
-                        "Version"
-                    ]
-                },
-                "Name": "current"
-            },
-            "Type": "AWS::Lambda::Alias"
-        },
-        "SleepRole": {
-            "Properties": {
-                "AssumeRolePolicyDocument": {
-                    "Statement": [
-                        {
-                            "Action": [
-                                "sts:AssumeRole"
-                            ],
-                            "Effect": "Allow",
-                            "Principal": {
-                                "Service": [
-                                    "lambda.amazonaws.com"
-                                ]
-                            }
-                        }
-                    ],
-                    "Version": "2012-10-17"
-                },
-                "Policies": [
-                    {
-                        "PolicyDocument": {
-                            "Statement": [
-                                {
-                                    "Action": [
-                                        "lambda:InvokeFunction"
-                                    ],
-                                    "Effect": "Allow",
-                                    "Resource": [
-                                        "*"
-                                    ]
-                                },
-                                {
-                                    "Action": [
-                                        "logs:CreateLogGroup",
-                                        "logs:CreateLogStream",
-                                        "logs:PutLogEvents"
-                                    ],
-                                    "Effect": "Allow",
-                                    "Resource": "arn:aws:logs:*:*:*"
-                                }
-                            ],
-                            "Version": "2012-10-17"
-                        },
-                        "PolicyName": "SleepLogsPolicy"
-                    }
-                ]
-            },
-            "Type": "AWS::IAM::Role"
-        },
-        "SleepVersion": {
-            "DependsOn": [
-                "VersionCurrentalias"
-            ],
-            "Properties": {
-                "FunctionName": {
-                    "Ref": "ContribHelpersSleep"
-                },
-                "S3ObjectVersion": {
-                    "Ref": "SleepS3Version"
-                },
-                "ServiceToken": {
-                    "Ref": "VersionCurrentalias"
-                }
-            },
-            "Type": "Custom::LambdaVersion"
         },
         "VersionCurrentalias": {
             "Properties": {
