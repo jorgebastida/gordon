@@ -25,7 +25,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="Gordon 0.0.1 documentation" href="index.html" />
     <link rel="next" title="Parameters" href="parameters.html" />
-    <link rel="prev" title="Lambdas" href="lambdas.html" />
+    <link rel="prev" title="Lambda Requirements" href="requirements.html" />
    
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
@@ -41,6 +41,59 @@
   <div class="section" id="settings">
 <h1>Settings<a class="headerlink" href="#settings" title="Permalink to this headline">¶</a></h1>
 <img alt="_images/settings.png" src="_images/settings.png" />
+<p>Gordon <code class="docutils literal"><span class="pre">settings.yml</span></code> files are simple <a class="reference external" href="http://yaml.org/">yaml</a> files which define how Gordon
+should behave.</p>
+<p>Settings can be defined at two different levels, project and application level.</p>
+<p>Resources such as lambdas or event sources can be defined in both levels, but there are
+some other settings which are only expected at project level.</p>
+<div class="section" id="project-settings">
+<h2>Project settings<a class="headerlink" href="#project-settings" title="Permalink to this headline">¶</a></h2>
+<p>Project settings are defined in the root level of your project.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="13%" />
+<col width="87%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Settings</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">project</span></code></td>
+<td>Name of the project</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">default-region</span></code></td>
+<td>Default region where the project will be deployed</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">code-bucket</span></code></td>
+<td>Name of the bucket gordon will use to store the source code of your lambdas and cloudformation templates.
+Because the source code and the lambdas needs to be in the same region, gordon will create on bucket per region and stage.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">apps</span></code></td>
+<td>List of installed apps</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="application-settings">
+<h2>Application settings<a class="headerlink" href="#application-settings" title="Permalink to this headline">¶</a></h2>
+<p>Application settings are defined within your applications.</p>
+<p>One particularity about application settings, is that those can be redefined as part of it&#8217;s initialization. If for example you want to reuse one application and
+redefining some settings, you can do so:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="nn">---</span>
+<span class="l-Scalar-Plain">project</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">my-project</span>
+<span class="l-Scalar-Plain">default-region</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">eu-west-1</span>
+<span class="l-Scalar-Plain">code-bucket</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">my-bucket</span>
+<span class="l-Scalar-Plain">apps</span><span class="p-Indicator">:</span>
+  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">exampleapp</span>
+  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">exampleapp</span><span class="p-Indicator">:</span>
+      <span class="l-Scalar-Plain">a</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">b</span>
+      <span class="l-Scalar-Plain">c</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">d</span>
+<span class="nn">...</span>
+</pre></div>
+</div>
+</div>
 </div>
 
 
@@ -48,11 +101,20 @@
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper"><div class="relations">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Settings</a><ul>
+<li><a class="reference internal" href="#project-settings">Project settings</a></li>
+<li><a class="reference internal" href="#application-settings">Application settings</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="lambdas.html" title="previous chapter">Lambdas</a></li>
+      <li>Previous: <a href="requirements.html" title="previous chapter">Lambda Requirements</a></li>
       <li>Next: <a href="parameters.html" title="next chapter">Parameters</a></li>
   </ul></li>
 </ul>

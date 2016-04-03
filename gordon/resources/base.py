@@ -64,7 +64,8 @@ class BaseResource(object):
 
         self.project.register_resource_reference(
             self.in_project_name,
-            self.in_project_cf_name
+            self.in_project_cf_name,
+            self
         )
 
     def _get_in_project_name(self):

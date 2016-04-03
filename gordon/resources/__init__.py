@@ -5,3 +5,4 @@ from . import lambdas
 from . import kinesis
 from . import s3
 from . import events
+from . import vpcs

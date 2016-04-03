@@ -41,7 +41,6 @@ Available ``contrib`` apps
 
 This application exposes two ``CloudFormation`` resources:
 
-    * **alias**: Creates aliases for our lambda functions. Nothing super fancy under the hood https://github.com/jorgebastida/gordon/blob/master/gordon/contrib/lambdas/alias/alias.py
     * **version**: Creates Versions for our lambda functions. Nothing super fancy under the hood: https://github.com/jorgebastida/gordon/blob/master/gordon/contrib/lambdas/version/version.py
 
 

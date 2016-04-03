@@ -108,6 +108,23 @@
                             "Version": "2012-10-17"
                         },
                         "PolicyName": "HellopyLogsPolicy"
+                    },
+                    {
+                        "PolicyDocument": {
+                            "Statement": [
+                                {
+                                    "Action": [
+                                        "ec2:CreateNetworkInterface"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": [
+                                        "*"
+                                    ]
+                                }
+                            ],
+                            "Version": "2012-10-17"
+                        },
+                        "PolicyName": "HellopyVpc"
                     }
                 ]
             },
@@ -154,7 +171,18 @@
                     ]
                 },
                 "Runtime": "python2.7",
-                "Timeout": 3
+                "Timeout": 3,
+                "VpcConfig": {
+                    "SecurityGroupIds": [
+                        "sg-0e7c2e76"
+                    ],
+                    "SubnetIds": [
+                        "subnet-c7ea6bed",
+                        "subnet-43295935",
+                        "subnet-3e175403",
+                        "subnet-b245ccea"
+                    ]
+                }
             },
             "Type": "AWS::Lambda::Function"
         },

@@ -24,7 +24,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="Gordon 0.0.1 documentation" href="index.html" />
-    <link rel="next" title="Settings" href="settings.html" />
+    <link rel="next" title="Lambda Requirements" href="requirements.html" />
     <link rel="prev" title="Applications" href="apps.html" />
    
   
@@ -137,6 +137,9 @@ needing to re-configure all related event sources.</p>
     <span class="l-Scalar-Plain">runtime</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">LAMBDA_RUNTIME</span> <span class="p-Indicator">}</span>
     <span class="l-Scalar-Plain">description</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">LAMBDA_DESCRIPTION</span> <span class="p-Indicator">}</span>
     <span class="l-Scalar-Plain">role</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">LAMBDA_ROLE</span> <span class="p-Indicator">}</span>
+    <span class="l-Scalar-Plain">vpc</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">VPC_NAME</span> <span class="p-Indicator">}</span>
+    <span class="l-Scalar-Plain">auto-vpc-policy</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">AUTO_VPC_POLICY</span> <span class="p-Indicator">}</span>
+    <span class="l-Scalar-Plain">auto-run-policy</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">AUTO_RUN_POLICY</span> <span class="p-Indicator">}</span>
     <span class="l-Scalar-Plain">policies</span><span class="p-Indicator">:</span>
       <span class="p-Indicator">{</span> <span class="nv">POLICY_NAME</span> <span class="p-Indicator">}:</span>
         <span class="p-Indicator">{</span> <span class="nv">POLICY_BODY</span> <span class="p-Indicator">}</span>
@@ -247,18 +250,12 @@ on the function&#8217;s expected execution time. By default, Timeout is set to 3
 <h3>runtime<a class="headerlink" href="#runtime" title="Permalink to this headline">¶</a></h3>
 <p>Gordon auto detects runtimes based on the extensions of the <code class="docutils literal"><span class="pre">code</span></code> file. For folder based lambdas (like <code class="docutils literal"><span class="pre">java</span></code>) the code is a directory
 and not a file, so the runtime can&#8217;t be inferred. For this situations, you can specify the runtime using this setting.</p>
-<div class="highlight-yaml"><div class="highlight"><pre>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">lambdas</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">hello_world</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">hellojava</span>
+    <span class="l-Scalar-Plain">runtime</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">java</span>
 </pre></div>
 </div>
-<dl class="docutils">
-<dt>lambdas:</dt>
-<dd><dl class="first last docutils">
-<dt>hello_world:</dt>
-<dd>code: hellojava
-runtime: java</dd>
-</dl>
-</dd>
-</dl>
 </div>
 <div class="section" id="description">
 <h3>description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h3>
@@ -280,6 +277,37 @@ runtime: java</dd>
     <span class="l-Scalar-Plain">role</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">arn:aws:iam::account-id:role/role-name</span>
 </pre></div>
 </div>
+</div>
+<div class="section" id="vpc">
+<h3>vpc<a class="headerlink" href="#vpc" title="Permalink to this headline">¶</a></h3>
+<p>Name of the vpc where this lambda should be deployed. If the Lambda function requires access to resources in a VPC, specify a VPC configuration
+that Lambda uses to set up an elastic network interface (ENI). The ENI enables your function to connect to other resources in your VPC, but it doesn&#8217;t provide
+public Internet access.</p>
+<p>If your function requires Internet access (for example, to access AWS services that don&#8217;t have VPC endpoints), configure a Network Address Translation (NAT) instance
+inside your VPC or use an Amazon Virtual Private Cloud (Amazon VPC) NAT gateway. For more information, see <a class="reference external" href="http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/vpc-nat-gateway.html">NAT Gateways</a> in the Amazon VPC User Guide.</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">lambdas</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">hello_world</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">functions.py</span>
+    <span class="l-Scalar-Plain">vpc</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">my-vpc</span>
+</pre></div>
+</div>
+<p>You need to define some properties about your vpc (in this example <code class="docutils literal"><span class="pre">my-vpc</span></code>) in the project settings.</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="nn">---</span>
+<span class="l-Scalar-Plain">project</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">vpcexample</span>
+<span class="nn">...</span>
+
+<span class="l-Scalar-Plain">vpcs</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">my-vpc</span><span class="p-Indicator">:</span>
+        <span class="l-Scalar-Plain">security-groups</span><span class="p-Indicator">:</span>
+            <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">sg-00000000</span>
+        <span class="l-Scalar-Plain">subnet-ids</span><span class="p-Indicator">:</span>
+            <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">subnet-1234567a</span>
+            <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">subnet-1234567b</span>
+            <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">subnet-1234567c</span>
+</pre></div>
+</div>
+<p>If <code class="docutils literal"><span class="pre">auto-vpc-policy</span></code> is <code class="docutils literal"><span class="pre">True</span></code>, gordon will attach to your lambda role the required policy which would allow it to access the vpc. It it is <code class="docutils literal"><span class="pre">False</span></code>, you&#8217;ll need
+to do this by yourself.</p>
 </div>
 <div class="section" id="policies">
 <h3>policies<a class="headerlink" href="#policies" title="Permalink to this headline">¶</a></h3>
@@ -311,6 +339,56 @@ S3 bucket called <code class="docutils literal"><span class="pre">EXAMPLE-BUCKET
 </pre></div>
 </div>
 </div>
+<div class="section" id="auto-vpc-policy">
+<h3>auto-vpc-policy<a class="headerlink" href="#auto-vpc-policy" title="Permalink to this headline">¶</a></h3>
+<p>If <code class="docutils literal"><span class="pre">auto-vpc-policy</span></code> is <code class="docutils literal"><span class="pre">True</span></code>, and you lambda has one <code class="docutils literal"><span class="pre">vpc</span></code> configured, gordon will attach to your lambda role the required policy which would allow it to
+access the vpc. It it is <code class="docutils literal"><span class="pre">False</span></code>, you&#8217;ll need to do this by yourself.</p>
+<div class="highlight-json"><div class="highlight"><pre><span class="p">{</span>
+    <span class="nt">&quot;Version&quot;</span><span class="p">:</span> <span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Statement&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;Effect&quot;</span><span class="p">:</span> <span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;Action&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;ec2:CreateNetworkInterface&quot;</span>
+            <span class="p">],</span>
+            <span class="nt">&quot;Resource&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;*&quot;</span>
+            <span class="p">]</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="auto-run-policy">
+<h3>auto-run-policy<a class="headerlink" href="#auto-run-policy" title="Permalink to this headline">¶</a></h3>
+<p>If <code class="docutils literal"><span class="pre">auto-run-policy</span></code> is <code class="docutils literal"><span class="pre">True</span></code>, gordon will attach to your lambda role the required policy which would allow it to run and push logs.</p>
+<div class="highlight-json"><div class="highlight"><pre><span class="p">{</span>
+    <span class="nt">&quot;Version&quot;</span><span class="p">:</span> <span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;Statement&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;Effect&quot;</span><span class="p">:</span> <span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;Action&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;lambda:InvokeFunction&quot;</span>
+            <span class="p">],</span>
+            <span class="nt">&quot;Resource&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;*&quot;</span>
+            <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;Effect&quot;</span><span class="p">:</span> <span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;Action&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;logs:CreateLogGroup&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;logs:CreateLogStream&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;logs:PutLogEvents&quot;</span>
+            <span class="p">],</span>
+            <span class="nt">&quot;Resource&quot;</span><span class="p">:</span> <span class="s2">&quot;arn:aws:logs:*:*:*&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
 </div>
 </div>
 
@@ -335,7 +413,10 @@ S3 bucket called <code class="docutils literal"><span class="pre">EXAMPLE-BUCKET
 <li><a class="reference internal" href="#runtime">runtime</a></li>
 <li><a class="reference internal" href="#description">description</a></li>
 <li><a class="reference internal" href="#role">role</a></li>
+<li><a class="reference internal" href="#vpc">vpc</a></li>
 <li><a class="reference internal" href="#policies">policies</a></li>
+<li><a class="reference internal" href="#auto-vpc-policy">auto-vpc-policy</a></li>
+<li><a class="reference internal" href="#auto-run-policy">auto-run-policy</a></li>
 </ul>
 </li>
 </ul>
@@ -346,7 +427,7 @@ S3 bucket called <code class="docutils literal"><span class="pre">EXAMPLE-BUCKET
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="apps.html" title="previous chapter">Applications</a></li>
-      <li>Next: <a href="settings.html" title="next chapter">Settings</a></li>
+      <li>Next: <a href="requirements.html" title="next chapter">Lambda Requirements</a></li>
   </ul></li>
 </ul>
 </div>

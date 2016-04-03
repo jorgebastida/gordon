@@ -32,7 +32,8 @@ AVAILABLE_RESOURCES = {
     'dynamodb': resources.dynamodb.Dynamodb,
     'kinesis': resources.kinesis.Kinesis,
     's3': resources.s3.BucketNotificationConfiguration,
-    'cron': resources.events.CloudWatchScheduledEvent
+    'cron': resources.events.CloudWatchScheduledEvent,
+    'vpcs': resources.vpcs.Vpc
 }
 
 
@@ -118,6 +119,7 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
     def __init__(self, *args, **kwargs):
         self.applications = []
         self._in_project_resource_references = {}
+        self._in_project_cf_resource_references = {}
         BaseProject.__init__(self, *args, **kwargs)
         puts(colored.blue("Loading project resources"))
         BaseResourceContainer.__init__(self, *args, **kwargs)
@@ -175,19 +177,21 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
                 raise exceptions.DuplicateAppNameError(new_app.name)
         self.applications.append(new_app)
 
-    def register_resource_reference(self, name, cf_name):
+    def register_resource_reference(self, name, cf_name, resource):
         """Register a resouce called ``name`` as ``cf_name``"""
         if name in self._in_project_resource_references or \
-           cf_name in self._in_project_resource_references.values():
+           name in self._in_project_cf_resource_references or \
+           cf_name in self._in_project_cf_resource_references.values():
             raise exceptions.DuplicateResourceNameError(name, cf_name)
 
-        self._in_project_resource_references[name] = cf_name
+        self._in_project_cf_resource_references[name] = cf_name
+        self._in_project_resource_references[name] = resource
 
     def reference(self, name):
         """Resolve ``name`` as a CloudFormation reference"""
-        if name in self._in_project_resource_references:
-            return self._in_project_resource_references[name]
-        raise exceptions.ResourceNotFoundError(name, self._in_project_resource_references.keys())
+        if name in self._in_project_cf_resource_references:
+            return self._in_project_cf_resource_references[name]
+        raise exceptions.ResourceNotFoundError(name, self._in_project_cf_resource_references.keys())
 
     def get_resources(self, resource_type=None):
         """Returns all project and application resources"""
@@ -197,6 +201,11 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
 
         for r in BaseResourceContainer.get_resources(self, resource_type):
             yield r
+
+    def get_resource(self, grn):
+        if grn in self._in_project_resource_references:
+            return self._in_project_resource_references[grn]
+        raise exceptions.ResourceNotFoundError(grn, self._in_project_resource_references.keys())
 
     def build(self):
         """Build current current project"""

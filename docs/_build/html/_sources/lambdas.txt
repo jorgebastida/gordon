@@ -87,6 +87,9 @@ The following is the anatomy of a lambda in gordon.
       runtime: { LAMBDA_RUNTIME }
       description: { LAMBDA_DESCRIPTION }
       role: { LAMBDA_ROLE }
+      vpc: { VPC_NAME }
+      auto-vpc-policy: { AUTO_VPC_POLICY }
+      auto-run-policy: { AUTO_RUN_POLICY }
       policies:
         { POLICY_NAME }:
           { POLICY_BODY }
@@ -209,10 +212,10 @@ and not a file, so the runtime can't be inferred. For this situations, you can s
 
 .. code-block:: yaml
 
-lambdas:
-  hello_world:
-    code: hellojava
-    runtime: java
+    lambdas:
+      hello_world:
+        code: hellojava
+        runtime: java
 
 
 description
@@ -240,6 +243,46 @@ If not provided, gordon will create one role for this function for you and inclu
     hello_world:
       code: functions.py
       role: arn:aws:iam::account-id:role/role-name
+
+vpc
+^^^^^^^^^^^^
+
+Name of the vpc where this lambda should be deployed. If the Lambda function requires access to resources in a VPC, specify a VPC configuration
+that Lambda uses to set up an elastic network interface (ENI). The ENI enables your function to connect to other resources in your VPC, but it doesn't provide
+public Internet access.
+
+If your function requires Internet access (for example, to access AWS services that don't have VPC endpoints), configure a Network Address Translation (NAT) instance
+inside your VPC or use an Amazon Virtual Private Cloud (Amazon VPC) NAT gateway. For more information, see `NAT Gateways <http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/vpc-nat-gateway.html>`_ in the Amazon VPC User Guide.
+
+.. code-block:: yaml
+
+  lambdas:
+    hello_world:
+      code: functions.py
+      vpc: my-vpc
+
+
+You need to define some properties about your vpc (in this example ``my-vpc``) in the project settings.
+
+.. code-block:: yaml
+
+    ---
+    project: vpcexample
+    ...
+
+    vpcs:
+        my-vpc:
+            security-groups:
+                - sg-00000000
+            subnet-ids:
+                - subnet-1234567a
+                - subnet-1234567b
+                - subnet-1234567c
+
+
+If ``auto-vpc-policy`` is ``True``, gordon will attach to your lambda role the required policy which would allow it to access the vpc. It it is ``False``, you'll need
+to do this by yourself.
+
 
 policies
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -273,3 +316,57 @@ S3 bucket called ``EXAMPLE-BUCKET-NAME``.
                 - "dynamodb:GetRecords"
               Resource: "arn:aws:s3:::EXAMPLE-BUCKET-NAME/*"
               Effect: "Allow"
+
+
+auto-vpc-policy
+^^^^^^^^^^^^^^^^^^^
+If ``auto-vpc-policy`` is ``True``, and you lambda has one ``vpc`` configured, gordon will attach to your lambda role the required policy which would allow it to
+access the vpc. It it is ``False``, you'll need to do this by yourself.
+
+.. code-block:: json
+
+    {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Effect": "Allow",
+                "Action": [
+                    "ec2:CreateNetworkInterface"
+                ],
+                "Resource": [
+                    "*"
+                ]
+            }
+        ]
+    }
+
+
+auto-run-policy
+^^^^^^^^^^^^^^^^^^^
+If ``auto-run-policy`` is ``True``, gordon will attach to your lambda role the required policy which would allow it to run and push logs.
+
+.. code-block:: json
+
+    {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Effect": "Allow",
+                "Action": [
+                    "lambda:InvokeFunction"
+                ],
+                "Resource": [
+                    "*"
+                ]
+            },
+            {
+                "Effect": "Allow",
+                "Action": [
+                    "logs:CreateLogGroup",
+                    "logs:CreateLogStream",
+                    "logs:PutLogEvents"
+                ],
+                "Resource": "arn:aws:logs:*:*:*",
+            }
+        ]
+    }

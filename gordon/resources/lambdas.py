@@ -46,13 +46,13 @@ class Lambda(base.BaseResource):
 
     def __init__(self, *args, **kwargs):
         super(Lambda, self).__init__(*args, **kwargs)
-
         self.current_alias_project_name = '{}:current'.format(self.in_project_name)
         self.current_alias_cf_name = utils.valid_cloudformation_name(self.name, "CurrentAlias")
 
         self.project.register_resource_reference(
             self.current_alias_project_name,
-            self.current_alias_cf_name
+            self.current_alias_cf_name,
+            self
         )
 
     def get_handler(self):
@@ -77,34 +77,58 @@ class Lambda(base.BaseResource):
         Users can add more policies to this Role by defining policy documents
         in the settings of the lambda under the ``policies`` key."""
 
-        policies = [
-            iam.Policy(
-                PolicyName=utils.valid_cloudformation_name(self.name, 'logs', 'policy'),
-                PolicyDocument={
-                    "Version": "2012-10-17",
-                    "Statement": [
-                        {
-                            "Effect": "Allow",
-                            "Action": [
-                                "lambda:InvokeFunction"
-                            ],
-                            "Resource": [
-                                "*"
-                            ]
-                        },
-                        {
-                            "Effect": "Allow",
-                            "Action": [
-                                "logs:CreateLogGroup",
-                                "logs:CreateLogStream",
-                                "logs:PutLogEvents"
-                            ],
-                            "Resource": "arn:aws:logs:*:*:*",
-                        }
-                    ]
-                }
-            ),
-        ]
+        policies = []
+
+        if self._get_true_false('auto-run-policy', 't'):
+            policies.append(
+                iam.Policy(
+                    PolicyName=utils.valid_cloudformation_name(self.name, 'logs', 'policy'),
+                    PolicyDocument={
+                        "Version": "2012-10-17",
+                        "Statement": [
+                            {
+                                "Effect": "Allow",
+                                "Action": [
+                                    "lambda:InvokeFunction"
+                                ],
+                                "Resource": [
+                                    "*"
+                                ]
+                            },
+                            {
+                                "Effect": "Allow",
+                                "Action": [
+                                    "logs:CreateLogGroup",
+                                    "logs:CreateLogStream",
+                                    "logs:PutLogEvents"
+                                ],
+                                "Resource": "arn:aws:logs:*:*:*",
+                            }
+                        ]
+                    }
+                )
+            )
+
+        if self.settings.get('vpc') and self._get_true_false('auto-vpc-policy', 't'):
+            policies.append(
+                iam.Policy(
+                    PolicyName=utils.valid_cloudformation_name(self.name, 'vpc'),
+                    PolicyDocument={
+                        "Version": "2012-10-17",
+                        "Statement": [
+                            {
+                                "Effect": "Allow",
+                                "Action": [
+                                    "ec2:CreateNetworkInterface"
+                                ],
+                                "Resource": [
+                                    "*"
+                                ]
+                            }
+                        ]
+                    }
+                )
+            )
 
         for policy_nme, policy_document in self.settings.get('policies', {}).iteritems():
             policies.append(
@@ -214,6 +238,14 @@ class Lambda(base.BaseResource):
             )
         )
 
+        extra = {}
+        if self.settings.get('vpc'):
+            vpc = self.project.get_resource('vpc::{}'.format(self.settings.get('vpc')))
+            extra['VpcConfig'] = awslambda.VPCConfig(
+                SecurityGroupIds=vpc.settings['security-groups'],
+                SubnetIds=vpc.settings['subnet-ids']
+            )
+
         function = template.add_resource(
             awslambda.Function(
                 self.in_project_cf_name,
@@ -230,7 +262,8 @@ class Lambda(base.BaseResource):
                 MemorySize=self.get_memory(),
                 Role=role,
                 Runtime=self.runtime,
-                Timeout=self.get_timeout()
+                Timeout=self.get_timeout(),
+                **extra
             )
         )
 
