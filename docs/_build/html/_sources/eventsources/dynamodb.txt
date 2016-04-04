@@ -13,6 +13,7 @@ Every time one of our dynamodb tables get's modified, dynamo notifies the stream
 
   As always, is not gordon's business to create the source ``stream``. You should create them in advance. You can read Why in the :doc:`../faq`
 
+.. _dynamodb-anatomy:
 
 Anatomy of the integration
 ----------------------------------

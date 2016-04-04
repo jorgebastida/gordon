@@ -69,6 +69,7 @@ Any subsequent deploy to the same stage will point the ``current`` alias to your
 
 For more information you can read `AWS Lambda Function Versioning and Aliases <http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html>`_.
 
+.. _lambdas-anatomy:
 
 Anatomy of a Lambda
 --------------------
@@ -243,6 +244,8 @@ If not provided, gordon will create one role for this function for you and inclu
     hello_world:
       code: functions.py
       role: arn:aws:iam::account-id:role/role-name
+
+.. _lambdas-vpc:
 
 vpc
 ^^^^^^^^^^^^

@@ -46,9 +46,41 @@ should behave.</p>
 <p>Settings can be defined at two different levels, project and application level.</p>
 <p>Resources such as lambdas or event sources can be defined in both levels, but there are
 some other settings which are only expected at project level.</p>
+<div class="section" id="general">
+<h2>General<a class="headerlink" href="#general" title="Permalink to this headline">¶</a></h2>
+<p>These settings can be defined either at project or app level.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="13%" />
+<col width="87%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Settings</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">lambdas</span></code></td>
+<td>Lambda definitions. <a class="reference internal" href="lambdas.html#lambdas-anatomy"><span>Anatomy of Lambdas</span></a></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">cron</span></code></td>
+<td>CloudWatch Events definitions. <a class="reference internal" href="eventsources/cron.html#cron-anatomy"><span>Anatomy of Cron integration</span></a></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">dynamodb</span></code></td>
+<td>Dynamodb Event Source definitions. <a class="reference internal" href="eventsources/dynamodb.html#dynamodb-anatomy"><span>Anatomy of Dynamodb integration</span></a></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">kinesis</span></code></td>
+<td>Kinesis Event Source definitions. <a class="reference internal" href="eventsources/kinesis.html#kinesis-anatomy"><span>Anatomy of Kinesis integration</span></a></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">s3</span></code></td>
+<td>S3 notfication definitions. <a class="reference internal" href="eventsources/s3.html#s3-anatomy"><span>Anatomy of S3 integration</span></a></td>
+</tr>
+</tbody>
+</table>
+</div>
 <div class="section" id="project-settings">
 <h2>Project settings<a class="headerlink" href="#project-settings" title="Permalink to this headline">¶</a></h2>
-<p>Project settings are defined in the root level of your project.</p>
+<p>Project settings are defined in the root level of your project  (<code class="docutils literal"><span class="pre">project/settings.yml</span></code>).</p>
 <table border="1" class="docutils">
 <colgroup>
 <col width="13%" />
@@ -73,12 +105,15 @@ Because the source code and the lambdas needs to be in the same region, gordon w
 <tr class="row-odd"><td><code class="docutils literal"><span class="pre">apps</span></code></td>
 <td>List of installed apps</td>
 </tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">vpc</span></code></td>
+<td>Map of vpc names with their respective <code class="docutils literal"><span class="pre">security-groups</span></code> and  <code class="docutils literal"><span class="pre">subnet-ids</span></code>. For more information <a class="reference internal" href="lambdas.html#lambdas-vpc"><span>Lambdas vpc setting</span></a>.</td>
+</tr>
 </tbody>
 </table>
 </div>
 <div class="section" id="application-settings">
 <h2>Application settings<a class="headerlink" href="#application-settings" title="Permalink to this headline">¶</a></h2>
-<p>Application settings are defined within your applications.</p>
+<p>Application settings are defined within your applications (<code class="docutils literal"><span class="pre">application/settings.yml</span></code>).</p>
 <p>One particularity about application settings, is that those can be redefined as part of it&#8217;s initialization. If for example you want to reuse one application and
 redefining some settings, you can do so:</p>
 <div class="highlight-yaml"><div class="highlight"><pre><span class="nn">---</span>
@@ -105,6 +140,7 @@ redefining some settings, you can do so:</p>
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Settings</a><ul>
+<li><a class="reference internal" href="#general">General</a></li>
 <li><a class="reference internal" href="#project-settings">Project settings</a></li>
 <li><a class="reference internal" href="#application-settings">Application settings</a></li>
 </ul>

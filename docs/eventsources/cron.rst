@@ -1,10 +1,12 @@
 Cron
 ========================
 
-CloudWatch Events Events allows you to take actions on a pre-determined schedule.
+CloudWatch Events allows you to take actions on a pre-determined schedule.
 
 Gordon allow you to wire this functionality with your lambdas and schedule them using cron-like syntax.
 
+
+.. _cron-anatomy:
 
 Anatomy of the integration
 ----------------------------------

@@ -23,6 +23,8 @@ This integration, has some limitations because how the AWS API is designed:
  * Gordon will refuse to configure notifications in bucket if it already has some other notifications configured manually (this is a safe measure).
 
 
+.. _s3-anatomy:
+
 Anatomy of the integration
 ----------------------------------
 

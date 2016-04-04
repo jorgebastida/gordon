@@ -125,7 +125,7 @@ needing to re-configure all related event sources.</p>
 <p>For more information you can read <a class="reference external" href="http://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html">AWS Lambda Function Versioning and Aliases</a>.</p>
 </div>
 <div class="section" id="anatomy-of-a-lambda">
-<h2>Anatomy of a Lambda<a class="headerlink" href="#anatomy-of-a-lambda" title="Permalink to this headline">¶</a></h2>
+<span id="lambdas-anatomy"></span><h2>Anatomy of a Lambda<a class="headerlink" href="#anatomy-of-a-lambda" title="Permalink to this headline">¶</a></h2>
 <p>The following is the anatomy of a lambda in gordon.</p>
 <div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">lambdas</span><span class="p-Indicator">:</span>
 
@@ -279,7 +279,7 @@ and not a file, so the runtime can&#8217;t be inferred. For this situations, you
 </div>
 </div>
 <div class="section" id="vpc">
-<h3>vpc<a class="headerlink" href="#vpc" title="Permalink to this headline">¶</a></h3>
+<span id="lambdas-vpc"></span><h3>vpc<a class="headerlink" href="#vpc" title="Permalink to this headline">¶</a></h3>
 <p>Name of the vpc where this lambda should be deployed. If the Lambda function requires access to resources in a VPC, specify a VPC configuration
 that Lambda uses to set up an elastic network interface (ENI). The ENI enables your function to connect to other resources in your VPC, but it doesn&#8217;t provide
 public Internet access.</p>
