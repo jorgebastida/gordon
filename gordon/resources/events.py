@@ -30,9 +30,8 @@ class CloudWatchScheduledEvent(BaseResource):
         )
 
     def get_destination_arn(self):
-        return troposphere.GetAtt(
-            self.get_function_name(),
-            'Arn'
+        return troposphere.Ref(
+            self.get_function_name()
         )
 
     def register_resources_template(self, template):
@@ -46,8 +45,8 @@ class CloudWatchScheduledEvent(BaseResource):
         rule = EventsRule.create_with(
             rule_resource_name,
             DependsOn=[self.project.reference(events_rule_lambda)],
-            lambda_arn=troposphere.GetAtt(
-                self.project.reference(events_rule_lambda), 'Arn'
+            lambda_arn=troposphere.Ref(
+                self.project.reference(events_rule_lambda)
             ),
             Name=rule_name,
             ScheduleExpression=self.get_expression(),

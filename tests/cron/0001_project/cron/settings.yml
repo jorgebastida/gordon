@@ -2,7 +2,7 @@ lambdas:
   example:
     code: example.py
     handler: code.handler
-    runtime: python
+    runtime: python2.7
     description: My description
     memory: 192
     timeout: 123

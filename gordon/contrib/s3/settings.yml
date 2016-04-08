@@ -3,7 +3,7 @@ lambdas:
   bucket_notification_configuration:
     code: bucket_notification_configuration
     handler: bucket_notification_configuration.handler
-    runtime: python
+    runtime: python2.7
     description: Manages Bucket Notification Configurations
     timeout: 300
     policies:

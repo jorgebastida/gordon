@@ -1,7 +1,7 @@
 lambdas:
   javaexample:
     code: helloworld
-    runtime: java
+    runtime: java8
     handler: example.Hello::handler
     description: My description
     memory: 192

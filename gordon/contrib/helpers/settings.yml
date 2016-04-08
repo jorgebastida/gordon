@@ -2,6 +2,6 @@ lambdas:
   sleep:
     code: sleep
     handler: sleep.handler
-    runtime: python
+    runtime: python2.7
     description: Sleeps several seconds before succeeding.
     timeout: 300

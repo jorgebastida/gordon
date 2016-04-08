@@ -3,7 +3,7 @@ lambdas:
   rule:
     code: rule
     handler: rule.handler
-    runtime: python
+    runtime: python2.7
     description: Manages Cloudwatch event rules
     timeout: 300
     policies:
@@ -21,7 +21,7 @@ lambdas:
   target:
     code: target
     handler: target.handler
-    runtime: python
+    runtime: python2.7
     description: Manages Cloudwatch event targets
     timeout: 300
 

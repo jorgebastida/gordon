@@ -1,8 +1,5 @@
 {
     "Parameters": {
-        "AliasS3Version": {
-            "Type": "String"
-        },
         "CodeBucket": {
             "Description": "Bucket where the code is located.",
             "Type": "String"
@@ -33,120 +30,6 @@
         }
     },
     "Resources": {
-        "AliasCurrentalias": {
-            "DependsOn": [
-                "ContribLambdasAlias"
-            ],
-            "Properties": {
-                "FunctionName": {
-                    "Ref": "ContribLambdasAlias"
-                },
-                "FunctionVersion": {
-                    "Fn::GetAtt": [
-                        "AliasVersion",
-                        "Version"
-                    ]
-                },
-                "Name": "current",
-                "S3ObjectVersion": {
-                    "Ref": "AliasS3Version"
-                },
-                "ServiceToken": {
-                    "Fn::GetAtt": [
-                        "ContribLambdasAlias",
-                        "Arn"
-                    ]
-                }
-            },
-            "Type": "Custom::LambdaAlias"
-        },
-        "AliasRole": {
-            "Properties": {
-                "AssumeRolePolicyDocument": {
-                    "Statement": [
-                        {
-                            "Action": [
-                                "sts:AssumeRole"
-                            ],
-                            "Effect": "Allow",
-                            "Principal": {
-                                "Service": [
-                                    "lambda.amazonaws.com"
-                                ]
-                            }
-                        }
-                    ],
-                    "Version": "2012-10-17"
-                },
-                "Policies": [
-                    {
-                        "PolicyDocument": {
-                            "Statement": [
-                                {
-                                    "Action": [
-                                        "lambda:InvokeFunction"
-                                    ],
-                                    "Effect": "Allow",
-                                    "Resource": [
-                                        "*"
-                                    ]
-                                },
-                                {
-                                    "Action": [
-                                        "logs:CreateLogGroup",
-                                        "logs:CreateLogStream",
-                                        "logs:PutLogEvents"
-                                    ],
-                                    "Effect": "Allow",
-                                    "Resource": "arn:aws:logs:*:*:*"
-                                }
-                            ],
-                            "Version": "2012-10-17"
-                        },
-                        "PolicyName": "AliasLogsPolicy"
-                    },
-                    {
-                        "PolicyDocument": {
-                            "Statement": [
-                                {
-                                    "Action": [
-                                        "lambda:CreateAlias",
-                                        "lambda:DeleteAlias",
-                                        "lambda:GetAlias",
-                                        "lambda:UpdateAlias"
-                                    ],
-                                    "Effect": "Allow",
-                                    "Resource": "arn:aws:lambda:*:*:*"
-                                }
-                            ],
-                            "Version": "2012-10-17"
-                        },
-                        "PolicyName": "AliasManageAliasPolicy"
-                    }
-                ]
-            },
-            "Type": "AWS::IAM::Role"
-        },
-        "AliasVersion": {
-            "DependsOn": [
-                "ContribLambdasVersion"
-            ],
-            "Properties": {
-                "FunctionName": {
-                    "Ref": "ContribLambdasAlias"
-                },
-                "S3ObjectVersion": {
-                    "Ref": "AliasS3Version"
-                },
-                "ServiceToken": {
-                    "Fn::GetAtt": [
-                        "ContribLambdasVersion",
-                        "Arn"
-                    ]
-                }
-            },
-            "Type": "Custom::LambdaVersion"
-        },
         "ContribEventsRule": {
             "DependsOn": [
                 "RuleRole"
@@ -223,34 +106,6 @@
                 "Role": {
                     "Fn::GetAtt": [
                         "SleepRole",
-                        "Arn"
-                    ]
-                },
-                "Runtime": "python2.7",
-                "Timeout": 300
-            },
-            "Type": "AWS::Lambda::Function"
-        },
-        "ContribLambdasAlias": {
-            "DependsOn": [
-                "AliasRole"
-            ],
-            "Properties": {
-                "Code": {
-                    "S3Bucket": {
-                        "Ref": "CodeBucket"
-                    },
-                    "S3Key": "contrib_lambdas_alias.zip",
-                    "S3ObjectVersion": {
-                        "Ref": "AliasS3Version"
-                    }
-                },
-                "Description": "Manages aliases of Lambdas.",
-                "Handler": "alias.handler",
-                "MemorySize": 128,
-                "Role": {
-                    "Fn::GetAtt": [
-                        "AliasRole",
                         "Arn"
                     ]
                 },
@@ -341,10 +196,7 @@
                 "Targets": [
                     {
                         "Arn": {
-                            "Fn::GetAtt": [
-                                "ExampleCurrentalias",
-                                "Arn"
-                            ]
+                            "Ref": "ExampleCurrentalias"
                         },
                         "Id": "ExampleCurrentalias"
                     }
@@ -356,10 +208,7 @@
             "Properties": {
                 "Action": "lambda:InvokeFunction",
                 "FunctionName": {
-                    "Fn::GetAtt": [
-                        "ExampleCurrentalias",
-                        "Arn"
-                    ]
+                    "Ref": "ExampleCurrentalias"
                 },
                 "Principal": "events.amazonaws.com",
                 "SourceAccount": {
@@ -393,19 +242,13 @@
                 },
                 "ScheduleExpression": "cron(0 20 * * ? *)",
                 "ServiceToken": {
-                    "Fn::GetAtt": [
-                        "RuleCurrentalias",
-                        "Arn"
-                    ]
+                    "Ref": "RuleCurrentalias"
                 },
                 "State": "ENABLED"
             },
             "Type": "Custom::EventsRule"
         },
         "ExampleCurrentalias": {
-            "DependsOn": [
-                "AliasCurrentalias"
-            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "CronExample"
@@ -416,18 +259,9 @@
                         "Version"
                     ]
                 },
-                "Name": "current",
-                "S3ObjectVersion": {
-                    "Ref": "ExampleS3Version"
-                },
-                "ServiceToken": {
-                    "Fn::GetAtt": [
-                        "AliasCurrentalias",
-                        "Arn"
-                    ]
-                }
+                "Name": "current"
             },
-            "Type": "Custom::LambdaAlias"
+            "Type": "AWS::Lambda::Alias"
         },
         "ExampleRole": {
             "Properties": {
@@ -490,18 +324,12 @@
                     "Ref": "ExampleS3Version"
                 },
                 "ServiceToken": {
-                    "Fn::GetAtt": [
-                        "VersionCurrentalias",
-                        "Arn"
-                    ]
+                    "Ref": "VersionCurrentalias"
                 }
             },
             "Type": "Custom::LambdaVersion"
         },
         "RuleCurrentalias": {
-            "DependsOn": [
-                "AliasCurrentalias"
-            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "ContribEventsRule"
@@ -512,18 +340,9 @@
                         "Version"
                     ]
                 },
-                "Name": "current",
-                "S3ObjectVersion": {
-                    "Ref": "RuleS3Version"
-                },
-                "ServiceToken": {
-                    "Fn::GetAtt": [
-                        "AliasCurrentalias",
-                        "Arn"
-                    ]
-                }
+                "Name": "current"
             },
-            "Type": "Custom::LambdaAlias"
+            "Type": "AWS::Lambda::Alias"
         },
         "RuleRole": {
             "Properties": {
@@ -603,18 +422,12 @@
                     "Ref": "RuleS3Version"
                 },
                 "ServiceToken": {
-                    "Fn::GetAtt": [
-                        "VersionCurrentalias",
-                        "Arn"
-                    ]
+                    "Ref": "VersionCurrentalias"
                 }
             },
             "Type": "Custom::LambdaVersion"
         },
         "SleepCurrentalias": {
-            "DependsOn": [
-                "AliasCurrentalias"
-            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "ContribHelpersSleep"
@@ -625,18 +438,9 @@
                         "Version"
                     ]
                 },
-                "Name": "current",
-                "S3ObjectVersion": {
-                    "Ref": "SleepS3Version"
-                },
-                "ServiceToken": {
-                    "Fn::GetAtt": [
-                        "AliasCurrentalias",
-                        "Arn"
-                    ]
-                }
+                "Name": "current"
             },
-            "Type": "Custom::LambdaAlias"
+            "Type": "AWS::Lambda::Alias"
         },
         "SleepRole": {
             "Properties": {
@@ -699,18 +503,12 @@
                     "Ref": "SleepS3Version"
                 },
                 "ServiceToken": {
-                    "Fn::GetAtt": [
-                        "VersionCurrentalias",
-                        "Arn"
-                    ]
+                    "Ref": "VersionCurrentalias"
                 }
             },
             "Type": "Custom::LambdaVersion"
         },
         "TargetCurrentalias": {
-            "DependsOn": [
-                "AliasCurrentalias"
-            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "ContribEventsTarget"
@@ -721,18 +519,9 @@
                         "Version"
                     ]
                 },
-                "Name": "current",
-                "S3ObjectVersion": {
-                    "Ref": "TargetS3Version"
-                },
-                "ServiceToken": {
-                    "Fn::GetAtt": [
-                        "AliasCurrentalias",
-                        "Arn"
-                    ]
-                }
+                "Name": "current"
             },
-            "Type": "Custom::LambdaAlias"
+            "Type": "AWS::Lambda::Alias"
         },
         "TargetRole": {
             "Properties": {
@@ -812,18 +601,12 @@
                     "Ref": "TargetS3Version"
                 },
                 "ServiceToken": {
-                    "Fn::GetAtt": [
-                        "VersionCurrentalias",
-                        "Arn"
-                    ]
+                    "Ref": "VersionCurrentalias"
                 }
             },
             "Type": "Custom::LambdaVersion"
         },
         "VersionCurrentalias": {
-            "DependsOn": [
-                "ContribLambdasAlias"
-            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "ContribLambdasVersion"
@@ -834,18 +617,9 @@
                         "Version"
                     ]
                 },
-                "Name": "current",
-                "S3ObjectVersion": {
-                    "Ref": "VersionS3Version"
-                },
-                "ServiceToken": {
-                    "Fn::GetAtt": [
-                        "ContribLambdasAlias",
-                        "Arn"
-                    ]
-                }
+                "Name": "current"
             },
-            "Type": "Custom::LambdaAlias"
+            "Type": "AWS::Lambda::Alias"
         },
         "VersionRole": {
             "Properties": {

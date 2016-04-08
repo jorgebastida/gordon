@@ -27,6 +27,8 @@ class Lambda(base.BaseResource):
     REQUIRED_SETTINGS = ('code', )
     code_filename = 'code'
     grn_type = 'lambda'
+    _default_runtime = None
+    _runtimes = {}
 
     @classmethod
     def factory(cls, *args, **kwargs):
@@ -35,11 +37,11 @@ class Lambda(base.BaseResource):
         _, extension = os.path.splitext(kwargs['settings']['code'])
         runtime = kwargs['settings'].get('runtime', None)
 
-        if runtime == 'python' or extension == '.py':
+        if 'python' in runtime or extension == '.py':
             return PythonLambda(*args, **kwargs)
-        elif runtime == 'javascript' or extension == '.js':
+        elif 'node' in runtime or extension == '.js':
             return NodeLambda(*args, **kwargs)
-        elif runtime == 'java':
+        elif 'java' in runtime:
             return JavaLambda(*args, **kwargs)
         else:
             raise exceptions.InvalidLambdaCodeExtensionError(extension)
@@ -71,6 +73,11 @@ class Lambda(base.BaseResource):
         """Returns the timeout value for this lambda."""
         timeout = self.settings.get('timeout', 3)
         return max(min(timeout, 300), 1)
+
+    def get_runtime(self):
+        """Returns the runtime for this lambda."""
+        runtime = self.settings.get('runtime', self._default_runtime)
+        return self._runtimes[runtime]
 
     def _get_policies(self):
         """Returns a list of policies to attach to the IAM Role of this Lambda.
@@ -261,7 +268,7 @@ class Lambda(base.BaseResource):
                 Handler=self.get_handler(),
                 MemorySize=self.get_memory(),
                 Role=role,
-                Runtime=self.runtime,
+                Runtime=self.get_runtime(),
                 Timeout=self.get_timeout(),
                 **extra
             )
@@ -407,8 +414,12 @@ class Lambda(base.BaseResource):
 
 class PythonLambda(Lambda):
 
-    runtime = 'python2.7'
-    base_runtime = 'python'
+    _default_runtime = 'python2.7'
+    _runtimes = {
+        'python': 'python2.7',
+        'python2.7': 'python2.7',
+        'python2': 'python2.7'
+    }
     extension = 'py'
 
     def _pip_path(self):
@@ -455,8 +466,15 @@ class PythonLambda(Lambda):
 
 class NodeLambda(Lambda):
 
-    runtime = 'nodejs'
-    base_runtime = 'node'
+    _default_runtime = 'nodejs4.3'
+    _runtimes = {
+        'node': 'nodejs',
+        'nodejs': 'nodejs',
+        'nodejs4.3': 'nodejs4.3',
+        'nodejs0.10': 'nodejs',
+        'node0.10': 'nodejs'
+    }
+
     extension = 'js'
 
     def _npm_path(self):
@@ -494,8 +512,11 @@ class NodeLambda(Lambda):
 
 class JavaLambda(Lambda):
 
-    runtime = 'java8'
-    base_runtime = 'java'
+    _default_runtime = 'java8'
+    _runtimes = {
+        'java': 'java8',
+        'java8': 'java8',
+    }
     extension = 'java'
 
     def _gradle_path(self):
