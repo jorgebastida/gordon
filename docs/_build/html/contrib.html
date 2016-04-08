@@ -94,8 +94,8 @@ using our lambda-based Resources and use native ones.</p>
 </div>
 <div class="section" id="contrib-helpers">
 <h3><code class="docutils literal"><span class="pre">contrib.helpers</span></code><a class="headerlink" href="#contrib-helpers" title="Permalink to this headline">¶</a></h3>
-<p>This application exposes one simple <code class="docutils literal"><span class="pre">CloudFormation</span></code> resource called <code class="docutils literal"><span class="pre">Sleep</span></code>. Yes, this is lame ¯_(ツ)_/¯ but
-it was the only possible way to make resilient integrations with streams such as <code class="docutils literal"><span class="pre">kinesiss</span></code> and <code class="docutils literal"><span class="pre">dynamodb</span></code>.</p>
+<p>This application exposes one simple <code class="docutils literal"><span class="pre">CloudFormation</span></code> resource called <code class="docutils literal"><span class="pre">Sleep</span></code>. Yes, this is lame <code class="docutils literal"><span class="pre">¯\_(ツ)_/¯</span></code> but
+it was the only possible way to make resilient integrations with streams such as <code class="docutils literal"><span class="pre">kinesis</span></code> and <code class="docutils literal"><span class="pre">dynamodb</span></code>.</p>
 <p>This is because the IAM role of the lambda is not propagated fast enough uppon creation, and <code class="docutils literal"><span class="pre">CloudFormation</span></code> checks
 if the referenced lambda has permission to consume this stream on creation time. A small sleep fixes the problem. We
 will probably try fix this in the future with a generic <code class="docutils literal"><span class="pre">make-sure-this-is-ready</span></code> lambda.</p>

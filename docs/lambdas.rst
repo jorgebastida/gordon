@@ -138,7 +138,7 @@ Folder javascript lambda:
       hello_world:
         code: myfolder
         handler: file.handler
-        runtime: javascript
+        runtime: nodejs4.3
 
 
 Java lambda:
@@ -149,7 +149,7 @@ Java lambda:
       hello_world:
         code: myfolder
         handler: example.Hello::handler
-        runtime: java
+        runtime: java8
 
 
 handler
@@ -171,7 +171,7 @@ For the java runtime, this handler will need to have the following format (``pac
   lambdas:
     hello_world:
       code: helloworld
-      runtime: java
+      runtime: java8
       handler: helloworld.Hello::handler
 
 .. note::
@@ -208,15 +208,36 @@ on the function's expected execution time. By default, Timeout is set to 3 secon
 runtime
 ^^^^^^^^^^^^^^^^^^^^^^
 
-Gordon auto detects runtimes based on the extensions of the ``code`` file. For folder based lambdas (like ``java``) the code is a directory
-and not a file, so the runtime can't be inferred. For this situations, you can specify the runtime using this setting.
+Runtime of your lambda. Valid values are:
+
+=======================================================  ================
+Runtime                                                  AWS Runtime
+=======================================================  ================
+``node``, ``nodejs``, ``node0.10`` and ``nodejs0.10``    ``nodejs``
+``node4.3`` and ``nodejs4.3``                            ``nodejs4.3``
+``python`` and ``python2.7``                             ``python2.7``
+``java`` and ``java8``                                   ``java8``
+=======================================================  ================
+
+If you don't specidy any runtime, Gordon tries to auto detect it based on the extensions of the ``code`` file.
+
+=====================  ===============
+Extension              Runtime
+=====================  ===============
+``.js``                ``nodejs4.3``
+``.py``                ``python2.7``
+=====================  ===============
+
+For folder based lambdas (like ``java``) the code is a directory and not a file, so the runtime can't be inferred.
+For these situations, you can specify the runtime using this setting.
+
 
 .. code-block:: yaml
 
     lambdas:
       hello_world:
         code: hellojava
-        runtime: java
+        runtime: java8
 
 
 description

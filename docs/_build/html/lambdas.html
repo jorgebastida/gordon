@@ -190,7 +190,7 @@ needing to re-configure all related event sources.</p>
   <span class="l-Scalar-Plain">hello_world</span><span class="p-Indicator">:</span>
     <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">myfolder</span>
     <span class="l-Scalar-Plain">handler</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">file.handler</span>
-    <span class="l-Scalar-Plain">runtime</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">javascript</span>
+    <span class="l-Scalar-Plain">runtime</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">nodejs4.3</span>
 </pre></div>
 </div>
 <p>Java lambda:</p>
@@ -198,7 +198,7 @@ needing to re-configure all related event sources.</p>
   <span class="l-Scalar-Plain">hello_world</span><span class="p-Indicator">:</span>
     <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">myfolder</span>
     <span class="l-Scalar-Plain">handler</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">example.Hello::handler</span>
-    <span class="l-Scalar-Plain">runtime</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">java</span>
+    <span class="l-Scalar-Plain">runtime</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">java8</span>
 </pre></div>
 </div>
 </div>
@@ -215,7 +215,7 @@ needing to re-configure all related event sources.</p>
 <div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">lambdas</span><span class="p-Indicator">:</span>
   <span class="l-Scalar-Plain">hello_world</span><span class="p-Indicator">:</span>
     <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">helloworld</span>
-    <span class="l-Scalar-Plain">runtime</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">java</span>
+    <span class="l-Scalar-Plain">runtime</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">java8</span>
     <span class="l-Scalar-Plain">handler</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">helloworld.Hello::handler</span>
 </pre></div>
 </div>
@@ -248,12 +248,58 @@ on the function&#8217;s expected execution time. By default, Timeout is set to 3
 </div>
 <div class="section" id="runtime">
 <h3>runtime<a class="headerlink" href="#runtime" title="Permalink to this headline">¶</a></h3>
-<p>Gordon auto detects runtimes based on the extensions of the <code class="docutils literal"><span class="pre">code</span></code> file. For folder based lambdas (like <code class="docutils literal"><span class="pre">java</span></code>) the code is a directory
-and not a file, so the runtime can&#8217;t be inferred. For this situations, you can specify the runtime using this setting.</p>
+<p>Runtime of your lambda. Valid values are:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="77%" />
+<col width="23%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Runtime</th>
+<th class="head">AWS Runtime</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">node</span></code>, <code class="docutils literal"><span class="pre">nodejs</span></code>, <code class="docutils literal"><span class="pre">node0.10</span></code> and <code class="docutils literal"><span class="pre">nodejs0.10</span></code></td>
+<td><code class="docutils literal"><span class="pre">nodejs</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">node4.3</span></code> and <code class="docutils literal"><span class="pre">nodejs4.3</span></code></td>
+<td><code class="docutils literal"><span class="pre">nodejs4.3</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">python</span></code> and <code class="docutils literal"><span class="pre">python2.7</span></code></td>
+<td><code class="docutils literal"><span class="pre">python2.7</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">java</span></code> and <code class="docutils literal"><span class="pre">java8</span></code></td>
+<td><code class="docutils literal"><span class="pre">java8</span></code></td>
+</tr>
+</tbody>
+</table>
+<p>If you don&#8217;t specidy any runtime, Gordon tries to auto detect it based on the extensions of the <code class="docutils literal"><span class="pre">code</span></code> file.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="58%" />
+<col width="42%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Extension</th>
+<th class="head">Runtime</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">.js</span></code></td>
+<td><code class="docutils literal"><span class="pre">nodejs4.3</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">.py</span></code></td>
+<td><code class="docutils literal"><span class="pre">python2.7</span></code></td>
+</tr>
+</tbody>
+</table>
+<p>For folder based lambdas (like <code class="docutils literal"><span class="pre">java</span></code>) the code is a directory and not a file, so the runtime can&#8217;t be inferred.
+For these situations, you can specify the runtime using this setting.</p>
 <div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">lambdas</span><span class="p-Indicator">:</span>
   <span class="l-Scalar-Plain">hello_world</span><span class="p-Indicator">:</span>
     <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">hellojava</span>
-    <span class="l-Scalar-Plain">runtime</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">java</span>
+    <span class="l-Scalar-Plain">runtime</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">java8</span>
 </pre></div>
 </div>
 </div>

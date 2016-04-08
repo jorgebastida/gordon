@@ -64,8 +64,8 @@ This application exposes two ``CloudFormation`` resources:
 ``contrib.helpers``
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-This application exposes one simple ``CloudFormation`` resource called ``Sleep``. Yes, this is lame ¯\_(ツ)_/¯ but
-it was the only possible way to make resilient integrations with streams such as ``kinesiss`` and ``dynamodb``.
+This application exposes one simple ``CloudFormation`` resource called ``Sleep``. Yes, this is lame ``¯\_(ツ)_/¯`` but
+it was the only possible way to make resilient integrations with streams such as ``kinesis`` and ``dynamodb``.
 
 This is because the IAM role of the lambda is not propagated fast enough uppon creation, and ``CloudFormation`` checks
 if the referenced lambda has permission to consume this stream on creation time. A small sleep fixes the problem. We
