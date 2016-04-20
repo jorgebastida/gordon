@@ -236,9 +236,7 @@ class BaseStream(BaseResource):
         sleep = Sleep.create_with(
             utils.valid_cloudformation_name(self.name, "Sleep"),
             DependsOn=[self.project.reference(sleep_lambda)],
-            lambda_arn=GetAtt(
-                self.project.reference(sleep_lambda), 'Arn'
-            ),
+            lambda_arn=troposphere.Ref(self.project.reference(sleep_lambda)),
             Time=30
         )
         template.add_resource(sleep)
@@ -250,7 +248,7 @@ class BaseStream(BaseResource):
                 BatchSize=self.get_batch_size(),
                 Enabled=self.get_enabled(),
                 EventSourceArn=self.settings.get('stream'),
-                FunctionName=troposphere.GetAtt(self.get_function_name(), 'Arn'),
+                FunctionName=troposphere.Ref(self.get_function_name()),
                 StartingPosition=self.get_starting_position()
             )
         )

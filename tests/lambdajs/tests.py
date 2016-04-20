@@ -13,7 +13,7 @@ class IntegrationTest(BaseIntegrationTest, unittest.TestCase):
         self.assert_stack_succeed('r')
 
         lambda_ = self.get_lambda(valid_cloudformation_name('jsexample:jsexample'))
-        self.assertEqual(lambda_['Runtime'], 'nodejs')
+        self.assertEqual(lambda_['Runtime'], 'nodejs4.3')
         self.assertEqual(lambda_['Description'], 'My description')
         self.assertEqual(lambda_['MemorySize'], 192)
         self.assertEqual(lambda_['Timeout'], 123)

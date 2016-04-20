@@ -78,8 +78,8 @@ class CloudWatchScheduledEvent(BaseResource):
                 self.project.reference(events_targets_lambda),
                 rule_resource_name
             ],
-            lambda_arn=troposphere.GetAtt(
-                self.project.reference(events_targets_lambda), 'Arn'
+            lambda_arn=troposphere.Ref(
+                self.project.reference(events_targets_lambda)
             ),
             Rule=rule_name,
             Targets=[

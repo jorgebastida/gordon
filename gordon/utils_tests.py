@@ -137,8 +137,11 @@ class BaseIntegrationTest(object):
         stacks = client.describe_stacks(StackName=name)
         self.assertEqual(len(stacks['Stacks']), 1)
         stack = stacks['Stacks'][0]
-        self.assertIn(stack['StackStatus'], ('CREATE_COMPLETE',))
-
+        try:
+            self.assertIn(stack['StackStatus'], ('CREATE_COMPLETE',))
+        except Exception:
+            import ipdb; ipdb.set_trace()
+            
     def get_lambda(self, function_name):
         client = boto3.client('lambda')
         matches = []

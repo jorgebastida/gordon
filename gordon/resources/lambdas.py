@@ -35,7 +35,7 @@ class Lambda(base.BaseResource):
         """Returns an instance of one of the severeal available Lambda
         resources based on the runtime."""
         _, extension = os.path.splitext(kwargs['settings']['code'])
-        runtime = kwargs['settings'].get('runtime', None)
+        runtime = kwargs['settings'].get('runtime', '')
 
         if 'python' in runtime or extension == '.py':
             return PythonLambda(*args, **kwargs)
