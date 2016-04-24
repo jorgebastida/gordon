@@ -283,13 +283,16 @@ class Lambda(base.BaseResource):
         version = template.add_resource(
             LambdaVersion.create_with(
                 utils.valid_cloudformation_name(self.name, "Version"),
-                DependsOn=[self.project.reference(lambda_version)],
+                DependsOn=[
+                    self.project.reference(lambda_version),
+                    function.name
+                ],
                 lambda_arn=lambda_ref,
                 FunctionName=troposphere.Ref(
                     function
                 ),
                 S3ObjectVersion=troposphere.Ref(
-                    utils.valid_cloudformation_name(self.name, "s3version")
+                   utils.valid_cloudformation_name(self.name, "s3version")
                 ),
             )
         )
@@ -297,6 +300,9 @@ class Lambda(base.BaseResource):
         template.add_resource(
             awslambda.Alias(
                 self.current_alias_cf_name,
+                DependsOn=[
+                    version.name
+                ],
                 FunctionName=troposphere.Ref(
                     function
                 ),

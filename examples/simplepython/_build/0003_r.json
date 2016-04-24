@@ -50,6 +50,9 @@
             "Type": "AWS::Lambda::Function"
         },
         "HellopyCurrentalias": {
+            "DependsOn": [
+                "HellopyVersion"
+            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "HelloworldHellopy"
@@ -132,7 +135,8 @@
         },
         "HellopyVersion": {
             "DependsOn": [
-                "VersionCurrentalias"
+                "VersionCurrentalias",
+                "HelloworldHellopy"
             ],
             "Properties": {
                 "FunctionName": {
@@ -187,6 +191,9 @@
             "Type": "AWS::Lambda::Function"
         },
         "VersionCurrentalias": {
+            "DependsOn": [
+                "VersionVersion"
+            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "ContribLambdasVersion"
@@ -268,6 +275,7 @@
         },
         "VersionVersion": {
             "DependsOn": [
+                "ContribLambdasVersion",
                 "ContribLambdasVersion"
             ],
             "Properties": {

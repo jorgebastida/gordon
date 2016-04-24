@@ -15,6 +15,10 @@ def publish_version(function_name):
 
 
 def handler(event, context, sleep=5):
+
+    # We don't want to delete versions when CloudFormation says so, because
+    # we want to keep them forever. If this delete comes from a stack delete
+    # operation, deleteing the lambda will delete all related versions.
     if event['RequestType'] == 'Delete':
         send(event, context, SUCCESS)
         return
