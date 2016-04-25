@@ -1,7 +1,7 @@
 Gordon
 =========
 
-Gordon is a high-level framework to create, wire and deploy AWS Lambdas in an easy way.
+Gordon is a high-level framework to create, wire and deploy AWS Lambdas using CloudFormation in an easy way.
 
 Usage
 ------
@@ -38,9 +38,9 @@ Features
 
 Why?
 ------
-In an ideal world, this project should not exits. AWS Lambdas (as any other AWS resource) should be provisioned using CloudFormation - One of the best advantages of using AWS (imho) is not it's scalability nor the fancy services... ain't the price; It is the fact that reproducibility is at it's core and their ecosystem is full of services which encourage/enforce it. Their flagship is CloudFormation.
+In an ideal world, AWS Lambdas (as any other AWS resource) should be provisioned using CloudFormation - One of the best advantages of using AWS (imho) is not it's scalability nor the fancy services... ain't the price; It is the fact that reproducibility is at it's core and their ecosystem is full of services which encourage/enforce it. Their flagship is CloudFormation.
 
-Then... why not use CloudFormation? Well, there are two reasons: First, not all AWS APIs are released when services are announced... ain't frameworks (boto3), nor integrations with CloudFormation.
+Then... why not use plain CloudFormation? Well, there are two reasons: First, not all AWS APIs are released when services are announced... ain't frameworks (boto3), nor integrations with CloudFormation.
 
 The second reason is complexity. CloudFormation stacks are defined using JSON templates which are a nightmare to write and maintain.
 
@@ -49,8 +49,7 @@ This project tries to solve these two issues by working around the lack of Cloud
 
 Why should you use this project?
 -----------------------------------
-Because eventually you'll stop using it -ish. Once CloudFormation supports 100% of the AWS Lambda API, this project will be a really thin layer of sugar around the fact that writing CloudFormation templates sucks and some conventions around how to structure a project using Lambdas... and not much more, which is great!
-
+Because this project doesn't introduces anything new. Gordon is a thin layer of sugar around the fact that writing CloudFormation templates sucks and some conventions around how to structure a project using Lambdas... and not much more, which is great!
 
 How it works
 -------------
