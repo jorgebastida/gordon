@@ -42,6 +42,7 @@ In detail explanations of how everything works together.
    settings
    parameters
    parameters_advanced
+   contexts
    eventsources
    contrib
    faq

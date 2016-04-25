@@ -43,6 +43,7 @@ Settings               Description
                        Because the source code and the lambdas needs to be in the same region, gordon will create on bucket per region and stage.
 ``apps``               List of installed apps
 ``vpc``                Map of vpc names with their respective ``security-groups`` and  ``subnet-ids``. For more information :ref:`Lambdas vpc setting <lambdas-vpc>`.
+``contexts``           Map of context names with their definitions. For more information :doc:`contexts`.
 =====================  =================================================================================================================================================
 
 

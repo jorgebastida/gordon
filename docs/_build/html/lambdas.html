@@ -138,6 +138,7 @@ needing to re-configure all related event sources.</p>
     <span class="l-Scalar-Plain">description</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">LAMBDA_DESCRIPTION</span> <span class="p-Indicator">}</span>
     <span class="l-Scalar-Plain">role</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">LAMBDA_ROLE</span> <span class="p-Indicator">}</span>
     <span class="l-Scalar-Plain">vpc</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">VPC_NAME</span> <span class="p-Indicator">}</span>
+    <span class="l-Scalar-Plain">context</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">CONTEXT_NAME</span> <span class="p-Indicator">}</span>
     <span class="l-Scalar-Plain">auto-vpc-policy</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">AUTO_VPC_POLICY</span> <span class="p-Indicator">}</span>
     <span class="l-Scalar-Plain">auto-run-policy</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">AUTO_RUN_POLICY</span> <span class="p-Indicator">}</span>
     <span class="l-Scalar-Plain">policies</span><span class="p-Indicator">:</span>
@@ -355,6 +356,16 @@ inside your VPC or use an Amazon Virtual Private Cloud (Amazon VPC) NAT gateway.
 <p>If <code class="docutils literal"><span class="pre">auto-vpc-policy</span></code> is <code class="docutils literal"><span class="pre">True</span></code>, gordon will attach to your lambda role the required policy which would allow it to access the vpc. It it is <code class="docutils literal"><span class="pre">False</span></code>, you&#8217;ll need
 to do this by yourself.</p>
 </div>
+<div class="section" id="context">
+<h3>context<a class="headerlink" href="#context" title="Permalink to this headline">¶</a></h3>
+<p>Name of the context you want to inject into this lambda. By default, Gordon will attach the context called <code class="docutils literal"><span class="pre">default</span></code> if it is present.</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">lambdas</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">hello_world</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">functions.py</span>
+    <span class="l-Scalar-Plain">context</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">context_name</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="policies">
 <h3>policies<a class="headerlink" href="#policies" title="Permalink to this headline">¶</a></h3>
 <p>List of AWS policies to attach to the role of this lambda. This is the way you&#8217;ll give permissions to you lambda to connect to other AWS services
@@ -460,6 +471,7 @@ access the vpc. It it is <code class="docutils literal"><span class="pre">False<
 <li><a class="reference internal" href="#description">description</a></li>
 <li><a class="reference internal" href="#role">role</a></li>
 <li><a class="reference internal" href="#vpc">vpc</a></li>
+<li><a class="reference internal" href="#context">context</a></li>
 <li><a class="reference internal" href="#policies">policies</a></li>
 <li><a class="reference internal" href="#auto-vpc-policy">auto-vpc-policy</a></li>
 <li><a class="reference internal" href="#auto-run-policy">auto-run-policy</a></li>

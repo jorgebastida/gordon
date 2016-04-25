@@ -34,7 +34,7 @@ AVAILABLE_RESOURCES = {
     's3': resources.s3.BucketNotificationConfiguration,
     'cron': resources.events.CloudWatchScheduledEvent,
     'vpcs': resources.vpcs.Vpc,
-    'lambdas-contexts': resources.lambdas_context.LambdasContexts
+    'contexts': resources.contexts.LambdasContexts
 }
 
 

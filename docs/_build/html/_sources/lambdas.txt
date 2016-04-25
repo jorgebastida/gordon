@@ -89,6 +89,7 @@ The following is the anatomy of a lambda in gordon.
       description: { LAMBDA_DESCRIPTION }
       role: { LAMBDA_ROLE }
       vpc: { VPC_NAME }
+      context: { CONTEXT_NAME }
       auto-vpc-policy: { AUTO_VPC_POLICY }
       auto-run-policy: { AUTO_RUN_POLICY }
       policies:
@@ -306,6 +307,18 @@ You need to define some properties about your vpc (in this example ``my-vpc``) i
 
 If ``auto-vpc-policy`` is ``True``, gordon will attach to your lambda role the required policy which would allow it to access the vpc. It it is ``False``, you'll need
 to do this by yourself.
+
+context
+^^^^^^^^^^^^
+
+Name of the context you want to inject into this lambda. By default, Gordon will attach the context called ``default`` if it is present.
+
+.. code-block:: yaml
+
+  lambdas:
+    hello_world:
+      code: functions.py
+      context: context_name
 
 
 policies

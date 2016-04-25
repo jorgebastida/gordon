@@ -6,4 +6,4 @@ from . import kinesis
 from . import s3
 from . import events
 from . import vpcs
-from . import lambdas_context
+from . import contexts
