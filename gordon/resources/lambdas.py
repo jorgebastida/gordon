@@ -79,6 +79,9 @@ class Lambda(base.BaseResource):
         runtime = self.settings.get('runtime', self._default_runtime)
         return self._runtimes[runtime]
 
+    def get_context_key(self):
+        return self.settings.get('context', 'default')
+
     def _get_policies(self):
         """Returns a list of policies to attach to the IAM Role of this Lambda.
         Users can add more policies to this Role by defining policy documents
@@ -336,12 +339,22 @@ class Lambda(base.BaseResource):
         with open(filename, 'w') as f:
             f.write(self.get_zip_file().read())
 
+        context, context_key = {}, self.get_context_key()
+        try:
+            lambda_context = self.project.get_resource('lambdas-contexts::{}'.format(context_key))
+        except exceptions.ResourceNotFoundError:
+            if context_key != 'default':
+                raise
+        else:
+            context = lambda_context.settings
+
         template.add(
-            actions.UploadToS3(
+            actions.InjectContextAndUploadToS3(
                 name="{}-upload".format(self.name),
                 bucket=actions.Ref(name='CodeBucket'),
                 key=self.get_bucket_key(),
-                filename=os.path.relpath(filename, self.project.build_path)
+                filename=os.path.relpath(filename, self.project.build_path),
+                context_to_inject=context
             )
         )
         template.add_output(

@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 import os
 import json
+import tempfile
+import zipfile
+import shutil
 
 import boto3
+import troposphere
 from clint.textui import colored, puts
 
 from gordon import utils, exceptions
@@ -45,6 +49,8 @@ class Serializable(object):
             return obj.serialize()
         elif isinstance(obj, dict):
             return dict((k, self._serialize(v)) for k, v in obj.iteritems())
+        elif isinstance(obj, troposphere.Ref):
+            return {'_type': 'Ref', 'name': obj.data['Ref']}
         elif hasattr(obj, '__iter__'):
             return [self._serialize(v) for v in obj]
         return obj
@@ -120,7 +126,6 @@ class ActionsTemplate(Serializable):
         action_outputs = {}
         for action in self.actions:
             action_outputs[action.name] = action.apply(context, project)
-
         outputs = {}
         for name, output in self.outputs.iteritems():
             if isinstance(output.value, GetAttr):
@@ -169,12 +174,13 @@ class UploadToS3(BaseAction):
         self.bucket = self._get('bucket', self.context)
         self.key = self._get('key', self.context)
 
-        self.filename = os.path.join(
+        self.filename = self._friendly_name = os.path.join(
             project.build_path,
             self._get('filename', context)
         )
 
         if self.filename.endswith('.zip'):
+            self.filename = self.prepare_zip()
             return self.apply_zip()
         return self.apply_general()
 
@@ -199,6 +205,9 @@ class UploadToS3(BaseAction):
             ),
             's3version': version
         }
+
+    def prepare_zip(self):
+        self.filename
 
     def apply_zip(self):
         s3client = boto3.client('s3')
@@ -226,4 +235,31 @@ class UploadToS3(BaseAction):
         return self.apply_general(metadata=zipmetadata)
 
     def _success(self, metadata):
-        puts(colored.green(u"✓ {} ({})".format(os.path.relpath(self.filename, self.project.build_path), metadata[:8])))
+        puts(colored.green(u"✓ {} ({})".format(os.path.relpath(self._friendly_name, self.project.build_path), metadata[:8])))
+
+
+def enrich_references(obj, context):
+    if isinstance(obj, dict):
+        return dict((k, enrich_references(v, context)) for k, v in obj.iteritems())
+    elif isinstance(obj, Ref):
+        return context[obj.name]
+    elif hasattr(obj, '__iter__'):
+        return [enrich_references(v, context) for v in obj]
+    return obj
+
+
+class InjectContextAndUploadToS3(UploadToS3):
+
+    properties = UploadToS3.properties + (
+        ('context_to_inject', None, False),
+    )
+
+    def prepare_zip(self):
+        context_to_inject = enrich_references(self.context_to_inject or {}, self.context)
+
+        _, tmpfile = tempfile.mkstemp()
+        shutil.copyfile(self.filename, tmpfile)
+        zfile = zipfile.ZipFile(tmpfile, 'w')
+        zfile.writestr('.context', json.dumps(context_to_inject))
+        zfile.close()
+        return tmpfile

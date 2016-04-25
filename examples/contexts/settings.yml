@@ -1,0 +1,14 @@
+---
+project: contexts
+default-region: eu-west-1
+code-bucket: gordon-contexts-0do1mc7
+pip-extra: --cache-dir=/tmp/
+apps:
+  - gordon.contrib.lambdas
+  - helloworld
+
+lambdas-contexts:
+    default:
+        a: value_a
+        b: value_b
+        c: ref://ImagesBucket

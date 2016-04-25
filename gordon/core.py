@@ -33,7 +33,8 @@ AVAILABLE_RESOURCES = {
     'kinesis': resources.kinesis.Kinesis,
     's3': resources.s3.BucketNotificationConfiguration,
     'cron': resources.events.CloudWatchScheduledEvent,
-    'vpcs': resources.vpcs.Vpc
+    'vpcs': resources.vpcs.Vpc,
+    'lambdas-contexts': resources.lambdas_context.LambdasContexts
 }
 
 
