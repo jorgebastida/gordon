@@ -380,7 +380,6 @@ class Lambda(base.BaseResource):
         """Returns a zip file file-like object with all the required source
         on it."""
         destination = tempfile.mkdtemp()
-        digest = hashlib.sha1()
 
         with indent(2):
             puts(colored.green(u"✓ {}".format(self._get_in_project_name())))
@@ -400,12 +399,6 @@ class Lambda(base.BaseResource):
                 source = os.path.join(destination, basedir, filename)
                 relative_destination = os.path.join(relative, filename)
                 zf.write(source, relative_destination)
-                with open(source, 'rb') as f:
-                    digest.update(f.read())
-
-        # Calculate digest of destination
-        metadata = {'sha1': digest.hexdigest()}
-        zf.writestr('.metadata', json.dumps(metadata))
 
         zf.close()
         output.seek(0)

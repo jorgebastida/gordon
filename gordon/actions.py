@@ -162,13 +162,14 @@ class UploadToS3(BaseAction):
     )
 
     def apply(self, context, project):
-        # Check if this file needs to get uploaded or not. In order to do so,
-        # we could rely on ETAG for normal files, but one of the mainline
-        # cases of gordon is to upload .zip files, and identical source folders
-        # don't have consistent checksums when you zip them, so we need to
-        # workaround this by generating our own checksum uppon creation and
-        # leave a .metadata file inside the zip file.
-        # If the file is not .zip file, we always upload the file.
+        """
+        Check if this file needs to get uploaded or not. In order to do so,
+        we could rely on ETAG for normal files, but one of the mainline
+        cases of gordon is to upload .zip files, and identical source folders
+        don't have consistent hashes when you zip them, so we need to
+        workaround this by generating our own hash by reading the zip content
+        in a particular order."""
+
         self.project = project
         self.context = context
         self.bucket = self._get('bucket', self.context)
@@ -179,21 +180,36 @@ class UploadToS3(BaseAction):
             self._get('filename', context)
         )
 
-        if self.filename.endswith('.zip'):
-            self.filename = self.prepare_zip()
-            return self.apply_zip()
-        return self.apply_general()
+        self.filename = self.prepare_file(self.filename)
 
-    def apply_general(self, metadata=None):
-        s3 = boto3.resource('s3')
-        obj = s3.Object(self.bucket, self.key)
+        s3client = boto3.client('s3')
+        try:
+            obj = s3client.head_object(Bucket=self.bucket, Key=self.key)
+        except Exception:
+            obj = None
 
-        extraargs = None
-        if metadata:
-            extraargs = {'Metadata': metadata}
+        # Calculate the hash of this file
+        file_hash = utils.get_file_hash(self.filename)
 
-        obj.upload_file(self.filename, ExtraArgs=extraargs)
-        self._success(metadata.get('sha1', ''))
+        # If the object is present, and the hash in the metadata is the same
+        # we don't need to upload it.
+        if obj and file_hash == obj['Metadata'].get('sha1'):
+            self._success(file_hash)
+            if self.project.debug:
+                puts(colored.white(u"✸ File with hash {} already present in {}/{}.".format(
+                    file_hash[:8], self.bucket, self.key))
+                )
+            return self.output(obj['VersionId'])
+
+        # If the key is not present or the hash doesn't match, we need to upload it.
+        if self.project.debug:
+            puts(colored.white(u"✸ Uploading file with hash {} to {}/{}.".format(
+                file_hash[:8], self.bucket, self.key))
+            )
+
+        obj = s3client.Object(self.bucket, self.key)
+        obj.upload_file(self.filename, ExtraArgs={'Metadata': {'sha1': file_hash}})
+        self._success(file_hash)
         return self.output(obj.version_id)
 
     def output(self, version):
@@ -206,33 +222,8 @@ class UploadToS3(BaseAction):
             's3version': version
         }
 
-    def prepare_zip(self):
-        self.filename
-
-    def apply_zip(self):
-        s3client = boto3.client('s3')
-        try:
-            obj = s3client.head_object(Bucket=self.bucket, Key=self.key)
-        except Exception:
-            obj = None
-
-        # If there is a file in this key, check if the attached metadata sha1
-        # matches with the sha1 inside the file zip
-        zipmetadata = utils.get_zip_metadata(self.filename)
-
-        if obj:
-            if zipmetadata.get('sha1') and zipmetadata.get('sha1') == obj['Metadata'].get('sha1'):
-                self._success(zipmetadata.get('sha1'))
-                if self.project.debug:
-                    puts(colored.white(u"✸ File with hash {} already present in {}/{}.".format(
-                        zipmetadata.get('sha1')[:8], self.bucket, self.key))
-                    )
-                return self.output(obj['VersionId'])
-        if self.project.debug:
-            puts(colored.white(u"✸ Uploading file with hash {} to {}/{}.".format(
-                zipmetadata.get('sha1')[:8], self.bucket, self.key))
-            )
-        return self.apply_general(metadata=zipmetadata)
+    def prepare_file(self, filename):
+        return filename
 
     def _success(self, metadata):
         puts(colored.green(u"✓ {} ({})".format(os.path.relpath(self._friendly_name, self.project.build_path), metadata[:8])))
@@ -254,7 +245,7 @@ class InjectContextAndUploadToS3(UploadToS3):
         ('context_to_inject', None, False),
     )
 
-    def prepare_zip(self):
+    def prepare_file(self, filename):
         context_to_inject = enrich_references(self.context_to_inject or {}, self.context)
 
         _, tmpfile = tempfile.mkstemp()

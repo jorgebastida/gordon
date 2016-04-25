@@ -96,6 +96,22 @@ def tree_hash(path):
     return digest.hexdigest()
 
 
+def get_zip_hash(obj):
+    """Return a consistent hash of the content of a zip file ``obj``."""
+    digest = hashlib.sha1()
+    zfile = zipfile.ZipFile(obj, 'r')
+    for path in sorted(zfile.namelist()):
+        digest.update(zfile.read(path))
+    return digest.hexdigest()
+
+
+def get_file_hash(filename):
+    if filename.endswith('.zip'):
+        return get_zip_hash(filename)
+    with open(filename, 'r') as f:
+        return hashlib.sha1(f.read()).hexdigest()
+
+
 def setup_region(region, settings=None):
     """Returns which region should be used and sets ``AWS_DEFAULT_REGION`` in
     order to configure ``boto3``."""
