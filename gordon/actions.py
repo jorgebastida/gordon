@@ -207,7 +207,7 @@ class UploadToS3(BaseAction):
                 file_hash[:8], self.bucket, self.key))
             )
 
-        obj = s3client.Object(self.bucket, self.key)
+        obj = boto3.resource('s3').Object(self.bucket, self.key)
         obj.upload_file(self.filename, ExtraArgs={'Metadata': {'sha1': file_hash}})
         self._success(file_hash)
         return self.output(obj.version_id)
