@@ -104,54 +104,59 @@
     "_type": "ActionsTemplate", 
     "actions": [
         {
-            "_type": "UploadToS3", 
-            "bucket": {
-                "_type": "Ref", 
-                "name": "CodeBucket"
-            }, 
+            "_type": "InjectContextAndUploadToS3", 
             "name": "sleep-upload", 
-            "key": "contrib_helpers_sleep.zip", 
-            "filename": "code/contrib_helpers_sleep.zip"
-        }, 
-        {
-            "_type": "UploadToS3", 
             "bucket": {
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
+            "filename": "code/contrib_helpers_sleep.zip", 
+            "context_to_inject": {}, 
+            "key": "contrib_helpers_sleep.zip"
+        }, 
+        {
+            "_type": "InjectContextAndUploadToS3", 
             "name": "version-upload", 
-            "key": "contrib_lambdas_version.zip", 
-            "filename": "code/contrib_lambdas_version.zip"
-        }, 
-        {
-            "_type": "UploadToS3", 
             "bucket": {
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
+            "filename": "code/contrib_lambdas_version.zip", 
+            "context_to_inject": {}, 
+            "key": "contrib_lambdas_version.zip"
+        }, 
+        {
+            "_type": "InjectContextAndUploadToS3", 
             "name": "target-upload", 
-            "key": "contrib_events_target.zip", 
-            "filename": "code/contrib_events_target.zip"
-        }, 
-        {
-            "_type": "UploadToS3", 
             "bucket": {
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
+            "filename": "code/contrib_events_target.zip", 
+            "context_to_inject": {}, 
+            "key": "contrib_events_target.zip"
+        }, 
+        {
+            "_type": "InjectContextAndUploadToS3", 
             "name": "rule-upload", 
-            "key": "contrib_events_rule.zip", 
-            "filename": "code/contrib_events_rule.zip"
-        }, 
-        {
-            "_type": "UploadToS3", 
             "bucket": {
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
+            "filename": "code/contrib_events_rule.zip", 
+            "context_to_inject": {}, 
+            "key": "contrib_events_rule.zip"
+        }, 
+        {
+            "_type": "InjectContextAndUploadToS3", 
             "name": "example-upload", 
-            "key": "cron_example.zip", 
-            "filename": "code/cron_example.zip"
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "filename": "code/cron_example.zip", 
+            "context_to_inject": {}, 
+            "key": "cron_example.zip"
         }
     ], 
     "parameters": {
