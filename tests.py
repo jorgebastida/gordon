@@ -147,8 +147,8 @@ class TestActions(unittest.TestCase):
 
     @patch('gordon.actions.boto3.resource')
     @patch('gordon.actions.boto3.client')
-    @patch('gordon.actions.utils.get_zip_metadata')
-    def test_upload_to_s3(self, get_zip_metadata_mock, client_mock, resource_mock):
+    @patch('gordon.actions.utils.get_file_hash')
+    def test_upload_to_s3(self, get_file_hash_mock, client_mock, resource_mock):
         client = Mock()
         resource = Mock()
         client_mock.return_value = client
@@ -158,7 +158,7 @@ class TestActions(unittest.TestCase):
         # New file
         #
         client.head_object.side_effect = Exception()
-        get_zip_metadata_mock.return_value = {'sha1': '123'}
+        get_file_hash_mock.return_value = '123'
         resource.Object.return_value.version_id = 'version123'
         context = Mock()
         project = Mock(region='eu-west-1', build_path='_build')
