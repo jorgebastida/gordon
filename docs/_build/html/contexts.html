@@ -71,10 +71,10 @@ you read that file on run time using your language of choice.</p>
 <span class="k">print</span><span class="p">(</span><span class="s">&#39;Loading function&#39;</span><span class="p">)</span>
 
 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;.context&#39;</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-    <span class="n">context</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+    <span class="n">gordon_context</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
 
 <span class="k">def</span> <span class="nf">handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">context</span><span class="p">[</span><span class="s">&#39;database_host&#39;</span><span class="p">]</span>  <span class="c"># Echo the database host</span>
+    <span class="k">return</span> <span class="n">gordon_context</span><span class="p">[</span><span class="s">&#39;database_host&#39;</span><span class="p">]</span>  <span class="c"># Echo the database host</span>
 </pre></div>
 </div>
 </div>

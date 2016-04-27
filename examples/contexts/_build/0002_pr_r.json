@@ -51,7 +51,14 @@
                 "name": "CodeBucket"
             }, 
             "filename": "code/contrib_lambdas_version.zip", 
-            "context_to_inject": {}, 
+            "context_to_inject": {
+                "a": "value_a", 
+                "c": {
+                    "_type": "Ref", 
+                    "name": "ImagesBucket"
+                }, 
+                "b": "value_b"
+            }, 
             "key": "contrib_lambdas_version.zip"
         }, 
         {
@@ -62,7 +69,14 @@
                 "name": "CodeBucket"
             }, 
             "filename": "code/helloworld_hellopy.zip", 
-            "context_to_inject": {}, 
+            "context_to_inject": {
+                "a": "value_a", 
+                "c": {
+                    "_type": "Ref", 
+                    "name": "ImagesBucket"
+                }, 
+                "b": "value_b"
+            }, 
             "key": "helloworld_hellopy.zip"
         }
     ], 

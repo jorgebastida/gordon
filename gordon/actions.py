@@ -250,7 +250,11 @@ class InjectContextAndUploadToS3(UploadToS3):
 
         _, tmpfile = tempfile.mkstemp()
         shutil.copyfile(self.filename, tmpfile)
-        zfile = zipfile.ZipFile(tmpfile, 'w')
-        zfile.writestr('.context', json.dumps(context_to_inject))
+        zfile = zipfile.ZipFile(tmpfile, 'a')
+
+        context_info = zipfile.ZipInfo('.context')
+        context_info.external_attr = 0440 << 16L
+        zfile.writestr(context_info, json.dumps(context_to_inject))
         zfile.close()
+
         return tmpfile

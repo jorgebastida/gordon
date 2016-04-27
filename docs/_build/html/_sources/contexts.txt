@@ -45,10 +45,10 @@ In the following example, we use python to read this file.
     print('Loading function')
 
     with open('.context', 'r') as f:
-        context = json.loads(f.read())
+        gordon_context = json.loads(f.read())
 
     def handler(event, context):
-        return context['database_host']  # Echo the database host
+        return gordon_context['database_host']  # Echo the database host
 
 Advanced contexts
 -------------------------

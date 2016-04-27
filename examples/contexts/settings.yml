@@ -7,7 +7,7 @@ apps:
   - gordon.contrib.lambdas
   - helloworld
 
-lambdas-contexts:
+contexts:
     default:
         a: value_a
         b: value_b

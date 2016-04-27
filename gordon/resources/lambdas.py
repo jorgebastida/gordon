@@ -341,7 +341,7 @@ class Lambda(base.BaseResource):
 
         context, context_key = {}, self.get_context_key()
         try:
-            lambda_context = self.project.get_resource('lambdas-contexts::{}'.format(context_key))
+            lambda_context = self.project.get_resource('contexts::{}'.format(context_key))
         except exceptions.ResourceNotFoundError:
             if context_key != 'default':
                 raise
