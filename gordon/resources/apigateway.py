@@ -9,6 +9,46 @@ class ApiGatewayContexts(BaseResource):
 
     grn_type = 'apigateway'
 
+    def __init__(self, *args, **kwargs):
+        super(ApiGatewayContexts, self).__init__(*args, **kwargs)
+        self._resources = {}
+
+    def get_or_create_resource(self, path, api, template):
+
+        if path and path[0] != '/':
+            path = '/{}'.format(path)
+
+        if path and path[-1] == '/':
+            path = path[:-1]
+
+        if not path:
+            path = '/'
+
+        if path == '/':
+            return troposphere.GetAtt(api, 'RootResourceId')
+
+        if path in self._resources:
+            return self._resources[path]
+
+        parent_id = self.get_or_create_resource(path.rsplit('/', 1)[0], api, template)
+        resource = Resource(
+            utils.valid_cloudformation_name(self.name, 'Resource', *path.split('/')),
+            ParentId=parent_id,
+            PathPart=path.rsplit('/', 1)[1],
+            RestApiId=troposphere.Ref(api)
+        )
+
+        template.add_resource(resource)
+        self._resources[path] = troposphere.Ref(resource)
+        return self._resources[path]
+
+    def get_function_name(self, resource):
+        """Returns a reference to the current alias of the lambda which will
+        process this stream."""
+        return self.project.reference(
+            utils.lambda_friendly_name_to_grn(resource['integration'].get('lambda'))
+        )
+
     def register_resources_template(self, template):
 
         api = RestApi(
@@ -18,97 +58,93 @@ class ApiGatewayContexts(BaseResource):
         )
         template.add_resource(api)
 
-        resource = Resource(
-            utils.valid_cloudformation_name(self.name, "FirstResource"),
-            ParentId=troposphere.GetAtt(api, 'RootResourceId'),
-            PathPart='hi',
-            RestApiId=troposphere.Ref(api)
-        )
-
-        template.add_resource(resource)
-
-        method = Method(
-            utils.valid_cloudformation_name(self.name, "FirstResourceGET"),
-            HttpMethod='GET',
-            AuthorizationType='NONE',
-            Integration=Integration(
-                IntegrationResponses=[
-                    IntegrationResponse(
-                        SelectionPattern=".*",
-                        StatusCode="200"
-                    )
-                ],
-                IntegrationHttpMethod='GET',
-                Type='AWS',
-                Uri='arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:936837623851:function:dev-apigateway-r-HelloworldHellopy-1EYA6E6VIU2AW/invocations',   #?Qualifier=current
-            ),
-            MethodResponses=[
-                MethodResponse(
-                    StatusCode='200'
+        role = troposphere.iam.Role(
+            utils.valid_cloudformation_name(self.name, 'Role'),
+            AssumeRolePolicyDocument={
+                "Version": "2012-10-17",
+                "Statement": [{
+                    "Effect": "Allow",
+                    "Principal": {
+                        "Service": ["apigateway.amazonaws.com"]
+                    },
+                    "Action": ["sts:AssumeRole"]
+                }]
+            },
+            Policies=[
+                troposphere.iam.Policy(
+                    PolicyName=utils.valid_cloudformation_name(self.name, 'Role', 'Policy'),
+                    PolicyDocument={
+                        "Version": "2012-10-17",
+                        "Statement": [
+                            {
+                                "Effect": "Allow",
+                                "Action": [
+                                    "lambda:InvokeFunction"
+                                ],
+                                "Resource": [
+                                    "*"
+                                ]
+                            }
+                        ]
+                    }
                 )
-            ],
-            ResourceId=troposphere.Ref(resource),
-            RestApiId=troposphere.Ref(api)
+            ]
         )
 
-        template.add_resource(method)
+        template.add_resource(role)
+
+        deployment_dependencies = []
+        for path, resource in self.settings.get('resources', {}).iteritems():
+            resource_reference = self.get_or_create_resource(path, api, template)
+
+            methods = resource.get('methods', [resource.get('method', 'GET')])
+
+            for method in methods:
+                method_name = [self.name]
+                method_name.extend(path.split('/'))
+                method_name.append(method)
+
+                m = Method(
+                    utils.valid_cloudformation_name(*method_name),
+                    HttpMethod=method,
+                    AuthorizationType=resource.get('authorization_type', 'NONE'),
+                    Integration=Integration(
+                        IntegrationResponses=[
+                            IntegrationResponse(
+                                SelectionPattern="",
+                                StatusCode="200"
+                            )
+                        ],
+                        IntegrationHttpMethod='POST',
+                        Type='AWS',
+                        Credentials=troposphere.GetAtt(role, 'Arn'),
+                        Uri=troposphere.Join(
+                            '',
+                            [
+                                'arn:aws:apigateway:',
+                                troposphere.Ref(troposphere.AWS_REGION),
+                                ':lambda:path/2015-03-31/functions/{}',
+                                troposphere.Ref(self.get_function_name(resource)),
+                                '/invocations?Qualifier=current'
+                            ]
+                        ),
+                    ),
+                    MethodResponses=[
+                        MethodResponse(
+                            StatusCode='200'
+                        )
+                    ],
+                    ResourceId=resource_reference,
+                    RestApiId=troposphere.Ref(api)
+                )
+                template.add_resource(m)
+                deployment_dependencies.append(m.name)
 
         deploy = Deployment(
             utils.valid_cloudformation_name(self.name, "Deployment2"),
+            DependsOn=deployment_dependencies,
             StageName='dev',
             RestApiId=troposphere.Ref(api)
         )
 
         template.add_resource(deploy)
-
-
-# class MethodResponse(AWSProperty):
-#
-#     props = {
-#         "ResponseModels": (dict, False),
-#         "ResponseParameters": (dict, False),
-#         "StatusCode": (basestring, False)
-#     }
-
-    #     class Deployment(AWSObject):
-    # resource_type = "AWS::ApiGateway::Deployment"
-    #
-    # props = {
-    #     "Description": (basestring, False),
-    #     "RestApiId": (basestring, True),
-    #     "StageDescription": (StageDescription, False),
-    #     "StageName": (basestring, False)
-    # }
-    #
-#
-# class Integration(AWSProperty):
-#
-#     props = {
-#         "CacheKeyParameters": ([basestring], False),
-#         "CacheNamespace": (basestring, False),
-#         "Credentials": (basestring, False),
-#         "IntegrationHttpMethod": (basestring, False),
-#         "IntegrationResponses": ([IntegrationResponse], False),
-#         "RequestParameters": (dict, False),
-#         "RequestTemplates": (dict, False),
-#         "Type": (basestring, False),
-#         "Uri": (basestring, False)
-#     }
-
-
-#
-# class Method(AWSObject):
-#     resource_type = "AWS::ApiGateway::Method"
-#
-#     props = {
-#         "ApiKeyRequired": (bool, False),
-#         "AuthorizationType": (basestring, False),
-#         "AuthorizerId": (basestring, False),
-#         #"HttpMethod": (basestring, False),
-#         "Integration": (Integration, False),
-#         "MethodResponses": ([MethodResponse], False),
-#         "RequestModels": (dict, False),
-#         "RequestParameters": (dict, False),
-#         "ResourceId": (basestring, False),
-#         #"RestApiId": (basestring, False)
-#     }

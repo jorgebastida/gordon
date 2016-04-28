@@ -7,5 +7,43 @@ apps:
   - helloworld
 
 apigateway:
-    hello:
+
+    helloapi:
         description: My first API
+        resources:
+            /:
+                methods: [GET, POST]
+                integration:
+                    lambda: helloworld.hellopy
+            /hi:
+                method: GET
+                integration:
+                    lambda: helloworld.hellopy
+
+            /hi/poo:
+                method: GET
+                integration:
+                    lambda: helloworld.hellopy
+
+            /extra/super/lol/:
+                method: GET
+                integration:
+                    lambda: helloworld.hellopy
+#
+# apigateway:
+#     hello:
+#         description: My first API
+#         resources:
+#             /hi/:
+#                 method: GET
+#                 authorization_type: NONE
+#                 integration:
+#                     responses:
+#                         - pattern: .*
+#                           status_code: 200
+#                     intergraion_http_method: POST
+#                     type: AWS
+#                     uri: lambda:hellopy
+#                 method_responses:
+#                     - status_code: 200
+#
