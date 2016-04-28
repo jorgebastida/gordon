@@ -188,10 +188,7 @@
                     ]
                 },
                 "ServiceToken": {
-                    "Fn::GetAtt": [
-                        "TargetCurrentalias",
-                        "Arn"
-                    ]
+                    "Ref": "TargetCurrentalias"
                 },
                 "Targets": [
                     {
@@ -249,6 +246,9 @@
             "Type": "Custom::EventsRule"
         },
         "ExampleCurrentalias": {
+            "DependsOn": [
+                "ExampleVersion"
+            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "CronExample"
@@ -314,7 +314,8 @@
         },
         "ExampleVersion": {
             "DependsOn": [
-                "VersionCurrentalias"
+                "VersionCurrentalias",
+                "CronExample"
             ],
             "Properties": {
                 "FunctionName": {
@@ -330,6 +331,9 @@
             "Type": "Custom::LambdaVersion"
         },
         "RuleCurrentalias": {
+            "DependsOn": [
+                "RuleVersion"
+            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "ContribEventsRule"
@@ -412,7 +416,8 @@
         },
         "RuleVersion": {
             "DependsOn": [
-                "VersionCurrentalias"
+                "VersionCurrentalias",
+                "ContribEventsRule"
             ],
             "Properties": {
                 "FunctionName": {
@@ -428,6 +433,9 @@
             "Type": "Custom::LambdaVersion"
         },
         "SleepCurrentalias": {
+            "DependsOn": [
+                "SleepVersion"
+            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "ContribHelpersSleep"
@@ -493,7 +501,8 @@
         },
         "SleepVersion": {
             "DependsOn": [
-                "VersionCurrentalias"
+                "VersionCurrentalias",
+                "ContribHelpersSleep"
             ],
             "Properties": {
                 "FunctionName": {
@@ -509,6 +518,9 @@
             "Type": "Custom::LambdaVersion"
         },
         "TargetCurrentalias": {
+            "DependsOn": [
+                "TargetVersion"
+            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "ContribEventsTarget"
@@ -591,7 +603,8 @@
         },
         "TargetVersion": {
             "DependsOn": [
-                "VersionCurrentalias"
+                "VersionCurrentalias",
+                "ContribEventsTarget"
             ],
             "Properties": {
                 "FunctionName": {
@@ -607,6 +620,9 @@
             "Type": "Custom::LambdaVersion"
         },
         "VersionCurrentalias": {
+            "DependsOn": [
+                "VersionVersion"
+            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "ContribLambdasVersion"
@@ -688,6 +704,7 @@
         },
         "VersionVersion": {
             "DependsOn": [
+                "ContribLambdasVersion",
                 "ContribLambdasVersion"
             ],
             "Properties": {

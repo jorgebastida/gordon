@@ -78,6 +78,9 @@
             "Type": "AWS::Lambda::Function"
         },
         "SleepCurrentalias": {
+            "DependsOn": [
+                "SleepVersion"
+            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "ContribHelpersSleep"
@@ -143,7 +146,8 @@
         },
         "SleepVersion": {
             "DependsOn": [
-                "VersionCurrentalias"
+                "VersionCurrentalias",
+                "ContribHelpersSleep"
             ],
             "Properties": {
                 "FunctionName": {
@@ -159,6 +163,9 @@
             "Type": "Custom::LambdaVersion"
         },
         "VersionCurrentalias": {
+            "DependsOn": [
+                "VersionVersion"
+            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "ContribLambdasVersion"
@@ -240,6 +247,7 @@
         },
         "VersionVersion": {
             "DependsOn": [
+                "ContribLambdasVersion",
                 "ContribLambdasVersion"
             ],
             "Properties": {

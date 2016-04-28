@@ -44,24 +44,26 @@
     "_type": "ActionsTemplate", 
     "actions": [
         {
-            "_type": "UploadToS3", 
+            "_type": "InjectContextAndUploadToS3", 
+            "name": "sleep-upload", 
             "bucket": {
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
-            "name": "sleep-upload", 
-            "key": "contrib_helpers_sleep.zip", 
-            "filename": "code/contrib_helpers_sleep.zip"
+            "filename": "code/contrib_helpers_sleep.zip", 
+            "context_to_inject": {}, 
+            "key": "contrib_helpers_sleep.zip"
         }, 
         {
-            "_type": "UploadToS3", 
+            "_type": "InjectContextAndUploadToS3", 
+            "name": "version-upload", 
             "bucket": {
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
-            "name": "version-upload", 
-            "key": "contrib_lambdas_version.zip", 
-            "filename": "code/contrib_lambdas_version.zip"
+            "filename": "code/contrib_lambdas_version.zip", 
+            "context_to_inject": {}, 
+            "key": "contrib_lambdas_version.zip"
         }
     ], 
     "parameters": {

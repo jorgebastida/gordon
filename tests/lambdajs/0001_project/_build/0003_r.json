@@ -81,6 +81,9 @@
             "Type": "AWS::Lambda::Function"
         },
         "JsexampleCurrentalias": {
+            "DependsOn": [
+                "JsexampleVersion"
+            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "JsexampleJsexample"
@@ -174,7 +177,8 @@
         },
         "JsexampleVersion": {
             "DependsOn": [
-                "VersionCurrentalias"
+                "VersionCurrentalias",
+                "JsexampleJsexample"
             ],
             "Properties": {
                 "FunctionName": {
@@ -190,6 +194,9 @@
             "Type": "Custom::LambdaVersion"
         },
         "SleepCurrentalias": {
+            "DependsOn": [
+                "SleepVersion"
+            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "ContribHelpersSleep"
@@ -255,7 +262,8 @@
         },
         "SleepVersion": {
             "DependsOn": [
-                "VersionCurrentalias"
+                "VersionCurrentalias",
+                "ContribHelpersSleep"
             ],
             "Properties": {
                 "FunctionName": {
@@ -271,6 +279,9 @@
             "Type": "Custom::LambdaVersion"
         },
         "VersionCurrentalias": {
+            "DependsOn": [
+                "VersionVersion"
+            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "ContribLambdasVersion"
@@ -352,6 +363,7 @@
         },
         "VersionVersion": {
             "DependsOn": [
+                "ContribLambdasVersion",
                 "ContribLambdasVersion"
             ],
             "Properties": {

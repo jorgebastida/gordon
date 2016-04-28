@@ -64,34 +64,37 @@
     "_type": "ActionsTemplate", 
     "actions": [
         {
-            "_type": "UploadToS3", 
-            "bucket": {
-                "_type": "Ref", 
-                "name": "CodeBucket"
-            }, 
+            "_type": "InjectContextAndUploadToS3", 
             "name": "sleep-upload", 
-            "key": "contrib_helpers_sleep.zip", 
-            "filename": "code/contrib_helpers_sleep.zip"
-        }, 
-        {
-            "_type": "UploadToS3", 
             "bucket": {
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
+            "filename": "code/contrib_helpers_sleep.zip", 
+            "context_to_inject": {}, 
+            "key": "contrib_helpers_sleep.zip"
+        }, 
+        {
+            "_type": "InjectContextAndUploadToS3", 
             "name": "version-upload", 
-            "key": "contrib_lambdas_version.zip", 
-            "filename": "code/contrib_lambdas_version.zip"
-        }, 
-        {
-            "_type": "UploadToS3", 
             "bucket": {
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
+            "filename": "code/contrib_lambdas_version.zip", 
+            "context_to_inject": {}, 
+            "key": "contrib_lambdas_version.zip"
+        }, 
+        {
+            "_type": "InjectContextAndUploadToS3", 
             "name": "consumer-upload", 
-            "key": "kinesisconsumer_consumer.zip", 
-            "filename": "code/kinesisconsumer_consumer.zip"
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "filename": "code/kinesisconsumer_consumer.zip", 
+            "context_to_inject": {}, 
+            "key": "kinesisconsumer_consumer.zip"
         }
     ], 
     "parameters": {
