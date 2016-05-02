@@ -1,5 +1,7 @@
 lambdas:
-  controllerpy:
+
+  python_webhook:
     code: mybot.py
-  controllerjs:
+
+  javascript_webhook:
     code: mybot.js

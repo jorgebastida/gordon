@@ -10,32 +10,32 @@
                 "attr": "s3version"
             }
         }, 
-        "ControllerjsS3Version": {
+        "PythonWebhookS3Version": {
             "default": "", 
             "_type": "Output", 
-            "name": "ControllerjsS3Version", 
+            "name": "PythonWebhookS3Version", 
             "value": {
-                "action": "controllerjs-upload", 
+                "action": "python_webhook-upload", 
                 "_type": "GetAttr", 
                 "attr": "s3version"
             }
         }, 
-        "ControllerpyS3Version": {
+        "JavascriptWebhookS3Version": {
             "default": "", 
             "_type": "Output", 
-            "name": "ControllerpyS3Version", 
+            "name": "JavascriptWebhookS3Version", 
             "value": {
-                "action": "controllerpy-upload", 
+                "action": "javascript_webhook-upload", 
                 "_type": "GetAttr", 
                 "attr": "s3version"
             }
         }, 
-        "ControllerjsS3Url": {
+        "PythonWebhookS3Url": {
             "default": "", 
             "_type": "Output", 
-            "name": "ControllerjsS3Url", 
+            "name": "PythonWebhookS3Url", 
             "value": {
-                "action": "controllerjs-upload", 
+                "action": "python_webhook-upload", 
                 "_type": "GetAttr", 
                 "attr": "s3url"
             }
@@ -50,12 +50,12 @@
                 "attr": "s3url"
             }
         }, 
-        "ControllerpyS3Url": {
+        "JavascriptWebhookS3Url": {
             "default": "", 
             "_type": "Output", 
-            "name": "ControllerpyS3Url", 
+            "name": "JavascriptWebhookS3Url", 
             "value": {
-                "action": "controllerpy-upload", 
+                "action": "javascript_webhook-upload", 
                 "_type": "GetAttr", 
                 "attr": "s3url"
             }
@@ -76,25 +76,25 @@
         }, 
         {
             "_type": "InjectContextAndUploadToS3", 
-            "name": "controllerjs-upload", 
+            "name": "javascript_webhook-upload", 
             "bucket": {
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
-            "filename": "code/bot_controllerjs.zip", 
+            "filename": "code/botapp_javascript_webhook.zip", 
             "context_to_inject": {}, 
-            "key": "bot_controllerjs.zip"
+            "key": "botapp_javascript_webhook.zip"
         }, 
         {
             "_type": "InjectContextAndUploadToS3", 
-            "name": "controllerpy-upload", 
+            "name": "python_webhook-upload", 
             "bucket": {
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
-            "filename": "code/bot_controllerpy.zip", 
+            "filename": "code/botapp_python_webhook.zip", 
             "context_to_inject": {}, 
-            "key": "bot_controllerpy.zip"
+            "key": "botapp_python_webhook.zip"
         }
     ], 
     "parameters": {
