@@ -1,0 +1,108 @@
+{
+    "outputs": {
+        "VersionS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "VersionS3Version", 
+            "value": {
+                "action": "version-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
+        "ControllerjsS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "ControllerjsS3Version", 
+            "value": {
+                "action": "controllerjs-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
+        "ControllerpyS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "ControllerpyS3Version", 
+            "value": {
+                "action": "controllerpy-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
+        "ControllerjsS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "ControllerjsS3Url", 
+            "value": {
+                "action": "controllerjs-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }, 
+        "VersionS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "VersionS3Url", 
+            "value": {
+                "action": "version-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }, 
+        "ControllerpyS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "ControllerpyS3Url", 
+            "value": {
+                "action": "controllerpy-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }
+    }, 
+    "_type": "ActionsTemplate", 
+    "actions": [
+        {
+            "_type": "InjectContextAndUploadToS3", 
+            "name": "version-upload", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "filename": "code/contrib_lambdas_version.zip", 
+            "context_to_inject": {}, 
+            "key": "contrib_lambdas_version.zip"
+        }, 
+        {
+            "_type": "InjectContextAndUploadToS3", 
+            "name": "controllerjs-upload", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "filename": "code/bot_controllerjs.zip", 
+            "context_to_inject": {}, 
+            "key": "bot_controllerjs.zip"
+        }, 
+        {
+            "_type": "InjectContextAndUploadToS3", 
+            "name": "controllerpy-upload", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "filename": "code/bot_controllerpy.zip", 
+            "context_to_inject": {}, 
+            "key": "bot_controllerpy.zip"
+        }
+    ], 
+    "parameters": {
+        "CodeBucket": {
+            "default": "", 
+            "_type": "Parameter", 
+            "name": "CodeBucket"
+        }
+    }, 
+    "parallelizable": false
+}

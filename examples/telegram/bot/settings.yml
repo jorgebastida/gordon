@@ -1,0 +1,5 @@
+lambdas:
+  controllerpy:
+    code: mybot.py
+  controllerjs:
+    code: mybot.js

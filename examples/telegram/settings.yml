@@ -1,0 +1,20 @@
+---
+project: telegramexample
+default-region: eu-west-1
+code-bucket: gordon-telegramexample-0do1mc7
+apps:
+  - gordon.contrib.lambdas
+  - bot
+
+apigateway:
+    telegramexampleapi:
+        description: My telegram API
+        resources:
+            /py:
+                methods: POST
+                integration:
+                    lambda: bot.controllerpy
+            /js:
+                methods: POST
+                integration:
+                    lambda: bot.controllerjs
