@@ -110,6 +110,60 @@ the full path (url) they will have within your apigateway.</p>
 </div>
 <p>Your lambda called <code class="docutils literal"><span class="pre">shop.article</span></code> will receive one parameter called <code class="docutils literal"><span class="pre">article_id</span></code>.</p>
 </div>
+<div class="section" id="resources-methods">
+<h3>Resources: Methods<a class="headerlink" href="#resources-methods" title="Permalink to this headline">¶</a></h3>
+<p>List of HTTP methods you lambda will support.</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">apigateway</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">example</span><span class="p-Indicator">:</span>
+        <span class="l-Scalar-Plain">description</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">My Api example</span>
+        <span class="l-Scalar-Plain">resources</span><span class="p-Indicator">:</span>
+            <span class="l-Scalar-Plain">/</span><span class="p-Indicator">:</span>
+                <span class="l-Scalar-Plain">methods</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">GET</span>
+                <span class="l-Scalar-Plain">lambda</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">inventory.index</span>
+            <span class="l-Scalar-Plain">/get_and_post</span><span class="p-Indicator">:</span>
+                <span class="l-Scalar-Plain">methods</span><span class="p-Indicator">:</span> <span class="p-Indicator">[</span><span class="nv">GET</span><span class="p-Indicator">,</span> <span class="nv">POST</span><span class="p-Indicator">]</span>
+                <span class="l-Scalar-Plain">lambda</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">inventory.article</span>
+            <span class="l-Scalar-Plain">/get_post_and_delete</span><span class="p-Indicator">:</span>
+                <span class="l-Scalar-Plain">methods</span><span class="p-Indicator">:</span>
+                    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">GET</span>
+                    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">POST</span>
+                    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">DELETE</span>
+                <span class="l-Scalar-Plain">lambda</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">inventory.article</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">As shortcut, if <code class="docutils literal"><span class="pre">methods</span></code> value is a string instead of a list gordon will assume you only want one method.</p>
+</div>
+</div>
+<div class="section" id="resources-methods-advanced">
+<h3>Resources: Methods (advanced)<a class="headerlink" href="#resources-methods-advanced" title="Permalink to this headline">¶</a></h3>
+<p>Methods is more than only a list of strings. The simplified version is only a shortcut in order to make gordon&#8217;s API nicer 95% of the time.</p>
+<p>That version (the simplified one) should be more than enough for most of the cases, but if for some reason you want to
+be able to configure different integrations for each of the methods of an url, you&#8217;ll need to do this.</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">apigateway</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">exampleapi</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">description</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">My not-that-simple example</span>
+    <span class="l-Scalar-Plain">resources</span><span class="p-Indicator">:</span>
+      <span class="l-Scalar-Plain">/</span><span class="p-Indicator">:</span>
+        <span class="l-Scalar-Plain">methods</span><span class="p-Indicator">:</span>
+          <span class="l-Scalar-Plain">GET</span><span class="p-Indicator">:</span>
+            <span class="l-Scalar-Plain">integration</span><span class="p-Indicator">:</span>
+              <span class="l-Scalar-Plain">lambda</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">app.index_on_get</span>
+          <span class="l-Scalar-Plain">POST</span><span class="p-Indicator">:</span>
+            <span class="l-Scalar-Plain">integration</span><span class="p-Indicator">:</span>
+              <span class="l-Scalar-Plain">lambda</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">app.index_on_post</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you use this approach, you would need to define <strong>ALL</strong> resource settings at the level of each method in your resource.</p>
+</div>
+</div>
+<div class="section" id="authorization-type">
+<h3>Authorization type<a class="headerlink" href="#authorization-type" title="Permalink to this headline">¶</a></h3>
+<p>apigateway authorization type for this resouce. The only (and default) authorization type is <code class="docutils literal"><span class="pre">NONE</span></code>.</p>
+</div>
 </div>
 <div class="section" id="full-example">
 <h2>Full Example<a class="headerlink" href="#full-example" title="Permalink to this headline">¶</a></h2>
@@ -121,16 +175,19 @@ the full path (url) they will have within your apigateway.</p>
         <span class="l-Scalar-Plain">resources</span><span class="p-Indicator">:</span>
             <span class="l-Scalar-Plain">/</span><span class="p-Indicator">:</span>
                 <span class="l-Scalar-Plain">methods</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">GET</span>
-                <span class="l-Scalar-Plain">lambda</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">helloworld.hellopy</span>
+                <span class="l-Scalar-Plain">integration</span><span class="p-Indicator">:</span>
+                    <span class="l-Scalar-Plain">lambda</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">helloworld.sayhi</span>
             <span class="l-Scalar-Plain">/hi</span><span class="p-Indicator">:</span>
-                <span class="l-Scalar-Plain">methods</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">GET</span>
-                <span class="l-Scalar-Plain">lambda</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">helloworld.hellopy</span>
+                <span class="l-Scalar-Plain">methods</span><span class="p-Indicator">:</span> <span class="p-Indicator">[</span><span class="nv">GET</span><span class="p-Indicator">,</span> <span class="nv">POST</span><span class="p-Indicator">]</span>
+                <span class="l-Scalar-Plain">integration</span><span class="p-Indicator">:</span>
+                    <span class="l-Scalar-Plain">lambda</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">helloworld.sayhi</span>
 
             <span class="l-Scalar-Plain">/hi/with-errors</span><span class="p-Indicator">:</span>
                 <span class="l-Scalar-Plain">method</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">GET</span>
-                <span class="l-Scalar-Plain">lambda</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">helloworld.hellopy</span>
-                <span class="l-Scalar-Plain">responses</span><span class="p-Indicator">:</span>
-                    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="s">&quot;404&quot;</span>
+                <span class="l-Scalar-Plain">integration</span><span class="p-Indicator">:</span>
+                    <span class="l-Scalar-Plain">lambda</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">helloworld.sayhi</span>
+                    <span class="l-Scalar-Plain">responses</span><span class="p-Indicator">:</span>
+                        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="s">&quot;404&quot;</span>
                 <span class="l-Scalar-Plain">responses</span><span class="p-Indicator">:</span>
                     <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">pattern</span><span class="p-Indicator">:</span> <span class="s">&quot;&quot;</span>
                       <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="s">&quot;404&quot;</span>
@@ -138,12 +195,25 @@ the full path (url) they will have within your apigateway.</p>
             <span class="l-Scalar-Plain">/hi/none</span><span class="p-Indicator">:</span>
                 <span class="l-Scalar-Plain">method</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">GET</span>
 
-            <span class="l-Scalar-Plain">/extra/super/lol/</span><span class="p-Indicator">:</span>
+            <span class="l-Scalar-Plain">/hi/http</span><span class="p-Indicator">:</span>
+                <span class="l-Scalar-Plain">methods</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">GET</span>
+                <span class="l-Scalar-Plain">integration</span><span class="p-Indicator">:</span>
+                    <span class="l-Scalar-Plain">type</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">HTTP</span>
+                    <span class="l-Scalar-Plain">uri</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">https://www.google.com</span>
+
+            <span class="l-Scalar-Plain">/hi/mock</span><span class="p-Indicator">:</span>
+                <span class="l-Scalar-Plain">methods</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">GET</span>
+                <span class="l-Scalar-Plain">integration</span><span class="p-Indicator">:</span>
+                    <span class="l-Scalar-Plain">type</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">MOCK</span>
+
+            <span class="l-Scalar-Plain">/hi/complex/</span><span class="p-Indicator">:</span>
                 <span class="l-Scalar-Plain">methods</span><span class="p-Indicator">:</span>
                     <span class="l-Scalar-Plain">GET</span><span class="p-Indicator">:</span>
-                        <span class="l-Scalar-Plain">lambda</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">helloworld.hellopy</span>
+                        <span class="l-Scalar-Plain">integration</span><span class="p-Indicator">:</span>
+                            <span class="l-Scalar-Plain">lambda</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">helloworld.sayhi</span>
                     <span class="l-Scalar-Plain">POST</span><span class="p-Indicator">:</span>
-                        <span class="l-Scalar-Plain">lambda</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">helloworld.hellopy</span>
+                        <span class="l-Scalar-Plain">integration</span><span class="p-Indicator">:</span>
+                            <span class="l-Scalar-Plain">lambda</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">helloworld.sayhi</span>
 </pre></div>
 </div>
 </div>
@@ -162,6 +232,9 @@ the full path (url) they will have within your apigateway.</p>
 <li><a class="reference internal" href="#api-description">Api Description</a></li>
 <li><a class="reference internal" href="#resources">Resources</a><ul>
 <li><a class="reference internal" href="#resources-url">Resources: URL</a></li>
+<li><a class="reference internal" href="#resources-methods">Resources: Methods</a></li>
+<li><a class="reference internal" href="#resources-methods-advanced">Resources: Methods (advanced)</a></li>
+<li><a class="reference internal" href="#authorization-type">Authorization type</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#full-example">Full Example</a></li>
