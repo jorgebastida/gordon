@@ -2,10 +2,8 @@
 import os
 import shutil
 import tempfile
-import hashlib
 import zipfile
 import StringIO
-import json
 import subprocess
 
 import troposphere
@@ -389,6 +387,8 @@ class Lambda(base.BaseResource):
         except subprocess.CalledProcessError, exc:
             raise exceptions.LambdaBuildProcessError(exc, self)
 
+        self._clean_package(destination)
+
         output = StringIO.StringIO()
         zf = zipfile.ZipFile(output, 'w')
 
@@ -416,6 +416,11 @@ class Lambda(base.BaseResource):
             for filename in files:
                 relative_destination = os.path.join(relative, filename)
                 shutil.copyfile(os.path.join(basedir, filename), os.path.join(destination, relative_destination))
+
+    def _clean_package(self, destination):
+        """Clean lambda package content before creating a .zip file
+        """
+        pass
 
     def collect_lambda_content(self):
         """Collects all required files to be included in the .zip file of the
@@ -475,6 +480,17 @@ class PythonLambda(Lambda):
 
                 os.remove(setup_cfg_path)
 
+    def _clean_package(self, destination):
+        for (dirpath, dirnames, fnames) in os.walk(destination):
+
+            if dirpath.endswith('.dist-info'):
+                shutil.rmtree(dirpath)
+                continue
+
+            for fname in fnames:
+                if fname.endswith('.pyc'):
+                    os.remove(os.path.join(dirpath, fname))
+                    
 
 class NodeLambda(Lambda):
 

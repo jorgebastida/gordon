@@ -35,7 +35,7 @@ AVAILABLE_RESOURCES = {
     'cron': resources.events.CloudWatchScheduledEvent,
     'vpcs': resources.vpcs.Vpc,
     'contexts': resources.contexts.LambdasContexts,
-    'apigateway': resources.apigateway.ApiGatewayContexts
+    'apigateway': resources.apigateway.ApiGateway
 }
 
 

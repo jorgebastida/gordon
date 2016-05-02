@@ -7,7 +7,6 @@ apps:
   - helloworld
 
 apigateway:
-
     helloapi:
         description: My first API
         resources:
@@ -16,19 +15,40 @@ apigateway:
                 integration:
                     lambda: helloworld.hellopy
             /hi:
-                method: GET
+                methods: GET
                 integration:
                     lambda: helloworld.hellopy
 
             /hi/poo:
-                method: GET
+                methods: GET
+                integration:
+                    lambda: helloworld.hellopy
+                    responses:
+                        - pattern: ""
+                          code: "404"
+                responses:
+                    - code: "404"
+
+            /hi/poo2:
+                methods: GET
                 integration:
                     lambda: helloworld.hellopy
 
-            /extra/super/lol/:
-                method: GET
+            /http:
+                methods: GET
                 integration:
-                    lambda: helloworld.hellopy
+                    type: HTTP
+                    uri: http://www.terra.es
+
+            /extra/super/lol/:
+                methods:
+                    GET:
+                        integration:
+                            lambda: helloworld.hellopy
+                    POST:
+                        integration:
+                            lambda: helloworld.hellopy
+
 #
 # apigateway:
 #     hello:
