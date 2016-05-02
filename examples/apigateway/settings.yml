@@ -34,11 +34,21 @@ apigateway:
                 integration:
                     lambda: helloworld.hellopy
 
+            /hi/{language}:
+                methods: GET
+                integration:
+                    lambda: helloworld.hellopy
+
             /http:
                 methods: GET
                 integration:
                     type: HTTP
                     uri: http://www.terra.es
+
+            /mock:
+                methods: GET
+                integration:
+                    type: MOCK
 
             /extra/super/lol/:
                 methods:

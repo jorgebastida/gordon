@@ -56,8 +56,9 @@
             },
             "Type": "AWS::ApiGateway::RestApi"
         },
-        "HelloapiDeploymentB98Bba04": {
+        "HelloapiDeploymentCce09C5D": {
             "DependsOn": [
+                "HelloapiMockGet",
                 "HelloapiHiGet",
                 "HelloapiHiPooGet",
                 "HelloapiExtraSuperLolPost",
@@ -65,7 +66,8 @@
                 "HelloapiPost",
                 "HelloapiGet",
                 "HelloapiHiPoo2Get",
-                "HelloapiHttpGet"
+                "HelloapiHttpGet",
+                "HelloapiHiLanguageGet"
             ],
             "Properties": {
                 "RestApiId": {
@@ -278,6 +280,56 @@
             },
             "Type": "AWS::ApiGateway::Method"
         },
+        "HelloapiHiLanguageGet": {
+            "Properties": {
+                "AuthorizationType": "NONE",
+                "HttpMethod": "GET",
+                "Integration": {
+                    "Credentials": {
+                        "Fn::GetAtt": [
+                            "HelloapiRole",
+                            "Arn"
+                        ]
+                    },
+                    "IntegrationHttpMethod": "POST",
+                    "IntegrationResponses": [
+                        {
+                            "SelectionPattern": "",
+                            "StatusCode": "200"
+                        }
+                    ],
+                    "Type": "AWS",
+                    "Uri": {
+                        "Fn::Join": [
+                            "",
+                            [
+                                "arn:aws:apigateway:",
+                                {
+                                    "Ref": "AWS::Region"
+                                },
+                                ":lambda:path/2015-03-31/functions/",
+                                {
+                                    "Ref": "HellopyCurrentalias"
+                                },
+                                "/invocations?Qualifier=current"
+                            ]
+                        ]
+                    }
+                },
+                "MethodResponses": [
+                    {
+                        "StatusCode": "200"
+                    }
+                ],
+                "ResourceId": {
+                    "Ref": "HelloapiResourceHiLanguage"
+                },
+                "RestApiId": {
+                    "Ref": "Helloapi"
+                }
+            },
+            "Type": "AWS::ApiGateway::Method"
+        },
         "HelloapiHiPoo2Get": {
             "Properties": {
                 "AuthorizationType": "NONE",
@@ -410,6 +462,40 @@
             },
             "Type": "AWS::ApiGateway::Method"
         },
+        "HelloapiMockGet": {
+            "Properties": {
+                "AuthorizationType": "NONE",
+                "HttpMethod": "GET",
+                "Integration": {
+                    "Credentials": {
+                        "Ref": "AWS::NoValue"
+                    },
+                    "IntegrationHttpMethod": "GET",
+                    "IntegrationResponses": [
+                        {
+                            "SelectionPattern": "",
+                            "StatusCode": "200"
+                        }
+                    ],
+                    "Type": "MOCK",
+                    "Uri": {
+                        "Ref": "AWS::NoValue"
+                    }
+                },
+                "MethodResponses": [
+                    {
+                        "StatusCode": "200"
+                    }
+                ],
+                "ResourceId": {
+                    "Ref": "HelloapiResourceMock"
+                },
+                "RestApiId": {
+                    "Ref": "Helloapi"
+                }
+            },
+            "Type": "AWS::ApiGateway::Method"
+        },
         "HelloapiPost": {
             "Properties": {
                 "AuthorizationType": "NONE",
@@ -517,6 +603,18 @@
             },
             "Type": "AWS::ApiGateway::Resource"
         },
+        "HelloapiResourceHiLanguage": {
+            "Properties": {
+                "ParentId": {
+                    "Ref": "HelloapiResourceHi"
+                },
+                "PathPart": "{language}",
+                "RestApiId": {
+                    "Ref": "Helloapi"
+                }
+            },
+            "Type": "AWS::ApiGateway::Resource"
+        },
         "HelloapiResourceHiPoo": {
             "Properties": {
                 "ParentId": {
@@ -550,6 +648,21 @@
                     ]
                 },
                 "PathPart": "http",
+                "RestApiId": {
+                    "Ref": "Helloapi"
+                }
+            },
+            "Type": "AWS::ApiGateway::Resource"
+        },
+        "HelloapiResourceMock": {
+            "Properties": {
+                "ParentId": {
+                    "Fn::GetAtt": [
+                        "Helloapi",
+                        "RootResourceId"
+                    ]
+                },
+                "PathPart": "mock",
                 "RestApiId": {
                     "Ref": "Helloapi"
                 }
