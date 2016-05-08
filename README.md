@@ -1,6 +1,8 @@
 Gordon
 =========
 
+Important! Preliminary doc: http://gordondoc.s3-website-eu-west-1.amazonaws.com/
+
 Gordon is a high-level framework to create, wire and deploy AWS Lambdas using CloudFormation in an easy way.
 
 Usage
