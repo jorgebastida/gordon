@@ -1,5 +1,15 @@
 {
     "outputs": {
+        "HellopyS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "HellopyS3Version", 
+            "value": {
+                "action": "hellopy-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
         "VersionS3Version": {
             "default": "", 
             "_type": "Output", 
@@ -20,46 +30,6 @@
                 "attr": "s3url"
             }
         }, 
-        "RuleS3Version": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "RuleS3Version", 
-            "value": {
-                "action": "rule-upload", 
-                "_type": "GetAttr", 
-                "attr": "s3version"
-            }
-        }, 
-        "HellopyS3Version": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "HellopyS3Version", 
-            "value": {
-                "action": "hellopy-upload", 
-                "_type": "GetAttr", 
-                "attr": "s3version"
-            }
-        }, 
-        "TargetS3Url": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "TargetS3Url", 
-            "value": {
-                "action": "target-upload", 
-                "_type": "GetAttr", 
-                "attr": "s3url"
-            }
-        }, 
-        "TargetS3Version": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "TargetS3Version", 
-            "value": {
-                "action": "target-upload", 
-                "_type": "GetAttr", 
-                "attr": "s3version"
-            }
-        }, 
         "VersionS3Url": {
             "default": "", 
             "_type": "Output", 
@@ -69,59 +39,31 @@
                 "_type": "GetAttr", 
                 "attr": "s3url"
             }
-        }, 
-        "RuleS3Url": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "RuleS3Url", 
-            "value": {
-                "action": "rule-upload", 
-                "_type": "GetAttr", 
-                "attr": "s3url"
-            }
         }
     }, 
     "_type": "ActionsTemplate", 
     "actions": [
         {
-            "_type": "UploadToS3", 
-            "bucket": {
-                "_type": "Ref", 
-                "name": "CodeBucket"
-            }, 
+            "_type": "InjectContextAndUploadToS3", 
             "name": "version-upload", 
-            "key": "contrib_lambdas_version.zip", 
-            "filename": "code/contrib_lambdas_version.zip"
-        }, 
-        {
-            "_type": "UploadToS3", 
             "bucket": {
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
-            "name": "target-upload", 
-            "key": "contrib_events_target.zip", 
-            "filename": "code/contrib_events_target.zip"
+            "filename": "code/contrib_lambdas_version.zip", 
+            "context_to_inject": {}, 
+            "key": "contrib_lambdas_version.zip"
         }, 
         {
-            "_type": "UploadToS3", 
-            "bucket": {
-                "_type": "Ref", 
-                "name": "CodeBucket"
-            }, 
-            "name": "rule-upload", 
-            "key": "contrib_events_rule.zip", 
-            "filename": "code/contrib_events_rule.zip"
-        }, 
-        {
-            "_type": "UploadToS3", 
-            "bucket": {
-                "_type": "Ref", 
-                "name": "CodeBucket"
-            }, 
+            "_type": "InjectContextAndUploadToS3", 
             "name": "hellopy-upload", 
-            "key": "helloworld_hellopy.zip", 
-            "filename": "code/helloworld_hellopy.zip"
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "filename": "code/helloworld_hellopy.zip", 
+            "context_to_inject": {}, 
+            "key": "helloworld_hellopy.zip"
         }
     ], 
     "parameters": {
