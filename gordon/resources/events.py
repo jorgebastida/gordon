@@ -8,7 +8,7 @@ from gordon import utils
 class CloudWatchScheduledEvent(BaseResource):
 
     required_settings = (
-        'expression',
+        'schedule_expression',
         'lambda'
     )
 
@@ -18,7 +18,7 @@ class CloudWatchScheduledEvent(BaseResource):
 
     def get_expression(self):
         """Returns a valid schedule expression"""
-        return self.settings['expression']
+        return self.settings['schedule_expression']
 
     def get_function_name(self):
         """Returns a reference to the current alias of the lambda which will
@@ -35,60 +35,33 @@ class CloudWatchScheduledEvent(BaseResource):
         )
 
     def register_resources_template(self, template):
-        role = troposphere.iam.Role(
-            utils.valid_cloudformation_name(self.name, 'Role'),
-            AssumeRolePolicyDocument={
-                "Version": "2012-10-17",
-                "Statement": [{
-                    "Effect": "Allow",
-                    "Principal": {
-                        "Service": ["events.amazonaws.com"]
-                    },
-                    "Action": ["sts:AssumeRole"]
-                }]
-            },
-            Policies=[
-                troposphere.iam.Policy(
-                    PolicyName=utils.valid_cloudformation_name(self.name, 'Policy'),
-                    PolicyDocument={
-                        "Version": "2012-10-17",
-                        "Statement": [
-                            {
-                                "Effect": "Allow",
-                                "Action": [
-                                    "lambda:InvokeFunction"
-                                ],
-                                "Resource": [
-                                    "*"
-                                ]
-                            }
-                        ]
-                    }
-                )
-            ]
-        )
-        template.add_resource(role)
-
-        rule_resource_name = utils.valid_cloudformation_name(self.name, "Rule")
-        rule_name = troposphere.Join(
-            "-",
-            [troposphere.Ref(troposphere.AWS_STACK_NAME), rule_resource_name]
-        )
         rule = events.Rule(
-            rule_resource_name,
+            utils.valid_cloudformation_name(self.name, "Rule"),
             Description=self.settings.get('description', ''),
             #EventPattern=,
-            Name=rule_name,
-            RoleArn=troposphere.GetAtt(role, 'Arn'),
             ScheduleExpression=self.get_expression(),
             State=self.get_enabled(),
             Targets=[
                 events.Target(
                     Arn=self.get_destination_arn(),
                     Id=self.get_function_name(),
-                    # Input=,
-                    # InputPath=,
                 )
             ]
         )
         template.add_resource(rule)
+
+        template.add_resource(
+            troposphere.awslambda.Permission(
+                utils.valid_cloudformation_name(
+                    self.name,
+                    'rule',
+                    'permission'
+                ),
+                Action="lambda:InvokeFunction",
+                FunctionName=self.get_destination_arn(),
+                Principal="events.amazonaws.com",
+                SourceArn=troposphere.GetAtt(
+                    rule, 'Arn'
+                ),
+            )
+        )

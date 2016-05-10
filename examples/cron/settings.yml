@@ -1,12 +1,18 @@
 ---
-project: cron5
+project: cron10
 default-region: eu-west-1
-code-bucket: gordon-cron5-0do1mc8
+code-bucket: gordon-cron10-0do1mc8
 apps:
   - gordon.contrib.lambdas
   - helloworld
 
 cron:
   every_night:
-    expression: rate(1 minute)
+    schedule_expression: rate(1 minute)
     lambda: helloworld.hellopy
+#
+# events:
+#   every_night:
+#     #event_pattern: xxx
+#     schedule_expression: rate(1 minute)
+#     lambda: helloworld.hellopy
