@@ -52,14 +52,19 @@
         "EveryNightRule": {
             "Properties": {
                 "Description": "",
-                "ScheduleExpression": "rate(1 minute)",
+                "EventPattern": {
+                    "Ref": "AWS::NoValue"
+                },
+                "ScheduleExpression": "rate(5 minutes)",
                 "State": "ENABLED",
                 "Targets": [
                     {
                         "Arn": {
                             "Ref": "HellopyCurrentalias"
                         },
-                        "Id": "HellopyCurrentalias"
+                        "Id": "HellopyCurrentalias",
+                        "Input": "",
+                        "InputPath": ""
                     }
                 ]
             },
@@ -193,6 +198,50 @@
                 "Timeout": 3
             },
             "Type": "AWS::Lambda::Function"
+        },
+        "UpdateDnsRule": {
+            "Properties": {
+                "Description": "",
+                "EventPattern": {
+                    "detail": {
+                        "state": [
+                            "pending"
+                        ]
+                    },
+                    "source": [
+                        "aws.ec2"
+                    ]
+                },
+                "ScheduleExpression": "rate(3 minutes)",
+                "State": "ENABLED",
+                "Targets": [
+                    {
+                        "Arn": {
+                            "Ref": "HellopyCurrentalias"
+                        },
+                        "Id": "HellopyCurrentalias",
+                        "Input": "",
+                        "InputPath": ""
+                    }
+                ]
+            },
+            "Type": "AWS::Events::Rule"
+        },
+        "UpdateDnsRulePermission": {
+            "Properties": {
+                "Action": "lambda:InvokeFunction",
+                "FunctionName": {
+                    "Ref": "HellopyCurrentalias"
+                },
+                "Principal": "events.amazonaws.com",
+                "SourceArn": {
+                    "Fn::GetAtt": [
+                        "UpdateDnsRule",
+                        "Arn"
+                    ]
+                }
+            },
+            "Type": "AWS::Lambda::Permission"
         },
         "VersionCurrentalias": {
             "DependsOn": [

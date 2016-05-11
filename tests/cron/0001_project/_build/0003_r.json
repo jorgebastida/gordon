@@ -11,9 +11,6 @@
             "Description": "AWS Region",
             "Type": "String"
         },
-        "RuleS3Version": {
-            "Type": "String"
-        },
         "SleepS3Version": {
             "Type": "String"
         },
@@ -22,70 +19,11 @@
             "Description": "Name of the Stage",
             "Type": "String"
         },
-        "TargetS3Version": {
-            "Type": "String"
-        },
         "VersionS3Version": {
             "Type": "String"
         }
     },
     "Resources": {
-        "ContribEventsRule": {
-            "DependsOn": [
-                "RuleRole"
-            ],
-            "Properties": {
-                "Code": {
-                    "S3Bucket": {
-                        "Ref": "CodeBucket"
-                    },
-                    "S3Key": "contrib_events_rule.zip",
-                    "S3ObjectVersion": {
-                        "Ref": "RuleS3Version"
-                    }
-                },
-                "Description": "Manages Cloudwatch event rules",
-                "Handler": "rule.handler",
-                "MemorySize": 128,
-                "Role": {
-                    "Fn::GetAtt": [
-                        "RuleRole",
-                        "Arn"
-                    ]
-                },
-                "Runtime": "python2.7",
-                "Timeout": 300
-            },
-            "Type": "AWS::Lambda::Function"
-        },
-        "ContribEventsTarget": {
-            "DependsOn": [
-                "TargetRole"
-            ],
-            "Properties": {
-                "Code": {
-                    "S3Bucket": {
-                        "Ref": "CodeBucket"
-                    },
-                    "S3Key": "contrib_events_target.zip",
-                    "S3ObjectVersion": {
-                        "Ref": "TargetS3Version"
-                    }
-                },
-                "Description": "Manages Cloudwatch event targets",
-                "Handler": "target.handler",
-                "MemorySize": 128,
-                "Role": {
-                    "Fn::GetAtt": [
-                        "TargetRole",
-                        "Arn"
-                    ]
-                },
-                "Runtime": "python2.7",
-                "Timeout": 300
-            },
-            "Type": "AWS::Lambda::Function"
-        },
         "ContribHelpersSleep": {
             "DependsOn": [
                 "SleepRole"
@@ -170,47 +108,34 @@
             },
             "Type": "AWS::Lambda::Function"
         },
-        "EveryNightEventstargets": {
-            "DependsOn": [
-                "TargetCurrentalias",
-                "EveryNightRule"
-            ],
+        "EveryNightRule": {
             "Properties": {
-                "Rule": {
-                    "Fn::Join": [
-                        "-",
-                        [
-                            {
-                                "Ref": "AWS::StackName"
-                            },
-                            "EveryNightRule"
-                        ]
-                    ]
+                "Description": "",
+                "EventPattern": {
+                    "Ref": "AWS::NoValue"
                 },
-                "ServiceToken": {
-                    "Ref": "TargetCurrentalias"
-                },
+                "ScheduleExpression": "cron(0 20 * * ? *)",
+                "State": "ENABLED",
                 "Targets": [
                     {
                         "Arn": {
                             "Ref": "ExampleCurrentalias"
                         },
-                        "Id": "ExampleCurrentalias"
+                        "Id": "ExampleCurrentalias",
+                        "Input": "",
+                        "InputPath": ""
                     }
                 ]
             },
-            "Type": "Custom::EventsTargets"
+            "Type": "AWS::Events::Rule"
         },
-        "EveryNightPermission": {
+        "EveryNightRulePermission": {
             "Properties": {
                 "Action": "lambda:InvokeFunction",
                 "FunctionName": {
                     "Ref": "ExampleCurrentalias"
                 },
                 "Principal": "events.amazonaws.com",
-                "SourceAccount": {
-                    "Ref": "AWS::AccountId"
-                },
                 "SourceArn": {
                     "Fn::GetAtt": [
                         "EveryNightRule",
@@ -219,31 +144,6 @@
                 }
             },
             "Type": "AWS::Lambda::Permission"
-        },
-        "EveryNightRule": {
-            "DependsOn": [
-                "RuleCurrentalias"
-            ],
-            "Properties": {
-                "Description": "",
-                "Name": {
-                    "Fn::Join": [
-                        "-",
-                        [
-                            {
-                                "Ref": "AWS::StackName"
-                            },
-                            "EveryNightRule"
-                        ]
-                    ]
-                },
-                "ScheduleExpression": "cron(0 20 * * ? *)",
-                "ServiceToken": {
-                    "Ref": "RuleCurrentalias"
-                },
-                "State": "ENABLED"
-            },
-            "Type": "Custom::EventsRule"
         },
         "ExampleCurrentalias": {
             "DependsOn": [
@@ -330,108 +230,6 @@
             },
             "Type": "Custom::LambdaVersion"
         },
-        "RuleCurrentalias": {
-            "DependsOn": [
-                "RuleVersion"
-            ],
-            "Properties": {
-                "FunctionName": {
-                    "Ref": "ContribEventsRule"
-                },
-                "FunctionVersion": {
-                    "Fn::GetAtt": [
-                        "RuleVersion",
-                        "Version"
-                    ]
-                },
-                "Name": "current"
-            },
-            "Type": "AWS::Lambda::Alias"
-        },
-        "RuleRole": {
-            "Properties": {
-                "AssumeRolePolicyDocument": {
-                    "Statement": [
-                        {
-                            "Action": [
-                                "sts:AssumeRole"
-                            ],
-                            "Effect": "Allow",
-                            "Principal": {
-                                "Service": [
-                                    "lambda.amazonaws.com"
-                                ]
-                            }
-                        }
-                    ],
-                    "Version": "2012-10-17"
-                },
-                "Policies": [
-                    {
-                        "PolicyDocument": {
-                            "Statement": [
-                                {
-                                    "Action": [
-                                        "lambda:InvokeFunction"
-                                    ],
-                                    "Effect": "Allow",
-                                    "Resource": [
-                                        "*"
-                                    ]
-                                },
-                                {
-                                    "Action": [
-                                        "logs:CreateLogGroup",
-                                        "logs:CreateLogStream",
-                                        "logs:PutLogEvents"
-                                    ],
-                                    "Effect": "Allow",
-                                    "Resource": "arn:aws:logs:*:*:*"
-                                }
-                            ],
-                            "Version": "2012-10-17"
-                        },
-                        "PolicyName": "RuleLogsPolicy"
-                    },
-                    {
-                        "PolicyDocument": {
-                            "Statement": [
-                                {
-                                    "Action": [
-                                        "events:DescribeRule",
-                                        "events:PutRule",
-                                        "events:DeleteRule"
-                                    ],
-                                    "Effect": "Allow",
-                                    "Resource": "arn:aws:events:*:*:*"
-                                }
-                            ],
-                            "Version": "2012-10-17"
-                        },
-                        "PolicyName": "RuleManageRulesPolicy"
-                    }
-                ]
-            },
-            "Type": "AWS::IAM::Role"
-        },
-        "RuleVersion": {
-            "DependsOn": [
-                "VersionCurrentalias",
-                "ContribEventsRule"
-            ],
-            "Properties": {
-                "FunctionName": {
-                    "Ref": "ContribEventsRule"
-                },
-                "S3ObjectVersion": {
-                    "Ref": "RuleS3Version"
-                },
-                "ServiceToken": {
-                    "Ref": "VersionCurrentalias"
-                }
-            },
-            "Type": "Custom::LambdaVersion"
-        },
         "SleepCurrentalias": {
             "DependsOn": [
                 "SleepVersion"
@@ -510,108 +308,6 @@
                 },
                 "S3ObjectVersion": {
                     "Ref": "SleepS3Version"
-                },
-                "ServiceToken": {
-                    "Ref": "VersionCurrentalias"
-                }
-            },
-            "Type": "Custom::LambdaVersion"
-        },
-        "TargetCurrentalias": {
-            "DependsOn": [
-                "TargetVersion"
-            ],
-            "Properties": {
-                "FunctionName": {
-                    "Ref": "ContribEventsTarget"
-                },
-                "FunctionVersion": {
-                    "Fn::GetAtt": [
-                        "TargetVersion",
-                        "Version"
-                    ]
-                },
-                "Name": "current"
-            },
-            "Type": "AWS::Lambda::Alias"
-        },
-        "TargetRole": {
-            "Properties": {
-                "AssumeRolePolicyDocument": {
-                    "Statement": [
-                        {
-                            "Action": [
-                                "sts:AssumeRole"
-                            ],
-                            "Effect": "Allow",
-                            "Principal": {
-                                "Service": [
-                                    "lambda.amazonaws.com"
-                                ]
-                            }
-                        }
-                    ],
-                    "Version": "2012-10-17"
-                },
-                "Policies": [
-                    {
-                        "PolicyDocument": {
-                            "Statement": [
-                                {
-                                    "Action": [
-                                        "lambda:InvokeFunction"
-                                    ],
-                                    "Effect": "Allow",
-                                    "Resource": [
-                                        "*"
-                                    ]
-                                },
-                                {
-                                    "Action": [
-                                        "logs:CreateLogGroup",
-                                        "logs:CreateLogStream",
-                                        "logs:PutLogEvents"
-                                    ],
-                                    "Effect": "Allow",
-                                    "Resource": "arn:aws:logs:*:*:*"
-                                }
-                            ],
-                            "Version": "2012-10-17"
-                        },
-                        "PolicyName": "TargetLogsPolicy"
-                    },
-                    {
-                        "PolicyDocument": {
-                            "Statement": [
-                                {
-                                    "Action": [
-                                        "events:PutTargets",
-                                        "events:RemoveTargets",
-                                        "events:ListTargetsByRule"
-                                    ],
-                                    "Effect": "Allow",
-                                    "Resource": "arn:aws:events:*:*:*"
-                                }
-                            ],
-                            "Version": "2012-10-17"
-                        },
-                        "PolicyName": "TargetManageRulesPolicy"
-                    }
-                ]
-            },
-            "Type": "AWS::IAM::Role"
-        },
-        "TargetVersion": {
-            "DependsOn": [
-                "VersionCurrentalias",
-                "ContribEventsTarget"
-            ],
-            "Properties": {
-                "FunctionName": {
-                    "Ref": "ContribEventsTarget"
-                },
-                "S3ObjectVersion": {
-                    "Ref": "TargetS3Version"
                 },
                 "ServiceToken": {
                     "Ref": "VersionCurrentalias"

@@ -6,13 +6,21 @@ apps:
   - gordon.contrib.lambdas
   - helloworld
 
-cron:
+events:
   every_night:
-    schedule_expression: rate(1 minute)
-    lambda: helloworld.hellopy
-#
-# events:
-#   every_night:
-#     #event_pattern: xxx
-#     schedule_expression: rate(1 minute)
-#     lambda: helloworld.hellopy
+    schedule_expression: rate(5 minutes)
+    targets:
+        say_hello:
+            lambda: helloworld.hellopy
+
+  update_dns:
+    schedule_expression: rate(3 minutes)
+    event_pattern:
+        source:
+            - aws.ec2
+        detail:
+            state:
+                - pending
+    targets:
+        say_hello:
+            lambda: helloworld.hellopy

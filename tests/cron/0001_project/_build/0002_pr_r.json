@@ -40,16 +40,6 @@
                 "attr": "s3url"
             }
         }, 
-        "RuleS3Version": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "RuleS3Version", 
-            "value": {
-                "action": "rule-upload", 
-                "_type": "GetAttr", 
-                "attr": "s3version"
-            }
-        }, 
         "SleepS3Version": {
             "default": "", 
             "_type": "Output", 
@@ -60,42 +50,12 @@
                 "attr": "s3version"
             }
         }, 
-        "TargetS3Url": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "TargetS3Url", 
-            "value": {
-                "action": "target-upload", 
-                "_type": "GetAttr", 
-                "attr": "s3url"
-            }
-        }, 
-        "TargetS3Version": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "TargetS3Version", 
-            "value": {
-                "action": "target-upload", 
-                "_type": "GetAttr", 
-                "attr": "s3version"
-            }
-        }, 
         "VersionS3Url": {
             "default": "", 
             "_type": "Output", 
             "name": "VersionS3Url", 
             "value": {
                 "action": "version-upload", 
-                "_type": "GetAttr", 
-                "attr": "s3url"
-            }
-        }, 
-        "RuleS3Url": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "RuleS3Url", 
-            "value": {
-                "action": "rule-upload", 
                 "_type": "GetAttr", 
                 "attr": "s3url"
             }
@@ -124,28 +84,6 @@
             "filename": "code/contrib_lambdas_version.zip", 
             "context_to_inject": {}, 
             "key": "contrib_lambdas_version.zip"
-        }, 
-        {
-            "_type": "InjectContextAndUploadToS3", 
-            "name": "target-upload", 
-            "bucket": {
-                "_type": "Ref", 
-                "name": "CodeBucket"
-            }, 
-            "filename": "code/contrib_events_target.zip", 
-            "context_to_inject": {}, 
-            "key": "contrib_events_target.zip"
-        }, 
-        {
-            "_type": "InjectContextAndUploadToS3", 
-            "name": "rule-upload", 
-            "bucket": {
-                "_type": "Ref", 
-                "name": "CodeBucket"
-            }, 
-            "filename": "code/contrib_events_rule.zip", 
-            "context_to_inject": {}, 
-            "key": "contrib_events_rule.zip"
         }, 
         {
             "_type": "InjectContextAndUploadToS3", 

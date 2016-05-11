@@ -5,10 +5,11 @@ code-bucket: ref://CodeBucketName
 apps:
   - gordon.contrib.helpers
   - gordon.contrib.lambdas
-  - gordon.contrib.events
   - cron
 
-cron:
+events:
   every_night:
-    expression: cron(0 20 * * ? *)
-    lambda: cron.example
+    schedule_expression: cron(0 20 * * ? *)
+    targets:
+      example_target:
+        lambda: cron.example
