@@ -101,6 +101,7 @@ def get_zip_hash(obj):
     digest = hashlib.sha1()
     zfile = zipfile.ZipFile(obj, 'r')
     for path in sorted(zfile.namelist()):
+        digest.update(path)
         digest.update(zfile.read(path))
     return digest.hexdigest()
 
@@ -108,8 +109,12 @@ def get_zip_hash(obj):
 def get_file_hash(filename):
     if filename.endswith('.zip'):
         return get_zip_hash(filename)
+
     with open(filename, 'r') as f:
-        return hashlib.sha1(f.read()).hexdigest()
+        digest = hashlib.sha1()
+        digest.update(filename)
+        digest.update(f.read())
+        return digest.hexdigest()
 
 
 def setup_region(region, settings=None):
@@ -164,6 +169,7 @@ def load_settings(filename, default=None, jinja2_enrich=False, context=None, pro
                 if protocol in protocols:
                     return protocols[protocol](value)
                 else:
+                    return obj
                     raise exceptions.UnknownProtocolError(protocol, value)
         return obj
 

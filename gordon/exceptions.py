@@ -145,6 +145,8 @@ class ResourceNotFoundError(BaseGordonException):
 
 class LambdaBuildProcessError(BaseGordonException):
 
+    code = 21
+
     def get_hint(self):
         return (
             u"Error building lambda '{}'!\n"
@@ -155,3 +157,8 @@ class LambdaBuildProcessError(BaseGordonException):
             self.args[0].cmd,
             self.args[0].output,
         )
+
+
+class InvalidApigatewayIntegrationTypeError(BaseGordonException):
+    hint = u"Invalid Apigateway integrantion type: {}"
+    code = 22

@@ -1,0 +1,7 @@
+lambdas:
+
+  python_webhook:
+    code: mybot.py
+
+  javascript_webhook:
+    code: mybot.js

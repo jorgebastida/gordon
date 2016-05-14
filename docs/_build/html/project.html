@@ -63,29 +63,6 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="project-settings">
-<h2>Project Settings<a class="headerlink" href="#project-settings" title="Permalink to this headline">¶</a></h2>
-<p>You can read a full in-depth explanation of how settings works in the <a class="reference internal" href="settings.html"><em>Settings</em></a> page, but these are the most common project settings you&#8217;ll probably use:</p>
-<div class="highlight-yaml"><div class="highlight"><pre><span class="nn">---</span>
-<span class="l-Scalar-Plain">project</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">STRING</span> <span class="p-Indicator">}</span>
-<span class="l-Scalar-Plain">default-region</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">AWS_REGION</span> <span class="p-Indicator">}</span>
-<span class="l-Scalar-Plain">code-bucket</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">STRING</span> <span class="p-Indicator">}</span>
-<span class="l-Scalar-Plain">apps</span><span class="p-Indicator">:</span>
-  <span class="p-Indicator">-</span> <span class="p-Indicator">{</span> <span class="nv">STRING</span> <span class="p-Indicator">}</span>
-
-<span class="l-Scalar-Plain">dynamodb</span><span class="p-Indicator">:</span>
-  <span class="l-Scalar-Plain">...</span>
-
-<span class="l-Scalar-Plain">kinesis</span><span class="p-Indicator">:</span>
-  <span class="l-Scalar-Plain">...</span>
-
-<span class="l-Scalar-Plain">s3</span><span class="p-Indicator">:</span>
-  <span class="l-Scalar-Plain">...</span>
-</pre></div>
-</div>
-<p>By default when you create a project, gordon will include some applications which you&#8217;ll probably need. Those applications are called <a class="reference internal" href="contrib.html"><em>gordon.contrib</em></a>
-applications and provide you (and your gordon project) with some basic functionalities that you (or gordon) might need.</p>
-</div>
 <div class="section" id="project-actions">
 <h2>Project Actions<a class="headerlink" href="#project-actions" title="Permalink to this headline">¶</a></h2>
 <p>Once you have created your project, there are two main actions that you&#8217;ll run from the command line; <code class="docutils literal"><span class="pre">build</span></code> and <code class="docutils literal"><span class="pre">apply</span></code>.</p>
@@ -167,6 +144,194 @@ deploy it. Gordon doesn&#8217;t know/care what is the current status (if any) of
 <p>This command (for obvious reasons), will use your AWS credentials to apply your project templates.</p>
 </div>
 </div>
+<div class="section" id="anatomy-of-the-project">
+<span id="project-anatomy"></span><h2>Anatomy of the project<a class="headerlink" href="#anatomy-of-the-project" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="nn">---</span>
+<span class="l-Scalar-Plain">project</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">STRING</span> <span class="p-Indicator">}</span>
+<span class="l-Scalar-Plain">default-region</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">AWS_REGION</span> <span class="p-Indicator">}</span>
+<span class="l-Scalar-Plain">code-bucket</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">STRING</span> <span class="p-Indicator">}</span>
+<span class="l-Scalar-Plain">apps</span><span class="p-Indicator">:</span>
+  <span class="p-Indicator">-</span> <span class="p-Indicator">{</span> <span class="nv">STRING</span> <span class="p-Indicator">}</span>
+<span class="l-Scalar-Plain">vpc</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">MAP</span> <span class="p-Indicator">}</span>
+<span class="l-Scalar-Plain">contexts</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">MAP</span> <span class="p-Indicator">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="lambda-properties">
+<h2>Lambda Properties<a class="headerlink" href="#lambda-properties" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="project-name">
+<h3>Project Name<a class="headerlink" href="#project-name" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">project</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>Valid types</td>
+<td><code class="docutils literal"><span class="pre">string</span></code></td>
+</tr>
+<tr class="row-even"><td>Description</td>
+<td>Name for your Project</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="default-region">
+<h3>default-region<a class="headerlink" href="#default-region" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">default-region</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>Valid types</td>
+<td><code class="docutils literal"><span class="pre">string</span></code></td>
+</tr>
+<tr class="row-even"><td>Description</td>
+<td>Default region where the project will be deployed</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="code-bucket">
+<h3>code-bucket<a class="headerlink" href="#code-bucket" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="81%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">code-bucket</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>Valid types</td>
+<td><code class="docutils literal"><span class="pre">string</span></code></td>
+</tr>
+<tr class="row-even"><td>Description</td>
+<td>Base Name of the bucket gordon will use to store the source code of your lambdas and Cloudformation templates.</td>
+</tr>
+</tbody>
+</table>
+<p>Because the source code and the lambdas needs to be in the same region, gordon will create on bucket per region and stage following
+the following format:</p>
+<p><code class="docutils literal"><span class="pre">$CODE_BUCKET-$REGION-$STAGE</span></code>.</p>
+</div>
+<div class="section" id="apps">
+<h3>apps<a class="headerlink" href="#apps" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="81%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">apps</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>Valid types</td>
+<td><code class="docutils literal"><span class="pre">list</span></code></td>
+</tr>
+<tr class="row-even"><td>Description</td>
+<td>List of installed apps</td>
+</tr>
+</tbody>
+</table>
+<p>By default when you create a project, gordon will include some applications which you&#8217;ll probably need. Those applications are called <a class="reference internal" href="contrib.html"><em>gordon.contrib</em></a>
+applications and provide you (and your gordon project) with some basic functionalities that you (or gordon) might need.</p>
+</div>
+<div class="section" id="vpc">
+<h3>vpc<a class="headerlink" href="#vpc" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="81%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">vpc</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>Valid types</td>
+<td><code class="docutils literal"><span class="pre">map</span></code></td>
+</tr>
+<tr class="row-even"><td>Description</td>
+<td>Map of vpc names with their respective <code class="docutils literal"><span class="pre">security-groups</span></code> and  <code class="docutils literal"><span class="pre">subnet-ids</span></code>.</td>
+</tr>
+</tbody>
+</table>
+<p>For more information <a class="reference internal" href="lambdas.html#lambdas-vpc"><span>Lambdas vpc setting</span></a>.</p>
+<p>Example:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="nn">---</span>
+<span class="l-Scalar-Plain">project</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">vpcexample</span>
+<span class="nn">...</span>
+
+<span class="l-Scalar-Plain">vpcs</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">my-vpc</span><span class="p-Indicator">:</span>
+        <span class="l-Scalar-Plain">security-groups</span><span class="p-Indicator">:</span>
+            <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">sg-00000000</span>
+        <span class="l-Scalar-Plain">subnet-ids</span><span class="p-Indicator">:</span>
+            <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">subnet-1234567a</span>
+            <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">subnet-1234567b</span>
+            <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">subnet-1234567c</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="contexts">
+<h3>contexts<a class="headerlink" href="#contexts" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="81%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">contexts</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>Valid types</td>
+<td><code class="docutils literal"><span class="pre">map</span></code></td>
+</tr>
+<tr class="row-even"><td>Description</td>
+<td>Map of context names with their definitions.</td>
+</tr>
+</tbody>
+</table>
+<p>For more information <a class="reference internal" href="contexts.html"><em>Contexts</em></a>.</p>
+<p>Example:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="nn">---</span>
+<span class="l-Scalar-Plain">project</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">example</span>
+<span class="nn">...</span>
+
+<span class="l-Scalar-Plain">contexts</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">default</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">database_host</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">10.0.0.1</span>
+    <span class="l-Scalar-Plain">database_username</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">dev-bob</span>
+    <span class="l-Scalar-Plain">database_password</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">shrug</span>
+</pre></div>
+</div>
+</div>
+</div>
 </div>
 
 
@@ -181,10 +346,19 @@ deploy it. Gordon doesn&#8217;t know/care what is the current status (if any) of
   <ul>
 <li><a class="reference internal" href="#">Project</a><ul>
 <li><a class="reference internal" href="#how-can-i-create-a-new-project">How can I create a new project?</a></li>
-<li><a class="reference internal" href="#project-settings">Project Settings</a></li>
 <li><a class="reference internal" href="#project-actions">Project Actions</a><ul>
 <li><a class="reference internal" href="#build">build</a></li>
 <li><a class="reference internal" href="#apply">apply</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#anatomy-of-the-project">Anatomy of the project</a></li>
+<li><a class="reference internal" href="#lambda-properties">Lambda Properties</a><ul>
+<li><a class="reference internal" href="#project-name">Project Name</a></li>
+<li><a class="reference internal" href="#default-region">default-region</a></li>
+<li><a class="reference internal" href="#code-bucket">code-bucket</a></li>
+<li><a class="reference internal" href="#apps">apps</a></li>
+<li><a class="reference internal" href="#vpc">vpc</a></li>
+<li><a class="reference internal" href="#contexts">contexts</a></li>
 </ul>
 </li>
 </ul>

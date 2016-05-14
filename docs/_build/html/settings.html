@@ -75,44 +75,16 @@ some other settings which are only expected at project level.</p>
 <tr class="row-even"><td><code class="docutils literal"><span class="pre">s3</span></code></td>
 <td>S3 notfication definitions. <a class="reference internal" href="eventsources/s3.html#s3-anatomy"><span>Anatomy of S3 integration</span></a></td>
 </tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">apigateway</span></code></td>
+<td>API Gateway definitions. <a class="reference internal" href="eventsources/apigateway.html#apigateway-anatomy"><span>Anatomy of Api Gateway integration</span></a></td>
+</tr>
 </tbody>
 </table>
 </div>
 <div class="section" id="project-settings">
 <h2>Project settings<a class="headerlink" href="#project-settings" title="Permalink to this headline">¶</a></h2>
-<p>Project settings are defined in the root level of your project  (<code class="docutils literal"><span class="pre">project/settings.yml</span></code>).</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="13%" />
-<col width="87%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Settings</th>
-<th class="head">Description</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">project</span></code></td>
-<td>Name of the project</td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">default-region</span></code></td>
-<td>Default region where the project will be deployed</td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">code-bucket</span></code></td>
-<td>Name of the bucket gordon will use to store the source code of your lambdas and cloudformation templates.
-Because the source code and the lambdas needs to be in the same region, gordon will create on bucket per region and stage.</td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">apps</span></code></td>
-<td>List of installed apps</td>
-</tr>
-<tr class="row-even"><td><code class="docutils literal"><span class="pre">vpc</span></code></td>
-<td>Map of vpc names with their respective <code class="docutils literal"><span class="pre">security-groups</span></code> and  <code class="docutils literal"><span class="pre">subnet-ids</span></code>. For more information <a class="reference internal" href="lambdas.html#lambdas-vpc"><span>Lambdas vpc setting</span></a>.</td>
-</tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">contexts</span></code></td>
-<td>Map of context names with their definitions. For more information <a class="reference internal" href="contexts.html"><em>Contexts</em></a>.</td>
-</tr>
-</tbody>
-</table>
+<p>Project settings are defined in the root level of your project  (<code class="docutils literal"><span class="pre">project/settings.yml</span></code>). The section <a class="reference internal" href="project.html#project-anatomy"><span>Project Anatomy</span></a> will give you more information about how
+you can customize your project.</p>
 </div>
 <div class="section" id="application-settings">
 <h2>Application settings<a class="headerlink" href="#application-settings" title="Permalink to this headline">¶</a></h2>

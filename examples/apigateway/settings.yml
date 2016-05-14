@@ -1,0 +1,79 @@
+---
+project: apigateway
+default-region: eu-west-1
+code-bucket: gordon-apigateway-0do1mc7
+apps:
+  - gordon.contrib.lambdas
+  - helloworld
+
+apigateway:
+    helloapi:
+        description: My first API
+        resources:
+            /:
+                methods: [GET, POST]
+                integration:
+                    lambda: helloworld.hellopy
+            /hi:
+                methods: GET
+                integration:
+                    lambda: helloworld.hellopy
+
+            /hi/poo:
+                methods: GET
+                integration:
+                    lambda: helloworld.hellopy
+                    responses:
+                        - pattern: ""
+                          code: "404"
+                responses:
+                    - code: "404"
+
+            /hi/poo2:
+                methods: GET
+                integration:
+                    lambda: helloworld.hellopy
+
+            /hi/{language}:
+                methods: GET
+                integration:
+                    lambda: helloworld.hellopy
+
+            /http:
+                methods: GET
+                integration:
+                    type: HTTP
+                    uri: http://www.terra.es
+
+            /mock:
+                methods: GET
+                integration:
+                    type: MOCK
+
+            /extra/super/lol/:
+                methods:
+                    GET:
+                        integration:
+                            lambda: helloworld.hellopy
+                    POST:
+                        integration:
+                            lambda: helloworld.hellopy
+
+#
+# apigateway:
+#     hello:
+#         description: My first API
+#         resources:
+#             /hi/:
+#                 method: GET
+#                 authorization_type: NONE
+#                 integration:
+#                     responses:
+#                         - pattern: .*
+#                           status_code: 200
+#                     intergraion_http_method: POST
+#                     type: AWS
+#                     uri: lambda:hellopy
+#                 method_responses:
+#                     - status_code: 200
+#

@@ -8,7 +8,7 @@ Gordon tests are split between three types:
 |                   | Internet Access | AWS Credentials |    Speed    |
 |:-----------------:|:---------------:|:---------------:|:-----------:|
 |     Core Tests    |        No       |        No       |     Fast    |
-|    Build Tests    |       Yes       |        No       |     Fast    |
+|    Build Tests    |       Yes       |        No       |     Fine    |
 | Integration Tests |       Yes       |       Yes       | Really Slow |
 
 

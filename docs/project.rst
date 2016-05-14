@@ -31,32 +31,6 @@ This will create a new directory called ``demo`` which will contain the most bas
     └── settings.yml
 
 
-Project Settings
---------------------
-
-You can read a full in-depth explanation of how settings works in the :doc:`settings` page, but these are the most common project settings you'll probably use:
-
-.. code-block:: yaml
-
-  ---
-  project: { STRING }
-  default-region: { AWS_REGION }
-  code-bucket: { STRING }
-  apps:
-    - { STRING }
-
-  dynamodb:
-    ...
-
-  kinesis:
-    ...
-
-  s3:
-    ...
-
-By default when you create a project, gordon will include some applications which you'll probably need. Those applications are called :doc:`contrib`
-applications and provide you (and your gordon project) with some basic functionalities that you (or gordon) might need.
-
 
 Project Actions
 -----------------
@@ -108,3 +82,130 @@ This command will:
   * Sequentially apply all gordon templates.
 
 This command (for obvious reasons), will use your AWS credentials to apply your project templates.
+
+
+.. _project-anatomy:
+
+
+Anatomy of the project
+------------------------
+
+.. code-block:: yaml
+
+  ---
+  project: { STRING }
+  default-region: { AWS_REGION }
+  code-bucket: { STRING }
+  apps:
+    - { STRING }
+  vpc: { MAP }
+  contexts: { MAP }
+
+
+
+Lambda Properties
+-------------------
+
+Project Name
+^^^^^^^^^^^^^^^^^^^^^^
+
+===========================  ============================================================================================================
+Name                         ``project``
+Required                     Yes
+Valid types                  ``string``
+Description                  Name for your Project
+===========================  ============================================================================================================
+
+default-region
+^^^^^^^^^^^^^^^^^^^^^^
+
+===========================  ============================================================================================================
+Name                         ``default-region``
+Required                     Yes
+Valid types                  ``string``
+Description                  Default region where the project will be deployed
+===========================  ============================================================================================================
+
+
+code-bucket
+^^^^^^^^^^^^^^^^^^^^^^
+
+===========================  ================================================================================================================
+Name                         ``code-bucket``
+Required                     Yes
+Valid types                  ``string``
+Description                  Base Name of the bucket gordon will use to store the source code of your lambdas and Cloudformation templates.
+===========================  ================================================================================================================
+
+Because the source code and the lambdas needs to be in the same region, gordon will create on bucket per region and stage following
+the following format:
+
+``$CODE_BUCKET-$REGION-$STAGE``.
+
+apps
+^^^^^^^^^^^^^^^^^^^^^^
+
+===========================  ================================================================================================================
+Name                         ``apps``
+Required                     Yes
+Valid types                  ``list``
+Description                  List of installed apps
+===========================  ================================================================================================================
+
+By default when you create a project, gordon will include some applications which you'll probably need. Those applications are called :doc:`contrib`
+applications and provide you (and your gordon project) with some basic functionalities that you (or gordon) might need.
+
+vpc
+^^^^^^^^^^^^^^^^^^^^^^
+
+===========================  ================================================================================================================
+Name                         ``vpc``
+Required                     No
+Valid types                  ``map``
+Description                  Map of vpc names with their respective ``security-groups`` and  ``subnet-ids``.
+===========================  ================================================================================================================
+
+For more information :ref:`Lambdas vpc setting <lambdas-vpc>`.
+
+Example:
+
+.. code-block:: yaml
+
+    ---
+    project: vpcexample
+    ...
+
+    vpcs:
+        my-vpc:
+            security-groups:
+                - sg-00000000
+            subnet-ids:
+                - subnet-1234567a
+                - subnet-1234567b
+                - subnet-1234567c
+
+contexts
+^^^^^^^^^^^^^^^^^^^^^^
+
+===========================  ================================================================================================================
+Name                         ``contexts``
+Required                     No
+Valid types                  ``map``
+Description                  Map of context names with their definitions.
+===========================  ================================================================================================================
+
+For more information :doc:`contexts`.
+
+Example:
+
+.. code-block:: yaml
+
+    ---
+    project: example
+    ...
+
+    contexts:
+      default:
+        database_host: 10.0.0.1
+        database_username: dev-bob
+        database_password: shrug

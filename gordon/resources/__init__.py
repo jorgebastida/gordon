@@ -7,3 +7,4 @@ from . import s3
 from . import events
 from . import vpcs
 from . import contexts
+from . import apigateway

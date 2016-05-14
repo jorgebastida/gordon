@@ -1,0 +1,20 @@
+---
+project: telegramexample
+default-region: eu-west-1
+code-bucket: gordon-telegramexample-0do1mc7
+apps:
+  - gordon.contrib.lambdas
+  - botapp
+
+apigateway:
+    telegramexampleapi:
+        description: My telegram API
+        resources:
+            /my-python-bot-webhook:
+                methods: POST
+                integration:
+                    lambda: botapp.python_webhook
+            /my-js-bot-webhook:
+                methods: POST
+                integration:
+                    lambda: botapp.javascript_webhook

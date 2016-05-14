@@ -247,8 +247,7 @@ class InjectContextAndUploadToS3(UploadToS3):
 
     def prepare_file(self, filename):
         context_to_inject = enrich_references(self.context_to_inject or {}, self.context)
-
-        _, tmpfile = tempfile.mkstemp()
+        _, tmpfile = tempfile.mkstemp(suffix='.{}'.format(self.filename.rsplit('.', 1)[1]))
         shutil.copyfile(self.filename, tmpfile)
         zfile = zipfile.ZipFile(tmpfile, 'a')
 

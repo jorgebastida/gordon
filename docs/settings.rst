@@ -25,26 +25,15 @@ Settings               Description
 ``dynamodb``           Dynamodb Event Source definitions. :ref:`Anatomy of Dynamodb integration <dynamodb-anatomy>`
 ``kinesis``            Kinesis Event Source definitions. :ref:`Anatomy of Kinesis integration <kinesis-anatomy>`
 ``s3``                 S3 notfication definitions. :ref:`Anatomy of S3 integration <s3-anatomy>`
+``apigateway``         API Gateway definitions. :ref:`Anatomy of Api Gateway integration <apigateway-anatomy>`
 =====================  =================================================================================================================================================
-
 
 
 Project settings
 --------------------
 
-Project settings are defined in the root level of your project  (``project/settings.yml``).
-
-=====================  =================================================================================================================================================
-Settings               Description
-=====================  =================================================================================================================================================
-``project``            Name of the project
-``default-region``     Default region where the project will be deployed
-``code-bucket``        Name of the bucket gordon will use to store the source code of your lambdas and cloudformation templates.
-                       Because the source code and the lambdas needs to be in the same region, gordon will create on bucket per region and stage.
-``apps``               List of installed apps
-``vpc``                Map of vpc names with their respective ``security-groups`` and  ``subnet-ids``. For more information :ref:`Lambdas vpc setting <lambdas-vpc>`.
-``contexts``           Map of context names with their definitions. For more information :doc:`contexts`.
-=====================  =================================================================================================================================================
+Project settings are defined in the root level of your project  (``project/settings.yml``). The section :ref:`Project Anatomy <project-anatomy>` will give you more information about how
+you can customize your project.
 
 
 Application settings
