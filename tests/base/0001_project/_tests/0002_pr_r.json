@@ -1,15 +1,5 @@
 {
     "outputs": {
-        "ExampleS3Version": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "ExampleS3Version", 
-            "value": {
-                "action": "example-upload", 
-                "_type": "GetAttr", 
-                "attr": "s3version"
-            }
-        }, 
         "VersionS3Version": {
             "default": "", 
             "_type": "Output", 
@@ -30,12 +20,12 @@
                 "attr": "s3url"
             }
         }, 
-        "ExampleS3Url": {
+        "VersionS3Url": {
             "default": "", 
             "_type": "Output", 
-            "name": "ExampleS3Url", 
+            "name": "VersionS3Url", 
             "value": {
-                "action": "example-upload", 
+                "action": "version-upload", 
                 "_type": "GetAttr", 
                 "attr": "s3url"
             }
@@ -48,16 +38,6 @@
                 "action": "sleep-upload", 
                 "_type": "GetAttr", 
                 "attr": "s3version"
-            }
-        }, 
-        "VersionS3Url": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "VersionS3Url", 
-            "value": {
-                "action": "version-upload", 
-                "_type": "GetAttr", 
-                "attr": "s3url"
             }
         }
     }, 
@@ -84,17 +64,6 @@
             "filename": "code/contrib_lambdas_version.zip", 
             "context_to_inject": {}, 
             "key": "contrib_lambdas_version.zip"
-        }, 
-        {
-            "_type": "InjectContextAndUploadToS3", 
-            "name": "example-upload", 
-            "bucket": {
-                "_type": "Ref", 
-                "name": "CodeBucket"
-            }, 
-            "filename": "code/cron_example.zip", 
-            "context_to_inject": {}, 
-            "key": "cron_example.zip"
         }
     ], 
     "parameters": {

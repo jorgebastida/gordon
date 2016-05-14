@@ -1,10 +1,10 @@
 import os
-import re
 import uuid
 import json
 import hashlib
 import random
 import shutil
+import unittest
 from nose.plugins.attrib import attr
 from nose.tools import nottest
 
@@ -69,50 +69,49 @@ def delete_test_stacks(name):
                 )
 
 
-@attr('integration')
-class BaseIntegrationTest(object):
+class BaseBuildTest(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
-        super(BaseIntegrationTest, self).__init__(*args, **kwargs)
-        self.uid = 'gt{}'.format(hashlib.sha1(str(uuid.uuid4())).hexdigest()[:5])
-        self.test_path = os.path.join('tests', self.test)
-        self.extra_env = {}
+        self.test_path = os.path.join('tests', self._test_name)
+        super(BaseBuildTest, self).__init__(*args, **kwargs)
+
+    def setUp(self):
+        super(BaseBuildTest, self).setUp()
+        self.addCleanup(self._clean_build_path)
 
     @property
-    def test(self):
+    def _test_name(self):
         return self.__class__.__module__.split('.', 1)[0]
 
-    def test_project(self):
-        steps = []
-        for filename in os.listdir(self.test_path):
-            match = re.match(r'(\d+)_(\w+)', filename)
-            if match and os.path.isdir(os.path.join(self.test_path, filename)):
-                steps.append((int(match.groups()[0]), filename))
-
-        steps = sorted(steps, key=lambda x: x[0])
-        for _, filename in steps:
-            with cd(os.path.join(self.test_path, filename)):
-                code = gordon(['gordon', 'build'])
-                self.assertEqual(code, 0)
-                self._test_build()
-                gordon([
-                    'gordon',
-                    'apply',
-                    '--stage={}'.format(self.uid),
-                ])
-                self._test_apply()
-
-    def _restore_context(self):
-        os.environ.clear()
-        os.environ.update(self._environ)
-
-    def _clean_extra_env(self):
-        self.extra_env = {}
+    def _test_project_step(self, filename):
+        with cd(os.path.join(self.test_path, filename)):
+            code = gordon(['gordon', 'build'])
+            self.assertEqual(code, 0)
 
     def _clean_build_path(self):
         build_path = os.path.join(self.test_path, '_build')
         if os.path.exists(build_path):
             shutil.rmtree(build_path)
+
+    def assertBuild(self, step, filename):
+        self.assertEqualJsonFiles(
+            os.path.join(self.test_path, step, '_build', filename),
+            os.path.join(self.test_path, step, '_tests', filename)
+        )
+
+    def assertEqualJsonFiles(self, a, b):
+        with open(a, 'r') as af, open(b, 'r') as bf:
+            self.assertEqual(json.loads(af.read()), json.loads(bf.read()))
+
+
+@attr('integration')
+class BaseIntegrationTest(BaseBuildTest):
+
+    def __init__(self, *args, **kwargs):
+        super(BaseIntegrationTest, self).__init__(*args, **kwargs)
+        self.uid = 'gt{}'.format(hashlib.sha1(str(uuid.uuid4())).hexdigest()[:5])
+        self.test_path = os.path.join('tests', self._test_name)
+        self.extra_env = {}
 
     def setUp(self):
         self.extra_env['CODE_BUCKET_NAME'] = 'gordon-tests-{}'.format(
@@ -122,17 +121,25 @@ class BaseIntegrationTest(object):
         os.environ.update(self.extra_env)
         self.addCleanup(self._restore_context)
         self.addCleanup(delete_test_stacks, self.uid)
-        self.addCleanup(self._clean_build_path)
         self.addCleanup(self._clean_extra_env)
 
-    def _test_build(self):
-        pass
+    def _test_project_step(self, filename):
+        super(BaseIntegrationTest, self)._test_project_step(filename)
+        gordon([
+            'gordon',
+            'apply',
+            '--stage={}'.format(self.uid),
+        ])
 
-    def _test_apply(self):
-        pass
+    def _restore_context(self):
+        os.environ.clear()
+        os.environ.update(self._environ)
+
+    def _clean_extra_env(self):
+        self.extra_env = {}
 
     def assert_stack_succeed(self, stack_name):
-        name = generate_stack_name(self.uid, self.test, stack_name)
+        name = generate_stack_name(self.uid, self._test_name, stack_name)
         client = boto3.client('cloudformation')
         stacks = client.describe_stacks(StackName=name)
         self.assertEqual(len(stacks['Stacks']), 1)
@@ -141,7 +148,10 @@ class BaseIntegrationTest(object):
             self.assertIn(stack['StackStatus'], ('CREATE_COMPLETE',))
         except Exception:
             import ipdb; ipdb.set_trace()
-            
+
+    def assert_lambda_response(self, response, value):
+        self.assertEqual(json.loads(response['Payload'].read()), value)
+        
     def get_lambda(self, function_name):
         client = boto3.client('lambda')
         matches = []
@@ -180,9 +190,6 @@ class BaseIntegrationTest(object):
             LogType='Tail',
             Payload=json.dumps(payload or {}),
         )
-
-    def assert_lambda_response(self, response, value):
-        self.assertEqual(json.loads(response['Payload'].read()), value)
 
     def get_lambda_versions(self, function_name):
         client = boto3.client('lambda')

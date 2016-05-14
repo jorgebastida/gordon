@@ -6,7 +6,9 @@
                 "Fn::Join": [
                     "-",
                     [
-                        "gordon-cron10-0do1mc8",
+                        {
+                            "Ref": "CodeBucketName"
+                        },
                         {
                             "Ref": "AWS::Region"
                         },
@@ -19,6 +21,9 @@
         }
     },
     "Parameters": {
+        "CodeBucketName": {
+            "Type": "String"
+        },
         "Region": {
             "Description": "AWS Region",
             "Type": "String"
@@ -37,7 +42,9 @@
                     "Fn::Join": [
                         "-",
                         [
-                            "gordon-cron10-0do1mc8",
+                            {
+                                "Ref": "CodeBucketName"
+                            },
                             {
                                 "Ref": "AWS::Region"
                             },

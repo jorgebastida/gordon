@@ -1,15 +1,5 @@
 {
     "outputs": {
-        "ExampleS3Version": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "ExampleS3Version", 
-            "value": {
-                "action": "example-upload", 
-                "_type": "GetAttr", 
-                "attr": "s3version"
-            }
-        }, 
         "VersionS3Version": {
             "default": "", 
             "_type": "Output", 
@@ -30,16 +20,6 @@
                 "attr": "s3url"
             }
         }, 
-        "ExampleS3Url": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "ExampleS3Url", 
-            "value": {
-                "action": "example-upload", 
-                "_type": "GetAttr", 
-                "attr": "s3url"
-            }
-        }, 
         "SleepS3Version": {
             "default": "", 
             "_type": "Output", 
@@ -50,6 +30,16 @@
                 "attr": "s3version"
             }
         }, 
+        "JsexampleS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "JsexampleS3Url", 
+            "value": {
+                "action": "jsexample-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }, 
         "VersionS3Url": {
             "default": "", 
             "_type": "Output", 
@@ -58,6 +48,16 @@
                 "action": "version-upload", 
                 "_type": "GetAttr", 
                 "attr": "s3url"
+            }
+        }, 
+        "JsexampleS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "JsexampleS3Version", 
+            "value": {
+                "action": "jsexample-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
             }
         }
     }, 
@@ -87,14 +87,14 @@
         }, 
         {
             "_type": "InjectContextAndUploadToS3", 
-            "name": "example-upload", 
+            "name": "jsexample-upload", 
             "bucket": {
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
-            "filename": "code/cron_example.zip", 
+            "filename": "code/jsexample_jsexample.zip", 
             "context_to_inject": {}, 
-            "key": "cron_example.zip"
+            "key": "jsexample_jsexample.zip"
         }
     ], 
     "parameters": {

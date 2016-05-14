@@ -1,15 +1,5 @@
 {
     "outputs": {
-        "ExampleS3Version": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "ExampleS3Version", 
-            "value": {
-                "action": "example-upload", 
-                "_type": "GetAttr", 
-                "attr": "s3version"
-            }
-        }, 
         "VersionS3Version": {
             "default": "", 
             "_type": "Output", 
@@ -30,14 +20,24 @@
                 "attr": "s3url"
             }
         }, 
-        "ExampleS3Url": {
+        "PyexampleS3Url": {
             "default": "", 
             "_type": "Output", 
-            "name": "ExampleS3Url", 
+            "name": "PyexampleS3Url", 
             "value": {
-                "action": "example-upload", 
+                "action": "pyexample-upload", 
                 "_type": "GetAttr", 
                 "attr": "s3url"
+            }
+        }, 
+        "PyexampleS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "PyexampleS3Version", 
+            "value": {
+                "action": "pyexample-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
             }
         }, 
         "SleepS3Version": {
@@ -87,14 +87,14 @@
         }, 
         {
             "_type": "InjectContextAndUploadToS3", 
-            "name": "example-upload", 
+            "name": "pyexample-upload", 
             "bucket": {
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
-            "filename": "code/cron_example.zip", 
+            "filename": "code/pyexample_pyexample.zip", 
             "context_to_inject": {}, 
-            "key": "cron_example.zip"
+            "key": "pyexample_pyexample.zip"
         }
     ], 
     "parameters": {

@@ -1,15 +1,5 @@
 {
     "outputs": {
-        "ExampleS3Version": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "ExampleS3Version", 
-            "value": {
-                "action": "example-upload", 
-                "_type": "GetAttr", 
-                "attr": "s3version"
-            }
-        }, 
         "VersionS3Version": {
             "default": "", 
             "_type": "Output", 
@@ -30,22 +20,32 @@
                 "attr": "s3url"
             }
         }, 
-        "ExampleS3Url": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "ExampleS3Url", 
-            "value": {
-                "action": "example-upload", 
-                "_type": "GetAttr", 
-                "attr": "s3url"
-            }
-        }, 
         "SleepS3Version": {
             "default": "", 
             "_type": "Output", 
             "name": "SleepS3Version", 
             "value": {
                 "action": "sleep-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
+        "JavaexampleS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "JavaexampleS3Url", 
+            "value": {
+                "action": "javaexample-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }, 
+        "JavaexampleS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "JavaexampleS3Version", 
+            "value": {
+                "action": "javaexample-upload", 
                 "_type": "GetAttr", 
                 "attr": "s3version"
             }
@@ -87,14 +87,14 @@
         }, 
         {
             "_type": "InjectContextAndUploadToS3", 
-            "name": "example-upload", 
+            "name": "javaexample-upload", 
             "bucket": {
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
-            "filename": "code/cron_example.zip", 
+            "filename": "code/javaexample_javaexample.zip", 
             "context_to_inject": {}, 
-            "key": "cron_example.zip"
+            "key": "javaexample_javaexample.zip"
         }
     ], 
     "parameters": {

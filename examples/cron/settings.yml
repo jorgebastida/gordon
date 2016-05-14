@@ -1,13 +1,26 @@
 ---
-project: cron3
+project: cron10
 default-region: eu-west-1
-code-bucket: gordon-cron-0do1mc7
+code-bucket: gordon-cron10-0do1mc8
 apps:
   - gordon.contrib.lambdas
-  - gordon.contrib.events
   - helloworld
 
-cron:
+events:
   every_night:
-    expression: cron(0 20 * * ? *)
-    lambda: helloworld.hellopy
+    schedule_expression: rate(5 minutes)
+    targets:
+        say_hello:
+            lambda: helloworld.hellopy
+
+  update_dns:
+    schedule_expression: rate(3 minutes)
+    event_pattern:
+        source:
+            - aws.ec2
+        detail:
+            state:
+                - pending
+    targets:
+        say_hello:
+            lambda: helloworld.hellopy

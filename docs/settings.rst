@@ -21,7 +21,7 @@ These settings can be defined either at project or app level.
 Settings               Description
 =====================  =================================================================================================================================================
 ``lambdas``            Lambda definitions. :ref:`Anatomy of Lambdas <lambdas-anatomy>`
-``cron``               CloudWatch Events definitions. :ref:`Anatomy of Cron integration <cron-anatomy>`
+``cron``               CloudWatch Events definitions. :ref:`Anatomy of Cron integration <events-anatomy>`
 ``dynamodb``           Dynamodb Event Source definitions. :ref:`Anatomy of Dynamodb integration <dynamodb-anatomy>`
 ``kinesis``            Kinesis Event Source definitions. :ref:`Anatomy of Kinesis integration <kinesis-anatomy>`
 ``s3``                 S3 notfication definitions. :ref:`Anatomy of S3 integration <s3-anatomy>`

@@ -52,15 +52,6 @@ This application exposes one ``CloudFormation`` resource:
     * **bucket_notification_configuration**: This resource allows us to manage S3 bucket notifications. This is a complex resource because the API AWS has develop around... it is not very nice (imho). You can see more details here: https://github.com/jorgebastida/gordon/blob/master/gordon/contrib/s3/bucket_notification_configuration/bucket_notification_configuration.py
 
 
-``contrib.events``
-^^^^^^^^^^^^^^^^^^^^^^^^
-
-This application exposes two ``CloudFormation`` resources:
-
-    * **rule**: Manages CloudWatch Event Rules. https://github.com/jorgebastida/gordon/blob/master/gordon/contrib/events/rule/rule.py
-    * **target**: Adds targets to CloudWatch Event Rules. https://github.com/jorgebastida/gordon/blob/master/gordon/contrib/events/target/target.py
-
-
 ``contrib.helpers``
 ^^^^^^^^^^^^^^^^^^^^^^^^
 

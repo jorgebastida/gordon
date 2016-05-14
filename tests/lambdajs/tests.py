@@ -1,14 +1,14 @@
-import unittest
-
 import boto3
 
-from gordon.utils_tests import BaseIntegrationTest
+from gordon.utils_tests import BaseIntegrationTest, BaseBuildTest
 from gordon.utils import valid_cloudformation_name
+from gordon import utils
 
 
-class IntegrationTest(BaseIntegrationTest, unittest.TestCase):
+class IntegrationTest(BaseIntegrationTest):
 
-    def _test_apply(self):
+    def test_0001_project(self):
+        self._test_project_step('0001_project')
         self.assert_stack_succeed('p')
         self.assert_stack_succeed('r')
 
@@ -26,3 +26,12 @@ class IntegrationTest(BaseIntegrationTest, unittest.TestCase):
             payload={'key1': 'hello'}
         )
         self.assert_lambda_response(response, 'hello')
+
+
+class BuildTest(BaseBuildTest):
+
+    def test_0001_project(self):
+        self._test_project_step('0001_project')
+        self.assertBuild('0001_project', '0001_p.json')
+        self.assertBuild('0001_project', '0002_pr_r.json')
+        self.assertBuild('0001_project', '0003_r.json')

@@ -1,21 +1,21 @@
 {
     "outputs": {
-        "ExampleS3Version": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "ExampleS3Version", 
-            "value": {
-                "action": "example-upload", 
-                "_type": "GetAttr", 
-                "attr": "s3version"
-            }
-        }, 
         "VersionS3Version": {
             "default": "", 
             "_type": "Output", 
             "name": "VersionS3Version", 
             "value": {
                 "action": "version-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
+        "ConsumerS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "ConsumerS3Version", 
+            "value": {
+                "action": "consumer-upload", 
                 "_type": "GetAttr", 
                 "attr": "s3version"
             }
@@ -30,16 +30,6 @@
                 "attr": "s3url"
             }
         }, 
-        "ExampleS3Url": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "ExampleS3Url", 
-            "value": {
-                "action": "example-upload", 
-                "_type": "GetAttr", 
-                "attr": "s3url"
-            }
-        }, 
         "SleepS3Version": {
             "default": "", 
             "_type": "Output", 
@@ -48,6 +38,16 @@
                 "action": "sleep-upload", 
                 "_type": "GetAttr", 
                 "attr": "s3version"
+            }
+        }, 
+        "ConsumerS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "ConsumerS3Url", 
+            "value": {
+                "action": "consumer-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
             }
         }, 
         "VersionS3Url": {
@@ -87,14 +87,14 @@
         }, 
         {
             "_type": "InjectContextAndUploadToS3", 
-            "name": "example-upload", 
+            "name": "consumer-upload", 
             "bucket": {
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
-            "filename": "code/cron_example.zip", 
+            "filename": "code/kinesisconsumer_consumer.zip", 
             "context_to_inject": {}, 
-            "key": "cron_example.zip"
+            "key": "kinesisconsumer_consumer.zip"
         }
     ], 
     "parameters": {
