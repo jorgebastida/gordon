@@ -1,24 +1,20 @@
 Must
 -----
-
-- New lambda settings. Inject settings to the .zip on deploy.
 - Doc CF gotchas.
 - Doc tutorial s3 integration
 - Doc tutorial kinesis integration
 - Doc tutorial dynamodb integration
 - Doc python and js requirements
-
+- exclude
+- npm build
 
 Maybe
 ------
-- New .gordonignore
-- New API Gateway
 - New API Gateway cors
 - New SNS integration
 - New Run lambda locally
 - New Improve CREATE_FAILED UPDATE_FAILED output, suggest next steps etc..
 
-- New Logo
 - New optimize code?
 - Doc Illustrate examples / integrations
 - New other integrations

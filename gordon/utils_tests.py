@@ -125,11 +125,13 @@ class BaseIntegrationTest(BaseBuildTest):
 
     def _test_project_step(self, filename):
         super(BaseIntegrationTest, self)._test_project_step(filename)
-        gordon([
-            'gordon',
-            'apply',
-            '--stage={}'.format(self.uid),
-        ])
+        with cd(os.path.join(self.test_path, filename)):
+            code = gordon([
+                'gordon',
+                'apply',
+                '--stage={}'.format(self.uid),
+            ])
+            self.assertEqual(code, 0)
 
     def _restore_context(self):
         os.environ.clear()
@@ -151,7 +153,7 @@ class BaseIntegrationTest(BaseBuildTest):
 
     def assert_lambda_response(self, response, value):
         self.assertEqual(json.loads(response['Payload'].read()), value)
-        
+
     def get_lambda(self, function_name):
         client = boto3.client('lambda')
         matches = []
@@ -170,7 +172,7 @@ class BaseIntegrationTest(BaseBuildTest):
         matches = []
         for f in client.list_rules().get('Rules', []):
             name = f['Name'].split('-')
-            if name[0] == self.uid and rule_name.startswith(name[-1]):
+            if name[0] == self.uid and rule_name.startswith(name[-2]):
                 matches.append(f)
         if len(matches) == 1:
             return matches[0]
