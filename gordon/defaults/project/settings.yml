@@ -3,6 +3,5 @@ project: {{ project_name }}
 default-region: {{ default_region }}
 code-bucket: gordon-{{ project_name }}-{{ random }}
 apps:
-  - gordon.contrib.helpers
   - gordon.contrib.lambdas
 # - firstapp

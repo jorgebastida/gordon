@@ -1,4 +1,4 @@
-package example;
+package helloworld;
 
 import com.amazonaws.services.lambda.runtime.Context;
 

@@ -4,6 +4,5 @@ lambdas:
     runtime: java8
     handler: helloworld.Hello::handler
     #description: Simple functions in python which says hello
-    #handler: handler
     #role:
     #memory:
