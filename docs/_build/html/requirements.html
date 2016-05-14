@@ -54,7 +54,7 @@ package managers / build tools.</p>
 <h2>Python requirements<a class="headerlink" href="#python-requirements" title="Permalink to this headline">¶</a></h2>
 <p>If your python lambda requires some python packages, you can create a <code class="docutils literal"><span class="pre">requirements.txt</span></code>
 file in the root of your lambda folder, and gordon will install all those using <code class="docutils literal"><span class="pre">pip</span></code>.</p>
-<p>For for information about the format of this file:</p>
+<p>For more information about the format of this file:</p>
 <blockquote>
 <div><ul class="simple">
 <li><a class="reference external" href="https://pip.readthedocs.org/en/1.1/requirements.html">https://pip.readthedocs.org/en/1.1/requirements.html</a></li>
@@ -63,8 +63,8 @@ file in the root of your lambda folder, and gordon will install all those using 
 <p>Additionally you can customize how gordon invoques <code class="docutils literal"><span class="pre">pip</span></code> using the following settings:</p>
 <table border="1" class="docutils">
 <colgroup>
-<col width="26%" />
-<col width="74%" />
+<col width="27%" />
+<col width="73%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Setting</th>
@@ -75,8 +75,8 @@ file in the root of your lambda folder, and gordon will install all those using 
 <tr class="row-even"><td><code class="docutils literal"><span class="pre">pip-path</span></code></td>
 <td>Path to you pip binary Default: <code class="docutils literal"><span class="pre">pip</span></code></td>
 </tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">pip-extra</span></code></td>
-<td>Extra arguments you want gordon to use while invoking pip.</td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">pip-install-extra</span></code></td>
+<td>Extra arguments you want gordon to use while invoking pip install.</td>
 </tr>
 </tbody>
 </table>
@@ -100,8 +100,8 @@ file in the root of your lambda folder, and gordon will invoke <code class="docu
 <p>Additionally you can customize how gordon invoques <code class="docutils literal"><span class="pre">npm</span></code> using the following settings:</p>
 <table border="1" class="docutils">
 <colgroup>
-<col width="26%" />
-<col width="74%" />
+<col width="27%" />
+<col width="73%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Setting</th>
@@ -112,8 +112,8 @@ file in the root of your lambda folder, and gordon will invoke <code class="docu
 <tr class="row-even"><td><code class="docutils literal"><span class="pre">npm-path</span></code></td>
 <td>Path to you npm binary Default: <code class="docutils literal"><span class="pre">npm</span></code></td>
 </tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">npm-extra</span></code></td>
-<td>Extra arguments you want gordon to use while invoking npm.</td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">npm-install-extra</span></code></td>
+<td>Extra arguments you want gordon to use while invoking npm install.</td>
 </tr>
 </tbody>
 </table>
@@ -142,8 +142,8 @@ You can make this build process as complex as you want/need.</p>
 <p>Additionally you can customize how gordon invoques <code class="docutils literal"><span class="pre">gradle</span></code> using the following settings:</p>
 <table border="1" class="docutils">
 <colgroup>
-<col width="25%" />
-<col width="75%" />
+<col width="26%" />
+<col width="74%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Setting</th>
@@ -154,8 +154,8 @@ You can make this build process as complex as you want/need.</p>
 <tr class="row-even"><td><code class="docutils literal"><span class="pre">gradle-path</span></code></td>
 <td>Path to you gradle binary Default: <code class="docutils literal"><span class="pre">gradle</span></code></td>
 </tr>
-<tr class="row-odd"><td><code class="docutils literal"><span class="pre">gradle-extra</span></code></td>
-<td>Extra arguments you want gordon to use while invoking gradle.</td>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">gradle-build-extra</span></code></td>
+<td>Extra arguments you want gordon to use while invoking gradle build.</td>
 </tr>
 </tbody>
 </table>
@@ -193,7 +193,9 @@ build.dependsOn buildLambda
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
+        <div class="sphinxsidebarwrapper"><p class="logo"><a href="index.html">
+  <img class="logo" src="_static/logo.png" alt="Logo"/>
+</a></p>
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Lambda Requirements</a><ul>
@@ -212,13 +214,6 @@ build.dependsOn buildLambda
   </ul></li>
 </ul>
 </div>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/requirements.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">

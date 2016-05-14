@@ -130,20 +130,20 @@ needing to re-configure all related event sources.</p>
 <div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">lambdas</span><span class="p-Indicator">:</span>
 
   <span class="p-Indicator">{</span> <span class="nv">LAMBDA_NAME</span> <span class="p-Indicator">}:</span>
-    <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">CODE_PATH</span> <span class="p-Indicator">}</span>
-    <span class="l-Scalar-Plain">handler</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">LAMBDA_HANDLER</span> <span class="p-Indicator">}</span>
-    <span class="l-Scalar-Plain">memory</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">LAMBDA_MEMORY</span> <span class="p-Indicator">}</span>
-    <span class="l-Scalar-Plain">timeout</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">LAMBDA_TIMEOUT</span> <span class="p-Indicator">}</span>
-    <span class="l-Scalar-Plain">runtime</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">LAMBDA_RUNTIME</span> <span class="p-Indicator">}</span>
-    <span class="l-Scalar-Plain">description</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">LAMBDA_DESCRIPTION</span> <span class="p-Indicator">}</span>
-    <span class="l-Scalar-Plain">role</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">LAMBDA_ROLE</span> <span class="p-Indicator">}</span>
-    <span class="l-Scalar-Plain">vpc</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">VPC_NAME</span> <span class="p-Indicator">}</span>
+    <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">PATH</span> <span class="p-Indicator">}</span>
+    <span class="l-Scalar-Plain">handler</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">STRING</span> <span class="p-Indicator">}</span>
+    <span class="l-Scalar-Plain">memory</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">NUMBER</span> <span class="p-Indicator">}</span>
+    <span class="l-Scalar-Plain">timeout</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">NUMBER</span> <span class="p-Indicator">}</span>
+    <span class="l-Scalar-Plain">runtime</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">RUNTIME_NAME</span> <span class="p-Indicator">}</span>
+    <span class="l-Scalar-Plain">description</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">STRING</span> <span class="p-Indicator">}</span>
+    <span class="l-Scalar-Plain">role</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">MAP</span> <span class="p-Indicator">}</span>
+    <span class="l-Scalar-Plain">vpc</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">STRING</span> <span class="p-Indicator">}</span>
     <span class="l-Scalar-Plain">context</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">CONTEXT_NAME</span> <span class="p-Indicator">}</span>
-    <span class="l-Scalar-Plain">auto-vpc-policy</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">AUTO_VPC_POLICY</span> <span class="p-Indicator">}</span>
-    <span class="l-Scalar-Plain">auto-run-policy</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">AUTO_RUN_POLICY</span> <span class="p-Indicator">}</span>
+    <span class="l-Scalar-Plain">auto-vpc-policy</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">BOOLEAN</span> <span class="p-Indicator">}</span>
+    <span class="l-Scalar-Plain">auto-run-policy</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">BOOLEAN</span> <span class="p-Indicator">}</span>
     <span class="l-Scalar-Plain">policies</span><span class="p-Indicator">:</span>
       <span class="p-Indicator">{</span> <span class="nv">POLICY_NAME</span> <span class="p-Indicator">}:</span>
-        <span class="p-Indicator">{</span> <span class="nv">POLICY_BODY</span> <span class="p-Indicator">}</span>
+        <span class="p-Indicator">{</span> <span class="nv">MAP</span> <span class="p-Indicator">}</span>
       <span class="l-Scalar-Plain">...</span>
 </pre></div>
 </div>
@@ -151,17 +151,61 @@ needing to re-configure all related event sources.</p>
 </div>
 <div class="section" id="lambda-properties">
 <h2>Lambda Properties<a class="headerlink" href="#lambda-properties" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="name">
-<h3>name<a class="headerlink" href="#name" title="Permalink to this headline">¶</a></h3>
-<p>Name for your lambda. Try to keep it as descriptive as possible.</p>
+<div class="section" id="lambda-name">
+<h3>Lambda Name<a class="headerlink" href="#lambda-name" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td>Key of the <code class="docutils literal"><span class="pre">lambdas</span></code> map.</td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>Valid types</td>
+<td><code class="docutils literal"><span class="pre">string</span></code></td>
+</tr>
+<tr class="row-even"><td>Max length</td>
+<td>30</td>
+</tr>
+<tr class="row-odd"><td>Description</td>
+<td>Name for your lambda. Try to keep it as short and descriptive as possible.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section" id="code">
 <h3>code<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h3>
-<p>Path where the code of your lambda is. When creating lambdas you can:</p>
-<blockquote>
-<div><ul>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">code</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>Valid types</td>
+<td><code class="docutils literal"><span class="pre">string</span></code></td>
+</tr>
+<tr class="row-even"><td>Max length</td>
+<td>30</td>
+</tr>
+<tr class="row-odd"><td>Description</td>
+<td>Path where the code of your lambda is</td>
+</tr>
+</tbody>
+</table>
+<p>When creating lambdas you can:</p>
+<ul>
 <li><dl class="first docutils">
-<dt>Put all the code of your lambda in the same file and point to it:</dt>
+<dt>Put all the code of your lambda in the same file and make <code class="docutils literal"><span class="pre">code</span></code> point to it:</dt>
 <dd><ul class="first last simple">
 <li><code class="docutils literal"><span class="pre">code:</span> <span class="pre">code.py</span></code></li>
 <li><code class="docutils literal"><span class="pre">code:</span> <span class="pre">example.js</span></code></li>
@@ -170,16 +214,15 @@ needing to re-configure all related event sources.</p>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt>Create a folder and put several files on it</dt>
+<dt>Put your code in several files within a folder and make <code class="docutils literal"><span class="pre">code</span></code> point to this directory:</dt>
 <dd><ul class="first last simple">
 <li><code class="docutils literal"><span class="pre">code:</span> <span class="pre">myfolder</span></code></li>
-<li>When you point <code class="docutils literal"><span class="pre">code</span></code> to a folder you need to remember to specify the <code class="docutils literal"><span class="pre">runtime</span></code> of your lambda as gordon can&#8217;t infer it from the filename.</li>
+<li>Remember: When you point <code class="docutils literal"><span class="pre">code</span></code> to a directory you need to remember to specify the <code class="docutils literal"><span class="pre">runtime</span></code> property of your lambda as gordon can&#8217;t infer it from the filename.</li>
 </ul>
 </dd>
 </dl>
 </li>
 </ul>
-</div></blockquote>
 <p>Simple python lambda:</p>
 <div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">lambdas</span><span class="p-Indicator">:</span>
   <span class="l-Scalar-Plain">hello_world</span><span class="p-Indicator">:</span>
@@ -205,14 +248,39 @@ needing to re-configure all related event sources.</p>
 </div>
 <div class="section" id="handler">
 <h3>handler<a class="headerlink" href="#handler" title="Permalink to this headline">¶</a></h3>
-<p>Name of the function within <code class="docutils literal"><span class="pre">code</span></code> which will be the entry point of you lambda.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">handler</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>Default</td>
+<td><code class="docutils literal"><span class="pre">handler</span></code></td>
+</tr>
+<tr class="row-even"><td>Valid types</td>
+<td><code class="docutils literal"><span class="pre">string</span></code>, <code class="docutils literal"><span class="pre">reference</span></code></td>
+</tr>
+<tr class="row-odd"><td>Max length</td>
+<td>30</td>
+</tr>
+<tr class="row-even"><td>Description</td>
+<td>Name of the function within <code class="docutils literal"><span class="pre">code</span></code> which will be the entry point of you lambda.</td>
+</tr>
+</tbody>
+</table>
 <div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">lambdas</span><span class="p-Indicator">:</span>
   <span class="l-Scalar-Plain">hello_world</span><span class="p-Indicator">:</span>
     <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">functions.py</span>
     <span class="l-Scalar-Plain">handler</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">my_handler</span>
 </pre></div>
 </div>
-<p>For the java runtime, this handler will need to have the following format (<code class="docutils literal"><span class="pre">package.class::method</span></code>):</p>
+<p>For lambdas using the java runtime, this handler will need to have the following format (<code class="docutils literal"><span class="pre">package.class::method</span></code>):</p>
 <div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">lambdas</span><span class="p-Indicator">:</span>
   <span class="l-Scalar-Plain">hello_world</span><span class="p-Indicator">:</span>
     <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">helloworld</span>
@@ -222,13 +290,40 @@ needing to re-configure all related event sources.</p>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">For more information about Java handlers &lt;<a class="reference external" href="http://docs.aws.amazon.com/lambda/latest/dg/java-programming-model-handler-types.html">http://docs.aws.amazon.com/lambda/latest/dg/java-programming-model-handler-types.html</a>&gt;`_</p>
+<p class="last">For more information about Java handlers <a class="reference external" href="http://docs.aws.amazon.com/lambda/latest/dg/java-programming-model-handler-types.html">Java Programming Model Handler Types</a></p>
 </div>
 </div>
 <div class="section" id="memory">
 <h3>memory<a class="headerlink" href="#memory" title="Permalink to this headline">¶</a></h3>
-<p>Amount of memory your lambda will get provisioned. This needs to be a multiple of <code class="docutils literal"><span class="pre">64</span></code>.
-The minimum value is <code class="docutils literal"><span class="pre">128</span></code> and the maximum <code class="docutils literal"><span class="pre">1536</span></code>. Default value is <code class="docutils literal"><span class="pre">128</span></code>.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">memory</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>Default</td>
+<td><code class="docutils literal"><span class="pre">128</span></code></td>
+</tr>
+<tr class="row-even"><td>Valid types</td>
+<td><code class="docutils literal"><span class="pre">integer</span></code>, <code class="docutils literal"><span class="pre">reference</span></code></td>
+</tr>
+<tr class="row-odd"><td>Max</td>
+<td><code class="docutils literal"><span class="pre">1536</span></code></td>
+</tr>
+<tr class="row-even"><td>Min</td>
+<td><code class="docutils literal"><span class="pre">128</span></code></td>
+</tr>
+<tr class="row-odd"><td>Description</td>
+<td>Amount of memory your lambda will get provisioned with</td>
+</tr>
+</tbody>
+</table>
 <div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">lambdas</span><span class="p-Indicator">:</span>
   <span class="l-Scalar-Plain">hello_world</span><span class="p-Indicator">:</span>
     <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">functions.py</span>
@@ -238,18 +333,66 @@ The minimum value is <code class="docutils literal"><span class="pre">128</span>
 </div>
 <div class="section" id="timeout">
 <h3>timeout<a class="headerlink" href="#timeout" title="Permalink to this headline">¶</a></h3>
-<p>The function execution time (in seconds) after which Lambda terminates the function. Because the execution time affects cost, set this value based
-on the function&#8217;s expected execution time. By default, Timeout is set to 3 seconds.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">timeout</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>Default</td>
+<td><code class="docutils literal"><span class="pre">3</span></code></td>
+</tr>
+<tr class="row-even"><td>Valid types</td>
+<td><code class="docutils literal"><span class="pre">integer</span></code>, <code class="docutils literal"><span class="pre">reference</span></code></td>
+</tr>
+<tr class="row-odd"><td>Max</td>
+<td><code class="docutils literal"><span class="pre">300</span></code></td>
+</tr>
+<tr class="row-even"><td>Min</td>
+<td><code class="docutils literal"><span class="pre">1</span></code></td>
+</tr>
+<tr class="row-odd"><td>Description</td>
+<td>The function execution time (in seconds) after which Lambda terminates the function</td>
+</tr>
+</tbody>
+</table>
+<p>Because the execution time affects cost, set this value based on the function&#8217;s expected execution time.</p>
 <div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">lambdas</span><span class="p-Indicator">:</span>
   <span class="l-Scalar-Plain">hello_world</span><span class="p-Indicator">:</span>
     <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">functions.py</span>
-    <span class="l-Scalar-Plain">memory</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">300</span>
+    <span class="l-Scalar-Plain">timeout</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">300</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="runtime">
 <h3>runtime<a class="headerlink" href="#runtime" title="Permalink to this headline">¶</a></h3>
-<p>Runtime of your lambda. Valid values are:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">runtime</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>Depends</td>
+</tr>
+<tr class="row-odd"><td>Valid types</td>
+<td><code class="docutils literal"><span class="pre">runtime</span></code></td>
+</tr>
+<tr class="row-even"><td>Description</td>
+<td>Runtime of your lambda</td>
+</tr>
+</tbody>
+</table>
+<p>Valid runtimes:</p>
 <table border="1" class="docutils">
 <colgroup>
 <col width="77%" />
@@ -275,7 +418,7 @@ on the function&#8217;s expected execution time. By default, Timeout is set to 3
 </tr>
 </tbody>
 </table>
-<p>If you don&#8217;t specidy any runtime, Gordon tries to auto detect it based on the extensions of the <code class="docutils literal"><span class="pre">code</span></code> file.</p>
+<p>If you don&#8217;t specify any runtime, Gordon tries to auto detect it based on the extensions of the <code class="docutils literal"><span class="pre">code</span></code> file.</p>
 <table border="1" class="docutils">
 <colgroup>
 <col width="58%" />
@@ -283,7 +426,7 @@ on the function&#8217;s expected execution time. By default, Timeout is set to 3
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Extension</th>
-<th class="head">Runtime</th>
+<th class="head">AWS Runtime</th>
 </tr>
 </thead>
 <tbody valign="top">
@@ -295,8 +438,8 @@ on the function&#8217;s expected execution time. By default, Timeout is set to 3
 </tr>
 </tbody>
 </table>
-<p>For folder based lambdas (like <code class="docutils literal"><span class="pre">java</span></code>) the code is a directory and not a file, so the runtime can&#8217;t be inferred.
-For these situations, you can specify the runtime using this setting.</p>
+<p>For folder based lambdas the <code class="docutils literal"><span class="pre">code</span></code> property is a directory and not a file, so the runtime can&#8217;t be inferred.</p>
+<p>For these situations, you can manually specify the runtime using this setting:</p>
 <div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">lambdas</span><span class="p-Indicator">:</span>
   <span class="l-Scalar-Plain">hello_world</span><span class="p-Indicator">:</span>
     <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">hellojava</span>
@@ -306,7 +449,29 @@ For these situations, you can specify the runtime using this setting.</p>
 </div>
 <div class="section" id="description">
 <h3>description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h3>
-<p>Human-readable description for your lambda.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">description</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>Default</td>
+<td><em>Empty</em></td>
+</tr>
+<tr class="row-even"><td>Valid types</td>
+<td><code class="docutils literal"><span class="pre">string</span></code>, <code class="docutils literal"><span class="pre">reference</span></code></td>
+</tr>
+<tr class="row-odd"><td>Description</td>
+<td>Human-readable description for your lambda.</td>
+</tr>
+</tbody>
+</table>
 <div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">lambdas</span><span class="p-Indicator">:</span>
   <span class="l-Scalar-Plain">hello_world</span><span class="p-Indicator">:</span>
     <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">functions.py</span>
@@ -316,8 +481,30 @@ For these situations, you can specify the runtime using this setting.</p>
 </div>
 <div class="section" id="role">
 <h3>role<a class="headerlink" href="#role" title="Permalink to this headline">¶</a></h3>
-<p>ARN of the lambda role this function will use.</p>
-<p>If not provided, gordon will create one role for this function for you and include all necessary <code class="docutils literal"><span class="pre">policies</span></code> <em>(This is the default and most likely behaviour you want).</em></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">role</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>default</td>
+<td>Gordon will create a minimal role for this function</td>
+</tr>
+<tr class="row-even"><td>Valid types</td>
+<td><code class="docutils literal"><span class="pre">arn</span></code></td>
+</tr>
+<tr class="row-odd"><td>Description</td>
+<td>ARN of the lambda role this function will use.</td>
+</tr>
+</tbody>
+</table>
+<p>If not provided, gordon will create one role for this function and include all necessary <code class="docutils literal"><span class="pre">policies</span></code> <em>(This is the default and most likely behaviour you want).</em></p>
 <div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">lambdas</span><span class="p-Indicator">:</span>
   <span class="l-Scalar-Plain">hello_world</span><span class="p-Indicator">:</span>
     <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">functions.py</span>
@@ -327,9 +514,28 @@ For these situations, you can specify the runtime using this setting.</p>
 </div>
 <div class="section" id="vpc">
 <span id="lambdas-vpc"></span><h3>vpc<a class="headerlink" href="#vpc" title="Permalink to this headline">¶</a></h3>
-<p>Name of the vpc where this lambda should be deployed. If the Lambda function requires access to resources in a VPC, specify a VPC configuration
-that Lambda uses to set up an elastic network interface (ENI). The ENI enables your function to connect to other resources in your VPC, but it doesn&#8217;t provide
-public Internet access.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">vpc</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>Valid types</td>
+<td><code class="docutils literal"><span class="pre">vpc-name</span></code></td>
+</tr>
+<tr class="row-even"><td>Description</td>
+<td>Name of the vpc where this lambda should be deployed.</td>
+</tr>
+</tbody>
+</table>
+<p>If the Lambda function requires access to resources in a VPC, specify a VPC configuration that Lambda uses to set up an elastic network interface (ENI).
+The ENI enables your function to connect to other resources in your VPC, but it doesn&#8217;t provide public Internet access.</p>
 <p>If your function requires Internet access (for example, to access AWS services that don&#8217;t have VPC endpoints), configure a Network Address Translation (NAT) instance
 inside your VPC or use an Amazon Virtual Private Cloud (Amazon VPC) NAT gateway. For more information, see <a class="reference external" href="http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/vpc-nat-gateway.html">NAT Gateways</a> in the Amazon VPC User Guide.</p>
 <div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">lambdas</span><span class="p-Indicator">:</span>
@@ -353,12 +559,35 @@ inside your VPC or use an Amazon Virtual Private Cloud (Amazon VPC) NAT gateway.
             <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">subnet-1234567c</span>
 </pre></div>
 </div>
-<p>If <code class="docutils literal"><span class="pre">auto-vpc-policy</span></code> is <code class="docutils literal"><span class="pre">True</span></code>, gordon will attach to your lambda role the required policy which would allow it to access the vpc. It it is <code class="docutils literal"><span class="pre">False</span></code>, you&#8217;ll need
+<p>If <code class="docutils literal"><span class="pre">auto-vpc-policy</span></code> is <code class="docutils literal"><span class="pre">True</span></code>, gordon will attach to your lambda role the required policy which would allow it to access the vpc. If it is <code class="docutils literal"><span class="pre">False</span></code>, you&#8217;ll need
 to do this by yourself.</p>
 </div>
 <div class="section" id="context">
 <h3>context<a class="headerlink" href="#context" title="Permalink to this headline">¶</a></h3>
-<p>Name of the context you want to inject into this lambda. By default, Gordon will attach the context called <code class="docutils literal"><span class="pre">default</span></code> if it is present.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">context</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>default</td>
+<td><code class="docutils literal"><span class="pre">default</span></code></td>
+</tr>
+<tr class="row-even"><td>Valid types</td>
+<td><code class="docutils literal"><span class="pre">context-name</span></code></td>
+</tr>
+<tr class="row-odd"><td>Description</td>
+<td>Name of the context you want to inject into this lambda.</td>
+</tr>
+</tbody>
+</table>
+<p>For more information about contexts you can read about them in <a class="reference internal" href="contexts.html"><em>Contexts</em></a>.</p>
 <div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">lambdas</span><span class="p-Indicator">:</span>
   <span class="l-Scalar-Plain">hello_world</span><span class="p-Indicator">:</span>
     <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">functions.py</span>
@@ -368,8 +597,28 @@ to do this by yourself.</p>
 </div>
 <div class="section" id="policies">
 <h3>policies<a class="headerlink" href="#policies" title="Permalink to this headline">¶</a></h3>
-<p>List of AWS policies to attach to the role of this lambda. This is the way you&#8217;ll give permissions to you lambda to connect to other AWS services
-such as dynamodb, kinesis, s3, etc... For more inforamtion <a class="reference external" href="http://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies.html">AWS IAM Policy Reference</a></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">policies</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>Valid types</td>
+<td><code class="docutils literal"><span class="pre">map</span></code></td>
+</tr>
+<tr class="row-even"><td>Description</td>
+<td>Map of AWS policies to attach to the role of this lambda.</td>
+</tr>
+</tbody>
+</table>
+<p>This is the way you&#8217;ll give permissions to you lambda to connect to other AWS services such as dynamodb, kinesis, s3, etc...
+For more inforamtion <a class="reference external" href="http://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies.html">AWS IAM Policy Reference</a></p>
 <p>In the following example we attach one policy called <code class="docutils literal"><span class="pre">example_bucket_policy</span></code> to our lambda <code class="docutils literal"><span class="pre">hello_world</span></code> in order to make it possible to read and write a
 S3 bucket called <code class="docutils literal"><span class="pre">EXAMPLE-BUCKET-NAME</span></code>.</p>
 <div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">lambdas</span><span class="p-Indicator">:</span>
@@ -398,8 +647,31 @@ S3 bucket called <code class="docutils literal"><span class="pre">EXAMPLE-BUCKET
 </div>
 <div class="section" id="auto-vpc-policy">
 <h3>auto-vpc-policy<a class="headerlink" href="#auto-vpc-policy" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">auto-vpc-policy</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>Default</td>
+<td>True</td>
+</tr>
+<tr class="row-even"><td>Valid types</td>
+<td><code class="docutils literal"><span class="pre">boolean</span></code></td>
+</tr>
+<tr class="row-odd"><td>Description</td>
+<td>Automatically attach to your lambda enough permissions to get a vpc configured.</td>
+</tr>
+</tbody>
+</table>
 <p>If <code class="docutils literal"><span class="pre">auto-vpc-policy</span></code> is <code class="docutils literal"><span class="pre">True</span></code>, and you lambda has one <code class="docutils literal"><span class="pre">vpc</span></code> configured, gordon will attach to your lambda role the required policy which would allow it to
-access the vpc. It it is <code class="docutils literal"><span class="pre">False</span></code>, you&#8217;ll need to do this by yourself.</p>
+access the vpc. If it is <code class="docutils literal"><span class="pre">False</span></code>, you&#8217;ll need to do this by yourself.</p>
 <div class="highlight-json"><div class="highlight"><pre><span class="p">{</span>
     <span class="nt">&quot;Version&quot;</span><span class="p">:</span> <span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
     <span class="nt">&quot;Statement&quot;</span><span class="p">:</span> <span class="p">[</span>
@@ -419,6 +691,29 @@ access the vpc. It it is <code class="docutils literal"><span class="pre">False<
 </div>
 <div class="section" id="auto-run-policy">
 <h3>auto-run-policy<a class="headerlink" href="#auto-run-policy" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">auto-run-policy</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>Default</td>
+<td>True</td>
+</tr>
+<tr class="row-even"><td>Valid types</td>
+<td><code class="docutils literal"><span class="pre">boolean</span></code></td>
+</tr>
+<tr class="row-odd"><td>Description</td>
+<td>Automatically attach to your lambda enough permissions to let it run and push logs to CloudWatch Logs.</td>
+</tr>
+</tbody>
+</table>
 <p>If <code class="docutils literal"><span class="pre">auto-run-policy</span></code> is <code class="docutils literal"><span class="pre">True</span></code>, gordon will attach to your lambda role the required policy which would allow it to run and push logs.</p>
 <div class="highlight-json"><div class="highlight"><pre><span class="p">{</span>
     <span class="nt">&quot;Version&quot;</span><span class="p">:</span> <span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
@@ -454,7 +749,9 @@ access the vpc. It it is <code class="docutils literal"><span class="pre">False<
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
+        <div class="sphinxsidebarwrapper"><p class="logo"><a href="index.html">
+  <img class="logo" src="_static/logo.png" alt="Logo"/>
+</a></p>
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Lambdas</a><ul>
@@ -462,7 +759,7 @@ access the vpc. It it is <code class="docutils literal"><span class="pre">False<
 <li><a class="reference internal" href="#why-the-current-alias-is-important">Why the current alias is important?</a></li>
 <li><a class="reference internal" href="#anatomy-of-a-lambda">Anatomy of a Lambda</a></li>
 <li><a class="reference internal" href="#lambda-properties">Lambda Properties</a><ul>
-<li><a class="reference internal" href="#name">name</a></li>
+<li><a class="reference internal" href="#lambda-name">Lambda Name</a></li>
 <li><a class="reference internal" href="#code">code</a></li>
 <li><a class="reference internal" href="#handler">handler</a></li>
 <li><a class="reference internal" href="#memory">memory</a></li>
@@ -489,13 +786,6 @@ access the vpc. It it is <code class="docutils literal"><span class="pre">False<
   </ul></li>
 </ul>
 </div>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/lambdas.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">

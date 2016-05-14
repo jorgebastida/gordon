@@ -74,7 +74,6 @@ Now that we know what these files does, we need to install this ``firstapp``. In
     default-region: us-east-1
     code-bucket: gordon-demo-5f1fb41f
     apps:
-      - gordon.contrib.helpers
       - gordon.contrib.lambdas
       - firstapp
 
@@ -99,10 +98,7 @@ This command will have an output similar to:
     $ gordon build
     Loading project resources
     Loading installed applications
-      contrib_helpers:
-        ✓ sleep
       contrib_lambdas:
-        ✓ alias
         ✓ version
       firstapp:
         ✓ helloworld
@@ -117,7 +113,8 @@ What is all this? Well, without going into much detail, gordon has just decided 
  * ``0002_pr_r.json`` gordon will upload the code of your lambdas to S3.
  * ``0003_r.json`` gordon will create your lambdas.
 
-But, should I care? **No** you should not really care much about what is going on. The only important part is that you'll now see a new ``_build`` directory in your project path. That directory contains everything gordon needs to put your lambdas live.
+
+But, should I care? **No** you should not really care much at this moment about what is going on. The only important part is that you'll now see a new ``_build`` directory in your project path. That directory contains everything gordon needs to put your lambdas live.
 
 If you want to read more about the internals of gordon project, you read more in the :doc:`project` page.
 
@@ -145,14 +142,14 @@ This command will have an output similar to:
     0001_p.json (cloudformation)
       CREATE_COMPLETE waiting... -
     0002_pr_r.json (custom)
-      ✓ code/contrib_helpers_sleep.zip (364c5f6d)
-      ✓ code/contrib_lambdas_alias.zip (e906090e)
       ✓ code/contrib_lambdas_version.zip (c3137e97)
       ✓ code/firstapp_helloworld.zip (c7ec05a8)
     0003_r.json (cloudformation)
       CREATE_COMPLETE
 
-Your lambdas are ready to be used!
+
+Your lambdas are ready to be used! Navigate to `AWS: Lambdas <https://console.aws.amazon.com/lambda/home>`_ to test them.
+
 
 What next?
 -----------

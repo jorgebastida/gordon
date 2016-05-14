@@ -67,26 +67,26 @@
 </div>
 <p>This will create a <cite>firstapp</cite> directory inside your project with the following structure:</p>
 <div class="highlight-bash"><div class="highlight"><pre>firstapp/
-├── helloworld.py
+├── helloworld
+│   └── code.py
 └── settings.yml
 </pre></div>
 </div>
 <p>These files are:</p>
 <blockquote>
 <div><ul class="simple">
-<li><code class="docutils literal"><span class="pre">helloworld.py</span></code> : File where the source code of our first helloworld lambda will be. By default gordon creates a function called <code class="docutils literal"><span class="pre">handler</span></code> in this file.</li>
-<li><code class="docutils literal"><span class="pre">settings.yml</span></code> : Configuration related to this application. By default gordon registers a <code class="docutils literal"><span class="pre">helloworld</span></code> lambda the function within <code class="docutils literal"><span class="pre">helloworld.py</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">code.py</span></code> : File where the source code of our first <code class="docutils literal"><span class="pre">helloworld</span></code> lambda will be. By default gordon creates a function called <code class="docutils literal"><span class="pre">handler</span></code> inside this file and registers it as the main handler.</li>
+<li><code class="docutils literal"><span class="pre">settings.yml</span></code> : Configuration related to this application. By default gordon registers a <code class="docutils literal"><span class="pre">helloworld</span></code> lambda function.</li>
 </ul>
 </div></blockquote>
-<p>Once you understand how everything works, and you start developing your app, you&#8217;ll rename/remove this function, but to start with we think this is the easiest way for you to understand how everything works.</p>
-<p>Give it a look to <code class="docutils literal"><span class="pre">firstapp/settings.yml</span></code> and <code class="docutils literal"><span class="pre">firstapp/helloworld.py</span></code> files in order to get a better understanding of what gordon just created for you.</p>
+<p>Once you understands how everything works, and you start developing your app, you&#8217;ll rename/remove this function, but to start with we think this is the easiest way for you to understand how everything works.</p>
+<p>Give it a look to <code class="docutils literal"><span class="pre">firstapp/settings.yml</span></code> and <code class="docutils literal"><span class="pre">firstapp/helloworld/code.py</span></code> files in order to get a better understanding of what gordon just created for you.</p>
 <p>Now that we know what these files does, we need to install this <code class="docutils literal"><span class="pre">firstapp</span></code>. In order to do so, open your project <code class="docutils literal"><span class="pre">settings.yml</span></code> and add <code class="docutils literal"><span class="pre">firstapp</span></code> to the <code class="docutils literal"><span class="pre">apps</span></code> list:</p>
 <div class="highlight-yml"><div class="highlight"><pre>---
 project: demo
 default-region: us-east-1
 code-bucket: gordon-demo-5f1fb41f
 apps:
-  - gordon.contrib.helpers
   - gordon.contrib.lambdas
   - firstapp
 </pre></div>
@@ -95,7 +95,7 @@ apps:
 </div>
 <div class="section" id="build-your-project">
 <h2>Build your project<a class="headerlink" href="#build-your-project" title="Permalink to this headline">¶</a></h2>
-<p>Now that your project is ready, you need to build it. You&#8217;ll need to repeat this step every single time you make some local changes and want to deploy them to AWS.</p>
+<p>Now that your project is ready, you need to build it. You&#8217;ll need to repeat this step every time you make some local changes and want to deploy them to AWS.</p>
 <p>From the command line, cd into the project root, then run the following command:</p>
 <div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>gordon build
 </pre></div>
@@ -104,15 +104,14 @@ apps:
 <div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>gordon build
 Loading project resources
 Loading installed applications
-  contrib_helpers:
-    ✓ sleep
   contrib_lambdas:
-    ✓ <span class="nb">alias</span>
     ✓ version
   firstapp:
     ✓ helloworld
 Building project...
   ✓ 0001_p.json
+    ✓ lambda:contrib_lambdas:version
+    ✓ lambda:firstapp:helloworld
   ✓ 0002_pr_r.json
   ✓ 0003_r.json
 </pre></div>
@@ -126,7 +125,7 @@ Building project...
 </ul>
 </dd>
 </dl>
-<p>But, should I care? <strong>No</strong> you should not really care much about what is going on. The only important part is that you&#8217;ll now see a new <code class="docutils literal"><span class="pre">_build</span></code> directory in your project path. That directory contains everything gordon needs to put your lambdas live.</p>
+<p>But, should I care? <strong>No</strong> you should not really care much at this moment about what is going on. The only important part is that you&#8217;ll now see a new <code class="docutils literal"><span class="pre">_build</span></code> directory in your project path. That directory contains everything gordon needs to put your lambdas live.</p>
 <p>If you want to read more about the internals of gordon project, you read more in the <a class="reference internal" href="project.html"><em>Project</em></a> page.</p>
 </div>
 <div class="section" id="deploy-your-project">
@@ -142,18 +141,16 @@ Building project...
 <p>This command will have an output similar to:</p>
 <div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>gordon apply
 Applying project...
-0001_p.json <span class="o">(</span>cloudformation<span class="o">)</span>
-  CREATE_COMPLETE waiting... -
-0002_pr_r.json <span class="o">(</span>custom<span class="o">)</span>
-  ✓ code/contrib_helpers_sleep.zip <span class="o">(</span>364c5f6d<span class="o">)</span>
-  ✓ code/contrib_lambdas_alias.zip <span class="o">(</span>e906090e<span class="o">)</span>
-  ✓ code/contrib_lambdas_version.zip <span class="o">(</span>c3137e97<span class="o">)</span>
-  ✓ code/firstapp_helloworld.zip <span class="o">(</span>c7ec05a8<span class="o">)</span>
-0003_r.json <span class="o">(</span>cloudformation<span class="o">)</span>
-  CREATE_COMPLETE
+  0001_p.json <span class="o">(</span>cloudformation<span class="o">)</span>
+    CREATE_COMPLETE waiting...
+  0002_pr_r.json <span class="o">(</span>custom<span class="o">)</span>
+    ✓ code/contrib_lambdas_version.zip <span class="o">(</span>da0684c2<span class="o">)</span>
+    ✓ code/firstapp_helloworld.zip <span class="o">(</span>45da7d76<span class="o">)</span>
+  0003_r.json <span class="o">(</span>cloudformation<span class="o">)</span>
+    CREATE_COMPLETE waiting...
 </pre></div>
 </div>
-<p>Your lambdas are ready to be used!</p>
+<p>Your lambdas are ready to be used! Navigate to <a class="reference external" href="https://console.aws.amazon.com/lambda/home">AWS: Lambdas</a> to test them.</p>
 </div>
 <div class="section" id="what-next">
 <h2>What next?<a class="headerlink" href="#what-next" title="Permalink to this headline">¶</a></h2>
@@ -174,7 +171,9 @@ Applying project...
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
+        <div class="sphinxsidebarwrapper"><p class="logo"><a href="index.html">
+  <img class="logo" src="_static/logo.png" alt="Logo"/>
+</a></p>
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Quickstart Python</a><ul>
@@ -195,13 +194,6 @@ Applying project...
   </ul></li>
 </ul>
 </div>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/quickstart_py.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">

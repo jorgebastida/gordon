@@ -437,11 +437,11 @@ class PythonLambda(Lambda):
     def _pip_path(self):
         return self.project.settings.get('pip-path', 'pip')
 
-    def _pip_extra(self):
+    def _pip_install_extra(self):
         extra = (
-            self.project.settings.get('pip-extra'),
-            self.app and self.app.settings.get('pip-extra'),
-            self.settings.get('pip-extra'),
+            self.project.settings.get('pip-install-extra'),
+            self.app and self.app.settings.get('pip-install-extra'),
+            self.settings.get('pip-install-extra'),
         )
         return ' '.join([e for e in extra if e])
 
@@ -464,7 +464,7 @@ class PythonLambda(Lambda):
                     self._pip_path(),
                     requirements_path,
                     destination,
-                    self._pip_extra()
+                    self._pip_install_extra()
                 )
 
                 subprocess.check_output(
@@ -492,11 +492,11 @@ class NodeLambda(Lambda):
     def _npm_path(self):
         return self.project.settings.get('npm-path', 'npm')
 
-    def _npm_extra(self):
+    def _npm_install_extra(self):
         extra = (
-            self.project.settings.get('npm-extra'),
-            self.app and self.app.settings.get('npm-extra'),
-            self.settings.get('npm-extra'),
+            self.project.settings.get('npm-install-extra'),
+            self.app and self.app.settings.get('npm-install-extra'),
+            self.settings.get('npm-install-extra'),
         )
         return ' '.join([e for e in extra if e])
 
@@ -513,7 +513,7 @@ class NodeLambda(Lambda):
                 command = "cd {} && {} install {}".format(
                     destination,
                     self._npm_path(),
-                    self._npm_extra()
+                    self._npm_install_extra()
                 )
                 subprocess.check_output(
                     command,
@@ -534,11 +534,11 @@ class JavaLambda(Lambda):
     def _gradle_path(self):
         return self.project.settings.get('gradle-path', 'gradle')
 
-    def _gradle_extra(self):
+    def _gradle_build_extra(self):
         extra = (
-            self.project.settings.get('gradle-extra'),
-            self.app and self.app.settings.get('gradle-extra'),
-            self.settings.get('gradle-extra'),
+            self.project.settings.get('gradle-build-extra'),
+            self.app and self.app.settings.get('gradle-build-extra'),
+            self.settings.get('gradle-build-extra'),
         )
         return ' '.join([e for e in extra if e])
 
@@ -548,7 +548,7 @@ class JavaLambda(Lambda):
             root,
             self._gradle_path(),
             destination,
-            self._gradle_extra()
+            self._gradle_build_extra()
         )
         subprocess.check_output(
             command,

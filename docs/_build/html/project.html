@@ -25,7 +25,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="Gordon 0.0.1 documentation" href="index.html" />
     <link rel="next" title="Applications" href="apps.html" />
-    <link rel="prev" title="Quickstart" href="quickstart.html" />
+    <link rel="prev" title="Quickstart Java" href="quickstart_java.html" />
    
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
@@ -67,11 +67,11 @@
 <h2>Project Settings<a class="headerlink" href="#project-settings" title="Permalink to this headline">¶</a></h2>
 <p>You can read a full in-depth explanation of how settings works in the <a class="reference internal" href="settings.html"><em>Settings</em></a> page, but these are the most common project settings you&#8217;ll probably use:</p>
 <div class="highlight-yaml"><div class="highlight"><pre><span class="nn">---</span>
-<span class="l-Scalar-Plain">project</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">PROJECT_NAME</span> <span class="p-Indicator">}</span>
-<span class="l-Scalar-Plain">default-region</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">PROJECT_DEFAULT_REGION</span> <span class="p-Indicator">}</span>
-<span class="l-Scalar-Plain">code-bucket</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">S3_BUCKET</span> <span class="p-Indicator">}</span>
+<span class="l-Scalar-Plain">project</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">STRING</span> <span class="p-Indicator">}</span>
+<span class="l-Scalar-Plain">default-region</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">AWS_REGION</span> <span class="p-Indicator">}</span>
+<span class="l-Scalar-Plain">code-bucket</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">STRING</span> <span class="p-Indicator">}</span>
 <span class="l-Scalar-Plain">apps</span><span class="p-Indicator">:</span>
-  <span class="p-Indicator">-</span> <span class="p-Indicator">{</span> <span class="nv">APPLICATION</span> <span class="p-Indicator">}</span>
+  <span class="p-Indicator">-</span> <span class="p-Indicator">{</span> <span class="nv">STRING</span> <span class="p-Indicator">}</span>
 
 <span class="l-Scalar-Plain">dynamodb</span><span class="p-Indicator">:</span>
   <span class="l-Scalar-Plain">...</span>
@@ -174,7 +174,9 @@ deploy it. Gordon doesn&#8217;t know/care what is the current status (if any) of
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
+        <div class="sphinxsidebarwrapper"><p class="logo"><a href="index.html">
+  <img class="logo" src="_static/logo.png" alt="Logo"/>
+</a></p>
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Project</a><ul>
@@ -192,18 +194,11 @@ deploy it. Gordon doesn&#8217;t know/care what is the current status (if any) of
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="quickstart.html" title="previous chapter">Quickstart</a></li>
+      <li>Previous: <a href="quickstart_java.html" title="previous chapter">Quickstart Java</a></li>
       <li>Next: <a href="apps.html" title="next chapter">Applications</a></li>
   </ul></li>
 </ul>
 </div>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/project.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">

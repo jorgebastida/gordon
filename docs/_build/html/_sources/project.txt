@@ -39,11 +39,11 @@ You can read a full in-depth explanation of how settings works in the :doc:`sett
 .. code-block:: yaml
 
   ---
-  project: { PROJECT_NAME }
-  default-region: { PROJECT_DEFAULT_REGION }
-  code-bucket: { S3_BUCKET }
+  project: { STRING }
+  default-region: { AWS_REGION }
+  code-bucket: { STRING }
   apps:
-    - { APPLICATION }
+    - { STRING }
 
   dynamodb:
     ...

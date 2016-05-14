@@ -42,17 +42,18 @@ This will create a `firstapp` directory inside your project with the following s
 .. code-block:: bash
 
     firstapp/
-    ├── helloworld.py
+    ├── helloworld
+    │   └── code.py
     └── settings.yml
 
 These files are:
 
-  * ``helloworld.py`` : File where the source code of our first helloworld lambda will be. By default gordon creates a function called ``handler`` in this file.
-  * ``settings.yml`` : Configuration related to this application. By default gordon registers a ``helloworld`` lambda the function within ``helloworld.py``.
+  * ``code.py`` : File where the source code of our first ``helloworld`` lambda will be. By default gordon creates a function called ``handler`` inside this file and registers it as the main handler.
+  * ``settings.yml`` : Configuration related to this application. By default gordon registers a ``helloworld`` lambda function.
 
-Once you understand how everything works, and you start developing your app, you'll rename/remove this function, but to start with we think this is the easiest way for you to understand how everything works.
+Once you understands how everything works, and you start developing your app, you'll rename/remove this function, but to start with we think this is the easiest way for you to understand how everything works.
 
-Give it a look to ``firstapp/settings.yml`` and ``firstapp/helloworld.py`` files in order to get a better understanding of what gordon just created for you.
+Give it a look to ``firstapp/settings.yml`` and ``firstapp/helloworld/code.py`` files in order to get a better understanding of what gordon just created for you.
 
 Now that we know what these files does, we need to install this ``firstapp``. In order to do so, open your project ``settings.yml`` and add ``firstapp`` to the ``apps`` list:
 
@@ -63,7 +64,6 @@ Now that we know what these files does, we need to install this ``firstapp``. In
     default-region: us-east-1
     code-bucket: gordon-demo-5f1fb41f
     apps:
-      - gordon.contrib.helpers
       - gordon.contrib.lambdas
       - firstapp
 
@@ -73,7 +73,7 @@ This will make Gordon take count of the resources registered within the ``firsta
 Build your project
 -------------------
 
-Now that your project is ready, you need to build it. You'll need to repeat this step every single time you make some local changes and want to deploy them to AWS.
+Now that your project is ready, you need to build it. You'll need to repeat this step every time you make some local changes and want to deploy them to AWS.
 
 From the command line, cd into the project root, then run the following command:
 
@@ -88,15 +88,14 @@ This command will have an output similar to:
     $ gordon build
     Loading project resources
     Loading installed applications
-      contrib_helpers:
-        ✓ sleep
       contrib_lambdas:
-        ✓ alias
         ✓ version
       firstapp:
         ✓ helloworld
     Building project...
       ✓ 0001_p.json
+        ✓ lambda:contrib_lambdas:version
+        ✓ lambda:firstapp:helloworld
       ✓ 0002_pr_r.json
       ✓ 0003_r.json
 
@@ -106,7 +105,7 @@ What is all this? Well, without going into much detail, gordon has just decided 
  * ``0002_pr_r.json`` gordon will upload the code of your lambdas to S3.
  * ``0003_r.json`` gordon will create your lambdas.
 
-But, should I care? **No** you should not really care much about what is going on. The only important part is that you'll now see a new ``_build`` directory in your project path. That directory contains everything gordon needs to put your lambdas live.
+But, should I care? **No** you should not really care much at this moment about what is going on. The only important part is that you'll now see a new ``_build`` directory in your project path. That directory contains everything gordon needs to put your lambdas live.
 
 If you want to read more about the internals of gordon project, you read more in the :doc:`project` page.
 
@@ -131,17 +130,16 @@ This command will have an output similar to:
 
     $ gordon apply
     Applying project...
-    0001_p.json (cloudformation)
-      CREATE_COMPLETE waiting... -
-    0002_pr_r.json (custom)
-      ✓ code/contrib_helpers_sleep.zip (364c5f6d)
-      ✓ code/contrib_lambdas_alias.zip (e906090e)
-      ✓ code/contrib_lambdas_version.zip (c3137e97)
-      ✓ code/firstapp_helloworld.zip (c7ec05a8)
-    0003_r.json (cloudformation)
-      CREATE_COMPLETE
+      0001_p.json (cloudformation)
+        CREATE_COMPLETE waiting...
+      0002_pr_r.json (custom)
+        ✓ code/contrib_lambdas_version.zip (da0684c2)
+        ✓ code/firstapp_helloworld.zip (45da7d76)
+      0003_r.json (cloudformation)
+        CREATE_COMPLETE waiting...
 
-Your lambdas are ready to be used!
+Your lambdas are ready to be used! Navigate to `AWS: Lambdas <https://console.aws.amazon.com/lambda/home>`_ to test them.
+
 
 What next?
 -----------

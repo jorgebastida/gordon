@@ -22,18 +22,18 @@ Python requirements
 If your python lambda requires some python packages, you can create a ``requirements.txt``
 file in the root of your lambda folder, and gordon will install all those using ``pip``.
 
-For for information about the format of this file:
+For more information about the format of this file:
 
     * https://pip.readthedocs.org/en/1.1/requirements.html
 
 Additionally you can customize how gordon invoques ``pip`` using the following settings:
 
-=====================  ============================================================
-Setting                Description
-=====================  ============================================================
-``pip-path``           Path to you pip binary Default: ``pip``
-``pip-extra``          Extra arguments you want gordon to use while invoking pip.
-=====================  ============================================================
+=========================  ====================================================================
+Setting                    Description
+=========================  ====================================================================
+``pip-path``               Path to you pip binary Default: ``pip``
+``pip-install-extra``      Extra arguments you want gordon to use while invoking pip install.
+=========================  ====================================================================
 
 Example ``requirements.txt``:
 
@@ -56,12 +56,12 @@ For more information:
 
 Additionally you can customize how gordon invoques ``npm`` using the following settings:
 
-=====================  ============================================================
-Setting                Description
-=====================  ============================================================
-``npm-path``           Path to you npm binary Default: ``npm``
-``npm-extra``          Extra arguments you want gordon to use while invoking npm.
-=====================  ============================================================
+========================  ==================================================================
+Setting                   Description
+========================  ==================================================================
+``npm-path``              Path to you npm binary Default: ``npm``
+``npm-install-extra``     Extra arguments you want gordon to use while invoking npm install.
+========================  ==================================================================
 
 Example ``package.json``:
 
@@ -92,12 +92,12 @@ You can make this build process as complex as you want/need.
 
 Additionally you can customize how gordon invoques ``gradle`` using the following settings:
 
-=====================  ==============================================================
-Setting                Description
-=====================  ==============================================================
-``gradle-path``        Path to you gradle binary Default: ``gradle``
-``gradle-extra``       Extra arguments you want gordon to use while invoking gradle.
-=====================  ==============================================================
+========================  ======================================================================
+Setting                   Description
+========================  ======================================================================
+``gradle-path``           Path to you gradle binary Default: ``gradle``
+``gradle-build-extra``    Extra arguments you want gordon to use while invoking gradle build.
+========================  ======================================================================
 
 Example ``build.grandle``:
 

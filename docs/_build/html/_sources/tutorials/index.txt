@@ -1,9 +1,0 @@
-Tutorials
-=============
-
-If you like step by step tutorials... this is your place!
-
-.. toctree::
-   :maxdepth: 2
-
-   first_python_lambda

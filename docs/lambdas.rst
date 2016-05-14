@@ -81,20 +81,20 @@ The following is the anatomy of a lambda in gordon.
   lambdas:
 
     { LAMBDA_NAME }:
-      code: { CODE_PATH }
-      handler: { LAMBDA_HANDLER }
-      memory: { LAMBDA_MEMORY }
-      timeout: { LAMBDA_TIMEOUT }
-      runtime: { LAMBDA_RUNTIME }
-      description: { LAMBDA_DESCRIPTION }
-      role: { LAMBDA_ROLE }
-      vpc: { VPC_NAME }
+      code: { PATH }
+      handler: { STRING }
+      memory: { NUMBER }
+      timeout: { NUMBER }
+      runtime: { RUNTIME_NAME }
+      description: { STRING }
+      role: { MAP }
+      vpc: { STRING }
       context: { CONTEXT_NAME }
-      auto-vpc-policy: { AUTO_VPC_POLICY }
-      auto-run-policy: { AUTO_RUN_POLICY }
+      auto-vpc-policy: { BOOLEAN }
+      auto-run-policy: { BOOLEAN }
       policies:
         { POLICY_NAME }:
-          { POLICY_BODY }
+          { MAP }
         ...
 
 The best way to organize you lambdas is to register them inside the ``settings.yml`` file of your :doc:`apps` within your :doc:`project`.
@@ -104,23 +104,37 @@ Lambda Properties
 -------------------
 
 
-name
+Lambda Name
 ^^^^^^^^^^^^^^^^^^^^^^
 
-Name for your lambda. Try to keep it as descriptive as possible.
+===========================  ============================================================================================================
+Name                         Key of the ``lambdas`` map.
+Required                     Yes
+Valid types                  ``string``
+Max length                   30
+Description                  Name for your lambda. Try to keep it as short and descriptive as possible.
+===========================  ============================================================================================================
+
 
 code
 ^^^^^^^^^^^^^^^^^^^^^^
 
-Path where the code of your lambda is. When creating lambdas you can:
+===========================  ============================================================================================================
+Name                         ``code``
+Required                     Yes
+Valid types                  ``string``
+Max length                   30
+Description                  Path where the code of your lambda is
+===========================  ============================================================================================================
 
-    * Put all the code of your lambda in the same file and point to it:
-        * ``code: code.py``
-        * ``code: example.js``
-    * Create a folder and put several files on it
-        * ``code: myfolder``
-        * When you point ``code`` to a folder you need to remember to specify the ``runtime`` of your lambda as gordon can't infer it from the filename.
+When creating lambdas you can:
 
+* Put all the code of your lambda in the same file and make ``code`` point to it:
+    * ``code: code.py``
+    * ``code: example.js``
+* Put your code in several files within a folder and make ``code`` point to this directory:
+    * ``code: myfolder``
+    * Remember: When you point ``code`` to a directory you need to remember to specify the ``runtime`` property of your lambda as gordon can't infer it from the filename.
 
 Simple python lambda:
 
@@ -156,7 +170,14 @@ Java lambda:
 handler
 ^^^^^^^^^^^^^^^^^^^^^^
 
-Name of the function within ``code`` which will be the entry point of you lambda.
+===========================  ============================================================================================================
+Name                         ``handler``
+Required                     No
+Default                      ``handler``
+Valid types                  ``string``, ``reference``
+Max length                   30
+Description                  Name of the function within ``code`` which will be the entry point of you lambda.
+===========================  ============================================================================================================
 
 .. code-block:: yaml
 
@@ -165,7 +186,7 @@ Name of the function within ``code`` which will be the entry point of you lambda
       code: functions.py
       handler: my_handler
 
-For the java runtime, this handler will need to have the following format (``package.class::method``):
+For lambdas using the java runtime, this handler will need to have the following format (``package.class::method``):
 
 .. code-block:: yaml
 
@@ -177,14 +198,21 @@ For the java runtime, this handler will need to have the following format (``pac
 
 .. note::
 
-  For more information about Java handlers <http://docs.aws.amazon.com/lambda/latest/dg/java-programming-model-handler-types.html>`_
+  For more information about Java handlers `Java Programming Model Handler Types <http://docs.aws.amazon.com/lambda/latest/dg/java-programming-model-handler-types.html>`_
 
 
 memory
 ^^^^^^^^^^^^^^^^^^^^^^
 
-Amount of memory your lambda will get provisioned. This needs to be a multiple of ``64``.
-The minimum value is ``128`` and the maximum ``1536``. Default value is ``128``.
+===========================  ============================================================================================================
+Name                         ``memory``
+Required                     No
+Default                      ``128``
+Valid types                  ``integer``, ``reference``
+Max                          ``1536``
+Min                          ``128``
+Description                  Amount of memory your lambda will get provisioned with
+===========================  ============================================================================================================
 
 .. code-block:: yaml
 
@@ -196,20 +224,36 @@ The minimum value is ``128`` and the maximum ``1536``. Default value is ``128``.
 timeout
 ^^^^^^^^^^^^^^^^^^^^^^
 
-The function execution time (in seconds) after which Lambda terminates the function. Because the execution time affects cost, set this value based
-on the function's expected execution time. By default, Timeout is set to 3 seconds.
+===========================  ============================================================================================================
+Name                         ``timeout``
+Required                     No
+Default                      ``3``
+Valid types                  ``integer``, ``reference``
+Max                          ``300``
+Min                          ``1``
+Description                  The function execution time (in seconds) after which Lambda terminates the function
+===========================  ============================================================================================================
+
+Because the execution time affects cost, set this value based on the function's expected execution time.
 
 .. code-block:: yaml
 
   lambdas:
     hello_world:
       code: functions.py
-      memory: 300
+      timeout: 300
 
 runtime
 ^^^^^^^^^^^^^^^^^^^^^^
 
-Runtime of your lambda. Valid values are:
+===========================  ============================================================================================================
+Name                         ``runtime``
+Required                     Depends
+Valid types                  ``runtime``
+Description                  Runtime of your lambda
+===========================  ============================================================================================================
+
+Valid runtimes:
 
 =======================================================  ================
 Runtime                                                  AWS Runtime
@@ -220,18 +264,18 @@ Runtime                                                  AWS Runtime
 ``java`` and ``java8``                                   ``java8``
 =======================================================  ================
 
-If you don't specidy any runtime, Gordon tries to auto detect it based on the extensions of the ``code`` file.
+If you don't specify any runtime, Gordon tries to auto detect it based on the extensions of the ``code`` file.
 
 =====================  ===============
-Extension              Runtime
+Extension              AWS Runtime
 =====================  ===============
 ``.js``                ``nodejs4.3``
 ``.py``                ``python2.7``
 =====================  ===============
 
-For folder based lambdas (like ``java``) the code is a directory and not a file, so the runtime can't be inferred.
-For these situations, you can specify the runtime using this setting.
+For folder based lambdas the ``code`` property is a directory and not a file, so the runtime can't be inferred.
 
+For these situations, you can manually specify the runtime using this setting:
 
 .. code-block:: yaml
 
@@ -244,7 +288,13 @@ For these situations, you can specify the runtime using this setting.
 description
 ^^^^^^^^^^^^^^^^^^^^^^
 
-Human-readable description for your lambda.
+===========================  ============================================================================================================
+Name                         ``description``
+Required                     No
+Default                      *Empty*
+Valid types                  ``string``, ``reference``
+Description                  Human-readable description for your lambda.
+===========================  ============================================================================================================
 
 .. code-block:: yaml
 
@@ -256,9 +306,15 @@ Human-readable description for your lambda.
 role
 ^^^^^^^^^^^^^^^^^^^^^^
 
-ARN of the lambda role this function will use.
+===========================  ============================================================================================================
+Name                         ``role``
+Required                     No
+default                      Gordon will create a minimal role for this function
+Valid types                  ``arn``
+Description                  ARN of the lambda role this function will use.
+===========================  ============================================================================================================
 
-If not provided, gordon will create one role for this function for you and include all necessary ``policies`` *(This is the default and most likely behaviour you want).*
+If not provided, gordon will create one role for this function and include all necessary ``policies`` *(This is the default and most likely behaviour you want).*
 
 .. code-block:: yaml
 
@@ -272,9 +328,15 @@ If not provided, gordon will create one role for this function for you and inclu
 vpc
 ^^^^^^^^^^^^
 
-Name of the vpc where this lambda should be deployed. If the Lambda function requires access to resources in a VPC, specify a VPC configuration
-that Lambda uses to set up an elastic network interface (ENI). The ENI enables your function to connect to other resources in your VPC, but it doesn't provide
-public Internet access.
+===========================  ============================================================================================================
+Name                         ``vpc``
+Required                     No
+Valid types                  ``vpc-name``
+Description                  Name of the vpc where this lambda should be deployed.
+===========================  ============================================================================================================
+
+If the Lambda function requires access to resources in a VPC, specify a VPC configuration that Lambda uses to set up an elastic network interface (ENI).
+The ENI enables your function to connect to other resources in your VPC, but it doesn't provide public Internet access.
 
 If your function requires Internet access (for example, to access AWS services that don't have VPC endpoints), configure a Network Address Translation (NAT) instance
 inside your VPC or use an Amazon Virtual Private Cloud (Amazon VPC) NAT gateway. For more information, see `NAT Gateways <http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/vpc-nat-gateway.html>`_ in the Amazon VPC User Guide.
@@ -305,13 +367,21 @@ You need to define some properties about your vpc (in this example ``my-vpc``) i
                 - subnet-1234567c
 
 
-If ``auto-vpc-policy`` is ``True``, gordon will attach to your lambda role the required policy which would allow it to access the vpc. It it is ``False``, you'll need
+If ``auto-vpc-policy`` is ``True``, gordon will attach to your lambda role the required policy which would allow it to access the vpc. If it is ``False``, you'll need
 to do this by yourself.
 
 context
 ^^^^^^^^^^^^
 
-Name of the context you want to inject into this lambda. By default, Gordon will attach the context called ``default`` if it is present.
+===========================  ============================================================================================================
+Name                         ``context``
+Required                     No
+default                      ``default``
+Valid types                  ``context-name``
+Description                  Name of the context you want to inject into this lambda.
+===========================  ============================================================================================================
+
+For more information about contexts you can read about them in :doc:`contexts`.
 
 .. code-block:: yaml
 
@@ -324,8 +394,15 @@ Name of the context you want to inject into this lambda. By default, Gordon will
 policies
 ^^^^^^^^^^^^^^^^^^^^^^
 
-List of AWS policies to attach to the role of this lambda. This is the way you'll give permissions to you lambda to connect to other AWS services
-such as dynamodb, kinesis, s3, etc... For more inforamtion `AWS IAM Policy Reference <http://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies.html>`_
+===========================  ============================================================================================================
+Name                         ``policies``
+Required                     No
+Valid types                  ``map``
+Description                  Map of AWS policies to attach to the role of this lambda.
+===========================  ============================================================================================================
+
+This is the way you'll give permissions to you lambda to connect to other AWS services such as dynamodb, kinesis, s3, etc...
+For more inforamtion `AWS IAM Policy Reference <http://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies.html>`_
 
 In the following example we attach one policy called ``example_bucket_policy`` to our lambda ``hello_world`` in order to make it possible to read and write a
 S3 bucket called ``EXAMPLE-BUCKET-NAME``.
@@ -357,8 +434,17 @@ S3 bucket called ``EXAMPLE-BUCKET-NAME``.
 
 auto-vpc-policy
 ^^^^^^^^^^^^^^^^^^^
+
+===========================  ============================================================================================================
+Name                         ``auto-vpc-policy``
+Required                     No
+Default                      True
+Valid types                  ``boolean``
+Description                  Automatically attach to your lambda enough permissions to get a vpc configured.
+===========================  ============================================================================================================
+
 If ``auto-vpc-policy`` is ``True``, and you lambda has one ``vpc`` configured, gordon will attach to your lambda role the required policy which would allow it to
-access the vpc. It it is ``False``, you'll need to do this by yourself.
+access the vpc. If it is ``False``, you'll need to do this by yourself.
 
 .. code-block:: json
 
@@ -380,6 +466,15 @@ access the vpc. It it is ``False``, you'll need to do this by yourself.
 
 auto-run-policy
 ^^^^^^^^^^^^^^^^^^^
+
+===========================  ============================================================================================================
+Name                         ``auto-run-policy``
+Required                     No
+Default                      True
+Valid types                  ``boolean``
+Description                  Automatically attach to your lambda enough permissions to let it run and push logs to CloudWatch Logs.
+===========================  ============================================================================================================
+
 If ``auto-run-policy`` is ``True``, gordon will attach to your lambda role the required policy which would allow it to run and push logs.
 
 .. code-block:: json
