@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "path": "0.11.14"
+  },
+  "scripts": {
+    "build": "echo 123 > file && echo hi"
+  }
+}

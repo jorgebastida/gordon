@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import json
 import shutil
 import tempfile
 import zipfile
@@ -490,7 +491,7 @@ class PythonLambda(Lambda):
             for fname in fnames:
                 if fname.endswith('.pyc'):
                     os.remove(os.path.join(dirpath, fname))
-                    
+
 
 class NodeLambda(Lambda):
 
@@ -536,6 +537,24 @@ class NodeLambda(Lambda):
                     shell=True,
                     stderr=subprocess.STDOUT
                 )
+
+                with open(package_json_path, 'r') as f:
+                    package_json = json.loads(f.read())
+
+                build_extra = ''
+
+                if 'build' in package_json.get('scripts', {}):
+                    command = "cd {} && {} run build {}".format(
+                        destination,
+                        self._npm_path(),
+                        build_extra
+                    )
+                    output = subprocess.check_output(
+                        command,
+                        shell=True,
+                        stderr=subprocess.STDOUT
+                    )
+                    import ipdb; ipdb.set_trace()
 
 
 class JavaLambda(Lambda):
