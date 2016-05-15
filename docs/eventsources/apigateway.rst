@@ -5,6 +5,8 @@ Amazon API Gateway is a fully managed service that makes it easy for developers 
 
 Gordon allow you to create and integrate your Lambdas with apigateway resources in order to easily create HTTP APIs.
 
+It might be interesting for you to give it a look to `AWS: Amazon API Gateway Concepts <http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-basic-concept.html>`_
+before continuing.
 
 .. _apigateway-anatomy:
 
@@ -16,31 +18,60 @@ Anatomy of the integration
   apigateway:
 
     { API_NAME }:
-      description: { API_DESCRIPTION }
+      description: { STRING }
       resources:
         { URL }:
-            methods: { LIST_OF_HTTP_METHODS }
-            authorization_type: { AUTHORIZATION_TYPE }
-            responses: { METHOD_RESPONSES }
+            methods: { LIST }
+            authorization_type: { STRING }
+            responses: { LIST }
             integration:
-                type: { INTEGRATION_TYPE }
+                type: { STRING }
                 lambda: { LAMBDA_NAME }
-                http_method: { INTEGRATION_HTTP_METHOD }
-                responses: { INTEGRATION_RESPONSES }
+                http_method: { STRING }
+                responses: { LIST }
 
 
 
-Api Description
----------------------
+Lambda Properties
+-------------------
 
-Description for your API.
+
+Api Name
+^^^^^^^^^^^^^^^^^^^^^^
+
+===========================  ============================================================================================================
+Name                         Key of the ``apigateway`` map.
+Required                     Yes
+Valid types                  ``string``
+Max length                   30
+Description                  Name for your apigateway.
+===========================  ============================================================================================================
+
+
+Description
+^^^^^^^^^^^^^^^^^^^^^^
+
+===========================  ============================================================================================================
+Name                         ``description``
+Required                     No
+Default                      *Empty*
+Valid types                  ``string``, ``reference``
+Max length                   30
+Description                  Description of your api
+===========================  ============================================================================================================
 
 
 Resources
--------------------
+^^^^^^^^^^^^^^^^^^^^^^
 
-Map of apigateway resources with their implementations. The key name of the resources will be
-the full path (url) they will have within your apigateway.
+===========================  ============================================================================================================
+Name                         ``resources``
+Required                     Yes
+Valid types                  ``map``
+Description                  Resources of your API Gateway
+===========================  ============================================================================================================
+
+Example:
 
 .. code-block:: yaml
 
@@ -61,10 +92,16 @@ In this example, we have defined one API called ``firstapi`` with two resources:
  * Each of these urls will call two different lambdas ``helloworld.index`` and ``helloworld.contact`` respectively.
  * The first url ``/`` will only allow ``GET`` requests, and the second one ``/contact/email`` will only allow ``POST`` requests.
 
-Each of the resources can be further configured using any of the following properties.
 
-Resources: URL
-^^^^^^^^^^^^^^^^
+Resource URL
+^^^^^^^^^^^^^^^^^^^^^^
+
+===========================  ============================================================================================================
+Name                         Key of the ``resources`` map.
+Required                     Yes
+Valid types                  ``string``
+Description                  Full path (url) of your resource
+===========================  ============================================================================================================
 
 ``URLs`` are the key of the resources map. For each resource. You need to define the full path including the leading ``/``.
 
@@ -85,10 +122,17 @@ If you want to make certain urls have parameters, you can do so using apigatwewa
 
 Your lambda called ``shop.article`` will receive one parameter called ``article_id``.
 
-Resources: Methods
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Resource Methods
+^^^^^^^^^^^^^^^^^^^^^^
 
-List of HTTP methods you lambda will support.
+===========================  ============================================================================================================
+Name                         ``methods``
+Required                     Yes
+Valid types                  ``list``, ``string``, ``map``
+Description                  List of valid methods for your resource
+===========================  ============================================================================================================
+
+Example:
 
 .. code-block:: yaml
 
@@ -109,44 +153,134 @@ List of HTTP methods you lambda will support.
                         - DELETE
                     lambda: inventory.article
 
-
 .. note::
 
   As shortcut, if ``methods`` value is a string instead of a list gordon will assume you only want one method.
 
+Resource Methods (advanced)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Resources: Methods (advanced)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Methods is more than only a list of strings. The simplified version is only a shortcut in order to make gordon's API nicer 95% of the time.
+The simplified version of ``methods`` is only a shortcut in order to make gordon's API nicer 95% of the time.
 
 That version (the simplified one) should be more than enough for most of the cases, but if for some reason you want to
-be able to configure different integrations for each of the methods of an url, you'll need to do this.
+be able to configure different integrations for each of the methods of an url, you'll need to make ``methods`` a map of
+http methods to integrations.
 
-.. code-block:: yaml
+  .. code-block:: yaml
 
-  apigateway:
-    exampleapi:
-      description: My not-that-simple example
-      resources:
-        /:
-          methods:
-            GET:
-              integration:
-                lambda: app.index_on_get
-            POST:
-              integration:
-                lambda: app.index_on_post
+    apigateway:
+      exampleapi:
+        description: My not-that-simple example
+        resources:
+          /:
+            methods:
+              GET:
+                integration:
+                  lambda: app.index_on_get
+              POST:
+                integration:
+                  lambda: app.index_on_post
 
 .. note::
 
-    If you use this approach, you would need to define **ALL** resource settings at the level of each method in your resource.
+  If you use this approach, you would need to define **ALL** resource settings at the level of each method in your resource.
 
 
-Authorization type
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Resource authorization type
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-apigateway authorization type for this resouce. The only (and default) authorization type is ``NONE``.
+===========================  ============================================================================================================
+Name                         ``authorization_type``
+Required                     No
+Default                      ``NONE``
+Valid Values                 ``NONE``
+Description                  Authorization type (if any) for your resource.
+===========================  ============================================================================================================
+
+
+Resource Responses
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+===========================  ============================================================================================================
+Name                         ``responses``
+Required                     No
+Valid Tpes                  ``Response``
+Description                  Responses that can be sent to the client who calls this resource.
+===========================  ============================================================================================================
+
+Example:
+
+.. code-block:: yaml
+
+    apigateway:
+        helloapi:
+            resources:
+                /hello:
+                    method: GET
+                    integration:
+                        lambda: helloworld.sayhi
+                        responses:
+                            - code: "404"
+                    responses:
+                        - pattern: ""
+                          code: "404"
+
+
+Resource Integration
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+===========================  ============================================================================================================
+Name                         ``integration``
+Required                     No
+Valid Values                 ``map``
+Description                  Integration for the current Resource
+===========================  ============================================================================================================
+
+
+Integration Type
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+===========================  ============================================================================================================
+Name                         ``type``
+Required                     No
+Default                      AWS
+Valid Values                 ``AWS``, ``MOCK``, ``HTTP``
+Description                  Type of the integration
+===========================  ============================================================================================================
+
+
+Integration Lambda
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+===========================  ============================================================================================================
+Name                         ``lambda``
+Required                     Depends
+Valid Values                 ``app.lambda-name``
+Description                  Name of the lambda you want to configure for this resource.
+===========================  ============================================================================================================
+
+Integration HTTP Method
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+===========================  ============================================================================================================
+Name                         ``http_method``
+Required                     Depends
+Valid Values                 ``string``
+Description                  Http method the ApiGateway will use to contact the integration
+===========================  ============================================================================================================
+
+Integration Responses
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+===========================  ============================================================================================================
+Name                         ``responses``
+Required                     No
+Valid Values                 ``list``
+Description                  The response that API Gateway provides after a method's back end completes processing a request.
+                             API Gateway intercepts the integration's response so that you can control how API Gateway surfaces back-end
+                             responses.
+===========================  ============================================================================================================
+
 
 
 Full Example

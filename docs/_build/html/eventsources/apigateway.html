@@ -43,35 +43,109 @@
 <h1>Apigateway<a class="headerlink" href="#apigateway" title="Permalink to this headline">¶</a></h1>
 <p>Amazon API Gateway is a fully managed service that makes it easy for developers to create APIs at any scale.</p>
 <p>Gordon allow you to create and integrate your Lambdas with apigateway resources in order to easily create HTTP APIs.</p>
+<p>It might be interesting for you to give it a look to <a class="reference external" href="http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-basic-concept.html">AWS: Amazon API Gateway Concepts</a>
+before continuing.</p>
 <div class="section" id="anatomy-of-the-integration">
 <span id="apigateway-anatomy"></span><h2>Anatomy of the integration<a class="headerlink" href="#anatomy-of-the-integration" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">apigateway</span><span class="p-Indicator">:</span>
 
   <span class="p-Indicator">{</span> <span class="nv">API_NAME</span> <span class="p-Indicator">}:</span>
-    <span class="l-Scalar-Plain">description</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">API_DESCRIPTION</span> <span class="p-Indicator">}</span>
+    <span class="l-Scalar-Plain">description</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">STRING</span> <span class="p-Indicator">}</span>
     <span class="l-Scalar-Plain">resources</span><span class="p-Indicator">:</span>
       <span class="p-Indicator">{</span> <span class="nv">URL</span> <span class="p-Indicator">}:</span>
-          <span class="l-Scalar-Plain">methods</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">LIST_OF_HTTP_METHODS</span> <span class="p-Indicator">}</span>
-          <span class="l-Scalar-Plain">authorization_type</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">AUTHORIZATION_TYPE</span> <span class="p-Indicator">}</span>
-          <span class="l-Scalar-Plain">responses</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">METHOD_RESPONSES</span> <span class="p-Indicator">}</span>
+          <span class="l-Scalar-Plain">methods</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">LIST</span> <span class="p-Indicator">}</span>
+          <span class="l-Scalar-Plain">authorization_type</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">STRING</span> <span class="p-Indicator">}</span>
+          <span class="l-Scalar-Plain">responses</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">LIST</span> <span class="p-Indicator">}</span>
           <span class="l-Scalar-Plain">integration</span><span class="p-Indicator">:</span>
-              <span class="l-Scalar-Plain">type</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">INTEGRATION_TYPE</span> <span class="p-Indicator">}</span>
+              <span class="l-Scalar-Plain">type</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">STRING</span> <span class="p-Indicator">}</span>
               <span class="l-Scalar-Plain">lambda</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">LAMBDA_NAME</span> <span class="p-Indicator">}</span>
-              <span class="l-Scalar-Plain">http_method</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">INTEGRATION_HTTP_METHOD</span> <span class="p-Indicator">}</span>
-              <span class="l-Scalar-Plain">responses</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">INTEGRATION_RESPONSES</span> <span class="p-Indicator">}</span>
+              <span class="l-Scalar-Plain">http_method</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">STRING</span> <span class="p-Indicator">}</span>
+              <span class="l-Scalar-Plain">responses</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">LIST</span> <span class="p-Indicator">}</span>
 </pre></div>
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="api-description">
-<h2>Api Description<a class="headerlink" href="#api-description" title="Permalink to this headline">¶</a></h2>
-<p>Description for your API.</p>
+<div class="section" id="lambda-properties">
+<h2>Lambda Properties<a class="headerlink" href="#lambda-properties" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="api-name">
+<h3>Api Name<a class="headerlink" href="#api-name" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td>Key of the <code class="docutils literal"><span class="pre">apigateway</span></code> map.</td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>Valid types</td>
+<td><code class="docutils literal"><span class="pre">string</span></code></td>
+</tr>
+<tr class="row-even"><td>Max length</td>
+<td>30</td>
+</tr>
+<tr class="row-odd"><td>Description</td>
+<td>Name for your apigateway.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="description">
+<h3>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">description</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>Default</td>
+<td><em>Empty</em></td>
+</tr>
+<tr class="row-even"><td>Valid types</td>
+<td><code class="docutils literal"><span class="pre">string</span></code>, <code class="docutils literal"><span class="pre">reference</span></code></td>
+</tr>
+<tr class="row-odd"><td>Max length</td>
+<td>30</td>
+</tr>
+<tr class="row-even"><td>Description</td>
+<td>Description of your api</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section" id="resources">
-<h2>Resources<a class="headerlink" href="#resources" title="Permalink to this headline">¶</a></h2>
-<p>Map of apigateway resources with their implementations. The key name of the resources will be
-the full path (url) they will have within your apigateway.</p>
+<h3>Resources<a class="headerlink" href="#resources" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">resources</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>Valid types</td>
+<td><code class="docutils literal"><span class="pre">map</span></code></td>
+</tr>
+<tr class="row-even"><td>Description</td>
+<td>Resources of your API Gateway</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
 <div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">apigateway</span><span class="p-Indicator">:</span>
     <span class="l-Scalar-Plain">firstapi</span><span class="p-Indicator">:</span>
         <span class="l-Scalar-Plain">description</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">My Inventory</span>
@@ -91,9 +165,29 @@ the full path (url) they will have within your apigateway.</p>
 <li>The first url <code class="docutils literal"><span class="pre">/</span></code> will only allow <code class="docutils literal"><span class="pre">GET</span></code> requests, and the second one <code class="docutils literal"><span class="pre">/contact/email</span></code> will only allow <code class="docutils literal"><span class="pre">POST</span></code> requests.</li>
 </ul>
 </div></blockquote>
-<p>Each of the resources can be further configured using any of the following properties.</p>
-<div class="section" id="resources-url">
-<h3>Resources: URL<a class="headerlink" href="#resources-url" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="resource-url">
+<h3>Resource URL<a class="headerlink" href="#resource-url" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td>Key of the <code class="docutils literal"><span class="pre">resources</span></code> map.</td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>Valid types</td>
+<td><code class="docutils literal"><span class="pre">string</span></code></td>
+</tr>
+<tr class="row-even"><td>Description</td>
+<td>Full path (url) of your resource</td>
+</tr>
+</tbody>
+</table>
 <p><code class="docutils literal"><span class="pre">URLs</span></code> are the key of the resources map. For each resource. You need to define the full path including the leading <code class="docutils literal"><span class="pre">/</span></code>.</p>
 <p>If you want to make certain urls have parameters, you can do so using apigatweway syntax.</p>
 <div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">apigateway</span><span class="p-Indicator">:</span>
@@ -110,9 +204,29 @@ the full path (url) they will have within your apigateway.</p>
 </div>
 <p>Your lambda called <code class="docutils literal"><span class="pre">shop.article</span></code> will receive one parameter called <code class="docutils literal"><span class="pre">article_id</span></code>.</p>
 </div>
-<div class="section" id="resources-methods">
-<h3>Resources: Methods<a class="headerlink" href="#resources-methods" title="Permalink to this headline">¶</a></h3>
-<p>List of HTTP methods you lambda will support.</p>
+<div class="section" id="resource-methods">
+<h3>Resource Methods<a class="headerlink" href="#resource-methods" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">methods</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>Valid types</td>
+<td><code class="docutils literal"><span class="pre">list</span></code>, <code class="docutils literal"><span class="pre">string</span></code>, <code class="docutils literal"><span class="pre">map</span></code></td>
+</tr>
+<tr class="row-even"><td>Description</td>
+<td>List of valid methods for your resource</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
 <div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">apigateway</span><span class="p-Indicator">:</span>
     <span class="l-Scalar-Plain">example</span><span class="p-Indicator">:</span>
         <span class="l-Scalar-Plain">description</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">My Api example</span>
@@ -136,12 +250,14 @@ the full path (url) they will have within your apigateway.</p>
 <p class="last">As shortcut, if <code class="docutils literal"><span class="pre">methods</span></code> value is a string instead of a list gordon will assume you only want one method.</p>
 </div>
 </div>
-<div class="section" id="resources-methods-advanced">
-<h3>Resources: Methods (advanced)<a class="headerlink" href="#resources-methods-advanced" title="Permalink to this headline">¶</a></h3>
-<p>Methods is more than only a list of strings. The simplified version is only a shortcut in order to make gordon&#8217;s API nicer 95% of the time.</p>
+<div class="section" id="resource-methods-advanced">
+<h3>Resource Methods (advanced)<a class="headerlink" href="#resource-methods-advanced" title="Permalink to this headline">¶</a></h3>
+<p>The simplified version of <code class="docutils literal"><span class="pre">methods</span></code> is only a shortcut in order to make gordon&#8217;s API nicer 95% of the time.</p>
 <p>That version (the simplified one) should be more than enough for most of the cases, but if for some reason you want to
-be able to configure different integrations for each of the methods of an url, you&#8217;ll need to do this.</p>
-<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">apigateway</span><span class="p-Indicator">:</span>
+be able to configure different integrations for each of the methods of an url, you&#8217;ll need to make <code class="docutils literal"><span class="pre">methods</span></code> a map of
+http methods to integrations.</p>
+<blockquote>
+<div><div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">apigateway</span><span class="p-Indicator">:</span>
   <span class="l-Scalar-Plain">exampleapi</span><span class="p-Indicator">:</span>
     <span class="l-Scalar-Plain">description</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">My not-that-simple example</span>
     <span class="l-Scalar-Plain">resources</span><span class="p-Indicator">:</span>
@@ -155,14 +271,175 @@ be able to configure different integrations for each of the methods of an url, y
               <span class="l-Scalar-Plain">lambda</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">app.index_on_post</span>
 </pre></div>
 </div>
+</div></blockquote>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">If you use this approach, you would need to define <strong>ALL</strong> resource settings at the level of each method in your resource.</p>
 </div>
 </div>
-<div class="section" id="authorization-type">
-<h3>Authorization type<a class="headerlink" href="#authorization-type" title="Permalink to this headline">¶</a></h3>
-<p>apigateway authorization type for this resouce. The only (and default) authorization type is <code class="docutils literal"><span class="pre">NONE</span></code>.</p>
+<div class="section" id="resource-authorization-type">
+<h3>Resource authorization type<a class="headerlink" href="#resource-authorization-type" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">authorization_type</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>Default</td>
+<td><code class="docutils literal"><span class="pre">NONE</span></code></td>
+</tr>
+<tr class="row-even"><td>Valid Values</td>
+<td><code class="docutils literal"><span class="pre">NONE</span></code></td>
+</tr>
+<tr class="row-odd"><td>Description</td>
+<td>Authorization type (if any) for your resource.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="resource-responses">
+<h3>Resource Responses<a class="headerlink" href="#resource-responses" title="Permalink to this headline">¶</a></h3>
+<p>Example:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">apigateway</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">helloapi</span><span class="p-Indicator">:</span>
+        <span class="l-Scalar-Plain">resources</span><span class="p-Indicator">:</span>
+            <span class="l-Scalar-Plain">/hello</span><span class="p-Indicator">:</span>
+                <span class="l-Scalar-Plain">method</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">GET</span>
+                <span class="l-Scalar-Plain">integration</span><span class="p-Indicator">:</span>
+                    <span class="l-Scalar-Plain">lambda</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">helloworld.sayhi</span>
+                    <span class="l-Scalar-Plain">responses</span><span class="p-Indicator">:</span>
+                        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="s">&quot;404&quot;</span>
+                <span class="l-Scalar-Plain">responses</span><span class="p-Indicator">:</span>
+                    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">pattern</span><span class="p-Indicator">:</span> <span class="s">&quot;&quot;</span>
+                      <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="s">&quot;404&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="resource-integration">
+<h3>Resource Integration<a class="headerlink" href="#resource-integration" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">integration</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>Valid Values</td>
+<td><code class="docutils literal"><span class="pre">map</span></code></td>
+</tr>
+<tr class="row-even"><td>Description</td>
+<td>Integration for the current Resource</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="integration-type">
+<h3>Integration Type<a class="headerlink" href="#integration-type" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">type</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>Default</td>
+<td>AWS</td>
+</tr>
+<tr class="row-even"><td>Valid Values</td>
+<td><code class="docutils literal"><span class="pre">AWS</span></code>, <code class="docutils literal"><span class="pre">MOCK</span></code>, <code class="docutils literal"><span class="pre">HTTP</span></code></td>
+</tr>
+<tr class="row-odd"><td>Description</td>
+<td>Type of the integration</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="integration-lambda">
+<h3>Integration Lambda<a class="headerlink" href="#integration-lambda" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">lambda</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>Depends</td>
+</tr>
+<tr class="row-odd"><td>Valid Values</td>
+<td><code class="docutils literal"><span class="pre">app.lambda-name</span></code></td>
+</tr>
+<tr class="row-even"><td>Description</td>
+<td>Name of the lambda you want to configure for this resource.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="integration-http-method">
+<h3>Integration HTTP Method<a class="headerlink" href="#integration-http-method" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">http_method</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>Depends</td>
+</tr>
+<tr class="row-odd"><td>Valid Values</td>
+<td><code class="docutils literal"><span class="pre">string</span></code></td>
+</tr>
+<tr class="row-even"><td>Description</td>
+<td>Http method the ApiGateway will use to contact the integration</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="integration-responses">
+<h3>Integration Responses<a class="headerlink" href="#integration-responses" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">responses</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>Valid Values</td>
+<td><code class="docutils literal"><span class="pre">list</span></code></td>
+</tr>
+<tr class="row-even"><td>Description</td>
+<td>The response that API Gateway provides after a method&#8217;s back end completes processing a request.
+API Gateway intercepts the integration&#8217;s response so that you can control how API Gateway surfaces back-end
+responses.</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="section" id="full-example">
@@ -231,12 +508,20 @@ be able to configure different integrations for each of the methods of an url, y
   <ul>
 <li><a class="reference internal" href="#">Apigateway</a><ul>
 <li><a class="reference internal" href="#anatomy-of-the-integration">Anatomy of the integration</a></li>
-<li><a class="reference internal" href="#api-description">Api Description</a></li>
-<li><a class="reference internal" href="#resources">Resources</a><ul>
-<li><a class="reference internal" href="#resources-url">Resources: URL</a></li>
-<li><a class="reference internal" href="#resources-methods">Resources: Methods</a></li>
-<li><a class="reference internal" href="#resources-methods-advanced">Resources: Methods (advanced)</a></li>
-<li><a class="reference internal" href="#authorization-type">Authorization type</a></li>
+<li><a class="reference internal" href="#lambda-properties">Lambda Properties</a><ul>
+<li><a class="reference internal" href="#api-name">Api Name</a></li>
+<li><a class="reference internal" href="#description">Description</a></li>
+<li><a class="reference internal" href="#resources">Resources</a></li>
+<li><a class="reference internal" href="#resource-url">Resource URL</a></li>
+<li><a class="reference internal" href="#resource-methods">Resource Methods</a></li>
+<li><a class="reference internal" href="#resource-methods-advanced">Resource Methods (advanced)</a></li>
+<li><a class="reference internal" href="#resource-authorization-type">Resource authorization type</a></li>
+<li><a class="reference internal" href="#resource-responses">Resource Responses</a></li>
+<li><a class="reference internal" href="#resource-integration">Resource Integration</a></li>
+<li><a class="reference internal" href="#integration-type">Integration Type</a></li>
+<li><a class="reference internal" href="#integration-lambda">Integration Lambda</a></li>
+<li><a class="reference internal" href="#integration-http-method">Integration HTTP Method</a></li>
+<li><a class="reference internal" href="#integration-responses">Integration Responses</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#full-example">Full Example</a></li>
