@@ -391,6 +391,14 @@ class BaseLambdaAWSCustomObject(cloudformation.AWSCustomObject):
         return cls(*args, **kwargs)
 
 
+def get_gordonignore_rules(path, filename='.gordonignore'):
+    ignore_path = os.path.join(path, filename)
+    if os.path.isfile(ignore_path):
+        with open(ignore_path, 'r') as f:
+            return [l.replace('\n', '') for l in f if l]
+    return []
+
+
 class cd:
     """Context manager for changing the current working directory"""
 

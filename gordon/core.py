@@ -71,6 +71,9 @@ class BaseResourceContainer(object):
         for r in self._resources[resource_type]:
             yield r
 
+    def get_gordonignore_rules(self):
+        return utils.get_gordonignore_rules(self.path)
+
 
 class App(BaseResourceContainer):
     """Container of resources of the same domain."""

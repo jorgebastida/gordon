@@ -2,6 +2,7 @@
 project: simplejses6
 default-region: eu-west-1
 code-bucket: gordon-simplejses6-0do1mc8
+npm-install-extra: --production
 apps:
   - gordon.contrib.lambdas
   - helloworld

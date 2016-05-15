@@ -410,23 +410,47 @@ class Lambda(base.BaseResource):
         filename = '{}.{}'.format(self.code_filename, self.extension)
         shutil.copyfile(os.path.join(self.get_root(), self.settings['code']), os.path.join(destination, filename))
 
-    def _collect_lambda_module_content(self, destination):
-        root = os.path.join(self.get_root(), self.settings['code'])
-        for basedir, dirs, files in os.walk(root):
-            relative = os.path.relpath(basedir, root)
-            for filename in files:
-                relative_destination = os.path.join(relative, filename)
-                shutil.copyfile(os.path.join(basedir, filename), os.path.join(destination, relative_destination))
+    def _get_build_command(self, destination):
+        return self.settings.get('build', self._get_default_build_command(destination))
 
     def _clean_package(self, destination):
         """Clean lambda package content before creating a .zip file
         """
         pass
 
-    def collect_lambda_content(self):
+    def _collect_lambda_content(self, destination):
         """Collects all required files to be included in the .zip file of the
         lambda. Returns a temporal directory path
         """
+        if os.path.isfile(os.path.join(self.get_root(), self.settings['code'])):
+            self._collect_lambda_file_content(destination)
+        else:
+            self._collect_lambda_module_content(destination)
+
+    def _collect_lambda_module_content(self, destination):
+        root = os.path.join(self.get_root(), self.settings['code'])
+        with utils.cd(root):
+            command = self._get_build_command(destination)
+            if hasattr(command, '__call__'):
+                command()
+            else:
+                command = command.format(
+                    destination=destination
+                )
+                print subprocess.check_output(
+                    command,
+                    shell=True,
+                    stderr=subprocess.STDOUT
+                )
+
+    def _collect_folder(self, source, destination):
+        for basedir, dirs, files in os.walk(source):
+            relative = os.path.relpath(basedir, source)
+            for filename in files:
+                relative_destination = os.path.join(relative, filename)
+                shutil.copyfile(os.path.join(basedir, filename), os.path.join(destination, relative_destination))
+
+    def _get_default_build_command(self, destination):
         raise NotImplementedError
 
 
@@ -451,13 +475,11 @@ class PythonLambda(Lambda):
         )
         return ' '.join([e for e in extra if e])
 
-    def _collect_lambda_content(self, destination):
-
-        if os.path.isfile(os.path.join(self.get_root(), self.settings['code'])):
-            self._collect_lambda_file_content(destination)
-        else:
-            self._collect_lambda_module_content(destination)
+    def _get_default_build_command(self, destination):
+        def _build():
             code_root = os.path.join(self.get_root(), self.settings['code'])
+            self._collect_folder(code_root, destination)
+
             requirements_path = os.path.join(code_root, 'requirements.txt')
 
             if os.path.isfile(requirements_path):
@@ -480,6 +502,7 @@ class PythonLambda(Lambda):
                 )
 
                 os.remove(setup_cfg_path)
+        return _build
 
     def _clean_package(self, destination):
         for (dirpath, dirnames, fnames) in os.walk(destination):
@@ -517,15 +540,12 @@ class NodeLambda(Lambda):
         )
         return ' '.join([e for e in extra if e])
 
-    def _collect_lambda_content(self, destination):
-        """Collect node requirements using ``npm``"""
+    def _get_default_build_command(self, destination):
+        def _build():
+            code_root = os.path.join(self.get_root(), self.settings['code'])
+            self._collect_folder(code_root, destination)
 
-        if os.path.isfile(os.path.join(self.get_root(), self.settings['code'])):
-            self._collect_lambda_file_content(destination)
-        else:
-            self._collect_lambda_module_content(destination)
             package_json_path = os.path.join(destination, 'package.json')
-
             if os.path.isfile(package_json_path):
                 command = "cd {} && {} install {}".format(
                     destination,
@@ -554,7 +574,8 @@ class NodeLambda(Lambda):
                         shell=True,
                         stderr=subprocess.STDOUT
                     )
-                    import ipdb; ipdb.set_trace()
+                    print output
+        return _build
 
 
 class JavaLambda(Lambda):
@@ -577,16 +598,9 @@ class JavaLambda(Lambda):
         )
         return ' '.join([e for e in extra if e])
 
-    def _collect_lambda_content(self, destination):
-        root = os.path.join(self.get_root(), self.settings['code'])
-        command = "cd {} && {} build -Pdest={} {}".format(
-            root,
+    def _get_default_build_command(self, destination):
+        return "{} build -Pdest={} {}".format(
             self._gradle_path(),
             destination,
             self._gradle_build_extra()
-        )
-        subprocess.check_output(
-            command,
-            shell=True,
-            stderr=subprocess.STDOUT
         )
