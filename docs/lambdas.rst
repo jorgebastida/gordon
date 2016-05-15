@@ -87,6 +87,7 @@ The following is the anatomy of a lambda in gordon.
       timeout: { NUMBER }
       runtime: { RUNTIME_NAME }
       description: { STRING }
+      build: { STRING }
       role: { MAP }
       vpc: { STRING }
       context: { CONTEXT_NAME }
@@ -302,6 +303,82 @@ Description                  Human-readable description for your lambda.
     hello_world:
       code: functions.py
       description: This is a really simple function which says hello
+
+
+build
+^^^^^^^^^^^^^^^^^^^^^^
+
+===========================  ============================================================================================================
+Name                         ``build``
+Required                     No
+Valid types                  ``string``, ``list``
+Description                  Build process for collecting resources of your lambda
+===========================  ============================================================================================================
+
+By default Gordon does it's best for collecting the resources of your lambdas. Based on the type of your lambda, gordon
+tries to do what it would be fine for most of the cases, but there are certain use-case where you might need fine control
+of what goes into your lambdas.
+
+The value of ``build`` can be either a string or a list of strings. Gordon will process them sequentially within your lambda directory.
+
+There are certain variables you can use to customize this ``build`` property.
+
+=======================  ================================================================================================
+Variable                 Description
+=======================  ================================================================================================
+``build_destination``    Destination folder where you need to put the code of your lambda
+``pip_path``             ``pip`` path. You can customize this using the ``pip-path`` setting in your settings
+``npm_path``             ``npm`` path. You can customize this using the ``npm-path`` setting in your settings
+``gradle_path``          ``gradle`` path. You can customize this using the ``gradle-path`` setting in your settings
+``pip_install_extra``    Extra arguments you can define using ``pip-install-extra`` in your settings
+``npm_install_extra``    Extra arguments you can define using ``npm-install-extra`` in your settings
+``gradle_build_extra``   Extra arguments you can define as part of ``gradle-build-extra`` in your settings
+=======================  ================================================================================================
+
+
+This is the minimal version of what a build command that copies your lambda directory would look like:
+
+.. code-block:: yaml
+
+    lambdas:
+      hello_world:
+        code: mycode
+        runtime: python
+        handler: code.handler
+        build: cp -Rf * {build_destination}
+
+
+You can use this ``build`` property in conjunction with some more powerful build tools such as ``Makefile``, ``npm``, ``gulp``, ``grunt``
+or simple ``bash`` files.
+
+In this example, we make ``babel`` process our javascript files, and leave them in ``BUILD_DESTINATION``.
+
+.. code-block:: yaml
+
+    lambdas:
+      hello_world:
+        code: mycode
+        runtime: node
+        handler: code.handler
+        build: BUILD_DESTINATION={build_destination} npm run build
+
+.. code-block:: json
+
+    {
+      "babel": {
+        "presets": [
+          "es2015"
+        ]
+      },
+      "devDependencies": {
+        "babel-cli": "^6.8.0",
+        "babel-preset-es2015": "^6.6.0"
+      },
+      "scripts": {
+          "build": "babel *.js --out-dir $BUILD_DESTINATION"
+      }
+    }
+
 
 role
 ^^^^^^^^^^^^^^^^^^^^^^

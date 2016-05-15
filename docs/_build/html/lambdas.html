@@ -136,6 +136,7 @@ needing to re-configure all related event sources.</p>
     <span class="l-Scalar-Plain">timeout</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">NUMBER</span> <span class="p-Indicator">}</span>
     <span class="l-Scalar-Plain">runtime</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">RUNTIME_NAME</span> <span class="p-Indicator">}</span>
     <span class="l-Scalar-Plain">description</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">STRING</span> <span class="p-Indicator">}</span>
+    <span class="l-Scalar-Plain">build</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">STRING</span> <span class="p-Indicator">}</span>
     <span class="l-Scalar-Plain">role</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">MAP</span> <span class="p-Indicator">}</span>
     <span class="l-Scalar-Plain">vpc</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">STRING</span> <span class="p-Indicator">}</span>
     <span class="l-Scalar-Plain">context</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">CONTEXT_NAME</span> <span class="p-Indicator">}</span>
@@ -479,6 +480,104 @@ needing to re-configure all related event sources.</p>
 </pre></div>
 </div>
 </div>
+<div class="section" id="build">
+<h3>build<a class="headerlink" href="#build" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">build</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>Valid types</td>
+<td><code class="docutils literal"><span class="pre">string</span></code>, <code class="docutils literal"><span class="pre">list</span></code></td>
+</tr>
+<tr class="row-even"><td>Description</td>
+<td>Build process for collecting resources of your lambda</td>
+</tr>
+</tbody>
+</table>
+<p>By default Gordon does it&#8217;s best for collecting the resources of your lambdas. Based on the type of your lambda, gordon
+tries to do what it would be fine for most of the cases, but there are certain use-case where you might need fine control
+of what goes into your lambdas.</p>
+<p>The value of <code class="docutils literal"><span class="pre">build</span></code> can be either a string or a list of strings. Gordon will process them sequentially within your lambda directory.</p>
+<p>There are certain variables you can use to customize this <code class="docutils literal"><span class="pre">build</span></code> property.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="81%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Variable</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">build_destination</span></code></td>
+<td>Destination folder where you need to put the code of your lambda</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">pip_path</span></code></td>
+<td><code class="docutils literal"><span class="pre">pip</span></code> path. You can customize this using the <code class="docutils literal"><span class="pre">pip-path</span></code> setting in your settings</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">npm_path</span></code></td>
+<td><code class="docutils literal"><span class="pre">npm</span></code> path. You can customize this using the <code class="docutils literal"><span class="pre">npm-path</span></code> setting in your settings</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">gradle_path</span></code></td>
+<td><code class="docutils literal"><span class="pre">gradle</span></code> path. You can customize this using the <code class="docutils literal"><span class="pre">gradle-path</span></code> setting in your settings</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">pip_install_extra</span></code></td>
+<td>Extra arguments you can define using <code class="docutils literal"><span class="pre">pip-install-extra</span></code> in your settings</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">npm_install_extra</span></code></td>
+<td>Extra arguments you can define using <code class="docutils literal"><span class="pre">npm-install-extra</span></code> in your settings</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">gradle_build_extra</span></code></td>
+<td>Extra arguments you can define as part of <code class="docutils literal"><span class="pre">gradle-build-extra</span></code> in your settings</td>
+</tr>
+</tbody>
+</table>
+<p>This is the minimal version of what a build command that copies your lambda directory would look like:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">lambdas</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">hello_world</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">mycode</span>
+    <span class="l-Scalar-Plain">runtime</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">python</span>
+    <span class="l-Scalar-Plain">handler</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">code.handler</span>
+    <span class="l-Scalar-Plain">build</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">cp -Rf * {build_destination}</span>
+</pre></div>
+</div>
+<p>You can use this <code class="docutils literal"><span class="pre">build</span></code> property in conjunction with some more powerful build tools such as <code class="docutils literal"><span class="pre">Makefile</span></code>, <code class="docutils literal"><span class="pre">npm</span></code>, <code class="docutils literal"><span class="pre">gulp</span></code>, <code class="docutils literal"><span class="pre">grunt</span></code>
+or simple <code class="docutils literal"><span class="pre">bash</span></code> files.</p>
+<p>In this example, we make <code class="docutils literal"><span class="pre">babel</span></code> process our javascript files, and leave them in <code class="docutils literal"><span class="pre">BUILD_DESTINATION</span></code>.</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">lambdas</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">hello_world</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">mycode</span>
+    <span class="l-Scalar-Plain">runtime</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">node</span>
+    <span class="l-Scalar-Plain">handler</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">code.handler</span>
+    <span class="l-Scalar-Plain">build</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">BUILD_DESTINATION={build_destination} npm run build</span>
+</pre></div>
+</div>
+<div class="highlight-json"><div class="highlight"><pre><span class="p">{</span>
+  <span class="nt">&quot;babel&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;presets&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="s2">&quot;es2015&quot;</span>
+    <span class="p">]</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;devDependencies&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;babel-cli&quot;</span><span class="p">:</span> <span class="s2">&quot;^6.8.0&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;babel-preset-es2015&quot;</span><span class="p">:</span> <span class="s2">&quot;^6.6.0&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;scripts&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;build&quot;</span><span class="p">:</span> <span class="s2">&quot;babel *.js --out-dir $BUILD_DESTINATION&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="role">
 <h3>role<a class="headerlink" href="#role" title="Permalink to this headline">¶</a></h3>
 <table border="1" class="docutils">
@@ -766,6 +865,7 @@ access the vpc. If it is <code class="docutils literal"><span class="pre">False<
 <li><a class="reference internal" href="#timeout">timeout</a></li>
 <li><a class="reference internal" href="#runtime">runtime</a></li>
 <li><a class="reference internal" href="#description">description</a></li>
+<li><a class="reference internal" href="#build">build</a></li>
 <li><a class="reference internal" href="#role">role</a></li>
 <li><a class="reference internal" href="#vpc">vpc</a></li>
 <li><a class="reference internal" href="#context">context</a></li>

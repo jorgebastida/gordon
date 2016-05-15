@@ -122,7 +122,7 @@ Example ``build.grandle``:
         into('lib') {
             from configurations.runtime
         }
-        into dest
+        into build_destination
     }
 
     build.dependsOn buildLambda

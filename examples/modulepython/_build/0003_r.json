@@ -22,6 +22,9 @@
     },
     "Resources": {
         "ByepythonCurrentalias": {
+            "DependsOn": [
+                "ByepythonVersion"
+            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "HelloworldByepython"
@@ -87,7 +90,8 @@
         },
         "ByepythonVersion": {
             "DependsOn": [
-                "VersionCurrentalias"
+                "VersionCurrentalias",
+                "HelloworldByepython"
             ],
             "Properties": {
                 "FunctionName": {
@@ -159,6 +163,9 @@
             "Type": "AWS::Lambda::Function"
         },
         "VersionCurrentalias": {
+            "DependsOn": [
+                "VersionVersion"
+            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "ContribLambdasVersion"
@@ -240,6 +247,7 @@
         },
         "VersionVersion": {
             "DependsOn": [
+                "ContribLambdasVersion",
                 "ContribLambdasVersion"
             ],
             "Properties": {

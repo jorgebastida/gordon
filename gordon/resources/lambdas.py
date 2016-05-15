@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import os
-import json
 import shutil
 import tempfile
 import zipfile
@@ -430,18 +429,31 @@ class Lambda(base.BaseResource):
     def _collect_lambda_module_content(self, destination):
         root = os.path.join(self.get_root(), self.settings['code'])
         with utils.cd(root):
-            command = self._get_build_command(destination)
-            if hasattr(command, '__call__'):
-                command()
-            else:
+            commands = self._get_build_command(destination)
+            if hasattr(commands, '__call__'):
+                commands()
+                return
+            elif isinstance(commands, basestring):
+                commands = [commands]
+
+            for command in commands:
                 command = command.format(
-                    destination=destination
+                    build_destination=destination,
+                    pip_path=self._pip_path(),
+                    npm_path=self._npm_path(),
+                    gradle_path=self._gradle_path(),
+                    pip_install_extra=self._pip_install_extra(),
+                    npm_install_extra=self._npm_install_extra(),
+                    gradle_build_extra=self._gradle_build_extra()
                 )
-                print subprocess.check_output(
+                out = subprocess.check_output(
                     command,
                     shell=True,
                     stderr=subprocess.STDOUT
                 )
+                if self.project.debug and out:
+                    with indent(4):
+                        puts(out)
 
     def _collect_folder(self, source, destination):
         for basedir, dirs, files in os.walk(source):
@@ -452,140 +464,6 @@ class Lambda(base.BaseResource):
 
     def _get_default_build_command(self, destination):
         raise NotImplementedError
-
-
-class PythonLambda(Lambda):
-
-    _default_runtime = 'python2.7'
-    _runtimes = {
-        'python': 'python2.7',
-        'python2.7': 'python2.7',
-        'python2': 'python2.7'
-    }
-    extension = 'py'
-
-    def _pip_path(self):
-        return self.project.settings.get('pip-path', 'pip')
-
-    def _pip_install_extra(self):
-        extra = (
-            self.project.settings.get('pip-install-extra'),
-            self.app and self.app.settings.get('pip-install-extra'),
-            self.settings.get('pip-install-extra'),
-        )
-        return ' '.join([e for e in extra if e])
-
-    def _get_default_build_command(self, destination):
-        def _build():
-            code_root = os.path.join(self.get_root(), self.settings['code'])
-            self._collect_folder(code_root, destination)
-
-            requirements_path = os.path.join(code_root, 'requirements.txt')
-
-            if os.path.isfile(requirements_path):
-                setup_cfg_path = os.path.join(destination, 'setup.cfg')
-
-                with open(setup_cfg_path, 'w') as f:
-                    f.write("[install]\nprefix=")
-
-                command = "{} install -r {} -q -t {} {}".format(
-                    self._pip_path(),
-                    requirements_path,
-                    destination,
-                    self._pip_install_extra()
-                )
-
-                subprocess.check_output(
-                    command,
-                    shell=True,
-                    stderr=subprocess.STDOUT
-                )
-
-                os.remove(setup_cfg_path)
-        return _build
-
-    def _clean_package(self, destination):
-        for (dirpath, dirnames, fnames) in os.walk(destination):
-
-            if dirpath.endswith('.dist-info'):
-                shutil.rmtree(dirpath)
-                continue
-
-            for fname in fnames:
-                if fname.endswith('.pyc'):
-                    os.remove(os.path.join(dirpath, fname))
-
-
-class NodeLambda(Lambda):
-
-    _default_runtime = 'nodejs4.3'
-    _runtimes = {
-        'node': 'nodejs',
-        'nodejs': 'nodejs',
-        'nodejs4.3': 'nodejs4.3',
-        'nodejs0.10': 'nodejs',
-        'node0.10': 'nodejs'
-    }
-
-    extension = 'js'
-
-    def _npm_path(self):
-        return self.project.settings.get('npm-path', 'npm')
-
-    def _npm_install_extra(self):
-        extra = (
-            self.project.settings.get('npm-install-extra'),
-            self.app and self.app.settings.get('npm-install-extra'),
-            self.settings.get('npm-install-extra'),
-        )
-        return ' '.join([e for e in extra if e])
-
-    def _get_default_build_command(self, destination):
-        def _build():
-            code_root = os.path.join(self.get_root(), self.settings['code'])
-            self._collect_folder(code_root, destination)
-
-            package_json_path = os.path.join(destination, 'package.json')
-            if os.path.isfile(package_json_path):
-                command = "cd {} && {} install {}".format(
-                    destination,
-                    self._npm_path(),
-                    self._npm_install_extra()
-                )
-                subprocess.check_output(
-                    command,
-                    shell=True,
-                    stderr=subprocess.STDOUT
-                )
-
-                with open(package_json_path, 'r') as f:
-                    package_json = json.loads(f.read())
-
-                build_extra = ''
-
-                if 'build' in package_json.get('scripts', {}):
-                    command = "cd {} && {} run build {}".format(
-                        destination,
-                        self._npm_path(),
-                        build_extra
-                    )
-                    output = subprocess.check_output(
-                        command,
-                        shell=True,
-                        stderr=subprocess.STDOUT
-                    )
-                    print output
-        return _build
-
-
-class JavaLambda(Lambda):
-
-    _default_runtime = 'java8'
-    _runtimes = {
-        'java': 'java8',
-        'java8': 'java8',
-    }
-    extension = 'java'
 
     def _gradle_path(self):
         return self.project.settings.get('gradle-path', 'gradle')
@@ -598,9 +476,83 @@ class JavaLambda(Lambda):
         )
         return ' '.join([e for e in extra if e])
 
-    def _get_default_build_command(self, destination):
-        return "{} build -Pdest={} {}".format(
-            self._gradle_path(),
-            destination,
-            self._gradle_build_extra()
+    def _pip_path(self):
+        return self.project.settings.get('pip-path', 'pip')
+
+    def _pip_install_extra(self):
+        extra = (
+            self.project.settings.get('pip-install-extra'),
+            self.app and self.app.settings.get('pip-install-extra'),
+            self.settings.get('pip-install-extra'),
         )
+        return ' '.join([e for e in extra if e])
+
+    def _npm_path(self):
+        return self.project.settings.get('npm-path', 'npm')
+
+    def _npm_install_extra(self):
+        extra = (
+            self.project.settings.get('npm-install-extra'),
+            self.app and self.app.settings.get('npm-install-extra'),
+            self.settings.get('npm-install-extra'),
+        )
+        return ' '.join([e for e in extra if e])
+
+
+class PythonLambda(Lambda):
+
+    _default_runtime = 'python2.7'
+    _runtimes = {
+        'python': 'python2.7',
+        'python2.7': 'python2.7',
+        'python2': 'python2.7'
+    }
+    extension = 'py'
+
+    def _get_default_build_command(self, destination):
+        code_root = os.path.join(self.get_root(), self.settings['code'])
+        requirements_path = os.path.join(code_root, 'requirements.txt')
+
+        commands = []
+        commands.append('cp -Rf * {build_destination}')
+        if os.path.isfile(requirements_path):
+            commands.append('echo "[install]\nprefix=" > {build_destination}/setup.cfg')
+            commands.append('{pip_path} install -r requirements.txt -q -t {build_destination} {pip_install_extra}')
+            commands.append('cd {build_destination} && find . -name "*.pyc" -delete')
+        return commands
+
+
+class NodeLambda(Lambda):
+
+    _default_runtime = 'nodejs4.3'
+    _runtimes = {
+        'node': 'nodejs',
+        'nodejs': 'nodejs',
+        'nodejs4.3': 'nodejs4.3',
+        'nodejs0.10': 'nodejs',
+        'node0.10': 'nodejs'
+    }
+    extension = 'js'
+
+    def _get_default_build_command(self, destination):
+        code_root = os.path.join(self.get_root(), self.settings['code'])
+        package_json_path = os.path.join(code_root, 'package.json')
+
+        commands = []
+        commands.append('cp -Rf * {build_destination}')
+        if os.path.isfile(package_json_path):
+            commands.append('cd {build_destination} && {npm_path} install {npm_install_extra}')
+        return commands
+
+
+class JavaLambda(Lambda):
+
+    _default_runtime = 'java8'
+    _runtimes = {
+        'java': 'java8',
+        'java8': 'java8',
+    }
+    extension = 'java'
+
+    def _get_default_build_command(self, destination):
+        return "{gradle_path} build -Pbuild_destination={build_destination} {gradle_build_extra}"

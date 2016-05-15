@@ -50,6 +50,9 @@
             "Type": "AWS::Lambda::Function"
         },
         "HellojavaCurrentalias": {
+            "DependsOn": [
+                "HellojavaVersion"
+            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "HelloworldHellojava"
@@ -115,7 +118,8 @@
         },
         "HellojavaVersion": {
             "DependsOn": [
-                "VersionCurrentalias"
+                "VersionCurrentalias",
+                "HelloworldHellojava"
             ],
             "Properties": {
                 "FunctionName": {
@@ -159,6 +163,9 @@
             "Type": "AWS::Lambda::Function"
         },
         "VersionCurrentalias": {
+            "DependsOn": [
+                "VersionVersion"
+            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "ContribLambdasVersion"
@@ -240,6 +247,7 @@
         },
         "VersionVersion": {
             "DependsOn": [
+                "ContribLambdasVersion",
                 "ContribLambdasVersion"
             ],
             "Properties": {

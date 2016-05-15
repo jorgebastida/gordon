@@ -50,6 +50,9 @@
             "Type": "AWS::Lambda::Function"
         },
         "HellojsCurrentalias": {
+            "DependsOn": [
+                "HellojsVersion"
+            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "HelloworldHellojs"
@@ -115,7 +118,8 @@
         },
         "HellojsVersion": {
             "DependsOn": [
-                "VersionCurrentalias"
+                "VersionCurrentalias",
+                "HelloworldHellojs"
             ],
             "Properties": {
                 "FunctionName": {
@@ -153,12 +157,15 @@
                         "Arn"
                     ]
                 },
-                "Runtime": "nodejs",
+                "Runtime": "nodejs4.3",
                 "Timeout": 3
             },
             "Type": "AWS::Lambda::Function"
         },
         "VersionCurrentalias": {
+            "DependsOn": [
+                "VersionVersion"
+            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "ContribLambdasVersion"
@@ -240,6 +247,7 @@
         },
         "VersionVersion": {
             "DependsOn": [
+                "ContribLambdasVersion",
                 "ContribLambdasVersion"
             ],
             "Properties": {

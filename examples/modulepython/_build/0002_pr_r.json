@@ -44,24 +44,26 @@
     "_type": "ActionsTemplate", 
     "actions": [
         {
-            "_type": "UploadToS3", 
+            "_type": "InjectContextAndUploadToS3", 
+            "name": "version-upload", 
             "bucket": {
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
-            "name": "version-upload", 
-            "key": "contrib_lambdas_version.zip", 
-            "filename": "code/contrib_lambdas_version.zip"
+            "filename": "code/contrib_lambdas_version.zip", 
+            "context_to_inject": {}, 
+            "key": "contrib_lambdas_version.zip"
         }, 
         {
-            "_type": "UploadToS3", 
+            "_type": "InjectContextAndUploadToS3", 
+            "name": "byepython-upload", 
             "bucket": {
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
-            "name": "byepython-upload", 
-            "key": "helloworld_byepython.zip", 
-            "filename": "code/helloworld_byepython.zip"
+            "filename": "code/helloworld_byepython.zip", 
+            "context_to_inject": {}, 
+            "key": "helloworld_byepython.zip"
         }
     ], 
     "parameters": {

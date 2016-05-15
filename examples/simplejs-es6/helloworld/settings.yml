@@ -3,4 +3,4 @@ lambdas:
     code: hellojs
     runtime: nodejs4.3
     handler: code.handler
-    build: DESTINATION={destination} npm run build
+    build: BUILD_DESTINATION={build_destination} npm run build
