@@ -57,26 +57,146 @@ Applications can access this log and view the data items as they appeared before
 
   <span class="p-Indicator">{</span> <span class="nv">INTEGRATION_NAME</span> <span class="p-Indicator">}:</span>
     <span class="l-Scalar-Plain">lambda</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">LAMBDA_NAME</span> <span class="p-Indicator">}</span>
-    <span class="l-Scalar-Plain">stream</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">STREAM_ARN</span> <span class="p-Indicator">}</span>
-    <span class="l-Scalar-Plain">batch_size</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">BATCH_SIZE</span> <span class="p-Indicator">}</span>
+    <span class="l-Scalar-Plain">stream</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">ARN</span> <span class="p-Indicator">}</span>
+    <span class="l-Scalar-Plain">batch_size</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">INT</span> <span class="p-Indicator">}</span>
     <span class="l-Scalar-Plain">starting_position</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">STARTING_POSITION</span> <span class="p-Indicator">}</span>
 </pre></div>
 </div>
 </div></blockquote>
 </div>
+<div class="section" id="properties">
+<h2>Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="integration-name">
+<h3>Integration Name<a class="headerlink" href="#integration-name" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td>Key of the <code class="docutils literal"><span class="pre">dynamodb</span></code> map.</td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>Valid types</td>
+<td><code class="docutils literal"><span class="pre">string</span></code></td>
+</tr>
+<tr class="row-even"><td>Max length</td>
+<td>30</td>
+</tr>
+<tr class="row-odd"><td>Description</td>
+<td>Name for your dynamodb integration. Try to keep it as short and descriptive as possible.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="lambda">
+<h3>Lambda<a class="headerlink" href="#lambda" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">lambda</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>Valid types</td>
+<td><code class="docutils literal"><span class="pre">lambda-name</span></code></td>
+</tr>
+<tr class="row-even"><td>Description</td>
+<td>Name of the lambda you want to notify</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="stream">
+<h3>Stream<a class="headerlink" href="#stream" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">stream</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>Valid types</td>
+<td><code class="docutils literal"><span class="pre">arn</span></code></td>
+</tr>
+<tr class="row-even"><td>Description</td>
+<td>Arn of the dynamodb stream you want to connect your lambda with.</td>
+</tr>
+</tbody>
+</table>
+</div>
 <div class="section" id="batch-size">
-<h2>Batch size<a class="headerlink" href="#batch-size" title="Permalink to this headline">¶</a></h2>
-<p>You can pick any number of events from <code class="docutils literal"><span class="pre">1</span></code> to <code class="docutils literal"><span class="pre">10000</span></code>. Default value is <code class="docutils literal"><span class="pre">100</span></code>.</p>
+<h3>Batch size<a class="headerlink" href="#batch-size" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">stream</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>Default</td>
+<td>100</td>
+</tr>
+<tr class="row-even"><td>Valid types</td>
+<td><code class="docutils literal"><span class="pre">integer</span></code></td>
+</tr>
+<tr class="row-odd"><td>Min</td>
+<td>1</td>
+</tr>
+<tr class="row-even"><td>Max</td>
+<td>10000</td>
+</tr>
+<tr class="row-odd"><td>Description</td>
+<td>Number of events you want your lambda to receive at once</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section" id="starting-position">
-<h2>Starting position<a class="headerlink" href="#starting-position" title="Permalink to this headline">¶</a></h2>
-<p>You need to pick either:</p>
-<blockquote>
-<div><ul class="simple">
-<li><code class="docutils literal"><span class="pre">TRIM_HORIZON</span></code>: Start reading at the last (untrimmed) stream record, which is the oldest record in the shard. In DynamoDB Streams, there is a 24 hour limit on data retention. Stream records whose age exceeds this limit are subject to removal (trimming) from the stream.</li>
-<li><code class="docutils literal"><span class="pre">LATEST</span></code>: Start reading just after the most recent stream record in the shard, so that you always read the most recent data in the shard.</li>
+<h3>Starting position<a class="headerlink" href="#starting-position" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">starting_position</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>Valid Values</td>
+<td><code class="docutils literal"><span class="pre">TRIM_HORIZON</span></code>, <code class="docutils literal"><span class="pre">LATEST</span></code></td>
+</tr>
+<tr class="row-even"><td>Description</td>
+<td>Number of events you want your lambda to receive at once</td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li>TRIM_HORIZON: Start reading at the last (untrimmed) stream record, which is the oldest record in the shard. In DynamoDB Streams, there is a 24 hour limit on data retention. Stream records whose age exceeds this limit are subject to removal (trimming) from the stream.</li>
+<li>LATEST: Start reading just after the most recent stream record in the shard, so that you always read the most recent data in the shard.</li>
 </ul>
-</div></blockquote>
+</div>
 </div>
 <div class="section" id="full-example">
 <h2>Full Example<a class="headerlink" href="#full-example" title="Permalink to this headline">¶</a></h2>
@@ -105,8 +225,14 @@ Applications can access this log and view the data items as they appeared before
   <ul>
 <li><a class="reference internal" href="#">Dynamodb</a><ul>
 <li><a class="reference internal" href="#anatomy-of-the-integration">Anatomy of the integration</a></li>
+<li><a class="reference internal" href="#properties">Properties</a><ul>
+<li><a class="reference internal" href="#integration-name">Integration Name</a></li>
+<li><a class="reference internal" href="#lambda">Lambda</a></li>
+<li><a class="reference internal" href="#stream">Stream</a></li>
 <li><a class="reference internal" href="#batch-size">Batch size</a></li>
 <li><a class="reference internal" href="#starting-position">Starting position</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#full-example">Full Example</a></li>
 </ul>
 </li>

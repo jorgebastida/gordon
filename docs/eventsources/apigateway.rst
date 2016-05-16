@@ -32,7 +32,7 @@ Anatomy of the integration
 
 
 
-Lambda Properties
+Properties
 -------------------
 
 
@@ -204,7 +204,7 @@ Resource Responses
 ===========================  ============================================================================================================
 Name                         ``responses``
 Required                     No
-Valid Tpes                  ``Response``
+Valid Tpes                   ``Response``
 Description                  Responses that can be sent to the client who calls this resource.
 ===========================  ============================================================================================================
 

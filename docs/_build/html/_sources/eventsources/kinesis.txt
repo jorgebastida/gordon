@@ -15,6 +15,7 @@ Every time on event gets published into the kinesis stream, one of our lambdas i
 
 .. _kinesis-anatomy:
 
+
 Anatomy of the integration
 ---------------------------
 
@@ -25,23 +26,76 @@ Anatomy of the integration
 
     { INTEGRATION_NAME }:
       lambda: { LAMBDA_NAME }
-      stream: { STREAM_ARN }
-      batch_size: { BATCH_SIZE }
+      stream: { ARN }
+      batch_size: { INT }
       starting_position: { STARTING_POSITION }
 
 
-Batch size
-------------
-
-You can pick any number of events from ``1`` to ``10000``. Default value is ``100``.
-
-Starting position
+Properties
 -------------------
 
-You need to pick either:
 
-  * ``TRIM_HORIZON``: Start reading at the last (untrimmed) stream record, which is the oldest record in the shard. Stream records whose age exceeds 7 days are subject to removal (trimming) from the stream.
-  * ``LATEST``: Start reading just after the most recent stream record in the shard, so that you always read the most recent data in the shard.
+Integration Name
+^^^^^^^^^^^^^^^^^^^^^^
+
+===========================  ============================================================================================================
+Name                         Key of the ``kinesis`` map.
+Required                     Yes
+Valid types                  ``string``
+Max length                   30
+Description                  Name for your kinesis integration. Try to keep it as short and descriptive as possible.
+===========================  ============================================================================================================
+
+Lambda
+^^^^^^^^^^^^^^^^^^^^^^
+
+===========================  ============================================================================================================
+Name                         ``lambda``
+Required                     Yes
+Valid types                  ``lambda-name``
+Description                  Name of the lambda you want to notify
+===========================  ============================================================================================================
+
+
+Stream
+^^^^^^^^^^^^^^^^^^^^^^
+
+===========================  ============================================================================================================
+Name                         ``stream``
+Required                     Yes
+Valid types                  ``arn``
+Description                  Arn of the kinesis stream you want to connect your lambda with.
+===========================  ============================================================================================================
+
+
+Batch size
+^^^^^^^^^^^^^^^^^^^^^^
+
+===========================  ============================================================================================================
+Name                         ``batch_size``
+Required                     No
+Default                      100
+Valid types                  ``integer``
+Min                          1
+Max                          10000
+Description                  Number of events you want your lambda to receive at once
+===========================  ============================================================================================================
+
+
+Starting position
+^^^^^^^^^^^^^^^^^^^^^^
+
+===========================  ============================================================================================================
+Name                         ``starting_position``
+Required                     Yes
+Valid Values                  ``TRIM_HORIZON``, ``LATEST``
+Description                  Number of events you want your lambda to receive at once
+===========================  ============================================================================================================
+
+
+* TRIM_HORIZON: Start reading at the last (untrimmed) stream record, which is the oldest record in the shard.
+* LATEST: Start reading just after the most recent stream record in the shard, so that you always read the most recent data in the shard.
+
 
 
 Full Example

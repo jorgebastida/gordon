@@ -3,9 +3,9 @@ Gordon
 
 .. image:: https://raw.githubusercontent.com/jorgebastida/gordon/master/docs/_static/logo.png
 
-Important! Preliminary doc: http://gordondoc.s3-website-eu-west-1.amazonaws.com/
+* Preliminary doc: http://gordondoc.s3-website-eu-west-1.amazonaws.com/
 
-Gordon is a high-level framework to create, wire and deploy AWS Lambdas using CloudFormation in an easy way.
+Gordon is a tool to create, wire and deploy AWS Lambdas using CloudFormation in an easy way.
 
 Usage
 ------
@@ -30,6 +30,8 @@ Features
   * Kinesis Streams
   * Dynamodb Streams
   * S3
+  * CloudWatch Events
+  * Apigateway
 * AWS Lambda Versions an Aliases
 * Dynamic stage parametrization including:
   * Environment variables
@@ -40,28 +42,30 @@ Features
 * Love
 
 
-Why?
-------
-In an ideal world, AWS Lambdas (as any other AWS resource) should be provisioned using CloudFormation - One of the best advantages of using AWS (imho) is not it's scalability nor the fancy services... ain't the price; It is the fact that reproducibility is at it's core and their ecosystem is full of services which encourage/enforce it. Their flagship is CloudFormation.
-
-Then... why not use plain CloudFormation? Well, there are two reasons: First, not all AWS APIs are released when services are announced... ain't frameworks (boto3), nor integrations with CloudFormation.
-
-The second reason is complexity. CloudFormation stacks are defined using JSON templates which are a nightmare to write and maintain.
-
-This project tries to solve these two issues by working around the lack of CloudFormation/Framework APIs (keeping in mind they will happen eventually) and trying to create a high level abstraction on top of CloudFormation, so people without a deep understanding of it can write and deploy lambdas without shooting their foot.
-
-
 Why should you use this project?
 -----------------------------------
+
 Because this project doesn't introduces anything new. Gordon is a thin layer of sugar around the fact that writing CloudFormation templates sucks and some conventions around how to structure a project using Lambdas... and not much more, which is great!
 
-How it works
--------------
-It is easy - we want as much as possible to happen on CloudFormation, so every single thing which could be done with it... will be done with it.
 
-If you are interested in the details, I would recommend you to read ``gordon/contrib/cloudFormation/settings.yml``. That's where all the pain is.
+Why CloudFormation?
+-----------------------
+One of the best advantages of using AWS is the fact that reproducibility is at it's core and their ecosystem is full of services which encourage it. Their flagship is CloudFormation.
 
-Yes, we eat our own dog food; We use gordon to create gordon. The idea is that, (unlike many other projects), we don't think streaming API commands to AWS is a nice solution to leverage the gaps in the CloudFormation API, so instead, we fill the gaps with custom CloudFormation resources which look like how AWS will implement them -ish ;)
+Then... why not use plain CloudFormation? Well, there are three reasons:
+1) Complexity. CloudFormation stacks are defined using JSON templates which are a nightmare to write and maintain. (Friends don't let friends write JSON files)
+2) Glue. There is a lot of glue to put in between a "normal user" and the reality-check of deploying and wiring Lambda into AWS.
+3) APIs. Not all AWS APIs are released when services are announced... ain't frameworks (boto3), nor integrations with CloudFormation.
+
+This project tries to solve these three issues by:
+1) Creating a really thin layer of conventions on top of easy to maintain YAML files.
+2) Making everything work out of the box as well trying to make people not shoot in their foot.
+2) Working around the lack of CloudFormation/Framework APIs (keeping in mind they will happen eventually)
+
+
+Does gordon use gordon to deploy gordon?
+-----------------------------------------
+Yes, we eat our own dog food; We use gordon to create gordon. The idea is that, (unlike many other projects), we don't think streaming API commands to AWS is a nice solution, so instead, we fill the gaps with custom CloudFormation resources.
 
 Those Custom CloudFormation resources are implemented using Lambdas (deployed by gordon)... crazy uh?!
 

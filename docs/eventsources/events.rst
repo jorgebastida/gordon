@@ -19,9 +19,9 @@ Anatomy of the integration
 
     { INTEGRATION_NAME }:
       state: { STATE }
-      description: { DESCRIPTION }
+      description: { STRING }
       schedule_expression: { RATE }
-      event_pattern: { PATTERN }
+      event_pattern: { MAP }
       targets:
         { TARGET_ID }:
           lambda: { LAMBDA_NAME }
@@ -34,19 +34,45 @@ Anatomy of the integration
     You need to specify either ``schedule_expression``, ``event_pattern`` or both.
 
 
-State
+
+Properties
 -------------------
 
-You need to pick between:
 
-    * ``ENABLED``: Your lambda will be scheduled.
-    * ``DISABLED``: Your lambda will not be scheduled.
+Integration Name
+^^^^^^^^^^^^^^^^^^^^^^
 
+===========================  ============================================================================================================
+Name                         Key of the ``events`` map.
+Required                     Yes
+Valid types                  ``string``
+Max length                   30
+Description                  Name for your CLoudWatch integration.
+===========================  ============================================================================================================
+
+
+State
+^^^^^^^^^^^^^^^^^^^^^^
+
+===========================  ============================================================================================================
+Name                         ``state``
+Required                     No
+Valid Values                 ``ENABLED``, ``DISABLED``
+Description                  Enables or disables this integration
+===========================  ============================================================================================================
 
 Schedule Expression
----------------------
+^^^^^^^^^^^^^^^^^^^^^^
 
-All scheduled events use UTC time zone and the minimum precision for schedules is 1 minute. CloudWatch Events supports the following formats:
+===========================  ============================================================================================================
+Name                         ``schedule_expression``
+Required                     No
+Valid Types                  ``rate``
+Description                  Rate at which your lambda will be scheduled
+===========================  ============================================================================================================
+
+
+All scheduled events use UTC time zone and the minimum precision for schedules is 1 minute. CloudWatch Events rates supports the following formats:
 
     * ``cron(<Fields>)``
     * ``rate(<Value> <Unit>)``
@@ -64,7 +90,14 @@ Examples:
 
 
 Event pattern
-----------------
+^^^^^^^^^^^^^^^^^^^^^^
+
+===========================  ============================================================================================================
+Name                         ``event_pattern``
+Required                     No
+Valid Types                  ``map``
+Description                  Pattern structure which matches certain CloudWatch events you are interested in.
+===========================  ============================================================================================================
 
 Rules use event patterns to select events and route them to targets. A pattern either matches an event or it doesn't.
 Event patterns are represented as objects with a structure that is similar to that of events.
@@ -80,10 +113,17 @@ Event patterns are represented as objects with a structure that is similar to th
 
 For more information about Events: http://docs.aws.amazon.com/AmazonCloudWatch/latest/DeveloperGuide/CloudWatchEventsandEventPatterns.html
 
-Targets
---------
 
-Map of target lambdas to connect this event to, as well as optional input and input_path information.
+Targets
+^^^^^^^^^^^^^^^^^^^^^^
+
+===========================  ============================================================================================================
+Name                         ``targets``
+Required                     No
+Valid Types                  ``map``
+Description                  Map of target lambdas to connect this event to, as well as optional input and input_path information.
+===========================  ============================================================================================================
+
 
 .. code-block:: yaml
 
@@ -95,6 +135,8 @@ Map of target lambdas to connect this event to, as well as optional input and in
     lambda: helloworld.hellopy
     input: xxx
     input_path: yyy
+
+
 
 Full Example
 ----------------------------------

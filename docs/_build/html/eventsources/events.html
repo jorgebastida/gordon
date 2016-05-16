@@ -51,9 +51,9 @@ trigger events on a pre-determined schedule .</p>
 
   <span class="p-Indicator">{</span> <span class="nv">INTEGRATION_NAME</span> <span class="p-Indicator">}:</span>
     <span class="l-Scalar-Plain">state</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">STATE</span> <span class="p-Indicator">}</span>
-    <span class="l-Scalar-Plain">description</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">DESCRIPTION</span> <span class="p-Indicator">}</span>
+    <span class="l-Scalar-Plain">description</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">STRING</span> <span class="p-Indicator">}</span>
     <span class="l-Scalar-Plain">schedule_expression</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">RATE</span> <span class="p-Indicator">}</span>
-    <span class="l-Scalar-Plain">event_pattern</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">PATTERN</span> <span class="p-Indicator">}</span>
+    <span class="l-Scalar-Plain">event_pattern</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">MAP</span> <span class="p-Indicator">}</span>
     <span class="l-Scalar-Plain">targets</span><span class="p-Indicator">:</span>
       <span class="p-Indicator">{</span> <span class="nv">TARGET_ID</span> <span class="p-Indicator">}:</span>
         <span class="l-Scalar-Plain">lambda</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">LAMBDA_NAME</span> <span class="p-Indicator">}</span>
@@ -66,19 +66,80 @@ trigger events on a pre-determined schedule .</p>
 <p class="last">You need to specify either <code class="docutils literal"><span class="pre">schedule_expression</span></code>, <code class="docutils literal"><span class="pre">event_pattern</span></code> or both.</p>
 </div>
 </div>
+<div class="section" id="properties">
+<h2>Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="integration-name">
+<h3>Integration Name<a class="headerlink" href="#integration-name" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td>Key of the <code class="docutils literal"><span class="pre">events</span></code> map.</td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>Valid types</td>
+<td><code class="docutils literal"><span class="pre">string</span></code></td>
+</tr>
+<tr class="row-even"><td>Max length</td>
+<td>30</td>
+</tr>
+<tr class="row-odd"><td>Description</td>
+<td>Name for your CLoudWatch integration.</td>
+</tr>
+</tbody>
+</table>
+</div>
 <div class="section" id="state">
-<h2>State<a class="headerlink" href="#state" title="Permalink to this headline">¶</a></h2>
-<p>You need to pick between:</p>
-<blockquote>
-<div><ul class="simple">
-<li><code class="docutils literal"><span class="pre">ENABLED</span></code>: Your lambda will be scheduled.</li>
-<li><code class="docutils literal"><span class="pre">DISABLED</span></code>: Your lambda will not be scheduled.</li>
-</ul>
-</div></blockquote>
+<h3>State<a class="headerlink" href="#state" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">state</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>Valid Values</td>
+<td><code class="docutils literal"><span class="pre">ENABLED</span></code>, <code class="docutils literal"><span class="pre">DISABLED</span></code></td>
+</tr>
+<tr class="row-even"><td>Description</td>
+<td>Enables or disables this integration</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section" id="schedule-expression">
-<h2>Schedule Expression<a class="headerlink" href="#schedule-expression" title="Permalink to this headline">¶</a></h2>
-<p>All scheduled events use UTC time zone and the minimum precision for schedules is 1 minute. CloudWatch Events supports the following formats:</p>
+<h3>Schedule Expression<a class="headerlink" href="#schedule-expression" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">schedule_expression</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>Valid Types</td>
+<td><code class="docutils literal"><span class="pre">rate</span></code></td>
+</tr>
+<tr class="row-even"><td>Description</td>
+<td>Rate at which your lambda will be scheduled</td>
+</tr>
+</tbody>
+</table>
+<p>All scheduled events use UTC time zone and the minimum precision for schedules is 1 minute. CloudWatch Events rates supports the following formats:</p>
 <blockquote>
 <div><ul class="simple">
 <li><code class="docutils literal"><span class="pre">cron(&lt;Fields&gt;)</span></code></li>
@@ -99,7 +160,27 @@ trigger events on a pre-determined schedule .</p>
 </div></blockquote>
 </div>
 <div class="section" id="event-pattern">
-<h2>Event pattern<a class="headerlink" href="#event-pattern" title="Permalink to this headline">¶</a></h2>
+<h3>Event pattern<a class="headerlink" href="#event-pattern" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">event_pattern</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>Valid Types</td>
+<td><code class="docutils literal"><span class="pre">map</span></code></td>
+</tr>
+<tr class="row-even"><td>Description</td>
+<td>Pattern structure which matches certain CloudWatch events you are interested in.</td>
+</tr>
+</tbody>
+</table>
 <p>Rules use event patterns to select events and route them to targets. A pattern either matches an event or it doesn&#8217;t.
 Event patterns are represented as objects with a structure that is similar to that of events.</p>
 <div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">event_pattern</span><span class="p-Indicator">:</span>
@@ -113,8 +194,27 @@ Event patterns are represented as objects with a structure that is similar to th
 <p>For more information about Events: <a class="reference external" href="http://docs.aws.amazon.com/AmazonCloudWatch/latest/DeveloperGuide/CloudWatchEventsandEventPatterns.html">http://docs.aws.amazon.com/AmazonCloudWatch/latest/DeveloperGuide/CloudWatchEventsandEventPatterns.html</a></p>
 </div>
 <div class="section" id="targets">
-<h2>Targets<a class="headerlink" href="#targets" title="Permalink to this headline">¶</a></h2>
-<p>Map of target lambdas to connect this event to, as well as optional input and input_path information.</p>
+<h3>Targets<a class="headerlink" href="#targets" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">targets</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>Valid Types</td>
+<td><code class="docutils literal"><span class="pre">map</span></code></td>
+</tr>
+<tr class="row-even"><td>Description</td>
+<td>Map of target lambdas to connect this event to, as well as optional input and input_path information.</td>
+</tr>
+</tbody>
+</table>
 <div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">targets</span><span class="p-Indicator">:</span>
   <span class="l-Scalar-Plain">say_hello</span><span class="p-Indicator">:</span>
     <span class="l-Scalar-Plain">lambda</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">helloworld.hellopy</span>
@@ -124,6 +224,7 @@ Event patterns are represented as objects with a structure that is similar to th
   <span class="l-Scalar-Plain">input</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">xxx</span>
   <span class="l-Scalar-Plain">input_path</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">yyy</span>
 </pre></div>
+</div>
 </div>
 </div>
 <div class="section" id="full-example">
@@ -169,10 +270,14 @@ Event patterns are represented as objects with a structure that is similar to th
   <ul>
 <li><a class="reference internal" href="#">Events</a><ul>
 <li><a class="reference internal" href="#anatomy-of-the-integration">Anatomy of the integration</a></li>
+<li><a class="reference internal" href="#properties">Properties</a><ul>
+<li><a class="reference internal" href="#integration-name">Integration Name</a></li>
 <li><a class="reference internal" href="#state">State</a></li>
 <li><a class="reference internal" href="#schedule-expression">Schedule Expression</a></li>
 <li><a class="reference internal" href="#event-pattern">Event pattern</a></li>
 <li><a class="reference internal" href="#targets">Targets</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#full-example">Full Example</a></li>
 </ul>
 </li>

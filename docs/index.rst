@@ -28,8 +28,6 @@ Your first steps using gordon.
 In detail
 ----------
 
-.. image:: _static/structure/general.png
-
 In detail explanations of how everything works together.
 
 .. toctree::
@@ -38,12 +36,12 @@ In detail explanations of how everything works together.
    project
    apps
    lambdas
+   eventsources
    requirements
    settings
    parameters
    parameters_advanced
    contexts
-   eventsources
    contrib
    faq
 

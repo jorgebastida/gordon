@@ -1,7 +1,7 @@
 S3
 =====
 
-Amazon Simple Storage Service (Amazon S3), provides developers and IT teams with secure, durable, highly-scalable object storage.
+Amazon Simple Storage Service (Amazon S3), provides developers with secure, durable, highly-scalable object storage.
 Amazon S3 is easy to use, with a simple web service interface to store and retrieve any amount of data from anywhere on the web.
 
 Gordon allow you to integrate your lambdas with S3 using their notification service.
@@ -36,45 +36,103 @@ Anatomy of the integration
        bucket: { BUCKET_NAME }
        notifications:
 
-         - id: { NOTFICATION_ID  }
-           { DESTINATION_TYPE }: { DESTINATION }
-
+         - id: { NOTFICATION_ID }
+           lambda: { LAMBDA_NAME }
+           queue: { QUEUE_NAME }
+           topic: { TOPIC_NAME }
            events:
              - { EVENT_NAME }
-             - ...
-
-           key_filters: (optional)
-             - prefix: PREFIX
-             - suffix: SUFFIX
+           key_filters:
+             - prefix: { STRING }
+             - suffix: { STRING }
 
 
-Destinations
--------------
 
-Valid destinations types are:
- * ``lambda``
- * ``queue``
- * ``topic``
+Properties
+-------------------
+
+Integration Name
+^^^^^^^^^^^^^^^^^^^^^^
+
+===========================  ============================================================================================================
+Name                         Key of the ``s3`` map.
+Required                     Yes
+Valid types                  ``string``
+Max length                   30
+Description                  Name for your s3 integration. Try to keep it as short and descriptive as possible.
+===========================  ============================================================================================================
 
 
-Destination: ``lambda``
-^^^^^^^^^^^^^^^^^^^^^^^^^
+Bucket
+^^^^^^^^^^^^^^^^^^^^^^
+
+===========================  ============================================================================================================
+Name                         ``bucket``
+Required                     Yes
+Valid types                  ``string``, ``arn``
+Max length                   30
+Description                  Name or ARN of the bucket source of the events
+===========================  ============================================================================================================
+
+Notifications
+^^^^^^^^^^^^^^^^^^^^^^
+
+===========================  ============================================================================================================
+Name                         ``notifications``
+Required                     Yes
+Valid types                  ``list``
+Description                  List of notifications to configure.
+===========================  ============================================================================================================
+
+Notification ID
+^^^^^^^^^^^^^^^^^^^^^^
+
+===========================  ============================================================================================================
+Name                         ``id``
+Required                     Yes
+Valid types                  ``string``
+Description                  Unique identifier for this notification
+===========================  ============================================================================================================
+
+Notification Lambda
+^^^^^^^^^^^^^^^^^^^^^^
+
+===========================  ============================================================================================================
+Name                         ``lambda``
+Required                     No
+Valid types                  ``lambda-name``, ``arn``
+Description                  Name of the lambda you want to notify
+===========================  ============================================================================================================
+
+.. note::
+
+  Each notification can only configure one ``lambda``, ``queue`` or ``topic``.
 
 You can reference lambdas by name
 
 .. code-block:: yaml
 
-  lambda: app.s3consumer
+    lambda: app.s3consumer
 
 Or by their full ``arn``:
 
 .. code-block:: yaml
 
-  lambda: arn:aws:lambda:eu-west-1:123456789:function:function-name
+    lambda: arn:aws:lambda:eu-west-1:123456789:function:function-name
 
+Notification Queue
+^^^^^^^^^^^^^^^^^^^^^^
 
-Destination: ``queue``
-^^^^^^^^^^^^^^^^^^^^^^^^^
+===========================  ============================================================================================================
+Name                         ``queue``
+Required                     No
+Valid types                  ``queue-name``, ``map``
+Description                  Name of the queue you want to notify
+===========================  ============================================================================================================
+
+.. note::
+
+    Each notification can only configure one ``lambda``, ``queue`` or ``topic``.
 
 You can reference queues by name if they are in the same account than the bucket
 
@@ -91,8 +149,15 @@ If your queue is on a different account you can use the dictionary format:
     acount_id: 123456789
 
 
-Destination: ``topic``
-^^^^^^^^^^^^^^^^^^^^^^^^
+Notification Topic
+^^^^^^^^^^^^^^^^^^^^^^
+
+===========================  ============================================================================================================
+Name                         ``topic``
+Required                     No
+Valid types                  ``topic-name``, ``map``
+Description                  Name of the topic you want to notify
+===========================  ============================================================================================================
 
 You can reference topics by name if they are in the same account than the bucket
 
@@ -108,10 +173,18 @@ If your topic is on a different account you can use the dictionary format:
     name: my-topic-name
     acount_id: 123456789
 
-Events
---------
 
-It is mandatory you provide a list of events where your notification will be subscribed. The list of available events is the following:
+Notification Events
+^^^^^^^^^^^^^^^^^^^^^^
+
+===========================  ============================================================================================================
+Name                         ``events``
+Required                     Yes
+Valid types                  ``list``
+Description                  List of events you want to make trigger a notification
+===========================  ============================================================================================================
+
+The list of available events is the following:
 
   * ``s3:ObjectCreated:*``
    * ``s3:ObjectCreated:Put``
@@ -123,14 +196,21 @@ It is mandatory you provide a list of events where your notification will be sub
    * ``s3:ObjectRemoved:DeleteMarkerCreated``
   * ``s3:ReducedRedundancyLostObject``
 
-  .. note::
+.. note::
 
-      Remember that you can't overlap events between notifications. So, if you for example subscribe a lambda to ``s3:ObjectCreated:*``, you'll not
-      be able to subscribe any other notification to: ``s3:ObjectCreated:Put``, ``s3:ObjectCreated:Post``, etc...
+  Remember that you can't overlap events between notifications. So, if you for example subscribe a lambda to ``s3:ObjectCreated:*``, you'll not
+  be able to subscribe any other notification to: ``s3:ObjectCreated:Put``, ``s3:ObjectCreated:Post``, etc...
 
 
-Filters
---------
+Key Filters
+^^^^^^^^^^^^^^^^^^^^^^
+
+===========================  ============================================================================================================
+Name                         ``key_filters``
+Required                     No
+Valid types                  ``list``
+Description                  List of filters you want to apply
+===========================  ============================================================================================================
 
 Filters are optional to all notifications. The current AWS API only allows you to filter events by the key's ``prefix`` and ``suffix``. One notification can't define
 more than one of each (``prefix`` and ``suffix``) and  filters in a bucket can't overlap one to each other.

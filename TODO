@@ -9,6 +9,7 @@ Must
 
 Maybe
 ------
+- S3 notifications api should be a map, and key_filters too
 - New API Gateway cors
 - New SNS integration
 - New Run lambda locally

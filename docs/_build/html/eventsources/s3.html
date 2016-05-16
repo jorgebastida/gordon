@@ -41,7 +41,7 @@
             
   <div class="section" id="s3">
 <h1>S3<a class="headerlink" href="#s3" title="Permalink to this headline">¶</a></h1>
-<p>Amazon Simple Storage Service (Amazon S3), provides developers and IT teams with secure, durable, highly-scalable object storage.
+<p>Amazon Simple Storage Service (Amazon S3), provides developers with secure, durable, highly-scalable object storage.
 Amazon S3 is easy to use, with a simple web service interface to store and retrieve any amount of data from anywhere on the web.</p>
 <p>Gordon allow you to integrate your lambdas with S3 using their notification service.
 The idea is simple, every time an object get&#8217;s created/deleted, S3, will trigger a notification which you can route to three different services:</p>
@@ -76,33 +76,145 @@ The idea is simple, every time an object get&#8217;s created/deleted, S3, will t
     <span class="l-Scalar-Plain">bucket</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">BUCKET_NAME</span> <span class="p-Indicator">}</span>
     <span class="l-Scalar-Plain">notifications</span><span class="p-Indicator">:</span>
 
-      <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">id</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">NOTFICATION_ID</span>  <span class="p-Indicator">}</span>
-        <span class="p-Indicator">{</span> <span class="nv">DESTINATION_TYPE</span> <span class="p-Indicator">}:</span> <span class="p-Indicator">{</span> <span class="nv">DESTINATION</span> <span class="p-Indicator">}</span>
-
+      <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">id</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">NOTFICATION_ID</span> <span class="p-Indicator">}</span>
+        <span class="l-Scalar-Plain">lambda</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">LAMBDA_NAME</span> <span class="p-Indicator">}</span>
+        <span class="l-Scalar-Plain">queue</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">QUEUE_NAME</span> <span class="p-Indicator">}</span>
+        <span class="l-Scalar-Plain">topic</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">TOPIC_NAME</span> <span class="p-Indicator">}</span>
         <span class="l-Scalar-Plain">events</span><span class="p-Indicator">:</span>
           <span class="p-Indicator">-</span> <span class="p-Indicator">{</span> <span class="nv">EVENT_NAME</span> <span class="p-Indicator">}</span>
-          <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">...</span>
-
-        <span class="l-Scalar-Plain">key_filters</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">(optional)</span>
-          <span class="l-Scalar-Plain">- prefix</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">PREFIX</span>
-          <span class="l-Scalar-Plain">- suffix</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">SUFFIX</span>
+        <span class="l-Scalar-Plain">key_filters</span><span class="p-Indicator">:</span>
+          <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">prefix</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">STRING</span> <span class="p-Indicator">}</span>
+          <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">suffix</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">STRING</span> <span class="p-Indicator">}</span>
 </pre></div>
 </div>
 </div></blockquote>
 </div>
-<div class="section" id="destinations">
-<h2>Destinations<a class="headerlink" href="#destinations" title="Permalink to this headline">¶</a></h2>
-<dl class="docutils">
-<dt>Valid destinations types are:</dt>
-<dd><ul class="first last simple">
-<li><code class="docutils literal"><span class="pre">lambda</span></code></li>
-<li><code class="docutils literal"><span class="pre">queue</span></code></li>
-<li><code class="docutils literal"><span class="pre">topic</span></code></li>
-</ul>
-</dd>
-</dl>
-<div class="section" id="destination-lambda">
-<h3>Destination: <code class="docutils literal"><span class="pre">lambda</span></code><a class="headerlink" href="#destination-lambda" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="properties">
+<h2>Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="integration-name">
+<h3>Integration Name<a class="headerlink" href="#integration-name" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td>Key of the <code class="docutils literal"><span class="pre">s3</span></code> map.</td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>Valid types</td>
+<td><code class="docutils literal"><span class="pre">string</span></code></td>
+</tr>
+<tr class="row-even"><td>Max length</td>
+<td>30</td>
+</tr>
+<tr class="row-odd"><td>Description</td>
+<td>Name for your s3 integration. Try to keep it as short and descriptive as possible.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="bucket">
+<h3>Bucket<a class="headerlink" href="#bucket" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">bucket</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>Valid types</td>
+<td><code class="docutils literal"><span class="pre">string</span></code>, <code class="docutils literal"><span class="pre">arn</span></code></td>
+</tr>
+<tr class="row-even"><td>Max length</td>
+<td>30</td>
+</tr>
+<tr class="row-odd"><td>Description</td>
+<td>Name or ARN of the bucket source of the events</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="notifications">
+<h3>Notifications<a class="headerlink" href="#notifications" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">notifications</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>Valid types</td>
+<td><code class="docutils literal"><span class="pre">list</span></code></td>
+</tr>
+<tr class="row-even"><td>Description</td>
+<td>List of notifications to configure.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="notification-id">
+<h3>Notification ID<a class="headerlink" href="#notification-id" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">id</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>Valid types</td>
+<td><code class="docutils literal"><span class="pre">string</span></code></td>
+</tr>
+<tr class="row-even"><td>Description</td>
+<td>Unique identifier for this notification</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="notification-lambda">
+<h3>Notification Lambda<a class="headerlink" href="#notification-lambda" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">lambda</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>Valid types</td>
+<td><code class="docutils literal"><span class="pre">lambda-name</span></code>, <code class="docutils literal"><span class="pre">arn</span></code></td>
+</tr>
+<tr class="row-even"><td>Description</td>
+<td>Name of the lambda you want to notify</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Each notification can only configure one <code class="docutils literal"><span class="pre">lambda</span></code>, <code class="docutils literal"><span class="pre">queue</span></code> or <code class="docutils literal"><span class="pre">topic</span></code>.</p>
+</div>
 <p>You can reference lambdas by name</p>
 <div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">lambda</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">app.s3consumer</span>
 </pre></div>
@@ -112,8 +224,32 @@ The idea is simple, every time an object get&#8217;s created/deleted, S3, will t
 </pre></div>
 </div>
 </div>
-<div class="section" id="destination-queue">
-<h3>Destination: <code class="docutils literal"><span class="pre">queue</span></code><a class="headerlink" href="#destination-queue" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="notification-queue">
+<h3>Notification Queue<a class="headerlink" href="#notification-queue" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">queue</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>Valid types</td>
+<td><code class="docutils literal"><span class="pre">queue-name</span></code>, <code class="docutils literal"><span class="pre">map</span></code></td>
+</tr>
+<tr class="row-even"><td>Description</td>
+<td>Name of the queue you want to notify</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Each notification can only configure one <code class="docutils literal"><span class="pre">lambda</span></code>, <code class="docutils literal"><span class="pre">queue</span></code> or <code class="docutils literal"><span class="pre">topic</span></code>.</p>
+</div>
 <p>You can reference queues by name if they are in the same account than the bucket</p>
 <div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">queue</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">my-queue-name</span>
 </pre></div>
@@ -125,8 +261,28 @@ The idea is simple, every time an object get&#8217;s created/deleted, S3, will t
 </pre></div>
 </div>
 </div>
-<div class="section" id="destination-topic">
-<h3>Destination: <code class="docutils literal"><span class="pre">topic</span></code><a class="headerlink" href="#destination-topic" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="notification-topic">
+<h3>Notification Topic<a class="headerlink" href="#notification-topic" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">topic</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>Valid types</td>
+<td><code class="docutils literal"><span class="pre">topic-name</span></code>, <code class="docutils literal"><span class="pre">map</span></code></td>
+</tr>
+<tr class="row-even"><td>Description</td>
+<td>Name of the topic you want to notify</td>
+</tr>
+</tbody>
+</table>
 <p>You can reference topics by name if they are in the same account than the bucket</p>
 <div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">topic</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">my-topic-name</span>
 </pre></div>
@@ -138,10 +294,29 @@ The idea is simple, every time an object get&#8217;s created/deleted, S3, will t
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="events">
-<h2>Events<a class="headerlink" href="#events" title="Permalink to this headline">¶</a></h2>
-<p>It is mandatory you provide a list of events where your notification will be subscribed. The list of available events is the following:</p>
+<div class="section" id="notification-events">
+<h3>Notification Events<a class="headerlink" href="#notification-events" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">events</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>Valid types</td>
+<td><code class="docutils literal"><span class="pre">list</span></code></td>
+</tr>
+<tr class="row-even"><td>Description</td>
+<td>List of events you want to make trigger a notification</td>
+</tr>
+</tbody>
+</table>
+<p>The list of available events is the following:</p>
 <blockquote>
 <div><ul class="simple">
 <li><code class="docutils literal"><span class="pre">s3:ObjectCreated:*</span></code></li>
@@ -166,17 +341,38 @@ The idea is simple, every time an object get&#8217;s created/deleted, S3, will t
 <ul class="simple">
 <li><code class="docutils literal"><span class="pre">s3:ReducedRedundancyLostObject</span></code></li>
 </ul>
+</div></blockquote>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">Remember that you can&#8217;t overlap events between notifications. So, if you for example subscribe a lambda to <code class="docutils literal"><span class="pre">s3:ObjectCreated:*</span></code>, you&#8217;ll not
 be able to subscribe any other notification to: <code class="docutils literal"><span class="pre">s3:ObjectCreated:Put</span></code>, <code class="docutils literal"><span class="pre">s3:ObjectCreated:Post</span></code>, etc...</p>
 </div>
-</div></blockquote>
 </div>
-<div class="section" id="filters">
-<h2>Filters<a class="headerlink" href="#filters" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="key-filters">
+<h3>Key Filters<a class="headerlink" href="#key-filters" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">key_filters</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>Valid types</td>
+<td><code class="docutils literal"><span class="pre">list</span></code></td>
+</tr>
+<tr class="row-even"><td>Description</td>
+<td>List of filters you want to apply</td>
+</tr>
+</tbody>
+</table>
 <p>Filters are optional to all notifications. The current AWS API only allows you to filter events by the key&#8217;s <code class="docutils literal"><span class="pre">prefix</span></code> and <code class="docutils literal"><span class="pre">suffix</span></code>. One notification can&#8217;t define
 more than one of each (<code class="docutils literal"><span class="pre">prefix</span></code> and <code class="docutils literal"><span class="pre">suffix</span></code>) and  filters in a bucket can&#8217;t overlap one to each other.</p>
+</div>
 </div>
 <div class="section" id="full-example">
 <h2>Full Example<a class="headerlink" href="#full-example" title="Permalink to this headline">¶</a></h2>
@@ -222,14 +418,18 @@ more than one of each (<code class="docutils literal"><span class="pre">prefix</
 <li><a class="reference internal" href="#">S3</a><ul>
 <li><a class="reference internal" href="#limitations">Limitations</a></li>
 <li><a class="reference internal" href="#anatomy-of-the-integration">Anatomy of the integration</a></li>
-<li><a class="reference internal" href="#destinations">Destinations</a><ul>
-<li><a class="reference internal" href="#destination-lambda">Destination: <code class="docutils literal"><span class="pre">lambda</span></code></a></li>
-<li><a class="reference internal" href="#destination-queue">Destination: <code class="docutils literal"><span class="pre">queue</span></code></a></li>
-<li><a class="reference internal" href="#destination-topic">Destination: <code class="docutils literal"><span class="pre">topic</span></code></a></li>
+<li><a class="reference internal" href="#properties">Properties</a><ul>
+<li><a class="reference internal" href="#integration-name">Integration Name</a></li>
+<li><a class="reference internal" href="#bucket">Bucket</a></li>
+<li><a class="reference internal" href="#notifications">Notifications</a></li>
+<li><a class="reference internal" href="#notification-id">Notification ID</a></li>
+<li><a class="reference internal" href="#notification-lambda">Notification Lambda</a></li>
+<li><a class="reference internal" href="#notification-queue">Notification Queue</a></li>
+<li><a class="reference internal" href="#notification-topic">Notification Topic</a></li>
+<li><a class="reference internal" href="#notification-events">Notification Events</a></li>
+<li><a class="reference internal" href="#key-filters">Key Filters</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#events">Events</a></li>
-<li><a class="reference internal" href="#filters">Filters</a></li>
 <li><a class="reference internal" href="#full-example">Full Example</a></li>
 </ul>
 </li>
