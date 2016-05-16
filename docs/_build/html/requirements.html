@@ -179,7 +179,7 @@ task buildLambda(type: Copy) {
     into(&#39;lib&#39;) {
         from configurations.runtime
     }
-    into build_destination
+    into target
 }
 
 build.dependsOn buildLambda

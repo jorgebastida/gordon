@@ -5,8 +5,6 @@ Must
 - Doc tutorial kinesis integration
 - Doc tutorial dynamodb integration
 - Doc python and js requirements
-- exclude
-- npm build
 - cli outputs
 
 Maybe
@@ -16,7 +14,6 @@ Maybe
 - New Run lambda locally
 - New Improve CREATE_FAILED UPDATE_FAILED output, suggest next steps etc..
 
-- New optimize code?
 - Doc Illustrate examples / integrations
 - New other integrations
 - Improve coverage

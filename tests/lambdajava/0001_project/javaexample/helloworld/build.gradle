@@ -17,7 +17,7 @@ task buildLambda(type: Copy) {
     into('lib') {
         from configurations.runtime
     }
-    into build_destination
+    into target
 }
 
 build.dependsOn buildLambda

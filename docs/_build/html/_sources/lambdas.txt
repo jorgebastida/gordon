@@ -315,37 +315,38 @@ Valid types                  ``string``, ``list``
 Description                  Build process for collecting resources of your lambda
 ===========================  ============================================================================================================
 
-This property defines which are the commands gordon needs to run to collect all the resources from your lambda before putting
-them in a zip file.
+This property defines which are the commands gordon needs to run in order to collect all the resources from your lambda and
+copying them to an empty target directory. Once the collection command finishes, gordon will create a zip file with the content
+of that folder.
 
-By default Gordon does it's best based on the runtime of your lambda, but there are certain use cases where you might need
-further fine control.
+This property has one default implementation per available runtime (Java, Javascript, Python), which covers most of the simple use cases, but
+there are certain use situations where you might need further fine control.
 
-This is the default value for ``build`` based on the runtime that gordon will use if you leave this property blank:
+These are the default implementations gordon will use if you leave this property blank:
 
 Python
 
 .. code-block:: yaml
 
     build:
-      - cp -Rf * {build_destination}
-      - echo "[install]\nprefix=" > {build_destination}/setup.cfg
-      - {pip_path} install -r requirements.txt -q -t {build_destination} {pip_install_extra}
-      - cd {build_destination} && find . -name "*.pyc" -delete
+      - cp -Rf * {target}
+      - echo "[install]\nprefix=" > {target}/setup.cfg
+      - {pip_path} install -r requirements.txt -q -t {target} {pip_install_extra}
+      - cd {target} && find . -name "*.pyc" -delete
 
 Node
 
 .. code-block:: yaml
 
   build:
-    - cp -Rf * {build_destination}
-    - cd {build_destination} && {npm_path} install {npm_install_extra}
+    - cp -Rf * {target}
+    - cd {target} && {npm_path} install {npm_install_extra}
 
 Java
 
 .. code-block:: yaml
 
-    build: {gradle_path} build -Pbuild_destination={build_destination} {gradle_build_extra}
+    build: {gradle_path} build -Ptarget={target} {gradle_build_extra}
 
 As you can see, the value of ``build`` can be either a string or a list of strings. Gordon will process them sequentially within your lambda directory.
 
@@ -354,7 +355,7 @@ There are certain variables you can use to customize this ``build`` property.
 =======================  ================================================================================================
 Variable                 Description
 =======================  ================================================================================================
-``build_destination``    Destination folder where you need to put the code of your lambda
+``target``    Destination folder where you need to put the code of your lambda
 ``pip_path``             ``pip`` path. You can customize this using the ``pip-path`` setting in your settings
 ``npm_path``             ``npm`` path. You can customize this using the ``npm-path`` setting in your settings
 ``gradle_path``          ``gradle`` path. You can customize this using the ``gradle-path`` setting in your settings
@@ -376,13 +377,13 @@ This is the minimal version of what a build command that copies your lambda dire
         code: mycode
         runtime: python
         handler: code.handler
-        build: cp -Rf * {build_destination}
+        build: cp -Rf * {target}
 
 
 You can use this ``build`` property in conjunction with some more powerful build tools such as ``Makefile``, ``npm``, ``gulp``, ``grunt``
 or simple ``bash`` files.
 
-In this example, we make ``babel`` process our javascript files, and leave them in ``BUILD_DESTINATION``.
+In this example, we make ``babel`` process our javascript files, and leave them in ``TARGET``.
 
 .. code-block:: yaml
 
@@ -391,7 +392,7 @@ In this example, we make ``babel`` process our javascript files, and leave them 
         code: mycode
         runtime: node
         handler: code.handler
-        build: BUILD_DESTINATION={build_destination} npm run build
+        build: TARGET={target} npm run build
 
 .. code-block:: json
 
@@ -406,7 +407,7 @@ In this example, we make ``babel`` process our javascript files, and leave them 
         "babel-preset-es2015": "^6.6.0"
       },
       "scripts": {
-          "build": "babel *.js --out-dir $BUILD_DESTINATION"
+          "build": "babel *.js --out-dir $TARGET"
       }
     }
 

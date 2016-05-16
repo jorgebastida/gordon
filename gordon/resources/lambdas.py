@@ -438,7 +438,7 @@ class Lambda(base.BaseResource):
 
             for command in commands:
                 command = command.format(
-                    build_destination=destination,
+                    target=destination,
                     pip_path=self._pip_path(),
                     npm_path=self._npm_path(),
                     gradle_path=self._gradle_path(),
@@ -520,11 +520,11 @@ class PythonLambda(Lambda):
         requirements_path = os.path.join(code_root, 'requirements.txt')
 
         commands = []
-        commands.append('cp -Rf * {build_destination}')
+        commands.append('cp -Rf * {target}')
         if os.path.isfile(requirements_path):
-            commands.append('echo "[install]\nprefix=" > {build_destination}/setup.cfg')
-            commands.append('{pip_path} install -r requirements.txt -q -t {build_destination} {pip_install_extra}')
-            commands.append('cd {build_destination} && find . -name "*.pyc" -delete')
+            commands.append('echo "[install]\nprefix=" > {target}/setup.cfg')
+            commands.append('{pip_path} install -r requirements.txt -q -t {target} {pip_install_extra}')
+            commands.append('cd {target} && find . -name "*.pyc" -delete')
         return commands
 
 
@@ -545,9 +545,9 @@ class NodeLambda(Lambda):
         package_json_path = os.path.join(code_root, 'package.json')
 
         commands = []
-        commands.append('cp -Rf * {build_destination}')
+        commands.append('cp -Rf * {target}')
         if os.path.isfile(package_json_path):
-            commands.append('cd {build_destination} && {npm_path} install {npm_install_extra}')
+            commands.append('cd {target} && {npm_path} install {npm_install_extra}')
         return commands
 
 
@@ -561,4 +561,4 @@ class JavaLambda(Lambda):
     extension = 'java'
 
     def _get_default_build_command(self, destination):
-        return "{gradle_path} build -Pbuild_destination={build_destination} {gradle_build_extra}"
+        return "{gradle_path} build -Ptarget={target} {gradle_build_extra}"
