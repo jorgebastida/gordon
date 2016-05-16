@@ -53,11 +53,13 @@ Why CloudFormation?
 One of the best advantages of using AWS is the fact that reproducibility is at it's core and their ecosystem is full of services which encourage it. Their flagship is CloudFormation.
 
 Then... why not use plain CloudFormation? Well, there are three reasons:
+
 1) Complexity. CloudFormation stacks are defined using JSON templates which are a nightmare to write and maintain. (Friends don't let friends write JSON files)
 2) Glue. There is a lot of glue to put in between a "normal user" and the reality-check of deploying and wiring Lambda into AWS.
 3) APIs. Not all AWS APIs are released when services are announced... ain't frameworks (boto3), nor integrations with CloudFormation.
 
 This project tries to solve these three issues by:
+
 1) Creating a really thin layer of conventions on top of easy to maintain YAML files.
 2) Making everything work out of the box as well trying to make people not shoot in their foot.
 2) Working around the lack of CloudFormation/Framework APIs (keeping in mind they will happen eventually)
