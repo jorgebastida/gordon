@@ -506,7 +506,7 @@ needing to re-configure all related event sources.</p>
 them in a zip file.</p>
 <p>By default Gordon does it&#8217;s best based on the runtime of your lambda, but there are certain use cases where you might need
 further fine control.</p>
-<p>This is the default value for <code class="docutils literal"><span class="pre">build</span></code> based on the runtime:</p>
+<p>This is the default value for <code class="docutils literal"><span class="pre">build</span></code> based on the runtime that gordon will use if you leave this property blank:</p>
 <p>Python</p>
 <div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">build</span><span class="p-Indicator">:</span>
   <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">cp -Rf * {build_destination}</span>
@@ -558,6 +558,15 @@ further fine control.</p>
 </tr>
 <tr class="row-even"><td><code class="docutils literal"><span class="pre">gradle_build_extra</span></code></td>
 <td>Extra arguments you can define as part of <code class="docutils literal"><span class="pre">gradle-build-extra</span></code> in your settings</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">project_path</span></code></td>
+<td>Root directory of your project</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">project_name</span></code></td>
+<td>Name of your project</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">lambda_name</span></code></td>
+<td>Name of your lambda</td>
 </tr>
 </tbody>
 </table>

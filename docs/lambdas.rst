@@ -321,7 +321,7 @@ them in a zip file.
 By default Gordon does it's best based on the runtime of your lambda, but there are certain use cases where you might need
 further fine control.
 
-This is the default value for ``build`` based on the runtime:
+This is the default value for ``build`` based on the runtime that gordon will use if you leave this property blank:
 
 Python
 

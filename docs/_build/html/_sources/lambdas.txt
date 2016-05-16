@@ -321,7 +321,7 @@ them in a zip file.
 By default Gordon does it's best based on the runtime of your lambda, but there are certain use cases where you might need
 further fine control.
 
-This is the default value for ``build`` based on the runtime:
+This is the default value for ``build`` based on the runtime that gordon will use if you leave this property blank:
 
 Python
 
@@ -361,6 +361,9 @@ Variable                 Description
 ``pip_install_extra``    Extra arguments you can define using ``pip-install-extra`` in your settings
 ``npm_install_extra``    Extra arguments you can define using ``npm-install-extra`` in your settings
 ``gradle_build_extra``   Extra arguments you can define as part of ``gradle-build-extra`` in your settings
+``project_path``         Root directory of your project
+``project_name``         Name of your project
+``lambda_name``          Name of your lambda
 =======================  ================================================================================================
 
 
