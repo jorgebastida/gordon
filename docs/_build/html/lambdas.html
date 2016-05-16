@@ -502,10 +502,30 @@ needing to re-configure all related event sources.</p>
 </tr>
 </tbody>
 </table>
-<p>By default Gordon does it&#8217;s best for collecting the resources of your lambdas. Based on the type of your lambda, gordon
-tries to do what it would be fine for most of the cases, but there are certain use-case where you might need fine control
-of what goes into your lambdas.</p>
-<p>The value of <code class="docutils literal"><span class="pre">build</span></code> can be either a string or a list of strings. Gordon will process them sequentially within your lambda directory.</p>
+<p>This property defines which are the commands gordon needs to run to collect all the resources from your lambda before putting
+them in a zip file.</p>
+<p>By default Gordon does it&#8217;s best based on the runtime of your lambda, but there are certain use cases where you might need
+further fine control.</p>
+<p>This is the default value for <code class="docutils literal"><span class="pre">build</span></code> based on the runtime:</p>
+<p>Python</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">build</span><span class="p-Indicator">:</span>
+  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">cp -Rf * {build_destination}</span>
+  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">echo &quot;[install]\nprefix=&quot; &gt; {build_destination}/setup.cfg</span>
+  <span class="p-Indicator">-</span> <span class="p-Indicator">{</span><span class="nv">pip_path</span><span class="p-Indicator">}</span> <span class="l-Scalar-Plain">install -r requirements.txt -q -t {build_destination} {pip_install_extra}</span>
+  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">cd {build_destination} &amp;&amp; find . -name &quot;*.pyc&quot; -delete</span>
+</pre></div>
+</div>
+<p>Node</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">build</span><span class="p-Indicator">:</span>
+  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">cp -Rf * {build_destination}</span>
+  <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">cd {build_destination} &amp;&amp; {npm_path} install {npm_install_extra}</span>
+</pre></div>
+</div>
+<p>Java</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">build</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span><span class="nv">gradle_path</span><span class="p-Indicator">}</span> <span class="l-Scalar-Plain">build -Pbuild_destination={build_destination} {gradle_build_extra}</span>
+</pre></div>
+</div>
+<p>As you can see, the value of <code class="docutils literal"><span class="pre">build</span></code> can be either a string or a list of strings. Gordon will process them sequentially within your lambda directory.</p>
 <p>There are certain variables you can use to customize this <code class="docutils literal"><span class="pre">build</span></code> property.</p>
 <table border="1" class="docutils">
 <colgroup>

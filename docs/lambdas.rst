@@ -315,11 +315,39 @@ Valid types                  ``string``, ``list``
 Description                  Build process for collecting resources of your lambda
 ===========================  ============================================================================================================
 
-By default Gordon does it's best for collecting the resources of your lambdas. Based on the type of your lambda, gordon
-tries to do what it would be fine for most of the cases, but there are certain use-case where you might need fine control
-of what goes into your lambdas.
+This property defines which are the commands gordon needs to run to collect all the resources from your lambda before putting
+them in a zip file.
 
-The value of ``build`` can be either a string or a list of strings. Gordon will process them sequentially within your lambda directory.
+By default Gordon does it's best based on the runtime of your lambda, but there are certain use cases where you might need
+further fine control.
+
+This is the default value for ``build`` based on the runtime:
+
+Python
+
+.. code-block:: yaml
+
+    build:
+      - cp -Rf * {build_destination}
+      - echo "[install]\nprefix=" > {build_destination}/setup.cfg
+      - {pip_path} install -r requirements.txt -q -t {build_destination} {pip_install_extra}
+      - cd {build_destination} && find . -name "*.pyc" -delete
+
+Node
+
+.. code-block:: yaml
+
+  build:
+    - cp -Rf * {build_destination}
+    - cd {build_destination} && {npm_path} install {npm_install_extra}
+
+Java
+
+.. code-block:: yaml
+
+    build: {gradle_path} build -Pbuild_destination={build_destination} {gradle_build_extra}
+
+As you can see, the value of ``build`` can be either a string or a list of strings. Gordon will process them sequentially within your lambda directory.
 
 There are certain variables you can use to customize this ``build`` property.
 
@@ -333,6 +361,9 @@ Variable                 Description
 ``pip_install_extra``    Extra arguments you can define using ``pip-install-extra`` in your settings
 ``npm_install_extra``    Extra arguments you can define using ``npm-install-extra`` in your settings
 ``gradle_build_extra``   Extra arguments you can define as part of ``gradle-build-extra`` in your settings
+``project_path``         Root directory of your project
+``project_name``         Name of your project
+``lambda_name``          Name of your lambda
 =======================  ================================================================================================
 
 

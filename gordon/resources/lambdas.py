@@ -444,8 +444,14 @@ class Lambda(base.BaseResource):
                     gradle_path=self._gradle_path(),
                     pip_install_extra=self._pip_install_extra(),
                     npm_install_extra=self._npm_install_extra(),
-                    gradle_build_extra=self._gradle_build_extra()
+                    gradle_build_extra=self._gradle_build_extra(),
+                    project_path=self.project.path,
+                    project_name=self.project.name,
+                    lambda_name=self.name
                 )
+                if self.project.debug:
+                    with indent(4):
+                        puts(colored.white(command))
                 out = subprocess.check_output(
                     command,
                     shell=True,
