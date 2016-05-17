@@ -17,7 +17,7 @@ Environment Variables
 
 You can make the value of your parameter be based on any environment variable using the ``env://`` protocol.
 
-.. code-block:: yml
+.. code-block:: yaml
 
     ---
     MyParameter: env://MY_ENV_VARIABLE
@@ -39,7 +39,7 @@ Name                         Description
 
 Example:
 
-.. code-block:: yml
+.. code-block:: yaml
 
     ---
     MyParameter: dynamodb-startswith://clients-
@@ -64,7 +64,7 @@ Name                                Description
 
 Example:
 
-.. code-block:: yml
+.. code-block:: yaml
 
     ---
     MyParameter: dynamodb-stream-startswith://clients-
@@ -89,7 +89,7 @@ Name                         Description
 
 Example:
 
-.. code-block:: yml
+.. code-block:: yaml
 
     ---
     MyParameter: kinesis-startswith://events-
@@ -114,7 +114,7 @@ The context gordon will provide to this jinja helper is:
 
 Example:
 
-.. code-block:: yml
+.. code-block:: yaml
 
     ---
     MyBucket: "company-{{ stage }}-images"

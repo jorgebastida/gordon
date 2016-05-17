@@ -355,7 +355,7 @@ There are certain variables you can use to customize this ``build`` property.
 =======================  ================================================================================================
 Variable                 Description
 =======================  ================================================================================================
-``target``    Destination folder where you need to put the code of your lambda
+``target``               Destination folder where you need to put the code of your lambda
 ``pip_path``             ``pip`` path. You can customize this using the ``pip-path`` setting in your settings
 ``npm_path``             ``npm`` path. You can customize this using the ``npm-path`` setting in your settings
 ``gradle_path``          ``gradle`` path. You can customize this using the ``gradle-path`` setting in your settings

@@ -67,7 +67,8 @@ Give it a look to ``firstapp/settings.yml`` and ``firstapp/helloworld/src/main/j
 
 Now that we know what these files does, we need to install this ``firstapp``. In order to do so, open your project ``settings.yml`` and add ``firstapp`` to the ``apps`` list:
 
-.. code-block:: yml
+
+.. code-block:: yaml
 
     ---
     project: demo

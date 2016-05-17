@@ -49,8 +49,8 @@ static makes quite hard to describe your needs.</p>
 <div class="section" id="environment-variables">
 <h3>Environment Variables<a class="headerlink" href="#environment-variables" title="Permalink to this headline">¶</a></h3>
 <p>You can make the value of your parameter be based on any environment variable using the <code class="docutils literal"><span class="pre">env://</span></code> protocol.</p>
-<div class="highlight-yml"><div class="highlight"><pre>---
-MyParameter: env://MY_ENV_VARIABLE
+<div class="highlight-yaml"><div class="highlight"><pre><span class="nn">---</span>
+<span class="l-Scalar-Plain">MyParameter</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">env://MY_ENV_VARIABLE</span>
 </pre></div>
 </div>
 <p>gordon will make the parameter <code class="docutils literal"><span class="pre">MyParameter</span></code> value be whatever <code class="docutils literal"><span class="pre">MY_ENV_VARIABLE</span></code> value is on <code class="docutils literal"><span class="pre">apply</span></code> time.</p>
@@ -81,8 +81,8 @@ MyParameter: env://MY_ENV_VARIABLE
 </tbody>
 </table>
 <p>Example:</p>
-<div class="highlight-yml"><div class="highlight"><pre>---
-MyParameter: dynamodb-startswith://clients-
+<div class="highlight-yaml"><div class="highlight"><pre><span class="nn">---</span>
+<span class="l-Scalar-Plain">MyParameter</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">dynamodb-startswith://clients-</span>
 </pre></div>
 </div>
 <p>gordon will make the parameter <code class="docutils literal"><span class="pre">MyParameter</span></code> value be the full name of the table which name starts with <code class="docutils literal"><span class="pre">clients-</span></code>.</p>
@@ -114,8 +114,8 @@ MyParameter: dynamodb-startswith://clients-
 </tbody>
 </table>
 <p>Example:</p>
-<div class="highlight-yml"><div class="highlight"><pre>---
-MyParameter: dynamodb-stream-startswith://clients-
+<div class="highlight-yaml"><div class="highlight"><pre><span class="nn">---</span>
+<span class="l-Scalar-Plain">MyParameter</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">dynamodb-stream-startswith://clients-</span>
 </pre></div>
 </div>
 <p>gordon will make the parameter <code class="docutils literal"><span class="pre">MyParameter</span></code> value be the <code class="docutils literal"><span class="pre">ARN</span></code> of the stream of which table name starts with <code class="docutils literal"><span class="pre">clients-</span></code>.</p>
@@ -147,8 +147,8 @@ MyParameter: dynamodb-stream-startswith://clients-
 </tbody>
 </table>
 <p>Example:</p>
-<div class="highlight-yml"><div class="highlight"><pre>---
-MyParameter: kinesis-startswith://events-
+<div class="highlight-yaml"><div class="highlight"><pre><span class="nn">---</span>
+<span class="l-Scalar-Plain">MyParameter</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">kinesis-startswith://events-</span>
 </pre></div>
 </div>
 <p>gordon will make the parameter <code class="docutils literal"><span class="pre">MyParameter</span></code> value be the full name of the table which name starts with <code class="docutils literal"><span class="pre">events-</span></code>.</p>
@@ -168,8 +168,8 @@ MyParameter: kinesis-startswith://events-
 </ul>
 </div></blockquote>
 <p>Example:</p>
-<div class="highlight-yml"><div class="highlight"><pre>---
-MyBucket: &quot;company-{{ stage }}-images&quot;
+<div class="highlight-yaml"><div class="highlight"><pre><span class="nn">---</span>
+<span class="l-Scalar-Plain">MyBucket</span><span class="p-Indicator">:</span> <span class="s">&quot;company-{{</span><span class="nv"> </span><span class="s">stage</span><span class="nv"> </span><span class="s">}}-images&quot;</span>
 </pre></div>
 </div>
 <p>There are lot&#8217;s of things you can do with Jinja2. For more information <a class="reference external" href="http://jinja.pocoo.org/docs/dev/templates/#filters">Jinja2 Template Designer Documentation</a></p>

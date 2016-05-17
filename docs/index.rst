@@ -20,6 +20,7 @@ Your first steps using gordon.
 .. toctree::
    :maxdepth: 1
 
+   quickstart
    quickstart_py
    quickstart_js
    quickstart_java
@@ -43,6 +44,7 @@ In detail explanations of how everything works together.
    parameters_advanced
    contexts
    contrib
+   setup_aws
    faq
 
 
