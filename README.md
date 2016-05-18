@@ -42,6 +42,20 @@ Features
 * Love
 
 
+Example Projects
+------------------
+* [ApiGateway](https://github.com/jorgebastida/gordon/tree/master/examples/apigateway)
+* [Contexts](https://github.com/jorgebastida/gordon/tree/master/examples/contexts)
+* [Cron](https://github.com/jorgebastida/gordon/tree/master/examples/cron)
+* [Dynamodb Stream Consumer](https://github.com/jorgebastida/gordon/tree/master/examples/dynamodbpython)
+* [Kinesis Stream Consumer](https://github.com/jorgebastida/gordon/tree/master/examples/kinesispython)
+* [S3 Consumer](https://github.com/jorgebastida/gordon/tree/master/examples/s3)
+* [Telegram Bot](https://github.com/jorgebastida/gordon/tree/master/examples/telegram)
+* Python projects [1](https://github.com/jorgebastida/gordon/tree/master/examples/simplepython) and [2](https://github.com/jorgebastida/gordon/tree/master/examples/modulepython)
+* Javascript projects [1](https://github.com/jorgebastida/gordon/tree/master/examples/simplejs) [2](https://github.com/jorgebastida/gordon/tree/master/examples/modulejs) [es-6 with babel](https://github.com/jorgebastida/gordon/tree/master/examples/simplejs-es6)
+* Java projects [1](https://github.com/jorgebastida/gordon/tree/master/examples/simplejava)
+
+
 Why should you use this project?
 -----------------------------------
 
