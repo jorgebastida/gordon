@@ -1,4 +1,4 @@
-Quickstart Javascript
+Quickstart: Javascript
 ======================
 
 Now that you have Gordon installed, let's create our first project. Before doing so, you need to understand how Gordon projects are structured.

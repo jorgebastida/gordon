@@ -18,12 +18,9 @@ Your first steps using gordon.
 
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
    quickstart
-   quickstart_py
-   quickstart_js
-   quickstart_java
 
 
 In detail
