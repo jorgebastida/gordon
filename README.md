@@ -44,10 +44,10 @@ Features
 
 Example Projects
 ------------------
-* [Simple HelloWorld Lambda written in Python](https://github.com/jorgebastida/gordon/tree/master/examples/modulepython)
-* [Simple HelloWorld Lambda written in Javascript](https://github.com/jorgebastida/gordon/tree/master/examples/modulejs)
-* [Simple HelloWorld Lambda written in Javascript ES-6](https://github.com/jorgebastida/gordon/tree/master/examples/simplejs-es6)
-* [Simple HelloWorld Lambda written in Java](https://github.com/jorgebastida/gordon/tree/master/examples/simplejava)
+* [Python HelloWorld Lambda](https://github.com/jorgebastida/gordon/tree/master/examples/modulepython): Simple Lambda written in Python.
+* [Javascript HelloWorld Lambda](https://github.com/jorgebastida/gordon/tree/master/examples/modulejs): Simple Lambda written in Javascript.
+* [Javascript ES6 HelloWorld Lambda](https://github.com/jorgebastida/gordon/tree/master/examples/simplejs-es6): Simple Lambda written in Javascript using ES-6.
+* [Java HelloWorld Lambda](https://github.com/jorgebastida/gordon/tree/master/examples/simplejava): Simple Lambda written in Java.
 * [ApiGateway](https://github.com/jorgebastida/gordon/tree/master/examples/apigateway): Integration for creating a simple web service.
 * [Cron](https://github.com/jorgebastida/gordon/tree/master/examples/cron): Schedule lambdas using cron syntax.
 * [Dynamodb Stream Consumer](https://github.com/jorgebastida/gordon/tree/master/examples/dynamodbpython): Consume as a stream changes to a dynamodb table.
