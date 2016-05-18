@@ -44,17 +44,17 @@ Features
 
 Example Projects
 ------------------
-* [ApiGateway](https://github.com/jorgebastida/gordon/tree/master/examples/apigateway)
-* [Contexts](https://github.com/jorgebastida/gordon/tree/master/examples/contexts)
-* [Cron](https://github.com/jorgebastida/gordon/tree/master/examples/cron)
-* [Dynamodb Stream Consumer](https://github.com/jorgebastida/gordon/tree/master/examples/dynamodbpython)
-* [Kinesis Stream Consumer](https://github.com/jorgebastida/gordon/tree/master/examples/kinesispython)
-* [S3 Consumer](https://github.com/jorgebastida/gordon/tree/master/examples/s3)
-* [Telegram Bot](https://github.com/jorgebastida/gordon/tree/master/examples/telegram)
-* Python projects [1](https://github.com/jorgebastida/gordon/tree/master/examples/simplepython) and [2](https://github.com/jorgebastida/gordon/tree/master/examples/modulepython)
-* Javascript projects [1](https://github.com/jorgebastida/gordon/tree/master/examples/simplejs) [2](https://github.com/jorgebastida/gordon/tree/master/examples/modulejs) [es-6 with babel](https://github.com/jorgebastida/gordon/tree/master/examples/simplejs-es6)
-* Java projects [1](https://github.com/jorgebastida/gordon/tree/master/examples/simplejava)
-
+* [Simple HelloWorld Lambda written in Python](https://github.com/jorgebastida/gordon/tree/master/examples/modulepython)
+* [Simple HelloWorld Lambda written in Javascript](https://github.com/jorgebastida/gordon/tree/master/examples/modulejs)
+* [Simple HelloWorld Lambda written in Javascript ES-6](https://github.com/jorgebastida/gordon/tree/master/examples/simplejs-es6)
+* [Simple HelloWorld Lambda written in Java](https://github.com/jorgebastida/gordon/tree/master/examples/simplejava)
+* [ApiGateway](https://github.com/jorgebastida/gordon/tree/master/examples/apigateway): Integration for creating a simple web service.
+* [Cron](https://github.com/jorgebastida/gordon/tree/master/examples/cron): Schedule lambdas using cron syntax.
+* [Dynamodb Stream Consumer](https://github.com/jorgebastida/gordon/tree/master/examples/dynamodbpython): Consume as a stream changes to a dynamodb table.
+* [Kinesis Stream Consumer](https://github.com/jorgebastida/gordon/tree/master/examples/kinesispython): Consume Events published in a Kinesis Stream.
+* [S3 Consumer](https://github.com/jorgebastida/gordon/tree/master/examples/s3): Run your lambdas when a file is created/deleted on S3.
+* [Contexts](https://github.com/jorgebastida/gordon/tree/master/examples/contexts): Add dynamic configuration to your lambdas.
+* [Telegram Bot](https://github.com/jorgebastida/gordon/tree/master/examples/telegram): Create a simple bot in telegram.
 
 Why should you use this project?
 -----------------------------------
