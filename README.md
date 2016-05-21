@@ -1,9 +1,10 @@
 Gordon
 =========
 
-.. image:: http://gordondoc.s3-website-eu-west-1.amazonaws.com/_static/logo_text.png
+![gordon](http://gordondoc.s3-website-eu-west-1.amazonaws.com/_static/logo_text.png)
 
-.. image:: https://img.shields.io/badge/license-BSD-blue.png
+[![GitHub license](https://img.shields.io/badge/license-BSD-blue.svg)](LICENSE)
+
 
 
 * Preliminary doc: http://gordondoc.s3-website-eu-west-1.amazonaws.com/
