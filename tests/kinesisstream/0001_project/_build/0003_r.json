@@ -1,4 +1,11 @@
 {
+    "Outputs": {
+        "ClioutputLambdaKinesisconsumerConsumer": {
+            "Value": {
+                "Ref": "ConsumerCurrentalias"
+            }
+        }
+    },
     "Parameters": {
         "CodeBucket": {
             "Description": "Bucket where the code is located.",

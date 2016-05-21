@@ -1,4 +1,11 @@
 {
+    "Outputs": {
+        "ClioutputLambdaJavaexampleJavaexample": {
+            "Value": {
+                "Ref": "JavaexampleCurrentalias"
+            }
+        }
+    },
     "Parameters": {
         "CodeBucket": {
             "Description": "Bucket where the code is located.",

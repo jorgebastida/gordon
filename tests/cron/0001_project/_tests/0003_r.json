@@ -1,4 +1,11 @@
 {
+    "Outputs": {
+        "ClioutputLambdaCronExample": {
+            "Value": {
+                "Ref": "ExampleCurrentalias"
+            }
+        }
+    },
     "Parameters": {
         "CodeBucket": {
             "Description": "Bucket where the code is located.",

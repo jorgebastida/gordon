@@ -1,4 +1,11 @@
 {
+    "Outputs": {
+        "ClioutputLambdaPyexamplePyexample": {
+            "Value": {
+                "Ref": "PyexampleCurrentalias"
+            }
+        }
+    },
     "Parameters": {
         "CodeBucket": {
             "Description": "Bucket where the code is located.",
