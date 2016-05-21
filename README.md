@@ -1,26 +1,10 @@
-Gordon
-=========
-
 ![gordon](http://gordondoc.s3-website-eu-west-1.amazonaws.com/_static/logo_text.svg)
 
 [![GitHub license](https://img.shields.io/badge/license-BSD-blue.svg)](LICENSE)
 
-
-
-* Preliminary doc: http://gordondoc.s3-website-eu-west-1.amazonaws.com/
-
 Gordon is a tool to create, wire and deploy AWS Lambdas using CloudFormation in an easy way.
 
-Usage
-------
-```shell
-$ gordon startproject demo [--region=eu-west-1]
-$ cd demo
-$ gordon startapp helloworld [--runtime=py|js|java]
-# ... Add helloword to demo/settings.yml installed apps.
-$ gordon build
-$ gordon apply [--stage=dev|prod|...]
-```
+Documentation: http://gordondoc.s3-website-eu-west-1.amazonaws.com/
 
 Features
 ---------
@@ -31,16 +15,16 @@ Features
 * Seamless integration with (``pip``,``npm`` and ``gradle``)
 * Dead-simple custom multi-stage and multi region deployments ``--stage=prod``
 * Supported integrations
-  * Kinesis Streams
-  * Dynamodb Streams
-  * S3
+  * Apigateway  
   * CloudWatch Events
-  * Apigateway
+  * Dynamodb Streams
+  * Kinesis Streams
+  * S3
 * AWS Lambda Versions an Aliases
 * Dynamic stage parametrization including:
   * Environment variables
   * Jinja2 values
-  * ARN translation helpers (``dynamodb-starswith://clients-``, ``dynamodb-endswith://-clients``, ``dynamodb-match://clients-`` ...)
+  * ARN translation helpers
 * Extensive Documentation
 * Good test suite
 * Love
