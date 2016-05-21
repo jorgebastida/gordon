@@ -1,7 +1,10 @@
 Gordon
 =========
 
-.. image:: https://raw.githubusercontent.com/jorgebastida/gordon/master/docs/_static/logo.png
+.. image:: http://gordondoc.s3-website-eu-west-1.amazonaws.com/_static/logo_text.png
+
+.. image:: https://img.shields.io/badge/license-BSD-blue.png
+
 
 * Preliminary doc: http://gordondoc.s3-website-eu-west-1.amazonaws.com/
 
