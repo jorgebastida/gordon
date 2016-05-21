@@ -1,7 +1,7 @@
 Gordon
 =========
 
-![gordon](http://gordondoc.s3-website-eu-west-1.amazonaws.com/_static/logo_text.png)
+![gordon](http://gordondoc.s3-website-eu-west-1.amazonaws.com/_static/logo_text.svg)
 
 [![GitHub license](https://img.shields.io/badge/license-BSD-blue.svg)](LICENSE)
 
