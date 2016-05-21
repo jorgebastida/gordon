@@ -93,6 +93,7 @@ The following is the anatomy of a lambda in gordon.
       context: { CONTEXT_NAME }
       auto-vpc-policy: { BOOLEAN }
       auto-run-policy: { BOOLEAN }
+      cli-output: { BOOLEAN }
       policies:
         { POLICY_NAME }:
           { MAP }
@@ -498,6 +499,18 @@ For more information about contexts you can read about them in :doc:`contexts`.
     hello_world:
       code: functions.py
       context: context_name
+
+
+cli-output
+^^^^^^^^^^^^^^^^^^^^^^
+
+===========================  ============================================================================================================
+Name                         ``cli-output``
+Required                     No
+Default                      True
+Valid types                  ``boolean``
+Description                  Output the lambda ARN as part of the ``apply`` output
+===========================  ============================================================================================================
 
 
 policies

@@ -167,7 +167,7 @@ class ApiGateway(BaseResource):
         deployment_resources = []
         api = RestApi(
             self.in_project_cf_name,
-            Name=self.name,
+            Name=troposphere.Join("-", [self.name, troposphere.Ref('Stage')]),
             Description=self.settings.get('description', '')
         )
         template.add_resource(api)
@@ -244,8 +244,19 @@ class ApiGateway(BaseResource):
         deploy = Deployment(
             utils.valid_cloudformation_name(self.name, "Deployment", deploy_hash[:8]),
             DependsOn=deployment_dependencies,
-            StageName='dev',
+            StageName=troposphere.Ref('Stage'),
             RestApiId=troposphere.Ref(api)
         )
 
         template.add_resource(deploy)
+
+        if self._get_true_false('cli-output', 't'):
+            template.add_output([
+                troposphere.Output(
+                    utils.valid_cloudformation_name("Clioutput", self.in_project_name),
+                    Value=troposphere.Join(
+                        "",
+                        ["https://", troposphere.Ref(api), ".execute-api.", troposphere.Ref(troposphere.AWS_REGION), ".amazonaws.com/", troposphere.Ref('Stage')]
+                    ),
+                )
+            ])

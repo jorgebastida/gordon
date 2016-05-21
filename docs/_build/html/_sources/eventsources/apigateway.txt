@@ -19,6 +19,7 @@ Anatomy of the integration
 
     { API_NAME }:
       description: { STRING }
+      cli-output: { BOOLEAN }
       resources:
         { URL }:
             methods: { LIST }
@@ -58,6 +59,17 @@ Default                      *Empty*
 Valid types                  ``string``, ``reference``
 Max length                   30
 Description                  Description of your api
+===========================  ============================================================================================================
+
+cli-output
+^^^^^^^^^^^^^^^^^^^^^^
+
+===========================  ============================================================================================================
+Name                         ``cli-output``
+Required                     No
+Default                      True
+Valid types                  ``boolean``
+Description                  Output the deployment base URL as part of the ``apply`` output
 ===========================  ============================================================================================================
 
 

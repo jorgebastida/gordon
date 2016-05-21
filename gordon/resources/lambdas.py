@@ -298,7 +298,7 @@ class Lambda(base.BaseResource):
             )
         )
 
-        template.add_resource(
+        alias = template.add_resource(
             awslambda.Alias(
                 self.current_alias_cf_name,
                 DependsOn=[
@@ -313,6 +313,13 @@ class Lambda(base.BaseResource):
                 Name="current",
             )
         )
+        if self._get_true_false('cli-output', 't'):
+            template.add_output([
+                troposphere.Output(
+                    utils.valid_cloudformation_name("Clioutput", self.in_project_name),
+                    Value=troposphere.Ref(alias),
+                )
+            ])
 
     def register_pre_resources_template(self, template):
         """Register one UploadToS3 action into the pre_resources template, as
@@ -378,9 +385,6 @@ class Lambda(base.BaseResource):
         """Returns a zip file file-like object with all the required source
         on it."""
         destination = tempfile.mkdtemp()
-
-        with indent(2):
-            puts(colored.green(u"✓ {}".format(self._get_in_project_name())))
 
         try:
             self._collect_lambda_content(destination)

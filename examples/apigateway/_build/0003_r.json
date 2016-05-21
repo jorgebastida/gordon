@@ -1,4 +1,32 @@
 {
+    "Outputs": {
+        "ClioutputApigatewayHelloapi": {
+            "Value": {
+                "Fn::Join": [
+                    "",
+                    [
+                        "https://",
+                        {
+                            "Ref": "Helloapi"
+                        },
+                        ".execute-api.",
+                        {
+                            "Ref": "AWS::Region"
+                        },
+                        ".amazonaws.com/",
+                        {
+                            "Ref": "Stage"
+                        }
+                    ]
+                ]
+            }
+        },
+        "ClioutputLambdaHelloworldHellopy": {
+            "Value": {
+                "Ref": "HellopyCurrentalias"
+            }
+        }
+    },
     "Parameters": {
         "CodeBucket": {
             "Description": "Bucket where the code is located.",
@@ -52,11 +80,21 @@
         "Helloapi": {
             "Properties": {
                 "Description": "My first API",
-                "Name": "helloapi"
+                "Name": {
+                    "Fn::Join": [
+                        "-",
+                        [
+                            "helloapi",
+                            {
+                                "Ref": "Stage"
+                            }
+                        ]
+                    ]
+                }
             },
             "Type": "AWS::ApiGateway::RestApi"
         },
-        "HelloapiDeploymentCce09C5D": {
+        "HelloapiDeploymentC16Ebd14": {
             "DependsOn": [
                 "HelloapiMockGet",
                 "HelloapiHiGet",
@@ -73,7 +111,9 @@
                 "RestApiId": {
                     "Ref": "Helloapi"
                 },
-                "StageName": "dev"
+                "StageName": {
+                    "Ref": "Stage"
+                }
             },
             "Type": "AWS::ApiGateway::Deployment"
         },

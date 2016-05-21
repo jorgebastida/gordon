@@ -1,4 +1,11 @@
 {
+    "Outputs": {
+        "ClioutputLambdaHelloworldHellopy": {
+            "Value": {
+                "Ref": "HellopyCurrentalias"
+            }
+        }
+    },
     "Parameters": {
         "CodeBucket": {
             "Description": "Bucket where the code is located.",

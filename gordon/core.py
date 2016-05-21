@@ -57,7 +57,7 @@ class BaseResourceContainer(object):
                 }
 
                 with indent(4 if hasattr(self, 'project') else 2):
-                    puts(colored.green(u"✓ {}".format(name)))
+                    puts(colored.green(u"✓ {}:{}".format(resource_type, name)))
 
                 self._resources[resource_type].append(
                     resource_cls.factory(
@@ -266,7 +266,7 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
 
         if template:
             output_filename = output_filename.format(self._get_next_build_sequence_id())
-            puts(colored.cyan(u"✓ {}".format(output_filename)))
+            puts(colored.cyan(output_filename))
             with open(os.path.join(self.build_path, output_filename), 'w') as f:
                 f.write(template.to_json(indent=4))
 
@@ -284,7 +284,7 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
 
         template = utils.fix_troposphere_references(template)
 
-        puts(colored.cyan(u"✓ {}".format(output_filename)))
+        puts(colored.cyan(output_filename))
         with open(os.path.join(self.build_path, output_filename), 'w') as f:
             f.write(template.to_json())
 
@@ -300,7 +300,7 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
 
         if template:
             output_filename = output_filename.format(self._get_next_build_sequence_id())
-            puts(colored.cyan(u"✓ {}".format(output_filename)))
+            puts(colored.cyan(output_filename))
             with open(os.path.join(self.build_path, output_filename), 'w') as f:
                 f.write(template.to_json(indent=4))
 
@@ -319,7 +319,7 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
 
         if template and template.resources:
             output_filename = output_filename.format(self._get_next_build_sequence_id())
-            puts(colored.cyan(u"✓ {}".format(output_filename)))
+            puts(colored.cyan(output_filename))
             with open(os.path.join(self.build_path, output_filename), 'w') as f:
                 f.write(template.to_json())
 
@@ -336,7 +336,7 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
 
         if template:
             output_filename = output_filename.format(self._get_next_build_sequence_id())
-            puts(colored.cyan(u"✓ {}".format(output_filename)))
+            puts(colored.cyan(output_filename))
             with open(os.path.join(self.build_path, output_filename), 'w') as f:
                 f.write(template.to_json(indent=4))
 
@@ -390,6 +390,14 @@ class ProjectApply(BaseProject):
                 if self.debug:
                     puts(colored.white(u"✸ Applying template {} with context {}".format(filename, context)))
                 getattr(self, 'apply_{}_template'.format(template_type))(name, filename, context)
+
+        puts(colored.blue("Project Outputs:"))
+        for k, v in context.iteritems():
+            if k.startswith('Clioutput'):
+                with indent(2):
+                    puts(colored.cyan(k[9:]))
+                with indent(4):
+                    puts(colored.green(v))
 
     def collect_parameters(self):
         """Collect parameters from both the ``common.yml`` parameters file and

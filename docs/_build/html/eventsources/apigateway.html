@@ -52,6 +52,7 @@ before continuing.</p>
 
   <span class="p-Indicator">{</span> <span class="nv">API_NAME</span> <span class="p-Indicator">}:</span>
     <span class="l-Scalar-Plain">description</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">STRING</span> <span class="p-Indicator">}</span>
+    <span class="l-Scalar-Plain">cli-output</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">BOOLEAN</span> <span class="p-Indicator">}</span>
     <span class="l-Scalar-Plain">resources</span><span class="p-Indicator">:</span>
       <span class="p-Indicator">{</span> <span class="nv">URL</span> <span class="p-Indicator">}:</span>
           <span class="l-Scalar-Plain">methods</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">LIST</span> <span class="p-Indicator">}</span>
@@ -119,6 +120,32 @@ before continuing.</p>
 </tr>
 <tr class="row-even"><td>Description</td>
 <td>Description of your api</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="cli-output">
+<h3>cli-output<a class="headerlink" href="#cli-output" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">cli-output</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>Default</td>
+<td>True</td>
+</tr>
+<tr class="row-even"><td>Valid types</td>
+<td><code class="docutils literal"><span class="pre">boolean</span></code></td>
+</tr>
+<tr class="row-odd"><td>Description</td>
+<td>Output the deployment base URL as part of the <code class="docutils literal"><span class="pre">apply</span></code> output</td>
 </tr>
 </tbody>
 </table>
@@ -531,6 +558,7 @@ responses.</td>
 <li><a class="reference internal" href="#properties">Properties</a><ul>
 <li><a class="reference internal" href="#api-name">Api Name</a></li>
 <li><a class="reference internal" href="#description">Description</a></li>
+<li><a class="reference internal" href="#cli-output">cli-output</a></li>
 <li><a class="reference internal" href="#resources">Resources</a></li>
 <li><a class="reference internal" href="#resource-url">Resource URL</a></li>
 <li><a class="reference internal" href="#resource-methods">Resource Methods</a></li>

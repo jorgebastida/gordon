@@ -1,4 +1,11 @@
 {
+    "Outputs": {
+        "ClioutputLambdaExampleappKinesisconsumer": {
+            "Value": {
+                "Ref": "KinesisconsumerCurrentalias"
+            }
+        }
+    },
     "Parameters": {
         "CodeBucket": {
             "Description": "Bucket where the code is located.",
@@ -95,10 +102,7 @@
                     "Ref": "KinesisIntegrationArn"
                 },
                 "FunctionName": {
-                    "Fn::GetAtt": [
-                        "KinesisconsumerCurrentalias",
-                        "Arn"
-                    ]
+                    "Ref": "KinesisconsumerCurrentalias"
                 },
                 "StartingPosition": "LATEST"
             },
@@ -110,10 +114,7 @@
             ],
             "Properties": {
                 "ServiceToken": {
-                    "Fn::GetAtt": [
-                        "SleepCurrentalias",
-                        "Arn"
-                    ]
+                    "Ref": "SleepCurrentalias"
                 },
                 "Time": 30
             },
@@ -148,6 +149,9 @@
             "Type": "AWS::Lambda::Function"
         },
         "KinesisconsumerCurrentalias": {
+            "DependsOn": [
+                "KinesisconsumerVersion"
+            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "ExampleappKinesisconsumer"
@@ -231,7 +235,8 @@
         },
         "KinesisconsumerVersion": {
             "DependsOn": [
-                "VersionCurrentalias"
+                "VersionCurrentalias",
+                "ExampleappKinesisconsumer"
             ],
             "Properties": {
                 "FunctionName": {
@@ -247,6 +252,9 @@
             "Type": "Custom::LambdaVersion"
         },
         "SleepCurrentalias": {
+            "DependsOn": [
+                "SleepVersion"
+            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "ContribHelpersSleep"
@@ -312,7 +320,8 @@
         },
         "SleepVersion": {
             "DependsOn": [
-                "VersionCurrentalias"
+                "VersionCurrentalias",
+                "ContribHelpersSleep"
             ],
             "Properties": {
                 "FunctionName": {
@@ -328,6 +337,9 @@
             "Type": "Custom::LambdaVersion"
         },
         "VersionCurrentalias": {
+            "DependsOn": [
+                "VersionVersion"
+            ],
             "Properties": {
                 "FunctionName": {
                     "Ref": "ContribLambdasVersion"
@@ -409,6 +421,7 @@
         },
         "VersionVersion": {
             "DependsOn": [
+                "ContribLambdasVersion",
                 "ContribLambdasVersion"
             ],
             "Properties": {

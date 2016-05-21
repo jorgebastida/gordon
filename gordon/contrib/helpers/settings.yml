@@ -5,3 +5,4 @@ lambdas:
     runtime: python2.7
     description: Sleeps several seconds before succeeding.
     timeout: 300
+    cli-output: False

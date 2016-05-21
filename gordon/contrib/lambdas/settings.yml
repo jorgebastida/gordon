@@ -6,6 +6,7 @@ lambdas:
     runtime: python2.7
     description: Publishes new versions of Lambdas.
     timeout: 300
+    cli-output: False
     policies:
       manage_version:
         Version: "2012-10-17"
