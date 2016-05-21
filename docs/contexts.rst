@@ -42,13 +42,53 @@ In the following example, we use python to read this file.
 .. code-block:: python
 
     import json
-    print('Loading function')
-
-    with open('.context', 'r') as f:
-        gordon_context = json.loads(f.read())
 
     def handler(event, context):
+        with open('.context', 'r') as f:
+            gordon_context = json.loads(f.read())
         return gordon_context['database_host']  # Echo the database host
+
+Same example, but written in Javascript:
+
+.. code-block:: javascript
+
+    var gordon_context = JSON.parse(require('fs').readFileSync('.context', 'utf8'));
+
+    exports.handler = function(event, context) {
+        context.succeed(gordon_context['database_host']);  // Echo the database host
+
+    };
+
+And Java:
+
+.. code-block:: java
+
+    // Remember to add 'org.json:json:20160212' to your gradle file
+    package example;
+
+    import java.io.FileNotFoundException;
+    import java.util.Scanner;
+    import java.io.File;
+    import com.amazonaws.services.lambda.runtime.Context;
+    import org.json.JSONObject;
+
+
+    public class Hello {
+
+        public static class EventClass {
+            public EventClass() {}
+        }
+
+        public String handler(EventClass event, Context context) throws FileNotFoundException{
+            JSONObject gordon_context = new JSONObject(
+                new Scanner(new File(".context")).useDelimiter("\\A").next()
+            );
+            return gordon_context.getString("database_host");
+        }
+
+    }
+
+
 
 Advanced contexts
 -------------------------

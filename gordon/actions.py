@@ -243,17 +243,18 @@ class InjectContextAndUploadToS3(UploadToS3):
 
     properties = UploadToS3.properties + (
         ('context_to_inject', None, False),
+        ('context_destinaton', None, False),
     )
 
     def prepare_file(self, filename):
         context_to_inject = enrich_references(self.context_to_inject or {}, self.context)
+        context_destinaton = self.context_destinaton or '.context'
         _, tmpfile = tempfile.mkstemp(suffix='.{}'.format(self.filename.rsplit('.', 1)[1]))
         shutil.copyfile(self.filename, tmpfile)
         zfile = zipfile.ZipFile(tmpfile, 'a')
 
-        context_info = zipfile.ZipInfo('.context')
-        context_info.external_attr = 0440 << 16L
+        context_info = zipfile.ZipInfo(context_destinaton)
+        context_info.external_attr = 0444 << 16L
         zfile.writestr(context_info, json.dumps(context_to_inject))
         zfile.close()
-
         return tmpfile

@@ -91,6 +91,7 @@ The following is the anatomy of a lambda in gordon.
       role: { MAP }
       vpc: { STRING }
       context: { CONTEXT_NAME }
+      context-destination: { PATH }
       auto-vpc-policy: { BOOLEAN }
       auto-run-policy: { BOOLEAN }
       cli-output: { BOOLEAN }
@@ -499,6 +500,27 @@ For more information about contexts you can read about them in :doc:`contexts`.
     hello_world:
       code: functions.py
       context: context_name
+
+
+context-destination
+^^^^^^^^^^^^^^^^^^^^^
+
+===========================  ============================================================================================================
+Name                         ``context-destination``
+Required                     No
+default                      ``.context``
+Valid types                  ``string``
+Description                  Path where gordon should put the context json file.
+===========================  ============================================================================================================
+
+For more information about contexts you can read about them in :doc:`contexts`.
+
+.. code-block:: yaml
+
+  lambdas:
+    hello_world:
+      code: functions.py
+      context-destination: my-customize-context-file.json
 
 
 cli-output

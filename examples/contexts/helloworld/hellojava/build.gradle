@@ -1,0 +1,24 @@
+apply plugin: 'java'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile (
+        'com.amazonaws:aws-lambda-java-core:1.1.0',
+        'com.amazonaws:aws-lambda-java-events:1.1.0',
+        'org.json:json:20160212'
+    )
+}
+
+task buildLambda(type: Copy) {
+    from compileJava
+    from processResources
+    into('lib') {
+        from configurations.runtime
+    }
+    into target
+}
+
+build.dependsOn buildLambda

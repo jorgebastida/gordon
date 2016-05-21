@@ -68,13 +68,47 @@ you read that file on run time using your language of choice.</p>
 <p>After doing this, Gordon will leave a <code class="docutils literal"><span class="pre">.context</span></code> JSON file at the root of your lambda package. You can use your language of choice to read and use it.</p>
 <p>In the following example, we use python to read this file.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">json</span>
-<span class="k">print</span><span class="p">(</span><span class="s">&#39;Loading function&#39;</span><span class="p">)</span>
-
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;.context&#39;</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-    <span class="n">gordon_context</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
 
 <span class="k">def</span> <span class="nf">handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;.context&#39;</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">gordon_context</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
     <span class="k">return</span> <span class="n">gordon_context</span><span class="p">[</span><span class="s">&#39;database_host&#39;</span><span class="p">]</span>  <span class="c"># Echo the database host</span>
+</pre></div>
+</div>
+<p>Same example, but written in Javascript:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">gordon_context</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fs&#39;</span><span class="p">).</span><span class="nx">readFileSync</span><span class="p">(</span><span class="s1">&#39;.context&#39;</span><span class="p">,</span> <span class="s1">&#39;utf8&#39;</span><span class="p">));</span>
+
+<span class="nx">exports</span><span class="p">.</span><span class="nx">handler</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">,</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">context</span><span class="p">.</span><span class="nx">succeed</span><span class="p">(</span><span class="nx">gordon_context</span><span class="p">[</span><span class="s1">&#39;database_host&#39;</span><span class="p">]);</span>  <span class="c1">// Echo the database host</span>
+
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>And Java:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="c1">// Remember to add &#39;org.json:json:20160212&#39; to your gradle file</span>
+<span class="kn">package</span> <span class="nn">example</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.io.FileNotFoundException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Scanner</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.File</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.amazonaws.services.lambda.runtime.Context</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.json.JSONObject</span><span class="o">;</span>
+
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Hello</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">EventClass</span> <span class="o">{</span>
+        <span class="kd">public</span> <span class="nf">EventClass</span><span class="o">()</span> <span class="o">{}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">handler</span><span class="o">(</span><span class="n">EventClass</span> <span class="n">event</span><span class="o">,</span> <span class="n">Context</span> <span class="n">context</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">FileNotFoundException</span><span class="o">{</span>
+        <span class="n">JSONObject</span> <span class="n">gordon_context</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JSONObject</span><span class="o">(</span>
+            <span class="k">new</span> <span class="n">Scanner</span><span class="o">(</span><span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="s">&quot;.context&quot;</span><span class="o">)).</span><span class="na">useDelimiter</span><span class="o">(</span><span class="s">&quot;\\A&quot;</span><span class="o">).</span><span class="na">next</span><span class="o">()</span>
+        <span class="o">);</span>
+        <span class="k">return</span> <span class="n">gordon_context</span><span class="o">.</span><span class="na">getString</span><span class="o">(</span><span class="s">&quot;database_host&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
 </pre></div>
 </div>
 </div>

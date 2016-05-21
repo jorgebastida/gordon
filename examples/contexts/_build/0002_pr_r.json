@@ -1,15 +1,5 @@
 {
     "outputs": {
-        "HellopyS3Version": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "HellopyS3Version", 
-            "value": {
-                "action": "hellopy-upload", 
-                "_type": "GetAttr", 
-                "attr": "s3version"
-            }
-        }, 
         "VersionS3Version": {
             "default": "", 
             "_type": "Output", 
@@ -20,6 +10,16 @@
                 "attr": "s3version"
             }
         }, 
+        "HellojsS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "HellojsS3Url", 
+            "value": {
+                "action": "hellojs-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }, 
         "HellopyS3Url": {
             "default": "", 
             "_type": "Output", 
@@ -28,6 +28,46 @@
                 "action": "hellopy-upload", 
                 "_type": "GetAttr", 
                 "attr": "s3url"
+            }
+        }, 
+        "HellojsS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "HellojsS3Version", 
+            "value": {
+                "action": "hellojs-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
+        "HellopyS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "HellopyS3Version", 
+            "value": {
+                "action": "hellopy-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
+        "HellojavaS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "HellojavaS3Url", 
+            "value": {
+                "action": "hellojava-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }, 
+        "HellojavaS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "HellojavaS3Version", 
+            "value": {
+                "action": "hellojava-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
             }
         }, 
         "VersionS3Url": {
@@ -59,7 +99,46 @@
                 }, 
                 "b": "value_b"
             }, 
+            "context_destinaton": ".context", 
             "key": "contrib_lambdas_version.zip"
+        }, 
+        {
+            "_type": "InjectContextAndUploadToS3", 
+            "name": "hellojava-upload", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "filename": "code/helloworld_hellojava.zip", 
+            "context_to_inject": {
+                "a": "value_a", 
+                "c": {
+                    "_type": "Ref", 
+                    "name": "ImagesBucket"
+                }, 
+                "b": "value_b"
+            }, 
+            "context_destinaton": ".context", 
+            "key": "helloworld_hellojava.zip"
+        }, 
+        {
+            "_type": "InjectContextAndUploadToS3", 
+            "name": "hellojs-upload", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "filename": "code/helloworld_hellojs.zip", 
+            "context_to_inject": {
+                "a": "value_a", 
+                "c": {
+                    "_type": "Ref", 
+                    "name": "ImagesBucket"
+                }, 
+                "b": "value_b"
+            }, 
+            "context_destinaton": ".context", 
+            "key": "helloworld_hellojs.zip"
         }, 
         {
             "_type": "InjectContextAndUploadToS3", 
@@ -77,6 +156,7 @@
                 }, 
                 "b": "value_b"
             }, 
+            "context_destinaton": ".context", 
             "key": "helloworld_hellopy.zip"
         }
     ], 

@@ -140,6 +140,7 @@ needing to re-configure all related event sources.</p>
     <span class="l-Scalar-Plain">role</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">MAP</span> <span class="p-Indicator">}</span>
     <span class="l-Scalar-Plain">vpc</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">STRING</span> <span class="p-Indicator">}</span>
     <span class="l-Scalar-Plain">context</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">CONTEXT_NAME</span> <span class="p-Indicator">}</span>
+    <span class="l-Scalar-Plain">context-destination</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">PATH</span> <span class="p-Indicator">}</span>
     <span class="l-Scalar-Plain">auto-vpc-policy</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">BOOLEAN</span> <span class="p-Indicator">}</span>
     <span class="l-Scalar-Plain">auto-run-policy</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">BOOLEAN</span> <span class="p-Indicator">}</span>
     <span class="l-Scalar-Plain">cli-output</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">BOOLEAN</span> <span class="p-Indicator">}</span>
@@ -725,6 +726,39 @@ to do this by yourself.</p>
 </pre></div>
 </div>
 </div>
+<div class="section" id="context-destination">
+<h3>context-destination<a class="headerlink" href="#context-destination" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">context-destination</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>default</td>
+<td><code class="docutils literal"><span class="pre">.context</span></code></td>
+</tr>
+<tr class="row-even"><td>Valid types</td>
+<td><code class="docutils literal"><span class="pre">string</span></code></td>
+</tr>
+<tr class="row-odd"><td>Description</td>
+<td>Path where gordon should put the context json file.</td>
+</tr>
+</tbody>
+</table>
+<p>For more information about contexts you can read about them in <a class="reference internal" href="contexts.html"><em>Contexts</em></a>.</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">lambdas</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">hello_world</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">functions.py</span>
+    <span class="l-Scalar-Plain">context-destination</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">my-customize-context-file.json</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="cli-output">
 <h3>cli-output<a class="headerlink" href="#cli-output" title="Permalink to this headline">¶</a></h3>
 <table border="1" class="docutils">
@@ -926,6 +960,7 @@ access the vpc. If it is <code class="docutils literal"><span class="pre">False<
 <li><a class="reference internal" href="#role">role</a></li>
 <li><a class="reference internal" href="#vpc">vpc</a></li>
 <li><a class="reference internal" href="#context">context</a></li>
+<li><a class="reference internal" href="#context-destination">context-destination</a></li>
 <li><a class="reference internal" href="#cli-output">cli-output</a></li>
 <li><a class="reference internal" href="#policies">policies</a></li>
 <li><a class="reference internal" href="#auto-vpc-policy">auto-vpc-policy</a></li>

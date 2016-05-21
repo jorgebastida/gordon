@@ -80,6 +80,9 @@ class Lambda(base.BaseResource):
     def get_context_key(self):
         return self.settings.get('context', 'default')
 
+    def get_context_destination(self):
+        return self.settings.get('context-destinaton', '.context')
+
     def _get_policies(self):
         """Returns a list of policies to attach to the IAM Role of this Lambda.
         Users can add more policies to this Role by defining policy documents
@@ -359,7 +362,8 @@ class Lambda(base.BaseResource):
                 bucket=actions.Ref(name='CodeBucket'),
                 key=self.get_bucket_key(),
                 filename=os.path.relpath(filename, self.project.build_path),
-                context_to_inject=context
+                context_to_inject=context,
+                context_destinaton=self.get_context_destination()
             )
         )
         template.add_output(

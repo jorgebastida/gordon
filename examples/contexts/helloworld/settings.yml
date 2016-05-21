@@ -1,3 +1,12 @@
 lambdas:
+
   hellopy:
     code: hellopy.py
+
+  hellojs:
+    code: hellojs.js
+
+  hellojava:
+    code: hellojava
+    runtime: java8
+    handler: example.Hello::handler
