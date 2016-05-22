@@ -10,10 +10,7 @@ apigateway:
     telegramexampleapi:
         description: My telegram API
         resources:
-            /my-python-bot-webhook:
-                methods: POST
-                integration:
-                    lambda: botapp.python_webhook
+
             /my-js-bot-webhook:
                 methods: POST
                 integration:

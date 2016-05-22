@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg width="731px" height="310px" viewBox="0 0 731 310" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+<svg width="731px" height="201px" viewBox="0 0 731 201" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
     <!-- Generator: Sketch 3.4.2 (15855) - http://www.bohemiancoding.com/sketch -->
     <title>telegram</title>
     <desc>Created with Sketch.</desc>
     <defs></defs>
     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
         <g id="telegram" sketch:type="MSArtboardGroup">
-            <g id="Oval-1-+-λ-+-A" sketch:type="MSLayerGroup" transform="translate(322.000000, 113.000000)">
+            <g id="Oval-1-+-λ-+-A" sketch:type="MSLayerGroup" transform="translate(327.000000, 65.000000)">
                 <g id="Oval-1-+-λ" fill="#DDCF17" sketch:type="MSShapeGroup">
                     <ellipse id="Oval-1" cx="44.151248" cy="44.840299" rx="44.151248" ry="44.840299"></ellipse>
                 </g>
@@ -14,17 +14,7 @@
                     <tspan x="22.4496222" y="64.6823511">A</tspan>
                 </text>
             </g>
-            <path d="M191.660283,90.6041191 L222.293807,90.6041191" id="Line" stroke="#979797" stroke-linecap="square" stroke-dasharray="3,3" sketch:type="MSShapeGroup"></path>
-            <g id="Oval-1-+-λ-+-py" sketch:type="MSLayerGroup" transform="translate(92.000000, 48.000000)">
-                <g id="Oval-1-+-λ" sketch:type="MSShapeGroup">
-                    <ellipse id="Oval-1" fill="#3E4349" cx="44.151248" cy="44.840299" rx="44.151248" ry="44.840299"></ellipse>
-                    <path d="M60.8017604,61.0154613 C61.1235,61.0154613 61.4351804,60.9950391 61.7368112,60.954194 C62.038442,60.9133489 62.3702309,60.8316599 62.7321879,60.7091246 L62.7321879,66.2844524 C61.9278391,66.7337485 61.1134482,67.0605044 60.2889907,67.2647298 C59.4645332,67.4689553 58.6702507,67.5710665 57.9061193,67.5710665 C56.0158997,67.5710665 54.5580394,67.1830439 53.5324947,66.4069871 C52.5069501,65.6309303 51.7729928,64.5281292 51.330601,63.0985508 L46.2029032,46.5563695 L46.0219256,46.5563695 L38.9638004,66.7133238 L29.7942702,66.7133238 L42.2817225,37.4275361 L39.8083624,31.423337 C39.406188,30.4838998 38.8733149,29.8814437 38.2097272,29.6159505 C37.5461395,29.3504574 36.751857,29.2177128 35.8268559,29.2177128 C34.8616373,29.2177128 33.8763249,29.3606685 32.8708889,29.6465842 L32.8708889,23.1522463 C33.79589,22.8663307 34.7309314,22.6825305 35.6760412,22.6008403 C36.621151,22.5191501 37.5159756,22.4783056 38.3605418,22.4783056 C39.7681522,22.4783056 40.9746573,22.6314724 41.9800932,22.9378107 C42.9855292,23.2441489 43.8702996,23.7342827 44.6344309,24.4082268 C45.3985622,25.0821709 46.0822485,25.9501161 46.68551,27.0120887 C47.2887716,28.0740612 47.8719157,29.3810846 48.4349599,30.9331983 L59.1126365,59.4837779 C59.3539411,60.1372994 59.6052963,60.5559554 59.8667097,60.7397583 C60.128123,60.9235613 60.4398035,61.0154613 60.8017604,61.0154613 L60.8017604,61.0154613 Z" id="λ" fill="#FFFFFF"></path>
-                </g>
-                <text id="py" sketch:type="MSTextLayer" font-family="Helvetica Neue" font-size="17.1673582" font-weight="bold" fill="#FFFFFF">
-                    <tspan x="59.4254706" y="49.1882135">py</tspan>
-                </text>
-            </g>
-            <g id="Oval-1-+-λ-+-js" sketch:type="MSLayerGroup" transform="translate(92.000000, 175.000000)">
+            <g id="Oval-1-+-λ-+-js" sketch:type="MSLayerGroup" transform="translate(107.000000, 65.000000)">
                 <g id="Oval-1-+-λ" sketch:type="MSShapeGroup">
                     <ellipse id="Oval-1" fill="#3E4349" cx="44.151248" cy="44.840299" rx="44.151248" ry="44.840299"></ellipse>
                     <path d="M60.8017604,61.0154613 C61.1235,61.0154613 61.4351804,60.9950391 61.7368112,60.954194 C62.038442,60.9133489 62.3702309,60.8316599 62.7321879,60.7091246 L62.7321879,66.2844524 C61.9278391,66.7337485 61.1134482,67.0605044 60.2889907,67.2647298 C59.4645332,67.4689553 58.6702507,67.5710665 57.9061193,67.5710665 C56.0158997,67.5710665 54.5580394,67.1830439 53.5324947,66.4069871 C52.5069501,65.6309303 51.7729928,64.5281292 51.330601,63.0985508 L46.2029032,46.5563695 L46.0219256,46.5563695 L38.9638004,66.7133238 L29.7942702,66.7133238 L42.2817225,37.4275361 L39.8083624,31.423337 C39.406188,30.4838998 38.8733149,29.8814437 38.2097272,29.6159505 C37.5461395,29.3504574 36.751857,29.2177128 35.8268559,29.2177128 C34.8616373,29.2177128 33.8763249,29.3606685 32.8708889,29.6465842 L32.8708889,23.1522463 C33.79589,22.8663307 34.7309314,22.6825305 35.6760412,22.6008403 C36.621151,22.5191501 37.5159756,22.4783056 38.3605418,22.4783056 C39.7681522,22.4783056 40.9746573,22.6314724 41.9800932,22.9378107 C42.9855292,23.2441489 43.8702996,23.7342827 44.6344309,24.4082268 C45.3985622,25.0821709 46.0822485,25.9501161 46.68551,27.0120887 C47.2887716,28.0740612 47.8719157,29.3810846 48.4349599,30.9331983 L59.1126365,59.4837779 C59.3539411,60.1372994 59.6052963,60.5559554 59.8667097,60.7397583 C60.128123,60.9235613 60.4398035,61.0154613 60.8017604,61.0154613 L60.8017604,61.0154613 Z" id="λ" fill="#FFFFFF"></path>
@@ -33,17 +23,8 @@
                     <tspan x="62.0666026" y="49.1882135">js</tspan>
                 </text>
             </g>
-            <path d="M281.5,220.5 L322.5,200.5" id="Line" stroke="#979797" stroke-linecap="square" stroke-dasharray="3,3" sketch:type="MSShapeGroup"></path>
-            <g id="Oval-1-+-λ-+-A" sketch:type="MSLayerGroup" transform="translate(233.000000, 72.000000)">
-                <g id="Oval-1-+-λ" fill="#F6A623" sketch:type="MSShapeGroup">
-                    <ellipse id="Oval-1" cx="19.8084902" cy="20.6991389" rx="19.8084902" ry="20.1176334"></ellipse>
-                </g>
-                <text id="R" sketch:type="MSTextLayer" font-family="Helvetica Neue" font-size="23.7701882" font-weight="bold" fill="#FFFFFF">
-                    <tspan x="11.8850941" y="28.3647022">R</tspan>
-                </text>
-            </g>
-            <path d="M281.660283,100.670588 L319.607946,122.700807" id="Line" stroke="#979797" stroke-linecap="square" stroke-dasharray="3,3" sketch:type="MSShapeGroup"></path>
-            <g id="Group" sketch:type="MSLayerGroup" transform="translate(539.000000, 98.000000)">
+            <path d="M295.5,109.5 L323.5,109.5" id="Line" stroke="#979797" stroke-linecap="square" stroke-dasharray="3,3" sketch:type="MSShapeGroup"></path>
+            <g id="Group" sketch:type="MSLayerGroup" transform="translate(537.000000, 54.000000)">
                 <rect id="Rectangle-1" fill="#F8F8F8" sketch:type="MSShapeGroup" x="0" y="0" width="170.595012" height="113.984006" rx="8"></rect>
                 <g id="Oval-1-+-λ-+-A" transform="translate(15.698927, 35.549518)">
                     <g id="Oval-1-+-λ" fill="#DDCF17" sketch:type="MSShapeGroup">
@@ -89,10 +70,10 @@
                 </text>
             </g>
             <text id="POST" sketch:type="MSTextLayer" font-family="Helvetica Neue" font-size="7.08045977" font-weight="260" fill="#C2C2C2">
-                <tspan x="199" y="218">POST</tspan>
+                <tspan x="211" y="104">POST</tspan>
             </text>
-            <path d="M191.660283,219.604119 L222.293807,219.604119" id="Line" stroke="#979797" stroke-linecap="square" stroke-dasharray="3,3" sketch:type="MSShapeGroup"></path>
-            <g id="Oval-1-+-λ-+-A" sketch:type="MSLayerGroup" transform="translate(233.000000, 200.000000)">
+            <path d="M198.660283,109.604119 L241.500126,109.604119" id="Line" stroke="#979797" stroke-linecap="square" stroke-dasharray="3,3" sketch:type="MSShapeGroup"></path>
+            <g id="Oval-1-+-λ-+-A" sketch:type="MSLayerGroup" transform="translate(248.000000, 89.000000)">
                 <g id="Oval-1-+-λ" fill="#F6A623" sketch:type="MSShapeGroup">
                     <ellipse id="Oval-1" cx="19.8084902" cy="20.6991389" rx="19.8084902" ry="20.1176334"></ellipse>
                 </g>
@@ -100,10 +81,7 @@
                     <tspan x="11.8850941" y="28.3647022">R</tspan>
                 </text>
             </g>
-            <text id="POST" sketch:type="MSTextLayer" font-family="Helvetica Neue" font-size="7.08045977" font-weight="260" fill="#C2C2C2">
-                <tspan x="199" y="87">POST</tspan>
-            </text>
-            <g id="Oval-1-+-λ-+-A" sketch:type="MSLayerGroup" transform="translate(9.000000, 134.000000)">
+            <g id="Oval-1-+-λ-+-A" sketch:type="MSLayerGroup" transform="translate(17.000000, 82.000000)">
                 <g id="Oval-1-+-λ" fill="#4990E2" sketch:type="MSShapeGroup">
                     <ellipse id="Oval-1" cx="27.9444839" cy="27.9444839" rx="27.9444839" ry="27.9444839"></ellipse>
                 </g>
@@ -111,7 +89,7 @@
                     <tspan x="16" y="44">T</tspan>
                 </text>
             </g>
-            <g id="Oval-1-+-λ-+-A" sketch:type="MSLayerGroup" transform="translate(443.000000, 127.000000)">
+            <g id="Oval-1-+-λ-+-A" sketch:type="MSLayerGroup" transform="translate(451.000000, 82.000000)">
                 <g id="Oval-1-+-λ" fill="#4990E2" sketch:type="MSShapeGroup">
                     <ellipse id="Oval-1" cx="27.9444839" cy="27.9444839" rx="27.9444839" ry="27.9444839"></ellipse>
                 </g>
@@ -119,9 +97,8 @@
                     <tspan x="16" y="44">T</tspan>
                 </text>
             </g>
-            <path d="M58.5,137.5 L86.5,118.5" id="Line" stroke="#979797" stroke-linecap="square" stroke-dasharray="3,3" sketch:type="MSShapeGroup"></path>
-            <path d="M51.5,199.5 L84.5,229.5" id="Line" stroke="#979797" stroke-linecap="square" stroke-dasharray="3,3" sketch:type="MSShapeGroup"></path>
-            <path d="M416.660283,156.670588 L437.338688,156.670588" id="Line" stroke="#979797" stroke-linecap="square" stroke-dasharray="3,3" sketch:type="MSShapeGroup"></path>
+            <path d="M76.4260272,109.5 L103.5,109.5" id="Line" stroke="#979797" stroke-linecap="square" stroke-dasharray="3,3" sketch:type="MSShapeGroup"></path>
+            <path d="M418.660283,109.670588 L439.338688,109.670588" id="Line" stroke="#979797" stroke-linecap="square" stroke-dasharray="3,3" sketch:type="MSShapeGroup"></path>
         </g>
     </g>
 </svg>
