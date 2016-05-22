@@ -1,7 +1,7 @@
 Gordon Cron Example
 ===========================
 
-![gordon](http://gordondoc.s3-website-eu-west-1.amazonaws.com/_static/examples/contexts.svg)
+![gordon](http://gordondoc.s3-website-eu-west-1.amazonaws.com/_static/examples/cron.svg)
 
 This simple project defines one lambda called ``hellopy``, and two CloudWatch rules called
 ``every_night`` and ``update_dns``.
