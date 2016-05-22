@@ -7,5 +7,5 @@ def handler(event, context):
     with open('.context', 'r') as f:
         gordon_context = json.loads(f.read())
 
-    print("CONTEXT = " + unicode(gordon_context))
-    return gordon_context['c']
+    print(unicode(gordon_context))
+    return gordon_context['bucket']

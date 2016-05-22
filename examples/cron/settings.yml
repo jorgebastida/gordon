@@ -8,7 +8,7 @@ apps:
 
 events:
   every_night:
-    schedule_expression: rate(5 minutes)
+    schedule_expression: cron(0 0 * * ? *)
     targets:
         say_hello:
             lambda: helloworld.hellopy

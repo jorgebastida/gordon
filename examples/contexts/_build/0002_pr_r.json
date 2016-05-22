@@ -92,12 +92,18 @@
             }, 
             "filename": "code/contrib_lambdas_version.zip", 
             "context_to_inject": {
-                "a": "value_a", 
-                "c": {
+                "username": {
+                    "_type": "Ref", 
+                    "name": "Username"
+                }, 
+                "password": {
+                    "_type": "Ref", 
+                    "name": "Password"
+                }, 
+                "bucket": {
                     "_type": "Ref", 
                     "name": "ImagesBucket"
-                }, 
-                "b": "value_b"
+                }
             }, 
             "context_destinaton": ".context", 
             "key": "contrib_lambdas_version.zip"
@@ -111,12 +117,18 @@
             }, 
             "filename": "code/helloworld_hellojava.zip", 
             "context_to_inject": {
-                "a": "value_a", 
-                "c": {
+                "username": {
+                    "_type": "Ref", 
+                    "name": "Username"
+                }, 
+                "password": {
+                    "_type": "Ref", 
+                    "name": "Password"
+                }, 
+                "bucket": {
                     "_type": "Ref", 
                     "name": "ImagesBucket"
-                }, 
-                "b": "value_b"
+                }
             }, 
             "context_destinaton": ".context", 
             "key": "helloworld_hellojava.zip"
@@ -130,12 +142,18 @@
             }, 
             "filename": "code/helloworld_hellojs.zip", 
             "context_to_inject": {
-                "a": "value_a", 
-                "c": {
+                "username": {
+                    "_type": "Ref", 
+                    "name": "Username"
+                }, 
+                "password": {
+                    "_type": "Ref", 
+                    "name": "Password"
+                }, 
+                "bucket": {
                     "_type": "Ref", 
                     "name": "ImagesBucket"
-                }, 
-                "b": "value_b"
+                }
             }, 
             "context_destinaton": ".context", 
             "key": "helloworld_hellojs.zip"
@@ -149,12 +167,18 @@
             }, 
             "filename": "code/helloworld_hellopy.zip", 
             "context_to_inject": {
-                "a": "value_a", 
-                "c": {
+                "username": {
+                    "_type": "Ref", 
+                    "name": "Username"
+                }, 
+                "password": {
+                    "_type": "Ref", 
+                    "name": "Password"
+                }, 
+                "bucket": {
                     "_type": "Ref", 
                     "name": "ImagesBucket"
-                }, 
-                "b": "value_b"
+                }
             }, 
             "context_destinaton": ".context", 
             "key": "helloworld_hellopy.zip"
