@@ -10,6 +10,9 @@ javascript or a build tool for java better than the existing ones.
 For that reason we try to respect as much as possible each runtime *de facto*
 package managers / build tools.
 
+That is the reason why the default ``build`` implementation for each kind
+of runtime uses ``pip``, ``npm`` and ``graddle``. If you want to know more
+about the ``build`` property of lambdas you can read :ref:`Lambda: build <lambda-build>`.
 
 .. note::
 

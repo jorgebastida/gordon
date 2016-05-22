@@ -46,6 +46,9 @@ in their languages. We are not going to come up with a package manager for
 javascript or a build tool for java better than the existing ones.</p>
 <p>For that reason we try to respect as much as possible each runtime <em>de facto</em>
 package managers / build tools.</p>
+<p>That is the reason why the default <code class="docutils literal"><span class="pre">build</span></code> implementation for each kind
+of runtime uses <code class="docutils literal"><span class="pre">pip</span></code>, <code class="docutils literal"><span class="pre">npm</span></code> and <code class="docutils literal"><span class="pre">graddle</span></code>. If you want to know more
+about the <code class="docutils literal"><span class="pre">build</span></code> property of lambdas you can read <a class="reference internal" href="lambdas.html#lambda-build"><span>Lambda: build</span></a>.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">For using this functionality, you&#8217;ll need to make the <code class="docutils literal"><span class="pre">code</span></code> path for you lambda be a directory. For more information you can read the <code class="docutils literal"><span class="pre">code</span></code> section in <a class="reference internal" href="lambdas.html"><em>Lambdas</em></a>.</p>

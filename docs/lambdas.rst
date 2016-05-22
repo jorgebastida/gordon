@@ -307,6 +307,8 @@ Description                  Human-readable description for your lambda.
       description: This is a really simple function which says hello
 
 
+.. _lambda-build:
+
 build
 ^^^^^^^^^^^^^^^^^^^^^^
 
