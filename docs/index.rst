@@ -23,10 +23,8 @@ Your first steps using gordon.
    quickstart
 
 
-In detail
-----------
-
-In detail explanations of how everything works together.
+Documentation
+---------------
 
 .. toctree::
    :maxdepth: 2
@@ -34,12 +32,22 @@ In detail explanations of how everything works together.
    project
    apps
    lambdas
-   eventsources
    requirements
-   settings
+   eventsources
    parameters
-   parameters_advanced
    contexts
+
+
+In detail
+----------
+
+In detail explanations and advanced use cases.
+
+.. toctree::
+   :maxdepth: 2
+
+   settings
+   parameters_advanced
    contrib
    setup_aws
    faq

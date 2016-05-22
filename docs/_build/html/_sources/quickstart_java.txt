@@ -5,6 +5,9 @@ Now that you have Gordon installed, let's create our first project. Before doing
 
 A Gordon project consist in one or more applications. The term application describes a directory that provides some set of features. Applications may be reused in various projects.
 
+Requirements for Java lambdas:
+ * ``gradle``: http://gradle.org/gradle-download/
+
 Creating a project
 ------------------
 
