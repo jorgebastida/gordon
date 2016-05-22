@@ -21,6 +21,11 @@
                 ]
             }
         },
+        "ClioutputLambdaHelloworldHellojs": {
+            "Value": {
+                "Ref": "HellojsCurrentalias"
+            }
+        },
         "ClioutputLambdaHelloworldHellopy": {
             "Value": {
                 "Ref": "HellopyCurrentalias"
@@ -30,6 +35,9 @@
     "Parameters": {
         "CodeBucket": {
             "Description": "Bucket where the code is located.",
+            "Type": "String"
+        },
+        "HellojsS3Version": {
             "Type": "String"
         },
         "HellopyS3Version": {
@@ -94,30 +102,57 @@
             },
             "Type": "AWS::ApiGateway::RestApi"
         },
-        "HelloapiDeploymentC16Ebd14": {
-            "DependsOn": [
-                "HelloapiMockGet",
-                "HelloapiHiGet",
-                "HelloapiHiPooGet",
-                "HelloapiExtraSuperLolPost",
-                "HelloapiExtraSuperLolGet",
-                "HelloapiPost",
-                "HelloapiGet",
-                "HelloapiHiPoo2Get",
-                "HelloapiHttpGet",
-                "HelloapiHiLanguageGet"
-            ],
+        "Helloapi404Get": {
             "Properties": {
+                "AuthorizationType": "NONE",
+                "HttpMethod": "GET",
+                "Integration": {
+                    "Credentials": {
+                        "Fn::GetAtt": [
+                            "HelloapiRole",
+                            "Arn"
+                        ]
+                    },
+                    "IntegrationHttpMethod": "POST",
+                    "IntegrationResponses": [
+                        {
+                            "SelectionPattern": "",
+                            "StatusCode": "404"
+                        }
+                    ],
+                    "Type": "AWS",
+                    "Uri": {
+                        "Fn::Join": [
+                            "",
+                            [
+                                "arn:aws:apigateway:",
+                                {
+                                    "Ref": "AWS::Region"
+                                },
+                                ":lambda:path/2015-03-31/functions/",
+                                {
+                                    "Ref": "HellopyCurrentalias"
+                                },
+                                "/invocations?Qualifier=current"
+                            ]
+                        ]
+                    }
+                },
+                "MethodResponses": [
+                    {
+                        "StatusCode": "404"
+                    }
+                ],
+                "ResourceId": {
+                    "Ref": "HelloapiResource404"
+                },
                 "RestApiId": {
                     "Ref": "Helloapi"
-                },
-                "StageName": {
-                    "Ref": "Stage"
                 }
             },
-            "Type": "AWS::ApiGateway::Deployment"
+            "Type": "AWS::ApiGateway::Method"
         },
-        "HelloapiExtraSuperLolGet": {
+        "HelloapiComplexImplementationGet": {
             "Properties": {
                 "AuthorizationType": "NONE",
                 "HttpMethod": "GET",
@@ -159,7 +194,7 @@
                     }
                 ],
                 "ResourceId": {
-                    "Ref": "HelloapiResourceExtraSuperLol"
+                    "Ref": "HelloapiResourceComplexImplementation"
                 },
                 "RestApiId": {
                     "Ref": "Helloapi"
@@ -167,7 +202,7 @@
             },
             "Type": "AWS::ApiGateway::Method"
         },
-        "HelloapiExtraSuperLolPost": {
+        "HelloapiComplexImplementationPost": {
             "Properties": {
                 "AuthorizationType": "NONE",
                 "HttpMethod": "POST",
@@ -196,7 +231,7 @@
                                 },
                                 ":lambda:path/2015-03-31/functions/",
                                 {
-                                    "Ref": "HellopyCurrentalias"
+                                    "Ref": "HellojsCurrentalias"
                                 },
                                 "/invocations?Qualifier=current"
                             ]
@@ -209,13 +244,35 @@
                     }
                 ],
                 "ResourceId": {
-                    "Ref": "HelloapiResourceExtraSuperLol"
+                    "Ref": "HelloapiResourceComplexImplementation"
                 },
                 "RestApiId": {
                     "Ref": "Helloapi"
                 }
             },
             "Type": "AWS::ApiGateway::Method"
+        },
+        "HelloapiDeployment09395844": {
+            "DependsOn": [
+                "Helloapi404Get",
+                "HelloapiMockGet",
+                "HelloapiShopItemGet",
+                "HelloapiComplexImplementationPost",
+                "HelloapiComplexImplementationGet",
+                "HelloapiPost",
+                "HelloapiGet",
+                "HelloapiHiFromJsGet",
+                "HelloapiHttpGet"
+            ],
+            "Properties": {
+                "RestApiId": {
+                    "Ref": "Helloapi"
+                },
+                "StageName": {
+                    "Ref": "Stage"
+                }
+            },
+            "Type": "AWS::ApiGateway::Deployment"
         },
         "HelloapiGet": {
             "Properties": {
@@ -270,7 +327,7 @@
             },
             "Type": "AWS::ApiGateway::Method"
         },
-        "HelloapiHiGet": {
+        "HelloapiHiFromJsGet": {
             "Properties": {
                 "AuthorizationType": "NONE",
                 "HttpMethod": "GET",
@@ -299,7 +356,7 @@
                                 },
                                 ":lambda:path/2015-03-31/functions/",
                                 {
-                                    "Ref": "HellopyCurrentalias"
+                                    "Ref": "HellojsCurrentalias"
                                 },
                                 "/invocations?Qualifier=current"
                             ]
@@ -312,157 +369,7 @@
                     }
                 ],
                 "ResourceId": {
-                    "Ref": "HelloapiResourceHi"
-                },
-                "RestApiId": {
-                    "Ref": "Helloapi"
-                }
-            },
-            "Type": "AWS::ApiGateway::Method"
-        },
-        "HelloapiHiLanguageGet": {
-            "Properties": {
-                "AuthorizationType": "NONE",
-                "HttpMethod": "GET",
-                "Integration": {
-                    "Credentials": {
-                        "Fn::GetAtt": [
-                            "HelloapiRole",
-                            "Arn"
-                        ]
-                    },
-                    "IntegrationHttpMethod": "POST",
-                    "IntegrationResponses": [
-                        {
-                            "SelectionPattern": "",
-                            "StatusCode": "200"
-                        }
-                    ],
-                    "Type": "AWS",
-                    "Uri": {
-                        "Fn::Join": [
-                            "",
-                            [
-                                "arn:aws:apigateway:",
-                                {
-                                    "Ref": "AWS::Region"
-                                },
-                                ":lambda:path/2015-03-31/functions/",
-                                {
-                                    "Ref": "HellopyCurrentalias"
-                                },
-                                "/invocations?Qualifier=current"
-                            ]
-                        ]
-                    }
-                },
-                "MethodResponses": [
-                    {
-                        "StatusCode": "200"
-                    }
-                ],
-                "ResourceId": {
-                    "Ref": "HelloapiResourceHiLanguage"
-                },
-                "RestApiId": {
-                    "Ref": "Helloapi"
-                }
-            },
-            "Type": "AWS::ApiGateway::Method"
-        },
-        "HelloapiHiPoo2Get": {
-            "Properties": {
-                "AuthorizationType": "NONE",
-                "HttpMethod": "GET",
-                "Integration": {
-                    "Credentials": {
-                        "Fn::GetAtt": [
-                            "HelloapiRole",
-                            "Arn"
-                        ]
-                    },
-                    "IntegrationHttpMethod": "POST",
-                    "IntegrationResponses": [
-                        {
-                            "SelectionPattern": "",
-                            "StatusCode": "200"
-                        }
-                    ],
-                    "Type": "AWS",
-                    "Uri": {
-                        "Fn::Join": [
-                            "",
-                            [
-                                "arn:aws:apigateway:",
-                                {
-                                    "Ref": "AWS::Region"
-                                },
-                                ":lambda:path/2015-03-31/functions/",
-                                {
-                                    "Ref": "HellopyCurrentalias"
-                                },
-                                "/invocations?Qualifier=current"
-                            ]
-                        ]
-                    }
-                },
-                "MethodResponses": [
-                    {
-                        "StatusCode": "200"
-                    }
-                ],
-                "ResourceId": {
-                    "Ref": "HelloapiResourceHiPoo2"
-                },
-                "RestApiId": {
-                    "Ref": "Helloapi"
-                }
-            },
-            "Type": "AWS::ApiGateway::Method"
-        },
-        "HelloapiHiPooGet": {
-            "Properties": {
-                "AuthorizationType": "NONE",
-                "HttpMethod": "GET",
-                "Integration": {
-                    "Credentials": {
-                        "Fn::GetAtt": [
-                            "HelloapiRole",
-                            "Arn"
-                        ]
-                    },
-                    "IntegrationHttpMethod": "POST",
-                    "IntegrationResponses": [
-                        {
-                            "SelectionPattern": "",
-                            "StatusCode": "404"
-                        }
-                    ],
-                    "Type": "AWS",
-                    "Uri": {
-                        "Fn::Join": [
-                            "",
-                            [
-                                "arn:aws:apigateway:",
-                                {
-                                    "Ref": "AWS::Region"
-                                },
-                                ":lambda:path/2015-03-31/functions/",
-                                {
-                                    "Ref": "HellopyCurrentalias"
-                                },
-                                "/invocations?Qualifier=current"
-                            ]
-                        ]
-                    }
-                },
-                "MethodResponses": [
-                    {
-                        "StatusCode": "404"
-                    }
-                ],
-                "ResourceId": {
-                    "Ref": "HelloapiResourceHiPoo"
+                    "Ref": "HelloapiResourceHiFromJs"
                 },
                 "RestApiId": {
                     "Ref": "Helloapi"
@@ -589,7 +496,7 @@
             },
             "Type": "AWS::ApiGateway::Method"
         },
-        "HelloapiResourceExtra": {
+        "HelloapiResource404": {
             "Properties": {
                 "ParentId": {
                     "Fn::GetAtt": [
@@ -597,38 +504,14 @@
                         "RootResourceId"
                     ]
                 },
-                "PathPart": "extra",
+                "PathPart": "404",
                 "RestApiId": {
                     "Ref": "Helloapi"
                 }
             },
             "Type": "AWS::ApiGateway::Resource"
         },
-        "HelloapiResourceExtraSuper": {
-            "Properties": {
-                "ParentId": {
-                    "Ref": "HelloapiResourceExtra"
-                },
-                "PathPart": "super",
-                "RestApiId": {
-                    "Ref": "Helloapi"
-                }
-            },
-            "Type": "AWS::ApiGateway::Resource"
-        },
-        "HelloapiResourceExtraSuperLol": {
-            "Properties": {
-                "ParentId": {
-                    "Ref": "HelloapiResourceExtraSuper"
-                },
-                "PathPart": "lol",
-                "RestApiId": {
-                    "Ref": "Helloapi"
-                }
-            },
-            "Type": "AWS::ApiGateway::Resource"
-        },
-        "HelloapiResourceHi": {
+        "HelloapiResourceComplex": {
             "Properties": {
                 "ParentId": {
                     "Fn::GetAtt": [
@@ -636,43 +519,34 @@
                         "RootResourceId"
                     ]
                 },
-                "PathPart": "hi",
+                "PathPart": "complex",
                 "RestApiId": {
                     "Ref": "Helloapi"
                 }
             },
             "Type": "AWS::ApiGateway::Resource"
         },
-        "HelloapiResourceHiLanguage": {
+        "HelloapiResourceComplexImplementation": {
             "Properties": {
                 "ParentId": {
-                    "Ref": "HelloapiResourceHi"
+                    "Ref": "HelloapiResourceComplex"
                 },
-                "PathPart": "{language}",
+                "PathPart": "implementation",
                 "RestApiId": {
                     "Ref": "Helloapi"
                 }
             },
             "Type": "AWS::ApiGateway::Resource"
         },
-        "HelloapiResourceHiPoo": {
+        "HelloapiResourceHiFromJs": {
             "Properties": {
                 "ParentId": {
-                    "Ref": "HelloapiResourceHi"
+                    "Fn::GetAtt": [
+                        "Helloapi",
+                        "RootResourceId"
+                    ]
                 },
-                "PathPart": "poo",
-                "RestApiId": {
-                    "Ref": "Helloapi"
-                }
-            },
-            "Type": "AWS::ApiGateway::Resource"
-        },
-        "HelloapiResourceHiPoo2": {
-            "Properties": {
-                "ParentId": {
-                    "Ref": "HelloapiResourceHi"
-                },
-                "PathPart": "poo2",
+                "PathPart": "hi-from-js",
                 "RestApiId": {
                     "Ref": "Helloapi"
                 }
@@ -703,6 +577,33 @@
                     ]
                 },
                 "PathPart": "mock",
+                "RestApiId": {
+                    "Ref": "Helloapi"
+                }
+            },
+            "Type": "AWS::ApiGateway::Resource"
+        },
+        "HelloapiResourceShop": {
+            "Properties": {
+                "ParentId": {
+                    "Fn::GetAtt": [
+                        "Helloapi",
+                        "RootResourceId"
+                    ]
+                },
+                "PathPart": "shop",
+                "RestApiId": {
+                    "Ref": "Helloapi"
+                }
+            },
+            "Type": "AWS::ApiGateway::Resource"
+        },
+        "HelloapiResourceShopItem": {
+            "Properties": {
+                "ParentId": {
+                    "Ref": "HelloapiResourceShop"
+                },
+                "PathPart": "{item}",
                 "RestApiId": {
                     "Ref": "Helloapi"
                 }
@@ -748,6 +649,141 @@
                 ]
             },
             "Type": "AWS::IAM::Role"
+        },
+        "HelloapiShopItemGet": {
+            "Properties": {
+                "AuthorizationType": "NONE",
+                "HttpMethod": "GET",
+                "Integration": {
+                    "Credentials": {
+                        "Fn::GetAtt": [
+                            "HelloapiRole",
+                            "Arn"
+                        ]
+                    },
+                    "IntegrationHttpMethod": "POST",
+                    "IntegrationResponses": [
+                        {
+                            "SelectionPattern": "",
+                            "StatusCode": "200"
+                        }
+                    ],
+                    "Type": "AWS",
+                    "Uri": {
+                        "Fn::Join": [
+                            "",
+                            [
+                                "arn:aws:apigateway:",
+                                {
+                                    "Ref": "AWS::Region"
+                                },
+                                ":lambda:path/2015-03-31/functions/",
+                                {
+                                    "Ref": "HellopyCurrentalias"
+                                },
+                                "/invocations?Qualifier=current"
+                            ]
+                        ]
+                    }
+                },
+                "MethodResponses": [
+                    {
+                        "StatusCode": "200"
+                    }
+                ],
+                "ResourceId": {
+                    "Ref": "HelloapiResourceShopItem"
+                },
+                "RestApiId": {
+                    "Ref": "Helloapi"
+                }
+            },
+            "Type": "AWS::ApiGateway::Method"
+        },
+        "HellojsCurrentalias": {
+            "DependsOn": [
+                "HellojsVersion"
+            ],
+            "Properties": {
+                "FunctionName": {
+                    "Ref": "HelloworldHellojs"
+                },
+                "FunctionVersion": {
+                    "Fn::GetAtt": [
+                        "HellojsVersion",
+                        "Version"
+                    ]
+                },
+                "Name": "current"
+            },
+            "Type": "AWS::Lambda::Alias"
+        },
+        "HellojsRole": {
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Statement": [
+                        {
+                            "Action": [
+                                "sts:AssumeRole"
+                            ],
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": [
+                                    "lambda.amazonaws.com"
+                                ]
+                            }
+                        }
+                    ],
+                    "Version": "2012-10-17"
+                },
+                "Policies": [
+                    {
+                        "PolicyDocument": {
+                            "Statement": [
+                                {
+                                    "Action": [
+                                        "lambda:InvokeFunction"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": [
+                                        "*"
+                                    ]
+                                },
+                                {
+                                    "Action": [
+                                        "logs:CreateLogGroup",
+                                        "logs:CreateLogStream",
+                                        "logs:PutLogEvents"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "arn:aws:logs:*:*:*"
+                                }
+                            ],
+                            "Version": "2012-10-17"
+                        },
+                        "PolicyName": "HellojsLogsPolicy"
+                    }
+                ]
+            },
+            "Type": "AWS::IAM::Role"
+        },
+        "HellojsVersion": {
+            "DependsOn": [
+                "VersionCurrentalias",
+                "HelloworldHellojs"
+            ],
+            "Properties": {
+                "FunctionName": {
+                    "Ref": "HelloworldHellojs"
+                },
+                "S3ObjectVersion": {
+                    "Ref": "HellojsS3Version"
+                },
+                "ServiceToken": {
+                    "Ref": "VersionCurrentalias"
+                }
+            },
+            "Type": "Custom::LambdaVersion"
         },
         "HellopyCurrentalias": {
             "DependsOn": [
@@ -834,6 +870,34 @@
             },
             "Type": "Custom::LambdaVersion"
         },
+        "HelloworldHellojs": {
+            "DependsOn": [
+                "HellojsRole"
+            ],
+            "Properties": {
+                "Code": {
+                    "S3Bucket": {
+                        "Ref": "CodeBucket"
+                    },
+                    "S3Key": "helloworld_hellojs.zip",
+                    "S3ObjectVersion": {
+                        "Ref": "HellojsS3Version"
+                    }
+                },
+                "Description": "Simple Lambda which says hello from javascript",
+                "Handler": "code.handler",
+                "MemorySize": 128,
+                "Role": {
+                    "Fn::GetAtt": [
+                        "HellojsRole",
+                        "Arn"
+                    ]
+                },
+                "Runtime": "nodejs4.3",
+                "Timeout": 3
+            },
+            "Type": "AWS::Lambda::Function"
+        },
         "HelloworldHellopy": {
             "DependsOn": [
                 "HellopyRole"
@@ -848,7 +912,7 @@
                         "Ref": "HellopyS3Version"
                     }
                 },
-                "Description": "",
+                "Description": "Simple Lambda which says hello from python",
                 "Handler": "code.handler",
                 "MemorySize": 128,
                 "Role": {

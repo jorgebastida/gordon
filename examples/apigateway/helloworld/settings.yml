@@ -1,7 +1,9 @@
 lambdas:
-    
+
   hellopy:
+    description: Simple Lambda which says hello from python
     code: hellopy.py
 
   hellojs:
+    description: Simple Lambda which says hello from javascript
     code: hellojs.js

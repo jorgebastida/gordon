@@ -2,4 +2,4 @@ print('Loading function')
 
 
 def handler(event, context):
-    return "Hello from pythonnnnnnnnn"
+    return "Hello from python!"
