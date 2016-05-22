@@ -10,7 +10,7 @@ Features
 ---------
 * 100% CloudFormation resource creation.
 * 100% Boilerplate free
-* Python/Javascript/Java runtimes supported.
+* Python/Javascript/Java/Golang runtimes supported.
 * Simple yml configuration
 * Seamless integration with (``pip``,``npm``, ``gradle`` ...)
 * Dead-simple custom multi-stage and multi region deployments ``--stage=prod``
@@ -36,6 +36,7 @@ Example Projects
 * [Javascript HelloWorld Lambda](https://github.com/jorgebastida/gordon/tree/master/examples/modulejs): Simple Lambda written in Javascript.
 * [Javascript ES6 HelloWorld Lambda](https://github.com/jorgebastida/gordon/tree/master/examples/simplejs-es6): Simple Lambda written in Javascript using ES-6.
 * [Java HelloWorld Lambda](https://github.com/jorgebastida/gordon/tree/master/examples/simplejava): Simple Lambda written in Java.
+* [Golang Runtime](https://github.com/jorgebastida/gordon/tree/master/examples/go): Run Golang based Lambdas via shim.
 * [ApiGateway](https://github.com/jorgebastida/gordon/tree/master/examples/apigateway): Integration for creating a simple web service.
 * [Cron](https://github.com/jorgebastida/gordon/tree/master/examples/cron): Schedule lambdas using cron syntax.
 * [Dynamodb Stream Consumer](https://github.com/jorgebastida/gordon/tree/master/examples/dynamodbpython): Consume as a stream changes to a dynamodb table.

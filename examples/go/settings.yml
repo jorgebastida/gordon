@@ -1,0 +1,7 @@
+---
+project: go
+default-region: us-east-1
+code-bucket: gordon-go-e2a21ef7
+apps:
+  - gordon.contrib.lambdas
+  - goexample

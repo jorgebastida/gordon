@@ -1,0 +1,10 @@
+lambdas:
+  helloworld:
+    description: Simple Lambda written in go
+    code: hellogo
+    handler: code.handler
+    runtime: nodejs4.3
+    build:
+        - cp -Rf * {target}
+        - GOOS=linux GOARCH=amd64 go build -o {target}/code_go_compiled code.go
+        - chmod +x {target}/code_go_compiled
