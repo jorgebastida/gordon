@@ -17,7 +17,7 @@ public class Hello {
         JSONObject gordon_context = new JSONObject(
             new Scanner(new File(".context")).useDelimiter("\\A").next()
         );
-        return gordon_context.getString("c");
+        return gordon_context.getString("bucket");
     }
 
 }

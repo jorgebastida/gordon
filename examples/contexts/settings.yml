@@ -9,6 +9,6 @@ apps:
 
 contexts:
     default:
-        a: value_a
-        b: value_b
-        c: ref://ImagesBucket
+        username: ref://Username
+        password: ref://Password
+        bucket: ref://ImagesBucket
