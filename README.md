@@ -12,7 +12,7 @@ Features
 * 100% Boilerplate free
 * Python/Javascript/Java runtimes supported.
 * Simple yml configuration
-* Seamless integration with (``pip``,``npm`` and ``gradle``)
+* Seamless integration with (``pip``,``npm``, ``gradle`` ...)
 * Dead-simple custom multi-stage and multi region deployments ``--stage=prod``
 * Supported integrations
   * APIGateway  
