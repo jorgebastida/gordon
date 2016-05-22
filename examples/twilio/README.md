@@ -16,8 +16,9 @@ Once you have deployed this project, you'll need to configure your phone number:
 
 As you can see this APIGateway example is quite complex because we need to do several things
 in order to make the integration work:
+
 1. Twilio sends requests with content type ``application/x-www-form-urlencoded`` To enable API gateway to parse them we need to passthrough that content-type.
-1. By default lambda will try to render the response as JSON which will break TwiML. To override it we need to create a new integration response mapping.
+2. By default lambda will try to render the response as JSON which will break TwiML. To override it we need to create a new integration response mapping.
 3. Lastly we need to make the response be XML instead of JSON.
 
 
