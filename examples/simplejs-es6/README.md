@@ -3,7 +3,7 @@ Simple ES6 Javascript Example
 
 This project defines one lambda called ``hellojs`` implemented using [ES6](https://github.com/lukehoban/es6features)
 
-The lambda itself is quite dumb, and only prints ``Hello from ES6!``, but the important part bit is
+The lambda itself is quite dumb, and only prints ``Hello from ES6!``, but the important bit is
 that we have replaced the default ``build`` process for that lambda with a custom one which which will
 transpile the code using babel.
 
