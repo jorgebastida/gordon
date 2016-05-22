@@ -1,5 +1,5 @@
 lambdas:
   byejs:
-    code: hello
+    code: bye
     runtime: nodejs4.3
     handler: code.handler

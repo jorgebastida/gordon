@@ -1,9 +1,9 @@
-Dynamodb Example
+Kinesis Example
 ===========================
 
-![gordon](http://gordondoc.s3-website-eu-west-1.amazonaws.com/_static/examples/dynamodb.svg)
+![gordon](http://gordondoc.s3-website-eu-west-1.amazonaws.com/_static/examples/kinesis.svg)
 
-This simple project defines one lambda called ``dynamoconsumer`` and integrates it with one dynamodb stream.
+This simple project defines one lambda called ``kinesisconsumer`` and integrates it with one kinesis stream.
 
 Every time 10 changes are published to the stream, the lambda will be executed.
 
@@ -11,7 +11,7 @@ The lambda is quite dumb, and only prints the received event.
 
 Documentation relevant to this example:
  * [Lambdas](http://gordondoc.s3-website-eu-west-1.amazonaws.com/lambdas.html)
- * [Dynamodb](http://gordondoc.s3-website-eu-west-1.amazonaws.com/eventsources/dynamodb.html)
+ * [Kinesis](http://gordondoc.s3-website-eu-west-1.amazonaws.com/eventsources/kinesis.html)
 
 How to deploy it?
 ------------------

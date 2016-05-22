@@ -1,4 +1,4 @@
-Gordon Contexts Example
+Contexts Example
 ===========================
 
 ![gordon](http://gordondoc.s3-website-eu-west-1.amazonaws.com/_static/examples/contexts.svg)

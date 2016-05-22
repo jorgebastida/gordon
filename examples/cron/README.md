@@ -1,4 +1,4 @@
-Gordon Cron Example
+Cron Example
 ===========================
 
 ![gordon](http://gordondoc.s3-website-eu-west-1.amazonaws.com/_static/examples/cron.svg)
