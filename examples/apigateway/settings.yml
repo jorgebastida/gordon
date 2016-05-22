@@ -46,7 +46,7 @@ apigateway:
                 integration:
                     type: MOCK
 
-            /complex/implementation/:
+            /complex/implementation:
                 methods:
                     GET:
                         integration:
