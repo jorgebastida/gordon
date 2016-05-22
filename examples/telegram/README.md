@@ -21,7 +21,7 @@ As a ``tl;dr`` version, you can follow this:
 
 Your lambda will be called every time somebody talks to your bot.
 
-The bot is not very clever, and only replies saying ``Hello!``
+The bot is not very clever, and only replies saying ``Hello from gordon!``
 
 
 Documentation relevant to this example:

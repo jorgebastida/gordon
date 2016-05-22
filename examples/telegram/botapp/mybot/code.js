@@ -7,5 +7,5 @@ exports.handler = function(event, context) {
     console.log("Context received:\n", JSON.stringify(context));
 
     var bot = new TelegramBot(gordon_context['token']);
-    bot.sendMessage(event.message.from.id, "Hello!");
+    bot.sendMessage(event.message.from.id, "Hello from gordon!");
 }
