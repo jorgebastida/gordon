@@ -1,0 +1,5 @@
+lambdas:
+  helloworld:
+    code: helloworld
+    handler: code.handler
+    runtime: python

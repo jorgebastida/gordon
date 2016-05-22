@@ -1,0 +1,79 @@
+{
+    "outputs": {
+        "HelloworldS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "HelloworldS3Version", 
+            "value": {
+                "action": "helloworld-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
+        "VersionS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "VersionS3Version", 
+            "value": {
+                "action": "version-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
+        "VersionS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "VersionS3Url", 
+            "value": {
+                "action": "version-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }, 
+        "HelloworldS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "HelloworldS3Url", 
+            "value": {
+                "action": "helloworld-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }
+    }, 
+    "_type": "ActionsTemplate", 
+    "actions": [
+        {
+            "_type": "InjectContextAndUploadToS3", 
+            "name": "version-upload", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "filename": "code/contrib_lambdas_version.zip", 
+            "context_to_inject": {}, 
+            "context_destinaton": ".context", 
+            "key": "contrib_lambdas_version.zip"
+        }, 
+        {
+            "_type": "InjectContextAndUploadToS3", 
+            "name": "helloworld-upload", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "filename": "code/example_helloworld.zip", 
+            "context_to_inject": {}, 
+            "context_destinaton": ".context", 
+            "key": "example_helloworld.zip"
+        }
+    ], 
+    "parameters": {
+        "CodeBucket": {
+            "default": "", 
+            "_type": "Parameter", 
+            "name": "CodeBucket"
+        }
+    }, 
+    "parallelizable": false
+}

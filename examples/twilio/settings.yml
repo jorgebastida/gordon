@@ -1,0 +1,41 @@
+---
+project: twilio
+default-region: us-east-1
+code-bucket: gordon-twilio-42bf5943
+apps:
+  - gordon.contrib.lambdas
+  - example
+
+
+apigateway:
+    twilioexample:
+        description: My first API
+        resources:
+            /:
+                methods: POST
+                integration:
+                    lambda: example.helloworld
+                    responses:
+                        - pattern: ""
+                          code: "200"
+                          template:
+                              # By default lambda will try to render the response
+                              # as JSON which will break TwiML. To override it you
+                              # need to go to create a new mapping.
+                              application/json: |
+                                #set($inputRoot = $input.path('$'))
+                                $inputRoot
+
+                request_templates:
+                    # Twilio sends requests with content type application/x-www-form-urlencoded
+                    # To enable API gateway to parse them we need to
+                    # passthrough that content-type
+                    application/x-www-form-urlencoded: |
+                        #set($inputRoot = $input.path('$'))
+                        {}
+                responses:
+                    - code: "200"
+                      models:
+                          # Lastly you need to make sure the respnse is returned
+                          # in XML instead of JSON
+                          application/xml: Empty

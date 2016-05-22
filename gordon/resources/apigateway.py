@@ -115,7 +115,7 @@ class ApiGateway(BaseResource):
                     troposphere.Ref(troposphere.AWS_REGION),
                     ':lambda:path/2015-03-31/functions/',
                     troposphere.Ref(self.get_function_name(resource)),
-                    '/invocations?Qualifier=current'
+                    '/invocations'#?Qualifier=current
                 ]
             )
         elif integration_type == HTTP_INTEGRATION:
@@ -129,9 +129,13 @@ class ApiGateway(BaseResource):
         ]
         responses = []
         for response in resource.get('responses', default_method_responses):
+            extra = {}
+            if 'models' in response:
+                extra['ResponseModels'] = response['models']
             responses.append(
                 MethodResponse(
-                    StatusCode=unicode(response['code'])
+                    StatusCode=unicode(response['code']),
+                    **extra
                 )
             )
         return responses
@@ -142,13 +146,20 @@ class ApiGateway(BaseResource):
         ]
         responses = []
         for response in resource['integration'].get('responses', default_integration_responses):
+            extra = {}
+            if 'template' in response:
+                extra['ResponseTemplates'] = response['template']
             responses.append(
                 IntegrationResponse(
                     SelectionPattern=unicode(response['pattern']),
-                    StatusCode=unicode(response['code'])
+                    StatusCode=unicode(response['code']),
+                    **extra
                 )
             )
         return responses
+
+    def get_request_templates(self, resource):
+        return resource.get('request_templates', {})
 
     def get_integration(self, resource, invoke_lambda_role):
         integrantion_type = self.get_integration_type(resource)
@@ -158,6 +169,7 @@ class ApiGateway(BaseResource):
                 IntegrationHttpMethod=self.get_integration_http_method(resource),
                 Type=integrantion_type,
                 Credentials=self.get_integration_credentials(resource, invoke_lambda_role),
+                RequestTemplates=self.get_request_templates(resource),
                 Uri=self.get_integration_uri(resource),
             )
         return troposphere.Ref(troposphere.AWS_NO_VALUE)
