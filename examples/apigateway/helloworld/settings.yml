@@ -1,3 +1,7 @@
 lambdas:
+    
   hellopy:
     code: hellopy.py
+
+  hellojs:
+    code: hellojs.js

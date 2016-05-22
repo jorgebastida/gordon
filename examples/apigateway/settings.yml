@@ -14,12 +14,13 @@ apigateway:
                 methods: [GET, POST]
                 integration:
                     lambda: helloworld.hellopy
-            /hi:
+
+            /hi-from-js:
                 methods: GET
                 integration:
-                    lambda: helloworld.hellopy
+                    lambda: helloworld.hellojs
 
-            /hi/poo:
+            /404:
                 methods: GET
                 integration:
                     lambda: helloworld.hellopy
@@ -29,12 +30,7 @@ apigateway:
                 responses:
                     - code: "404"
 
-            /hi/poo2:
-                methods: GET
-                integration:
-                    lambda: helloworld.hellopy
-
-            /hi/{language}:
+            /shop/{item}:
                 methods: GET
                 integration:
                     lambda: helloworld.hellopy
@@ -50,30 +46,11 @@ apigateway:
                 integration:
                     type: MOCK
 
-            /extra/super/lol/:
+            /complex/implementation/:
                 methods:
                     GET:
                         integration:
                             lambda: helloworld.hellopy
                     POST:
                         integration:
-                            lambda: helloworld.hellopy
-
-#
-# apigateway:
-#     hello:
-#         description: My first API
-#         resources:
-#             /hi/:
-#                 method: GET
-#                 authorization_type: NONE
-#                 integration:
-#                     responses:
-#                         - pattern: .*
-#                           status_code: 200
-#                     intergraion_http_method: POST
-#                     type: AWS
-#                     uri: lambda:hellopy
-#                 method_responses:
-#                     - status_code: 200
-#
+                            lambda: helloworld.hellojs
