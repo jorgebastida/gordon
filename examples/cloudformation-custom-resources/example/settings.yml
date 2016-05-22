@@ -1,0 +1,6 @@
+lambdas:
+  mycustomresource:
+    code: mycustomresource
+    handler: code.handler
+    runtime: python
+    description: Simple function that can be used as a CLoudFormation custom resource

@@ -1,0 +1,79 @@
+{
+    "outputs": {
+        "MycustomresourceS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "MycustomresourceS3Url", 
+            "value": {
+                "action": "mycustomresource-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }, 
+        "MycustomresourceS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "MycustomresourceS3Version", 
+            "value": {
+                "action": "mycustomresource-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
+        "VersionS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "VersionS3Version", 
+            "value": {
+                "action": "version-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
+        "VersionS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "VersionS3Url", 
+            "value": {
+                "action": "version-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3url"
+            }
+        }
+    }, 
+    "_type": "ActionsTemplate", 
+    "actions": [
+        {
+            "_type": "InjectContextAndUploadToS3", 
+            "name": "version-upload", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "filename": "code/contrib_lambdas_version.zip", 
+            "context_to_inject": {}, 
+            "context_destinaton": ".context", 
+            "key": "contrib_lambdas_version.zip"
+        }, 
+        {
+            "_type": "InjectContextAndUploadToS3", 
+            "name": "mycustomresource-upload", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "filename": "code/example_mycustomresource.zip", 
+            "context_to_inject": {}, 
+            "context_destinaton": ".context", 
+            "key": "example_mycustomresource.zip"
+        }
+    ], 
+    "parameters": {
+        "CodeBucket": {
+            "default": "", 
+            "_type": "Parameter", 
+            "name": "CodeBucket"
+        }
+    }, 
+    "parallelizable": false
+}

@@ -1,0 +1,7 @@
+---
+project: cloudformation-custom-resources
+default-region: us-east-1
+code-bucket: gordon-cloudformation-custom-resources-0fc3b30f
+apps:
+  - gordon.contrib.lambdas
+  - example
