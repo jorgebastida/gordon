@@ -36,6 +36,5 @@ apigateway:
                 responses:
                     - code: "200"
                       models:
-                          # Lastly you need to make sure the respnse is returned
-                          # in XML instead of JSON
+                          # Lastly you need to make sure the response is XML instead of JSON
                           application/xml: Empty
