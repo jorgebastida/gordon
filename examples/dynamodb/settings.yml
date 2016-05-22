@@ -11,5 +11,5 @@ dynamodb:
   example_dynamo_integration:
     lambda: exampleapp.dynamoconsumer
     stream: ref://DynamoIntegrationArn
-    batch_size: 1
+    batch_size: 10
     starting_position: LATEST

@@ -1,4 +1,11 @@
 {
+    "Outputs": {
+        "ClioutputLambdaHelloworldHellopy": {
+            "Value": {
+                "Ref": "HellopyCurrentalias"
+            }
+        }
+    },
     "Parameters": {
         "CodeBucket": {
             "Description": "Bucket where the code is located.",
@@ -55,7 +62,7 @@
                 "EventPattern": {
                     "Ref": "AWS::NoValue"
                 },
-                "ScheduleExpression": "rate(5 minutes)",
+                "ScheduleExpression": "cron(0 0 * * ? *)",
                 "State": "ENABLED",
                 "Targets": [
                     {
