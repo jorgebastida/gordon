@@ -1,7 +1,7 @@
 import re
 
 import troposphere
-from troposphere import awslambda, GetAtt
+from troposphere import awslambda
 
 from gordon import utils
 from gordon.contrib.helpers.resources import Sleep

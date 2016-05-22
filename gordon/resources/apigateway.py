@@ -2,7 +2,10 @@ import copy
 import uuid
 import hashlib
 import troposphere
-from troposphere.apigateway import RestApi, Resource, Method, Integration, Deployment, MethodResponse, IntegrationResponse
+from troposphere.apigateway import (
+    RestApi, Resource, Method, Integration, Deployment, MethodResponse,
+    IntegrationResponse
+)
 
 from gordon import utils, exceptions
 from .base import BaseResource
@@ -278,7 +281,14 @@ class ApiGateway(BaseResource):
                     utils.valid_cloudformation_name("Clioutput", self.in_project_name),
                     Value=troposphere.Join(
                         "",
-                        ["https://", troposphere.Ref(api), ".execute-api.", troposphere.Ref(troposphere.AWS_REGION), ".amazonaws.com/", troposphere.Ref('Stage')]
+                        [
+                            "https://",
+                            troposphere.Ref(api),
+                            ".execute-api.",
+                            troposphere.Ref(troposphere.AWS_REGION),
+                            ".amazonaws.com/",
+                            troposphere.Ref('Stage')
+                        ]
                     ),
                 )
             ])

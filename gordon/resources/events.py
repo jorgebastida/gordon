@@ -1,4 +1,3 @@
-import json
 import troposphere
 from troposphere import events
 

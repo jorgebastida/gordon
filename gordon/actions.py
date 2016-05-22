@@ -226,7 +226,13 @@ class UploadToS3(BaseAction):
         return filename
 
     def _success(self, metadata):
-        puts(colored.green(u"✓ {} ({})".format(os.path.relpath(self._friendly_name, self.project.build_path), metadata[:8])))
+        puts(
+            colored.green(
+                u"✓ {} ({})".format(
+                    os.path.relpath(self._friendly_name, self.project.build_path), metadata[:8]
+                )
+            )
+        )
 
 
 def enrich_references(obj, context):

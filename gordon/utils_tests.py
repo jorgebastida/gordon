@@ -146,10 +146,7 @@ class BaseIntegrationTest(BaseBuildTest):
         stacks = client.describe_stacks(StackName=name)
         self.assertEqual(len(stacks['Stacks']), 1)
         stack = stacks['Stacks'][0]
-        try:
-            self.assertIn(stack['StackStatus'], ('CREATE_COMPLETE',))
-        except Exception:
-            import ipdb; ipdb.set_trace()
+        self.assertIn(stack['StackStatus'], ('CREATE_COMPLETE',))
 
     def assert_lambda_response(self, response, value):
         self.assertEqual(json.loads(response['Payload'].read()), value)
