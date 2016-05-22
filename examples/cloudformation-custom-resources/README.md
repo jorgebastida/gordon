@@ -3,7 +3,7 @@ CloudFormation Custom Resource Example
 
 This simple project defines one Lambda that once deployed, can be used as ``ServiceToken`` of your Custom CloudFormation resources.
 
-You'll only need to deploy it and use the ``Arn`` of it as the ``ServiceToken`` of your resource.
+You'll only need to deploy it and use the ``Arn`` as the ``ServiceToken`` of your resource.
 
 ```json
 "MyCustomResource": {
