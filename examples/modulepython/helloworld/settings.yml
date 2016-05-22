@@ -1,5 +1,5 @@
 lambdas:
-  byepython:
+  hellopython:
     code: hello
     runtime: python2.7
     handler: code.handler

@@ -1,8 +1,0 @@
-lambdas:
-  hellopy:
-    code: hellopy.py
-    settings:
-        a: value_a
-        b: value_b
-        c: ref://table_name
-        

@@ -1,4 +1,4 @@
-const HelloMessage = "Hello from ES6"
+const HelloMessage = "Hello from ES6!"
 console.log('Loading function');
 
 exports.handler = function(event, context) {

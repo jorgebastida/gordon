@@ -1,15 +1,3 @@
 lambdas:
   s3consumer:
     code: s3consumer.py
-    policies:
-      read_kinesis_new:
-        Version: "2012-10-17"
-        Statement:
-          -
-            Action:
-              - "kinesis:DescribeStream"
-              - "kinesis:ListStreams"
-              - "kinesis:GetShardIterator"
-              - "kinesis:GetRecords"
-            Resource: "arn:aws:kinesis:*:*:*"
-            Effect: "Allow"
