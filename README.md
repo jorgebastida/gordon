@@ -49,9 +49,9 @@ Example Projects
 Why should you use this project?
 -----------------------------------
 
-Because this project doesn't introduces anything new. Gordon is a thin layer of sugar around the fact that writing CloudFormation templates by hand sucks and some conventions around how to structure a project using Lambdas... and not much more, which is great!
+Because this project doesn't introduces anything new. Gordon is a thin layer of sugar around the fact that writing CloudFormation templates by hand is a nightmare and some conventions around how to structure a project using Lambdas... and not much more, which is great!
 
-Why introduce yet-another framework when you can build lambdas using tools you already know (``pip``, ``npm``, ``grunt``, ``gulp``, ``gradle``, ``Makefile``...) and deploy them using a Service Amazon cares about and maintains?
+Why introduce yet-another framework when you can build lambdas using tools you already know (``pip``, ``npm``, ``grunt``, ``gulp``, ``gradle``, ``Makefile``...) and deploy them using a service Amazon cares about and maintains?
 
 Keep it simple! 😀
 
@@ -60,17 +60,17 @@ Why CloudFormation?
 -----------------------
 One of the best advantages of using AWS is the fact that reproducibility is at it's core and their ecosystem is full of services which encourage it. Their flagship is CloudFormation.
 
-Then... why not use plain CloudFormation? Well, there are three reasons:
+Then... why not use only CloudFormation? Well, there are three reasons:
 
-1. Complexity. CloudFormation stacks are defined using JSON templates which are a nightmare to write and maintain. (Friends don't let friends write JSON files)
-2. Glue. There is a lot of glue to put in between a "normal user" and the reality-check of deploying and wiring a Lambda into AWS.
-3. APIs. Not all AWS APIs are released when services are announced... ain't frameworks (boto3), nor integrations with CloudFormation.
+1. **Complexity**: CloudFormation stacks are defined using JSON templates which are a nightmare to write and maintain. And remember, Friends don't let friends write JSON files.
+2. **Glue**: There is a lot of glue to put in between a "normal user" and the reality-check of deploying and wiring a Lambda into AWS.
+3. **APIs**: Not all AWS APIs are released when services are announced... ain't frameworks (boto3), nor integrations with CloudFormation.
 
 This project tries to solve these three issues by:
 
 1. Creating a really thin layer of conventions on top of easy to maintain YAML files.
 2. Making everything work out of the box as well trying to make people not shoot in their foot.
-3. Working around the lack of CloudFormation/Framework APIs (keeping in mind they will happen eventually)
+3. Working around the lack of CloudFormation/Framework APIs (keeping in mind they will eventually happen).
 
 
 Does gordon use gordon to deploy gordon?
