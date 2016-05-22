@@ -120,6 +120,7 @@
                             "StatusCode": "404"
                         }
                     ],
+                    "RequestTemplates": {},
                     "Type": "AWS",
                     "Uri": {
                         "Fn::Join": [
@@ -133,7 +134,7 @@
                                 {
                                     "Ref": "HellopyCurrentalias"
                                 },
-                                "/invocations?Qualifier=current"
+                                "/invocations"
                             ]
                         ]
                     }
@@ -170,6 +171,7 @@
                             "StatusCode": "200"
                         }
                     ],
+                    "RequestTemplates": {},
                     "Type": "AWS",
                     "Uri": {
                         "Fn::Join": [
@@ -183,7 +185,7 @@
                                 {
                                     "Ref": "HellopyCurrentalias"
                                 },
-                                "/invocations?Qualifier=current"
+                                "/invocations"
                             ]
                         ]
                     }
@@ -220,6 +222,7 @@
                             "StatusCode": "200"
                         }
                     ],
+                    "RequestTemplates": {},
                     "Type": "AWS",
                     "Uri": {
                         "Fn::Join": [
@@ -233,7 +236,7 @@
                                 {
                                     "Ref": "HellojsCurrentalias"
                                 },
-                                "/invocations?Qualifier=current"
+                                "/invocations"
                             ]
                         ]
                     }
@@ -252,8 +255,9 @@
             },
             "Type": "AWS::ApiGateway::Method"
         },
-        "HelloapiDeployment09395844": {
+        "HelloapiDeployment9A66D22C": {
             "DependsOn": [
+                "HelloapiParametersGet",
                 "Helloapi404Get",
                 "HelloapiMockGet",
                 "HelloapiShopItemGet",
@@ -292,6 +296,7 @@
                             "StatusCode": "200"
                         }
                     ],
+                    "RequestTemplates": {},
                     "Type": "AWS",
                     "Uri": {
                         "Fn::Join": [
@@ -305,7 +310,7 @@
                                 {
                                     "Ref": "HellopyCurrentalias"
                                 },
-                                "/invocations?Qualifier=current"
+                                "/invocations"
                             ]
                         ]
                     }
@@ -345,6 +350,7 @@
                             "StatusCode": "200"
                         }
                     ],
+                    "RequestTemplates": {},
                     "Type": "AWS",
                     "Uri": {
                         "Fn::Join": [
@@ -358,7 +364,7 @@
                                 {
                                     "Ref": "HellojsCurrentalias"
                                 },
-                                "/invocations?Qualifier=current"
+                                "/invocations"
                             ]
                         ]
                     }
@@ -392,6 +398,7 @@
                             "StatusCode": "200"
                         }
                     ],
+                    "RequestTemplates": {},
                     "Type": "HTTP",
                     "Uri": "http://www.terra.es"
                 },
@@ -424,6 +431,7 @@
                             "StatusCode": "200"
                         }
                     ],
+                    "RequestTemplates": {},
                     "Type": "MOCK",
                     "Uri": {
                         "Ref": "AWS::NoValue"
@@ -436,6 +444,66 @@
                 ],
                 "ResourceId": {
                     "Ref": "HelloapiResourceMock"
+                },
+                "RestApiId": {
+                    "Ref": "Helloapi"
+                }
+            },
+            "Type": "AWS::ApiGateway::Method"
+        },
+        "HelloapiParametersGet": {
+            "Properties": {
+                "AuthorizationType": "NONE",
+                "HttpMethod": "GET",
+                "Integration": {
+                    "Credentials": {
+                        "Fn::GetAtt": [
+                            "HelloapiRole",
+                            "Arn"
+                        ]
+                    },
+                    "IntegrationHttpMethod": "POST",
+                    "IntegrationResponses": [
+                        {
+                            "SelectionPattern": "",
+                            "StatusCode": "200"
+                        }
+                    ],
+                    "RequestParameters": {
+                        "integration.request.querystring.color": "method.request.header.color"
+                    },
+                    "RequestTemplates": {},
+                    "Type": "AWS",
+                    "Uri": {
+                        "Fn::Join": [
+                            "",
+                            [
+                                "arn:aws:apigateway:",
+                                {
+                                    "Ref": "AWS::Region"
+                                },
+                                ":lambda:path/2015-03-31/functions/",
+                                {
+                                    "Ref": "HellopyCurrentalias"
+                                },
+                                "/invocations"
+                            ]
+                        ]
+                    }
+                },
+                "MethodResponses": [
+                    {
+                        "ResponseParameters": {
+                            "method.response.header.color": "color"
+                        },
+                        "StatusCode": "200"
+                    }
+                ],
+                "RequestParameters": {
+                    "method.request.header.color": true
+                },
+                "ResourceId": {
+                    "Ref": "HelloapiResourceParameters"
                 },
                 "RestApiId": {
                     "Ref": "Helloapi"
@@ -461,6 +529,7 @@
                             "StatusCode": "200"
                         }
                     ],
+                    "RequestTemplates": {},
                     "Type": "AWS",
                     "Uri": {
                         "Fn::Join": [
@@ -474,7 +543,7 @@
                                 {
                                     "Ref": "HellopyCurrentalias"
                                 },
-                                "/invocations?Qualifier=current"
+                                "/invocations"
                             ]
                         ]
                     }
@@ -583,6 +652,21 @@
             },
             "Type": "AWS::ApiGateway::Resource"
         },
+        "HelloapiResourceParameters": {
+            "Properties": {
+                "ParentId": {
+                    "Fn::GetAtt": [
+                        "Helloapi",
+                        "RootResourceId"
+                    ]
+                },
+                "PathPart": "parameters",
+                "RestApiId": {
+                    "Ref": "Helloapi"
+                }
+            },
+            "Type": "AWS::ApiGateway::Resource"
+        },
         "HelloapiResourceShop": {
             "Properties": {
                 "ParentId": {
@@ -668,6 +752,7 @@
                             "StatusCode": "200"
                         }
                     ],
+                    "RequestTemplates": {},
                     "Type": "AWS",
                     "Uri": {
                         "Fn::Join": [
@@ -681,7 +766,7 @@
                                 {
                                     "Ref": "HellopyCurrentalias"
                                 },
-                                "/invocations?Qualifier=current"
+                                "/invocations"
                             ]
                         ]
                     }

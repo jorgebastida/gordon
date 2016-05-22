@@ -115,7 +115,7 @@ class ApiGateway(BaseResource):
                     troposphere.Ref(troposphere.AWS_REGION),
                     ':lambda:path/2015-03-31/functions/',
                     troposphere.Ref(self.get_function_name(resource)),
-                    '/invocations'#?Qualifier=current
+                    '/invocations'
                 ]
             )
         elif integration_type == HTTP_INTEGRATION:
@@ -132,6 +132,8 @@ class ApiGateway(BaseResource):
             extra = {}
             if 'models' in response:
                 extra['ResponseModels'] = response['models']
+            if 'parameters' in response:
+                extra['ResponseParameters'] = response['parameters']
             responses.append(
                 MethodResponse(
                     StatusCode=unicode(response['code']),
@@ -164,6 +166,9 @@ class ApiGateway(BaseResource):
     def get_integration(self, resource, invoke_lambda_role):
         integrantion_type = self.get_integration_type(resource)
         if integrantion_type:
+            extra = {}
+            if 'parameters' in resource['integration']:
+                extra['RequestParameters'] = resource['integration']['parameters']
             return Integration(
                 IntegrationResponses=self.get_integration_responses(resource),
                 IntegrationHttpMethod=self.get_integration_http_method(resource),
@@ -171,6 +176,7 @@ class ApiGateway(BaseResource):
                 Credentials=self.get_integration_credentials(resource, invoke_lambda_role),
                 RequestTemplates=self.get_request_templates(resource),
                 Uri=self.get_integration_uri(resource),
+                **extra
             )
         return troposphere.Ref(troposphere.AWS_NO_VALUE)
 
@@ -239,6 +245,9 @@ class ApiGateway(BaseResource):
                 method_name.extend(path.split('/'))
                 method_name.append(method)
 
+                extra = {}
+                if 'parameters' in configuration:
+                    extra['RequestParameters'] = configuration['parameters']
                 m = Method(
                     utils.valid_cloudformation_name(*method_name),
                     HttpMethod=method,
@@ -246,7 +255,8 @@ class ApiGateway(BaseResource):
                     Integration=self.get_integration(configuration, invoke_lambda_role),
                     MethodResponses=self.get_method_responses(configuration),
                     ResourceId=resource_reference,
-                    RestApiId=troposphere.Ref(api)
+                    RestApiId=troposphere.Ref(api),
+                    **extra
                 )
                 template.add_resource(m)
                 deployment_dependencies.append(m.name)

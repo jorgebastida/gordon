@@ -25,11 +25,14 @@ Anatomy of the integration
             methods: { LIST }
             authorization_type: { STRING }
             responses: { LIST }
+            parameters: { MAP }
+            request_templates: { MAP }
             integration:
                 type: { STRING }
                 lambda: { LAMBDA_NAME }
                 http_method: { STRING }
                 responses: { LIST }
+                parameters: { MAP }
 
 
 
@@ -238,6 +241,36 @@ Example:
                           code: "404"
 
 
+Resource Parameters
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+===========================  ===========================================================================================================================
+Name                         ``parameters``
+Required                     No
+Default                      *Empty*
+Valid Values                 ``MAP``
+Description                  Request parameters that API Gateway accepts. Specify request parameters as key-value pairs (string-to-Boolean maps),
+                             with a source as the key and a Boolean as the value. The Boolean specifies whether a parameter is required.
+                             A source must match the following format ``method.request.$location.$name``, where the ``$location`` is ``querystring``,
+                             ``path``, or ``header``, and ``$name`` is a valid, unique parameter name.
+===========================  ===========================================================================================================================
+
+
+Resource Request Templates
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+===========================  ==================================================================================================================================
+Name                         ``request_templates``
+Required                     No
+Valid Values                 ``map``
+Description                  A map of Apache Velocity templates that are applied on the request payload. The template that API Gateway
+                             uses is based on the value of the Content-Type header sent by the client. The content type value is the
+                             key, and the template is the value (specified as a string).
+                             For more information: http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-mapping-template-reference.html
+===========================  ==================================================================================================================================
+
+
+
 Resource Integration
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -271,6 +304,21 @@ Valid Values                 ``app.lambda-name``
 Description                  Name of the lambda you want to configure for this resource.
 ===========================  ============================================================================================================
 
+Integration Parameters
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+===========================  ==============================================================================================================================
+Name                         ``parameters``
+Required                     No
+Default                      *Empty*
+Valid Values                 ``MAP``
+Description                  The request parameters that API Gateway sends with the back-end request. Specify request parameters as key-value pairs
+                             (string-to-string maps), with a destination as the key and a source as the value. Specify the destination using the
+                             following pattern ``integration.request.$location.$name``, where ``$location`` is ``querystring``, ``path``, or ``header``,
+                             and ``name`` is a valid, unique parameter name. The source must be an existing method request parameter or a static value.
+                             Static values must be enclosed in single quotation marks and pre-encoded based on their destination in the request.
+===========================  ==============================================================================================================================
+
 Integration HTTP Method
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -292,6 +340,27 @@ Description                  The response that API Gateway provides after a meth
                              API Gateway intercepts the integration's response so that you can control how API Gateway surfaces back-end
                              responses.
 ===========================  ============================================================================================================
+
+Example:
+
+.. code-block:: yaml
+
+    apigateway:
+      helloapi:
+        resources:
+          /hello:
+            method: GET
+            integration:
+              lambda: helloworld.sayhi
+              responses:
+                - pattern: ""
+                  code: "404"
+                  models:
+                    application/xml: Empty
+                  template:
+                    application/json: |
+                      #set($inputRoot = $input.path('$'))
+                      $inputRoot
 
 
 
@@ -339,6 +408,22 @@ Full Example
                     integration:
                         type: MOCK
 
+                /parameters:
+                    methods: GET
+                    parameters:
+                        method.request.header.color: True
+                    integration:
+                        lambda: helloworld.hellopy
+                        responses:
+                            - pattern: ""
+                              code: "200"
+                        parameters:
+                            integration.request.querystring.color: method.request.header.color
+                    responses:
+                        - code: "200"
+                          parameters:
+                            method.response.header.color: color
+
                 /hi/complex/:
                     methods:
                         GET:
@@ -347,3 +432,24 @@ Full Example
                         POST:
                             integration:
                                 lambda: helloworld.sayhi
+
+                /content-types:
+                    methods: POST
+                    integration:
+                        lambda: helloworld.sayhi
+                        responses:
+                            - pattern: ""
+                              code: "200"
+                              template:
+                                  application/json: |
+                                    #set($inputRoot = $input.path('$'))
+                                    $inputRoot
+
+                    request_templates:
+                        application/x-www-form-urlencoded: |
+                            #set($inputRoot = $input.path('$'))
+                            {}
+                    responses:
+                        - code: "200"
+                          models:
+                              application/xml: Empty

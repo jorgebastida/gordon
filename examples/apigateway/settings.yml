@@ -30,6 +30,23 @@ apigateway:
                 responses:
                     - code: "404"
 
+            /parameters:
+                # http://docs.aws.amazon.com/apigateway/latest/developerguide/request-response-data-mappings.html
+                methods: GET
+                parameters:
+                    method.request.header.color: True
+                integration:
+                    lambda: helloworld.hellopy
+                    responses:
+                        - pattern: ""
+                          code: "200"
+                    parameters:
+                        integration.request.querystring.color: method.request.header.color
+                responses:
+                    - code: "200"
+                      parameters:
+                        method.response.header.color: color
+                        
             /shop/{item}:
                 methods: GET
                 integration:

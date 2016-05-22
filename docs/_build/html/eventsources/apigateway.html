@@ -58,11 +58,14 @@ before continuing.</p>
           <span class="l-Scalar-Plain">methods</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">LIST</span> <span class="p-Indicator">}</span>
           <span class="l-Scalar-Plain">authorization_type</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">STRING</span> <span class="p-Indicator">}</span>
           <span class="l-Scalar-Plain">responses</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">LIST</span> <span class="p-Indicator">}</span>
+          <span class="l-Scalar-Plain">parameters</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">MAP</span> <span class="p-Indicator">}</span>
+          <span class="l-Scalar-Plain">request_templates</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">MAP</span> <span class="p-Indicator">}</span>
           <span class="l-Scalar-Plain">integration</span><span class="p-Indicator">:</span>
               <span class="l-Scalar-Plain">type</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">STRING</span> <span class="p-Indicator">}</span>
               <span class="l-Scalar-Plain">lambda</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">LAMBDA_NAME</span> <span class="p-Indicator">}</span>
               <span class="l-Scalar-Plain">http_method</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">STRING</span> <span class="p-Indicator">}</span>
               <span class="l-Scalar-Plain">responses</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">LIST</span> <span class="p-Indicator">}</span>
+              <span class="l-Scalar-Plain">parameters</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">MAP</span> <span class="p-Indicator">}</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -368,6 +371,61 @@ http methods to integrations.</p>
 </pre></div>
 </div>
 </div>
+<div class="section" id="resource-parameters">
+<h3>Resource Parameters<a class="headerlink" href="#resource-parameters" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="82%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">parameters</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>Default</td>
+<td><em>Empty</em></td>
+</tr>
+<tr class="row-even"><td>Valid Values</td>
+<td><code class="docutils literal"><span class="pre">MAP</span></code></td>
+</tr>
+<tr class="row-odd"><td>Description</td>
+<td>Request parameters that API Gateway accepts. Specify request parameters as key-value pairs (string-to-Boolean maps),
+with a source as the key and a Boolean as the value. The Boolean specifies whether a parameter is required.
+A source must match the following format <code class="docutils literal"><span class="pre">method.request.$location.$name</span></code>, where the <code class="docutils literal"><span class="pre">$location</span></code> is <code class="docutils literal"><span class="pre">querystring</span></code>,
+<code class="docutils literal"><span class="pre">path</span></code>, or <code class="docutils literal"><span class="pre">header</span></code>, and <code class="docutils literal"><span class="pre">$name</span></code> is a valid, unique parameter name.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="resource-request-templates">
+<h3>Resource Request Templates<a class="headerlink" href="#resource-request-templates" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="17%" />
+<col width="83%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">request_templates</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>Valid Values</td>
+<td><code class="docutils literal"><span class="pre">map</span></code></td>
+</tr>
+<tr class="row-even"><td>Description</td>
+<td>A map of Apache Velocity templates that are applied on the request payload. The template that API Gateway
+uses is based on the value of the Content-Type header sent by the client. The content type value is the
+key, and the template is the value (specified as a string).
+For more information: <a class="reference external" href="http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-mapping-template-reference.html">http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-mapping-template-reference.html</a></td>
+</tr>
+</tbody>
+</table>
+</div>
 <div class="section" id="resource-integration">
 <h3>Resource Integration<a class="headerlink" href="#resource-integration" title="Permalink to this headline">¶</a></h3>
 <table border="1" class="docutils">
@@ -440,6 +498,36 @@ http methods to integrations.</p>
 </tbody>
 </table>
 </div>
+<div class="section" id="integration-parameters">
+<h3>Integration Parameters<a class="headerlink" href="#integration-parameters" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="82%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">parameters</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>Default</td>
+<td><em>Empty</em></td>
+</tr>
+<tr class="row-even"><td>Valid Values</td>
+<td><code class="docutils literal"><span class="pre">MAP</span></code></td>
+</tr>
+<tr class="row-odd"><td>Description</td>
+<td>The request parameters that API Gateway sends with the back-end request. Specify request parameters as key-value pairs
+(string-to-string maps), with a destination as the key and a source as the value. Specify the destination using the
+following pattern <code class="docutils literal"><span class="pre">integration.request.$location.$name</span></code>, where <code class="docutils literal"><span class="pre">$location</span></code> is <code class="docutils literal"><span class="pre">querystring</span></code>, <code class="docutils literal"><span class="pre">path</span></code>, or <code class="docutils literal"><span class="pre">header</span></code>,
+and <code class="docutils literal"><span class="pre">name</span></code> is a valid, unique parameter name. The source must be an existing method request parameter or a static value.
+Static values must be enclosed in single quotation marks and pre-encoded based on their destination in the request.</td>
+</tr>
+</tbody>
+</table>
+</div>
 <div class="section" id="integration-http-method">
 <h3>Integration HTTP Method<a class="headerlink" href="#integration-http-method" title="Permalink to this headline">¶</a></h3>
 <table border="1" class="docutils">
@@ -487,6 +575,25 @@ responses.</td>
 </tr>
 </tbody>
 </table>
+<p>Example:</p>
+<div class="highlight-yaml"><div class="highlight"><pre><span class="l-Scalar-Plain">apigateway</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">helloapi</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">resources</span><span class="p-Indicator">:</span>
+      <span class="l-Scalar-Plain">/hello</span><span class="p-Indicator">:</span>
+        <span class="l-Scalar-Plain">method</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">GET</span>
+        <span class="l-Scalar-Plain">integration</span><span class="p-Indicator">:</span>
+          <span class="l-Scalar-Plain">lambda</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">helloworld.sayhi</span>
+          <span class="l-Scalar-Plain">responses</span><span class="p-Indicator">:</span>
+            <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">pattern</span><span class="p-Indicator">:</span> <span class="s">&quot;&quot;</span>
+              <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="s">&quot;404&quot;</span>
+              <span class="l-Scalar-Plain">models</span><span class="p-Indicator">:</span>
+                <span class="l-Scalar-Plain">application/xml</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Empty</span>
+              <span class="l-Scalar-Plain">template</span><span class="p-Indicator">:</span>
+                <span class="l-Scalar-Plain">application/json</span><span class="p-Indicator">:</span> <span class="p-Indicator">|</span>
+                  <span class="no">#set($inputRoot = $input.path(&#39;$&#39;))</span>
+                  <span class="no">$inputRoot</span>
+</pre></div>
+</div>
 </div>
 </div>
 <div class="section" id="full-example">
@@ -530,6 +637,22 @@ responses.</td>
                 <span class="l-Scalar-Plain">integration</span><span class="p-Indicator">:</span>
                     <span class="l-Scalar-Plain">type</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">MOCK</span>
 
+            <span class="l-Scalar-Plain">/parameters</span><span class="p-Indicator">:</span>
+                <span class="l-Scalar-Plain">methods</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">GET</span>
+                <span class="l-Scalar-Plain">parameters</span><span class="p-Indicator">:</span>
+                    <span class="l-Scalar-Plain">method.request.header.color</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">True</span>
+                <span class="l-Scalar-Plain">integration</span><span class="p-Indicator">:</span>
+                    <span class="l-Scalar-Plain">lambda</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">helloworld.hellopy</span>
+                    <span class="l-Scalar-Plain">responses</span><span class="p-Indicator">:</span>
+                        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">pattern</span><span class="p-Indicator">:</span> <span class="s">&quot;&quot;</span>
+                          <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="s">&quot;200&quot;</span>
+                    <span class="l-Scalar-Plain">parameters</span><span class="p-Indicator">:</span>
+                        <span class="l-Scalar-Plain">integration.request.querystring.color</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">method.request.header.color</span>
+                <span class="l-Scalar-Plain">responses</span><span class="p-Indicator">:</span>
+                    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="s">&quot;200&quot;</span>
+                      <span class="l-Scalar-Plain">parameters</span><span class="p-Indicator">:</span>
+                        <span class="l-Scalar-Plain">method.response.header.color</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">color</span>
+
             <span class="l-Scalar-Plain">/hi/complex/</span><span class="p-Indicator">:</span>
                 <span class="l-Scalar-Plain">methods</span><span class="p-Indicator">:</span>
                     <span class="l-Scalar-Plain">GET</span><span class="p-Indicator">:</span>
@@ -538,6 +661,27 @@ responses.</td>
                     <span class="l-Scalar-Plain">POST</span><span class="p-Indicator">:</span>
                         <span class="l-Scalar-Plain">integration</span><span class="p-Indicator">:</span>
                             <span class="l-Scalar-Plain">lambda</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">helloworld.sayhi</span>
+
+            <span class="l-Scalar-Plain">/content-types</span><span class="p-Indicator">:</span>
+                <span class="l-Scalar-Plain">methods</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">POST</span>
+                <span class="l-Scalar-Plain">integration</span><span class="p-Indicator">:</span>
+                    <span class="l-Scalar-Plain">lambda</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">helloworld.sayhi</span>
+                    <span class="l-Scalar-Plain">responses</span><span class="p-Indicator">:</span>
+                        <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">pattern</span><span class="p-Indicator">:</span> <span class="s">&quot;&quot;</span>
+                          <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="s">&quot;200&quot;</span>
+                          <span class="l-Scalar-Plain">template</span><span class="p-Indicator">:</span>
+                              <span class="l-Scalar-Plain">application/json</span><span class="p-Indicator">:</span> <span class="p-Indicator">|</span>
+                                <span class="no">#set($inputRoot = $input.path(&#39;$&#39;))</span>
+                                <span class="no">$inputRoot</span>
+
+                <span class="l-Scalar-Plain">request_templates</span><span class="p-Indicator">:</span>
+                    <span class="l-Scalar-Plain">application/x-www-form-urlencoded</span><span class="p-Indicator">:</span> <span class="p-Indicator">|</span>
+                        <span class="no">#set($inputRoot = $input.path(&#39;$&#39;))</span>
+                        <span class="no">{}</span>
+                <span class="l-Scalar-Plain">responses</span><span class="p-Indicator">:</span>
+                    <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">code</span><span class="p-Indicator">:</span> <span class="s">&quot;200&quot;</span>
+                      <span class="l-Scalar-Plain">models</span><span class="p-Indicator">:</span>
+                          <span class="l-Scalar-Plain">application/xml</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Empty</span>
 </pre></div>
 </div>
 </div>
@@ -565,9 +709,12 @@ responses.</td>
 <li><a class="reference internal" href="#resource-methods-advanced">Resource Methods (advanced)</a></li>
 <li><a class="reference internal" href="#resource-authorization-type">Resource authorization type</a></li>
 <li><a class="reference internal" href="#resource-responses">Resource Responses</a></li>
+<li><a class="reference internal" href="#resource-parameters">Resource Parameters</a></li>
+<li><a class="reference internal" href="#resource-request-templates">Resource Request Templates</a></li>
 <li><a class="reference internal" href="#resource-integration">Resource Integration</a></li>
 <li><a class="reference internal" href="#integration-type">Integration Type</a></li>
 <li><a class="reference internal" href="#integration-lambda">Integration Lambda</a></li>
+<li><a class="reference internal" href="#integration-parameters">Integration Parameters</a></li>
 <li><a class="reference internal" href="#integration-http-method">Integration HTTP Method</a></li>
 <li><a class="reference internal" href="#integration-responses">Integration Responses</a></li>
 </ul>
