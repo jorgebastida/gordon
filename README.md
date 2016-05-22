@@ -15,8 +15,8 @@ Features
 * Seamless integration with (``pip``,``npm`` and ``gradle``)
 * Dead-simple custom multi-stage and multi region deployments ``--stage=prod``
 * Supported integrations
-  * Apigateway  
-  * CloudWatch Events
+  * APIGateway  
+  * CloudWatch Events (cron)
   * Dynamodb Streams
   * Kinesis Streams
   * S3
@@ -49,7 +49,11 @@ Example Projects
 Why should you use this project?
 -----------------------------------
 
-Because this project doesn't introduces anything new. Gordon is a thin layer of sugar around the fact that writing CloudFormation templates sucks and some conventions around how to structure a project using Lambdas... and not much more, which is great!
+Because this project doesn't introduces anything new. Gordon is a thin layer of sugar around the fact that writing CloudFormation templates by hand sucks and some conventions around how to structure a project using Lambdas... and not much more, which is great!
+
+Why introduce yet-another framework when you can build lambdas using tools you already know (``pip``, ``npm``, ``grunt``, ``gulp``, ``gradle``, ``Makefile``...) and deploy them using a Service Amazon cares about and maintains?
+
+Keep it simple! 😀
 
 
 Why CloudFormation?
