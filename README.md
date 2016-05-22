@@ -42,7 +42,7 @@ Example Projects
 * [Kinesis Stream Consumer](https://github.com/jorgebastida/gordon/tree/master/examples/kinesispython): Consume Events published in a Kinesis Stream.
 * [S3 Consumer](https://github.com/jorgebastida/gordon/tree/master/examples/s3): Run your lambdas when a file is created/deleted on S3.
 * [Contexts](https://github.com/jorgebastida/gordon/tree/master/examples/contexts): Add dynamic configuration to your lambdas.
-* [Lambda based Custom CloudFormation Resouces](https://github.com/jorgebastida/gordon/tree/master/examples/cloudformation-custom-resources): Lambda based Custom Cloud Formation resources.
+* [Lambda based Custom CloudFormation Resouces](https://github.com/jorgebastida/gordon/tree/master/examples/cloudformation-custom-resources): Manage CloudFormation resources using Lambdas.
 * [Telegram Bot](https://github.com/jorgebastida/gordon/tree/master/examples/telegram): Create a simple bot in telegram.
 
 Why should you use this project?
