@@ -22,8 +22,6 @@ in your ``default`` context, giving it the value of:
 Then, on apply time, gordon will inject a file called ``.context`` to your lambda ``.zip``
 before uploading it to AWS.
 
-These three lambdas will hey read a file called ``.context`` that gordon
-
 These three lambdas defined within the application ``helloworld`` read the ``.contex`` file
 and return the value of the key ``bucket``.
 
