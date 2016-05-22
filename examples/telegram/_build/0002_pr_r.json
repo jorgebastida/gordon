@@ -1,5 +1,15 @@
 {
     "outputs": {
+        "JavascriptBotS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "JavascriptBotS3Version", 
+            "value": {
+                "action": "javascript_bot-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
+            }
+        }, 
         "VersionS3Version": {
             "default": "", 
             "_type": "Output", 
@@ -8,36 +18,6 @@
                 "action": "version-upload", 
                 "_type": "GetAttr", 
                 "attr": "s3version"
-            }
-        }, 
-        "PythonWebhookS3Version": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "PythonWebhookS3Version", 
-            "value": {
-                "action": "python_webhook-upload", 
-                "_type": "GetAttr", 
-                "attr": "s3version"
-            }
-        }, 
-        "JavascriptWebhookS3Version": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "JavascriptWebhookS3Version", 
-            "value": {
-                "action": "javascript_webhook-upload", 
-                "_type": "GetAttr", 
-                "attr": "s3version"
-            }
-        }, 
-        "PythonWebhookS3Url": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "PythonWebhookS3Url", 
-            "value": {
-                "action": "python_webhook-upload", 
-                "_type": "GetAttr", 
-                "attr": "s3url"
             }
         }, 
         "VersionS3Url": {
@@ -50,12 +30,12 @@
                 "attr": "s3url"
             }
         }, 
-        "JavascriptWebhookS3Url": {
+        "JavascriptBotS3Url": {
             "default": "", 
             "_type": "Output", 
-            "name": "JavascriptWebhookS3Url", 
+            "name": "JavascriptBotS3Url", 
             "value": {
-                "action": "javascript_webhook-upload", 
+                "action": "javascript_bot-upload", 
                 "_type": "GetAttr", 
                 "attr": "s3url"
             }
@@ -71,30 +51,31 @@
                 "name": "CodeBucket"
             }, 
             "filename": "code/contrib_lambdas_version.zip", 
-            "context_to_inject": {}, 
+            "context_to_inject": {
+                "token": {
+                    "_type": "Ref", 
+                    "name": "Token"
+                }
+            }, 
+            "context_destinaton": ".context", 
             "key": "contrib_lambdas_version.zip"
         }, 
         {
             "_type": "InjectContextAndUploadToS3", 
-            "name": "javascript_webhook-upload", 
+            "name": "javascript_bot-upload", 
             "bucket": {
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
-            "filename": "code/botapp_javascript_webhook.zip", 
-            "context_to_inject": {}, 
-            "key": "botapp_javascript_webhook.zip"
-        }, 
-        {
-            "_type": "InjectContextAndUploadToS3", 
-            "name": "python_webhook-upload", 
-            "bucket": {
-                "_type": "Ref", 
-                "name": "CodeBucket"
+            "filename": "code/botapp_javascript_bot.zip", 
+            "context_to_inject": {
+                "token": {
+                    "_type": "Ref", 
+                    "name": "Token"
+                }
             }, 
-            "filename": "code/botapp_python_webhook.zip", 
-            "context_to_inject": {}, 
-            "key": "botapp_python_webhook.zip"
+            "context_destinaton": ".context", 
+            "key": "botapp_javascript_bot.zip"
         }
     ], 
     "parameters": {

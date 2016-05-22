@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "node-telegram-bot-api": "0.21.1"
+  }
+}

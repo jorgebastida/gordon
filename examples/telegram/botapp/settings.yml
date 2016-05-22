@@ -1,4 +1,5 @@
 lambdas:
-
-  javascript_webhook:
-    code: mybot.js
+  javascript_bot:
+    code: mybot
+    handler: code.handler
+    runtime: nodejs4.3

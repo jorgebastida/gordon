@@ -6,12 +6,15 @@ apps:
   - gordon.contrib.lambdas
   - botapp
 
-apigateway:
-    telegramexampleapi:
-        description: My telegram API
-        resources:
+contexts:
+  default:
+    token: ref://Token
 
-            /my-js-bot-webhook:
-                methods: POST
-                integration:
-                    lambda: botapp.javascript_webhook
+apigateway:
+  telegramexampleapi:
+    description: My telegram API
+    resources:
+      /my-js-bot-webhook:
+        methods: POST
+        integration:
+          lambda: botapp.javascript_bot
