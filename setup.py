@@ -6,23 +6,14 @@ install_requires = [
     'boto3>=1.2.3',
     'clint',
     'PyYAML>=3',
-    'troposphere>=1.3',
+    'troposphere>=1.6',
     'Jinja2',
-]
-
-tests_require = [
-    'coverage'
 ]
 
 # as of Python >= 2.7 argparse module is maintained within Python.
 if sys.version_info < (2, 7):
     install_requires.append('argparse>=1.1.0')
 
-# as of Python >= 3.3 unittest.mock module is maintained within Python.
-if sys.version_info < (3, 3):
-    tests_require.append('mock>=1.0.0')
-    tests_require.append('nose')
-    tests_require.append('cfn-response')
 
 setup(
     name='gordon',
@@ -31,13 +22,12 @@ setup(
     license='BSD',
     author='Jorge Bastida',
     author_email='me@jorgebastida.com',
-    description='Gordon is a high-level framework to create, wire and deploy AWS Lambdas in an easy way.',
-    keywords="aws lambda api gateway",
+    description='Gordon is a tool to create, wire and deploy AWS Lambdas using CloudFormation in an easy way.',
+    keywords="aws lambda apigateway kinesis dynamodb s3 cloudwatch",
     packages=find_packages(),
     platforms='any',
     install_requires=install_requires,
     test_suite='nose.collector',
-    tests_require=tests_require,
     classifiers=[
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 2',
