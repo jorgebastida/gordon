@@ -20,7 +20,6 @@ if sys.version_info < (2, 7):
 
 # as of Python >= 3.3 unittest.mock module is maintained within Python.
 if sys.version_info < (3, 3):
-    tests_require.append('pbr>=0.11,<1.7.0')
     tests_require.append('mock>=1.0.0')
     tests_require.append('nose')
     tests_require.append('cfn-response')
@@ -54,5 +53,6 @@ setup(
             'gordon = gordon.bin:main',
         ]
     },
-    zip_safe=False
+    zip_safe=False,
+    use_2to3=True
 )

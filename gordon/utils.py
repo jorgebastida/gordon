@@ -234,7 +234,7 @@ def get_cf_stack(name):
     client = boto3.client('cloudformation')
     try:
         return client.describe_stacks(StackName=name)['Stacks'][0]
-    except ClientError, e:
+    except ClientError as e:
         if e.response['Error']['Code'] == 'ValidationError':
             return None
         raise
@@ -323,7 +323,7 @@ def update_stack(name, template_filename, bucket, context, **kwargs):
             Capabilities=['CAPABILITY_IAM'],
             **extra
         )
-    except ClientError, e:
+    except ClientError as e:
         if e.response['Error']['Message'] == 'No updates are to be performed.':
             puts(colored.green('✓ No updates are to be performed.'))
             return get_cf_stack(name)

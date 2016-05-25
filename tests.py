@@ -1,4 +1,5 @@
 import unittest
+import json
 
 try:
     from mock import patch, Mock
@@ -95,7 +96,7 @@ class TestActions(unittest.TestCase):
         s = t.serialize()
         self.assertEqual(s, {'_type': 'Parameter', 'name': 'Name', 'default': 'Default'})
         self.assertEqual(t, Parameter.from_dict(s))
-        self.assertEqual(t.to_json(), '{"default": "Default", "_type": "Parameter", "name": "Name"}')
+        self.assertEqual(json.loads(t.to_json()), json.loads('{"default": "Default", "_type": "Parameter", "name": "Name"}'))
 
         t = Parameter(name="Name")
         s = t.serialize()

@@ -16,11 +16,13 @@ Features
 * Dead-simple custom multi-stage and multi region deployments ``--stage=prod``
 * Supported integrations
   * APIGateway  
-  * CloudWatch Events (cron)
+  * Scheduled CloudWatch Events (cron)
+  * CloudWatch Events
   * Dynamodb Streams
   * Kinesis Streams
   * S3
 * AWS Lambda Versions an Aliases
+* VPC support
 * Dynamic stage parametrization including:
   * Environment variables
   * Jinja2 values

@@ -40,7 +40,7 @@ def delete_s3_bucket(bucket_name):
     if objects:
 
         for obj in objects:
-            print "  ", obj['Key']
+            print ("  {}".format(obj['Key']))
 
         s3client.delete_objects(
             Bucket=bucket_name,
@@ -57,7 +57,8 @@ def delete_test_stacks(name):
     paginator = client.get_paginator('describe_stacks')
     for stacks in paginator.paginate():
         for stack in stacks['Stacks']:
-            print stack['StackName']
+            print(stack['StackName'])
+            print(stack['StackName'])
             if stack['StackName'].startswith(name) and\
                [t for t in stack['Tags'] if t['Key'] == 'GordonVersion']:
                 for resource in client.describe_stack_resources(StackName=stack['StackName'])['StackResources']:
