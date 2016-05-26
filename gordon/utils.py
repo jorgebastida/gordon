@@ -150,9 +150,9 @@ def load_settings(filename, default=None, jinja2_enrich=False, context=None, pro
     def _jinja2_enrich(obj):
         if isinstance(obj, dict):
             return dict((k, _jinja2_enrich(v)) for k, v in six.iteritems(obj))
-        elif isinstance(obj, Iterable):
+        elif isinstance(obj, Iterable) and not isinstance(obj, six.string_types):
             return [_jinja2_enrich(v) for v in obj]
-        elif isinstance(obj, basestring):
+        elif isinstance(obj, six.string_types):
             return jinja2.Template(obj).render(**context)
         return obj
 
@@ -162,9 +162,9 @@ def load_settings(filename, default=None, jinja2_enrich=False, context=None, pro
     def _protocol_enrich(obj):
         if isinstance(obj, dict):
             return dict((k, _protocol_enrich(v)) for k, v in six.iteritems(obj))
-        elif isinstance(obj, Iterable):
+        elif isinstance(obj, Iterable) and not isinstance(obj, six.string_types):
             return [_protocol_enrich(v) for v in obj]
-        elif isinstance(obj, basestring):
+        elif isinstance(obj, six.string_types):
             match = re.match(r'^(\w+)\:\/\/(.*)$', obj)
             if match:
                 protocol, value = match.groups()
@@ -189,7 +189,7 @@ def fix_troposphere_references(template):
     def _fix_references(value):
         if isinstance(value, troposphere.Ref):
             name = value.data['Ref']
-            if name not in (template.parameters.keys() + template.resources.keys()) and not name.startswith('AWS::'):
+            if name not in (list(template.parameters.keys()) + list(template.resources.keys())) and not name.startswith('AWS::'):
                 template.add_parameter(
                     troposphere.Parameter(
                         name,
@@ -325,7 +325,7 @@ def update_stack(name, template_filename, bucket, context, **kwargs):
             Capabilities=['CAPABILITY_IAM'],
             **extra
         )
-    except ClientError, e:
+    except ClientError as e:
         if e.response['Error']['Message'] == 'No updates are to be performed.':
             puts(colored.green('✓ No updates are to be performed.'))
             return get_cf_stack(name)

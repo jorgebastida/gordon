@@ -53,7 +53,7 @@ class Serializable(object):
             return dict((k, self._serialize(v)) for k, v in six.iteritems(obj))
         elif isinstance(obj, troposphere.Ref):
             return {'_type': 'Ref', 'name': obj.data['Ref']}
-        elif isinstance(obj, Iterable):
+        elif isinstance(obj, Iterable) and not isinstance(obj, six.string_types):
             return [self._serialize(v) for v in obj]
         return obj
 
@@ -71,7 +71,7 @@ class Serializable(object):
                 return globals()[data['_type']](**params)
             elif isinstance(data, dict):
                 return dict([[k, _unserialize(v)] for k, v in six.iteritems(data)])
-            elif isinstance(data, Iterable):
+            elif isinstance(data, Iterable) and not isinstance(data, six.string_types):
                 return [_unserialize(e) for e in data]
             else:
                 return data
@@ -136,6 +136,9 @@ class ActionsTemplate(Serializable):
                 value = output.value
             outputs[name] = value
         return outputs
+
+    def __bool__(self):
+        return bool(self.actions)
 
     def __nonzero__(self):
         return bool(self.actions)
@@ -242,7 +245,7 @@ def enrich_references(obj, context):
         return dict((k, enrich_references(v, context)) for k, v in six.iteritems(obj))
     elif isinstance(obj, Ref):
         return context[obj.name]
-    elif isinstance(obj, Iterable):
+    elif isinstance(obj, Iterable) and not isinstance(obj, six.string_types):
         return [enrich_references(v, context) for v in obj]
     return obj
 

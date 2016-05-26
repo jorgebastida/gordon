@@ -126,7 +126,7 @@ class QueueNotification(BaseNotification):
         destination = self.settings['queue']
         region = troposphere.Ref(troposphere.AWS_REGION)
 
-        if isinstance(destination, basestring):
+        if isinstance(destination, six.string_types):
             if destination.startswith('arn:aws:'):
                 return destination
             account = troposphere.Ref(troposphere.AWS_ACCOUNT_ID)
@@ -147,7 +147,7 @@ class QueueNotification(BaseNotification):
         destination = self.settings['queue']
         region = troposphere.Ref(troposphere.AWS_REGION)
 
-        if isinstance(destination, basestring):
+        if isinstance(destination, six.string_types):
             account = troposphere.Ref(troposphere.AWS_ACCOUNT_ID)
         elif isinstance(destination, dict):
             account = destination['account_id']
@@ -199,7 +199,7 @@ class TopicNotification(BaseNotification):
         destination = self.settings['topic']
         region = troposphere.Ref(troposphere.AWS_REGION)
 
-        if isinstance(destination, basestring):
+        if isinstance(destination, six.string_types):
             if destination.startswith('arn:aws:'):
                 return destination
             account = troposphere.Ref(troposphere.AWS_ACCOUNT_ID)

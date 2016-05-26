@@ -149,7 +149,7 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
         """
         for application in self.settings.get('apps', None) or []:
             path = None
-            if isinstance(application, basestring):
+            if isinstance(application, six.string_types):
                 application_name = application
                 if application.startswith('gordon.contrib.'):
                     app_parts = application.split('.')
@@ -265,6 +265,8 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
             for r in self.get_resources(resource_type):
                 r.register_pre_project_template(template)
 
+        print(template, bool(template))
+        
         if template:
             output_filename = output_filename.format(self._get_next_build_sequence_id())
             puts(colored.cyan(output_filename))

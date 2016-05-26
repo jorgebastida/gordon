@@ -1,201 +1,111 @@
 {
-<<<<<<< Updated upstream
-    "outputs": {
-        "ExampleS3Version": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "ExampleS3Version", 
-=======
-    "_type": "ActionsTemplate", 
-    "outputs": {
-        "VersionS3Url": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "VersionS3Url", 
->>>>>>> Stashed changes
-            "value": {
-                "action": "example-upload", 
-                "_type": "GetAttr", 
-<<<<<<< Updated upstream
-                "attr": "s3version"
-=======
-                "attr": "s3url", 
-                "action": "version-upload"
->>>>>>> Stashed changes
-            }
-        }, 
-        "VersionS3Version": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "VersionS3Version", 
-            "value": {
-                "action": "version-upload", 
-                "_type": "GetAttr", 
-                "attr": "s3version"
-            }
-        }, 
-        "VersionS3Version": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "VersionS3Version", 
-            "value": {
-                "action": "sleep-upload", 
-                "_type": "GetAttr", 
-<<<<<<< Updated upstream
-                "attr": "s3url"
-            }
-        }, 
-        "ExampleS3Url": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "ExampleS3Url", 
-=======
-                "attr": "s3version", 
-                "action": "version-upload"
-            }
-        }, 
-        "SleepS3Url": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "SleepS3Url", 
->>>>>>> Stashed changes
-            "value": {
-                "action": "example-upload", 
-                "_type": "GetAttr", 
-<<<<<<< Updated upstream
-                "attr": "s3url"
-            }
-        }, 
-        "SleepS3Version": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "SleepS3Version", 
-=======
-                "attr": "s3url", 
-                "action": "sleep-upload"
-            }
-        }, 
-        "ExampleS3Url": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "ExampleS3Url", 
->>>>>>> Stashed changes
-            "value": {
-                "action": "sleep-upload", 
-                "_type": "GetAttr", 
-<<<<<<< Updated upstream
-                "attr": "s3version"
-            }
-        }, 
-        "VersionS3Url": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "VersionS3Url", 
-=======
-                "attr": "s3url", 
-                "action": "example-upload"
-            }
-        }, 
-        "ExampleS3Version": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "ExampleS3Version", 
->>>>>>> Stashed changes
-            "value": {
-                "action": "version-upload", 
-                "_type": "GetAttr", 
-<<<<<<< Updated upstream
-                "attr": "s3url"
-=======
-                "attr": "s3version", 
-                "action": "example-upload"
->>>>>>> Stashed changes
-            }
-        }
-    }, 
-    "parallelizable": false, 
     "actions": [
         {
-<<<<<<< Updated upstream
-            "_type": "InjectContextAndUploadToS3", 
-            "name": "sleep-upload", 
-=======
->>>>>>> Stashed changes
-            "bucket": {
-                "_type": "Ref", 
-                "name": "CodeBucket"
-            }, 
-<<<<<<< Updated upstream
             "filename": "code/contrib_helpers_sleep.zip", 
-            "context_to_inject": {}, 
-            "context_destinaton": ".context", 
-            "key": "contrib_helpers_sleep.zip"
-        }, 
-        {
-            "_type": "InjectContextAndUploadToS3", 
-            "name": "version-upload", 
-=======
-            "name": "sleep-upload", 
             "key": "contrib_helpers_sleep.zip", 
-            "context_destinaton": ".context", 
-            "_type": "InjectContextAndUploadToS3", 
             "context_to_inject": {}, 
-            "filename": "code/contrib_helpers_sleep.zip"
+            "context_destinaton": ".context", 
+            "bucket": {
+                "name": "CodeBucket", 
+                "_type": "Ref"
+            }, 
+            "name": "sleep-upload", 
+            "_type": "InjectContextAndUploadToS3"
         }, 
         {
->>>>>>> Stashed changes
-            "bucket": {
-                "_type": "Ref", 
-                "name": "CodeBucket"
-            }, 
-<<<<<<< Updated upstream
             "filename": "code/contrib_lambdas_version.zip", 
-            "context_to_inject": {}, 
-            "context_destinaton": ".context", 
-            "key": "contrib_lambdas_version.zip"
-        }, 
-        {
-            "_type": "InjectContextAndUploadToS3", 
-            "name": "example-upload", 
-=======
-            "name": "version-upload", 
             "key": "contrib_lambdas_version.zip", 
-            "context_destinaton": ".context", 
-            "_type": "InjectContextAndUploadToS3", 
             "context_to_inject": {}, 
-            "filename": "code/contrib_lambdas_version.zip"
+            "context_destinaton": ".context", 
+            "bucket": {
+                "name": "CodeBucket", 
+                "_type": "Ref"
+            }, 
+            "name": "version-upload", 
+            "_type": "InjectContextAndUploadToS3"
         }, 
         {
->>>>>>> Stashed changes
-            "bucket": {
-                "_type": "Ref", 
-                "name": "CodeBucket"
-            }, 
-<<<<<<< Updated upstream
             "filename": "code/cron_example.zip", 
-            "context_to_inject": {}, 
-            "context_destinaton": ".context", 
-            "key": "cron_example.zip"
-=======
-            "name": "example-upload", 
             "key": "cron_example.zip", 
-            "context_destinaton": ".context", 
-            "_type": "InjectContextAndUploadToS3", 
             "context_to_inject": {}, 
-            "filename": "code/cron_example.zip"
->>>>>>> Stashed changes
+            "context_destinaton": ".context", 
+            "bucket": {
+                "name": "CodeBucket", 
+                "_type": "Ref"
+            }, 
+            "name": "example-upload", 
+            "_type": "InjectContextAndUploadToS3"
         }
     ], 
+    "outputs": {
+        "ExampleS3Version": {
+            "value": {
+                "attr": "s3version", 
+                "action": "example-upload", 
+                "_type": "GetAttr"
+            }, 
+            "name": "ExampleS3Version", 
+            "_type": "Output", 
+            "default": ""
+        }, 
+        "SleepS3Version": {
+            "value": {
+                "attr": "s3version", 
+                "action": "sleep-upload", 
+                "_type": "GetAttr"
+            }, 
+            "name": "SleepS3Version", 
+            "_type": "Output", 
+            "default": ""
+        }, 
+        "SleepS3Url": {
+            "value": {
+                "attr": "s3url", 
+                "action": "sleep-upload", 
+                "_type": "GetAttr"
+            }, 
+            "name": "SleepS3Url", 
+            "_type": "Output", 
+            "default": ""
+        }, 
+        "ExampleS3Url": {
+            "value": {
+                "attr": "s3url", 
+                "action": "example-upload", 
+                "_type": "GetAttr"
+            }, 
+            "name": "ExampleS3Url", 
+            "_type": "Output", 
+            "default": ""
+        }, 
+        "VersionS3Url": {
+            "value": {
+                "attr": "s3url", 
+                "action": "version-upload", 
+                "_type": "GetAttr"
+            }, 
+            "name": "VersionS3Url", 
+            "_type": "Output", 
+            "default": ""
+        }, 
+        "VersionS3Version": {
+            "value": {
+                "attr": "s3version", 
+                "action": "version-upload", 
+                "_type": "GetAttr"
+            }, 
+            "name": "VersionS3Version", 
+            "_type": "Output", 
+            "default": ""
+        }
+    }, 
     "parameters": {
         "CodeBucket": {
-            "default": "", 
+            "name": "CodeBucket", 
             "_type": "Parameter", 
-            "name": "CodeBucket"
+            "default": ""
         }
-<<<<<<< Updated upstream
     }, 
+    "_type": "ActionsTemplate", 
     "parallelizable": false
-=======
-    }
->>>>>>> Stashed changes
 }

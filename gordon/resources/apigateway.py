@@ -237,7 +237,7 @@ class ApiGateway(BaseResource):
             resource_reference = self.get_or_create_resource(path, api, template)
             methods = resource['methods']
 
-            if isinstance(methods, basestring):
+            if isinstance(methods, six.string_types):
                 methods = [methods]
 
             if not isinstance(methods, dict):

@@ -1,203 +1,111 @@
 {
-<<<<<<< Updated upstream
-=======
-    "_type": "ActionsTemplate", 
->>>>>>> Stashed changes
-    "outputs": {
-        "VersionS3Version": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "VersionS3Version", 
-            "value": {
-                "action": "version-upload", 
-                "_type": "GetAttr", 
-                "attr": "s3version"
-            }
-        }, 
-<<<<<<< Updated upstream
-        "ConsumerS3Version": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "ConsumerS3Version", 
-=======
-        "VersionS3Url": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "VersionS3Url", 
->>>>>>> Stashed changes
-            "value": {
-                "action": "consumer-upload", 
-                "_type": "GetAttr", 
-<<<<<<< Updated upstream
-                "attr": "s3version"
-=======
-                "attr": "s3url", 
-                "action": "version-upload"
->>>>>>> Stashed changes
-            }
-        }, 
-        "SleepS3Version": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "SleepS3Version", 
-            "value": {
-                "action": "sleep-upload", 
-                "_type": "GetAttr", 
-<<<<<<< Updated upstream
-                "attr": "s3url"
-            }
-        }, 
-        "SleepS3Version": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "SleepS3Version", 
-=======
-                "attr": "s3version", 
-                "action": "sleep-upload"
-            }
-        }, 
-        "VersionS3Version": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "VersionS3Version", 
->>>>>>> Stashed changes
-            "value": {
-                "action": "sleep-upload", 
-                "_type": "GetAttr", 
-<<<<<<< Updated upstream
-                "attr": "s3version"
-            }
-        }, 
-        "ConsumerS3Url": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "ConsumerS3Url", 
-=======
-                "attr": "s3version", 
-                "action": "version-upload"
-            }
-        }, 
-        "SleepS3Url": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "SleepS3Url", 
->>>>>>> Stashed changes
-            "value": {
-                "action": "consumer-upload", 
-                "_type": "GetAttr", 
-<<<<<<< Updated upstream
-                "attr": "s3url"
-            }
-        }, 
-        "VersionS3Url": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "VersionS3Url", 
-=======
-                "attr": "s3url", 
-                "action": "sleep-upload"
-            }
-        }, 
-        "ConsumerS3Version": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "ConsumerS3Version", 
->>>>>>> Stashed changes
-            "value": {
-                "action": "version-upload", 
-                "_type": "GetAttr", 
-<<<<<<< Updated upstream
-                "attr": "s3url"
-=======
-                "attr": "s3version", 
-                "action": "consumer-upload"
->>>>>>> Stashed changes
-            }
-        }
-    }, 
-    "parallelizable": false, 
     "actions": [
         {
-<<<<<<< Updated upstream
-            "_type": "InjectContextAndUploadToS3", 
-            "name": "sleep-upload", 
-=======
->>>>>>> Stashed changes
-            "bucket": {
-                "_type": "Ref", 
-                "name": "CodeBucket"
-            }, 
-<<<<<<< Updated upstream
             "filename": "code/contrib_helpers_sleep.zip", 
-            "context_to_inject": {}, 
-            "context_destinaton": ".context", 
-            "key": "contrib_helpers_sleep.zip"
-        }, 
-        {
-            "_type": "InjectContextAndUploadToS3", 
-            "name": "version-upload", 
-=======
-            "name": "sleep-upload", 
             "key": "contrib_helpers_sleep.zip", 
-            "context_destinaton": ".context", 
-            "_type": "InjectContextAndUploadToS3", 
             "context_to_inject": {}, 
-            "filename": "code/contrib_helpers_sleep.zip"
+            "context_destinaton": ".context", 
+            "bucket": {
+                "name": "CodeBucket", 
+                "_type": "Ref"
+            }, 
+            "name": "sleep-upload", 
+            "_type": "InjectContextAndUploadToS3"
         }, 
         {
->>>>>>> Stashed changes
-            "bucket": {
-                "_type": "Ref", 
-                "name": "CodeBucket"
-            }, 
-<<<<<<< Updated upstream
             "filename": "code/contrib_lambdas_version.zip", 
-            "context_to_inject": {}, 
-            "context_destinaton": ".context", 
-            "key": "contrib_lambdas_version.zip"
-        }, 
-        {
-            "_type": "InjectContextAndUploadToS3", 
-            "name": "consumer-upload", 
-=======
-            "name": "version-upload", 
             "key": "contrib_lambdas_version.zip", 
-            "context_destinaton": ".context", 
-            "_type": "InjectContextAndUploadToS3", 
             "context_to_inject": {}, 
-            "filename": "code/contrib_lambdas_version.zip"
+            "context_destinaton": ".context", 
+            "bucket": {
+                "name": "CodeBucket", 
+                "_type": "Ref"
+            }, 
+            "name": "version-upload", 
+            "_type": "InjectContextAndUploadToS3"
         }, 
         {
->>>>>>> Stashed changes
-            "bucket": {
-                "_type": "Ref", 
-                "name": "CodeBucket"
-            }, 
-<<<<<<< Updated upstream
             "filename": "code/kinesisconsumer_consumer.zip", 
-            "context_to_inject": {}, 
-            "context_destinaton": ".context", 
-            "key": "kinesisconsumer_consumer.zip"
-=======
-            "name": "consumer-upload", 
             "key": "kinesisconsumer_consumer.zip", 
-            "context_destinaton": ".context", 
-            "_type": "InjectContextAndUploadToS3", 
             "context_to_inject": {}, 
-            "filename": "code/kinesisconsumer_consumer.zip"
->>>>>>> Stashed changes
+            "context_destinaton": ".context", 
+            "bucket": {
+                "name": "CodeBucket", 
+                "_type": "Ref"
+            }, 
+            "name": "consumer-upload", 
+            "_type": "InjectContextAndUploadToS3"
         }
     ], 
+    "outputs": {
+        "ConsumerS3Url": {
+            "value": {
+                "attr": "s3url", 
+                "action": "consumer-upload", 
+                "_type": "GetAttr"
+            }, 
+            "name": "ConsumerS3Url", 
+            "_type": "Output", 
+            "default": ""
+        }, 
+        "ConsumerS3Version": {
+            "value": {
+                "attr": "s3version", 
+                "action": "consumer-upload", 
+                "_type": "GetAttr"
+            }, 
+            "name": "ConsumerS3Version", 
+            "_type": "Output", 
+            "default": ""
+        }, 
+        "SleepS3Version": {
+            "value": {
+                "attr": "s3version", 
+                "action": "sleep-upload", 
+                "_type": "GetAttr"
+            }, 
+            "name": "SleepS3Version", 
+            "_type": "Output", 
+            "default": ""
+        }, 
+        "SleepS3Url": {
+            "value": {
+                "attr": "s3url", 
+                "action": "sleep-upload", 
+                "_type": "GetAttr"
+            }, 
+            "name": "SleepS3Url", 
+            "_type": "Output", 
+            "default": ""
+        }, 
+        "VersionS3Url": {
+            "value": {
+                "attr": "s3url", 
+                "action": "version-upload", 
+                "_type": "GetAttr"
+            }, 
+            "name": "VersionS3Url", 
+            "_type": "Output", 
+            "default": ""
+        }, 
+        "VersionS3Version": {
+            "value": {
+                "attr": "s3version", 
+                "action": "version-upload", 
+                "_type": "GetAttr"
+            }, 
+            "name": "VersionS3Version", 
+            "_type": "Output", 
+            "default": ""
+        }
+    }, 
     "parameters": {
         "CodeBucket": {
-            "default": "", 
+            "name": "CodeBucket", 
             "_type": "Parameter", 
-            "name": "CodeBucket"
+            "default": ""
         }
-<<<<<<< Updated upstream
     }, 
+    "_type": "ActionsTemplate", 
     "parallelizable": false
-=======
-    }
->>>>>>> Stashed changes
 }

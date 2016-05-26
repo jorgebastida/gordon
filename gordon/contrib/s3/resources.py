@@ -1,3 +1,4 @@
+import six
 from gordon.utils import BaseLambdaAWSCustomObject
 from troposphere import AWSProperty
 
@@ -11,15 +12,15 @@ def validate_key_filter_name(value):
 class KeyFilter(AWSProperty):
     props = {
         'Name': (validate_key_filter_name, True),
-        'Value': (basestring, True),
+        'Value': (six.string_types, True),
     }
 
 
 class NotificationConfiguration(AWSProperty):
     props = {
-        'Id': (basestring, True),
-        'DestinationArn': (basestring, True),
-        'Events': ([basestring], True),
+        'Id': (six.string_types, True),
+        'DestinationArn': (six.string_types, True),
+        'Events': ([six.string_types], True),
         'KeyFilters': ([KeyFilter], False),
     }
 
@@ -29,8 +30,8 @@ class S3BucketNotificationConfiguration(BaseLambdaAWSCustomObject):
     resource_type = "Custom::S3BucketNotificationConfiguration"
 
     props = {
-        'ServiceToken': (basestring, True),
-        'Bucket': (basestring, True),
+        'ServiceToken': (six.string_types, True),
+        'Bucket': (six.string_types, True),
         'TopicConfigurations': ([NotificationConfiguration], False),
         'QueueConfigurations': ([NotificationConfiguration], False),
         'LambdaFunctionConfigurations': ([NotificationConfiguration], False),
