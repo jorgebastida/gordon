@@ -1,8 +1,10 @@
 import re
 from collections import defaultdict, Counter
 
+import six
 import troposphere
 from troposphere import sqs, sns, awslambda
+
 from . import base
 from gordon import exceptions
 from gordon import utils
@@ -303,7 +305,7 @@ class BucketNotificationConfiguration(base.BaseResource):
                 all_filters[name].append(value)
 
         overlap_checks = {'prefix': 'startswith', 'suffix': 'endswith'}
-        for filter_type, values in all_filters.iteritems():
+        for filter_type, values in six.iteritems(all_filters):
             check = overlap_checks.get(filter_type)
             overlaps = [sum([int(getattr(v, check)(z)) for z in values]) for v in values]
             if sum(overlaps) > len(values):
@@ -338,7 +340,7 @@ class BucketNotificationConfiguration(base.BaseResource):
                     self.project.reference(bucket_notification_configuration_lambda), 'Arn'
                 ),
                 Bucket=self.get_bucket_name(),
-                **dict([[k, v] for k, v in extra.iteritems() if v])
+                **dict([[k, v] for k, v in six.iteritems(extra) if v])
             )
         )
 

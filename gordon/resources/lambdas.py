@@ -6,6 +6,7 @@ import zipfile
 import StringIO
 import subprocess
 
+import six
 import troposphere
 from troposphere import iam, awslambda, s3
 from clint.textui import colored, puts, indent
@@ -141,7 +142,7 @@ class Lambda(base.BaseResource):
                 )
             )
 
-        for policy_nme, policy_document in self.settings.get('policies', {}).iteritems():
+        for policy_nme, policy_document in six.iteritems(self.settings.get('policies', {})):
             policies.append(
                 iam.Policy(
                     PolicyName=utils.valid_cloudformation_name(self.name, policy_nme, 'policy'),

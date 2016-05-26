@@ -7,6 +7,7 @@ import hashlib
 import shutil
 from collections import defaultdict
 
+import six
 import boto3
 import jinja2
 import troposphere
@@ -49,7 +50,7 @@ class BaseResourceContainer(object):
     def _load_resources(self):
         """Load resources defined in ``self.settings`` and stores them in
         ``self._resources`` map."""
-        for resource_type, resource_cls in AVAILABLE_RESOURCES.iteritems():
+        for resource_type, resource_cls in six.iteritems(AVAILABLE_RESOURCES):
             for name in self.settings.get(resource_type, {}):
                 extra = {
                     'project': getattr(self, 'project', None) or self,
@@ -259,7 +260,7 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
         and ``register_pre_project_template``"""
         template = actions.ActionsTemplate()
 
-        for resource_type, resource_cls in AVAILABLE_RESOURCES.iteritems():
+        for resource_type, resource_cls in six.iteritems(AVAILABLE_RESOURCES):
             resource_cls.register_type_pre_project_template(self, template)
             for r in self.get_resources(resource_type):
                 r.register_pre_project_template(template)
@@ -277,7 +278,7 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
         output_filename = output_filename.format(self._get_next_build_sequence_id())
         template = self._base_troposphere_template()
 
-        for resource_type, resource_cls in AVAILABLE_RESOURCES.iteritems():
+        for resource_type, resource_cls in six.iteritems(AVAILABLE_RESOURCES):
             resource_cls.register_type_project_template(self, template)
             for r in self.get_resources(resource_type):
                 r.register_project_template(template)
@@ -293,7 +294,7 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
         and ``register_pre_resources_template``"""
         template = actions.ActionsTemplate()
 
-        for resource_type, resource_cls in AVAILABLE_RESOURCES.iteritems():
+        for resource_type, resource_cls in six.iteritems(AVAILABLE_RESOURCES):
             resource_cls.register_type_pre_resources_template(self, template)
             for r in self.get_resources(resource_type):
                 r.register_pre_resources_template(template)
@@ -310,7 +311,7 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
 
         template = self._base_troposphere_template()
 
-        for resource_type, resource_cls in AVAILABLE_RESOURCES.iteritems():
+        for resource_type, resource_cls in six.iteritems(AVAILABLE_RESOURCES):
             resource_cls.register_type_resources_template(self, template)
             for r in self.get_resources(resource_type):
                 r.register_resources_template(template)
@@ -329,7 +330,7 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
 
         template = actions.ActionsTemplate()
 
-        for resource_type, resource_cls in AVAILABLE_RESOURCES.iteritems():
+        for resource_type, resource_cls in six.iteritems(AVAILABLE_RESOURCES):
             resource_cls.register_type_post_resources_template(self, template)
             for r in self.get_resources(resource_type):
                 r.register_post_resources_template(template)
@@ -392,7 +393,7 @@ class ProjectApply(BaseProject):
                 getattr(self, 'apply_{}_template'.format(template_type))(name, filename, context)
 
         puts(colored.blue("Project Outputs:"))
-        for k, v in context.iteritems():
+        for k, v in six.iteritems(context):
             if k.startswith('Clioutput'):
                 with indent(2):
                     puts(colored.cyan(k[9:]))
@@ -435,7 +436,7 @@ class ProjectApply(BaseProject):
 
         outputs = template.apply(context, self)
 
-        for key, value in outputs.iteritems():
+        for key, value in six.iteritems(outputs):
             context[key] = value
 
     def apply_cloudformation_template(self, name, filename, context):

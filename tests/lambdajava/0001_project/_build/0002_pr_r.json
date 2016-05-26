@@ -1,12 +1,22 @@
 {
+<<<<<<< Updated upstream
     "outputs": {
         "VersionS3Version": {
             "default": "", 
             "_type": "Output", 
             "name": "VersionS3Version", 
+=======
+    "_type": "ActionsTemplate", 
+    "outputs": {
+        "JavaexampleS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "JavaexampleS3Version", 
+>>>>>>> Stashed changes
             "value": {
                 "action": "version-upload", 
                 "_type": "GetAttr", 
+<<<<<<< Updated upstream
                 "attr": "s3version"
             }
         }, 
@@ -18,6 +28,10 @@
                 "action": "sleep-upload", 
                 "_type": "GetAttr", 
                 "attr": "s3url"
+=======
+                "attr": "s3version", 
+                "action": "javaexample-upload"
+>>>>>>> Stashed changes
             }
         }, 
         "SleepS3Version": {
@@ -30,14 +44,19 @@
                 "attr": "s3version"
             }
         }, 
-        "JavaexampleS3Url": {
+        "SleepS3Version": {
             "default": "", 
             "_type": "Output", 
-            "name": "JavaexampleS3Url", 
+            "name": "SleepS3Version", 
             "value": {
                 "action": "javaexample-upload", 
                 "_type": "GetAttr", 
+<<<<<<< Updated upstream
                 "attr": "s3url"
+=======
+                "attr": "s3version", 
+                "action": "sleep-upload"
+>>>>>>> Stashed changes
             }
         }, 
         "JavaexampleS3Version": {
@@ -50,26 +69,52 @@
                 "attr": "s3version"
             }
         }, 
+<<<<<<< Updated upstream
         "VersionS3Url": {
             "default": "", 
             "_type": "Output", 
             "name": "VersionS3Url", 
+=======
+        "SleepS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "SleepS3Url", 
+>>>>>>> Stashed changes
             "value": {
                 "action": "version-upload", 
                 "_type": "GetAttr", 
+<<<<<<< Updated upstream
                 "attr": "s3url"
+=======
+                "attr": "s3url", 
+                "action": "sleep-upload"
+            }
+        }, 
+        "JavaexampleS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "JavaexampleS3Url", 
+            "value": {
+                "_type": "GetAttr", 
+                "attr": "s3url", 
+                "action": "javaexample-upload"
+>>>>>>> Stashed changes
             }
         }
     }, 
-    "_type": "ActionsTemplate", 
+    "parallelizable": false, 
     "actions": [
         {
+<<<<<<< Updated upstream
             "_type": "InjectContextAndUploadToS3", 
             "name": "sleep-upload", 
+=======
+>>>>>>> Stashed changes
             "bucket": {
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
+<<<<<<< Updated upstream
             "filename": "code/contrib_helpers_sleep.zip", 
             "context_to_inject": {}, 
             "context_destinaton": ".context", 
@@ -78,10 +123,21 @@
         {
             "_type": "InjectContextAndUploadToS3", 
             "name": "version-upload", 
+=======
+            "name": "sleep-upload", 
+            "key": "contrib_helpers_sleep.zip", 
+            "context_destinaton": ".context", 
+            "_type": "InjectContextAndUploadToS3", 
+            "context_to_inject": {}, 
+            "filename": "code/contrib_helpers_sleep.zip"
+        }, 
+        {
+>>>>>>> Stashed changes
             "bucket": {
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
+<<<<<<< Updated upstream
             "filename": "code/contrib_lambdas_version.zip", 
             "context_to_inject": {}, 
             "context_destinaton": ".context", 
@@ -90,14 +146,33 @@
         {
             "_type": "InjectContextAndUploadToS3", 
             "name": "javaexample-upload", 
+=======
+            "name": "version-upload", 
+            "key": "contrib_lambdas_version.zip", 
+            "context_destinaton": ".context", 
+            "_type": "InjectContextAndUploadToS3", 
+            "context_to_inject": {}, 
+            "filename": "code/contrib_lambdas_version.zip"
+        }, 
+        {
+>>>>>>> Stashed changes
             "bucket": {
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
+<<<<<<< Updated upstream
             "filename": "code/javaexample_javaexample.zip", 
             "context_to_inject": {}, 
             "context_destinaton": ".context", 
             "key": "javaexample_javaexample.zip"
+=======
+            "name": "javaexample-upload", 
+            "key": "javaexample_javaexample.zip", 
+            "context_destinaton": ".context", 
+            "_type": "InjectContextAndUploadToS3", 
+            "context_to_inject": {}, 
+            "filename": "code/javaexample_javaexample.zip"
+>>>>>>> Stashed changes
         }
     ], 
     "parameters": {
@@ -106,6 +181,10 @@
             "_type": "Parameter", 
             "name": "CodeBucket"
         }
+<<<<<<< Updated upstream
     }, 
     "parallelizable": false
+=======
+    }
+>>>>>>> Stashed changes
 }

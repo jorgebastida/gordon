@@ -8,6 +8,7 @@ install_requires = [
     'PyYAML>=3',
     'troposphere>=1.3',
     'Jinja2',
+    'six'
 ]
 
 tests_require = [
