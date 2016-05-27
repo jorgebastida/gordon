@@ -20,14 +20,24 @@
                 "attr": "s3url"
             }
         }, 
-        "KinesisconsumerS3Url": {
+        "VersionS3Url": {
             "default": "", 
             "_type": "Output", 
-            "name": "KinesisconsumerS3Url", 
+            "name": "VersionS3Url", 
             "value": {
-                "action": "kinesisconsumer-upload", 
+                "action": "version-upload", 
                 "_type": "GetAttr", 
                 "attr": "s3url"
+            }
+        }, 
+        "SnowplowconsumerS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "name": "SnowplowconsumerS3Version", 
+            "value": {
+                "action": "snowplowconsumer-upload", 
+                "_type": "GetAttr", 
+                "attr": "s3version"
             }
         }, 
         "SleepS3Version": {
@@ -40,22 +50,12 @@
                 "attr": "s3version"
             }
         }, 
-        "KinesisconsumerS3Version": {
+        "SnowplowconsumerS3Url": {
             "default": "", 
             "_type": "Output", 
-            "name": "KinesisconsumerS3Version", 
+            "name": "SnowplowconsumerS3Url", 
             "value": {
-                "action": "kinesisconsumer-upload", 
-                "_type": "GetAttr", 
-                "attr": "s3version"
-            }
-        }, 
-        "VersionS3Url": {
-            "default": "", 
-            "_type": "Output", 
-            "name": "VersionS3Url", 
-            "value": {
-                "action": "version-upload", 
+                "action": "snowplowconsumer-upload", 
                 "_type": "GetAttr", 
                 "attr": "s3url"
             }
@@ -71,7 +71,12 @@
                 "name": "CodeBucket"
             }, 
             "filename": "code/contrib_helpers_sleep.zip", 
-            "context_to_inject": {}, 
+            "context_to_inject": {
+                "dynamodb_table": {
+                    "_type": "Ref", 
+                    "name": "DynamodbTable"
+                }
+            }, 
             "context_destinaton": ".context", 
             "key": "contrib_helpers_sleep.zip"
         }, 
@@ -83,21 +88,31 @@
                 "name": "CodeBucket"
             }, 
             "filename": "code/contrib_lambdas_version.zip", 
-            "context_to_inject": {}, 
+            "context_to_inject": {
+                "dynamodb_table": {
+                    "_type": "Ref", 
+                    "name": "DynamodbTable"
+                }
+            }, 
             "context_destinaton": ".context", 
             "key": "contrib_lambdas_version.zip"
         }, 
         {
             "_type": "InjectContextAndUploadToS3", 
-            "name": "kinesisconsumer-upload", 
+            "name": "snowplowconsumer-upload", 
             "bucket": {
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
-            "filename": "code/exampleapp_kinesisconsumer.zip", 
-            "context_to_inject": {}, 
+            "filename": "code/exampleapp_snowplowconsumer.zip", 
+            "context_to_inject": {
+                "dynamodb_table": {
+                    "_type": "Ref", 
+                    "name": "DynamodbTable"
+                }
+            }, 
             "context_destinaton": ".context", 
-            "key": "exampleapp_kinesisconsumer.zip"
+            "key": "exampleapp_snowplowconsumer.zip"
         }
     ], 
     "parameters": {

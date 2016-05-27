@@ -1,0 +1,3 @@
+---
+KinesisIntegrationArn: arn:aws:kinesis:us-east-1:936837623851:stream/snowplow-test
+DynamodbTable: test_snowplow

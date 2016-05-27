@@ -1,8 +1,8 @@
 {
     "Outputs": {
-        "ClioutputLambdaExampleappKinesisconsumer": {
+        "ClioutputLambdaExampleappSnowplowconsumer": {
             "Value": {
-                "Ref": "KinesisconsumerCurrentalias"
+                "Ref": "SnowplowconsumerCurrentalias"
             }
         }
     },
@@ -14,14 +14,14 @@
         "KinesisIntegrationArn": {
             "Type": "String"
         },
-        "KinesisconsumerS3Version": {
-            "Type": "String"
-        },
         "Region": {
             "Description": "AWS Region",
             "Type": "String"
         },
         "SleepS3Version": {
+            "Type": "String"
+        },
+        "SnowplowconsumerS3Version": {
             "Type": "String"
         },
         "Stage": {
@@ -93,7 +93,7 @@
         "ExampleKinesisIntegration": {
             "DependsOn": [
                 "ExampleKinesisIntegrationSleep",
-                "KinesisconsumerCurrentalias"
+                "SnowplowconsumerCurrentalias"
             ],
             "Properties": {
                 "BatchSize": 1,
@@ -102,7 +102,7 @@
                     "Ref": "KinesisIntegrationArn"
                 },
                 "FunctionName": {
-                    "Ref": "KinesisconsumerCurrentalias"
+                    "Ref": "SnowplowconsumerCurrentalias"
                 },
                 "StartingPosition": "LATEST"
             },
@@ -120,18 +120,18 @@
             },
             "Type": "Custom::Sleep"
         },
-        "ExampleappKinesisconsumer": {
+        "ExampleappSnowplowconsumer": {
             "DependsOn": [
-                "KinesisconsumerRole"
+                "SnowplowconsumerRole"
             ],
             "Properties": {
                 "Code": {
                     "S3Bucket": {
                         "Ref": "CodeBucket"
                     },
-                    "S3Key": "exampleapp_kinesisconsumer.zip",
+                    "S3Key": "exampleapp_snowplowconsumer.zip",
                     "S3ObjectVersion": {
-                        "Ref": "KinesisconsumerS3Version"
+                        "Ref": "SnowplowconsumerS3Version"
                     }
                 },
                 "Description": "",
@@ -139,7 +139,7 @@
                 "MemorySize": 128,
                 "Role": {
                     "Fn::GetAtt": [
-                        "KinesisconsumerRole",
+                        "SnowplowconsumerRole",
                         "Arn"
                     ]
                 },
@@ -147,109 +147,6 @@
                 "Timeout": 20
             },
             "Type": "AWS::Lambda::Function"
-        },
-        "KinesisconsumerCurrentalias": {
-            "DependsOn": [
-                "KinesisconsumerVersion"
-            ],
-            "Properties": {
-                "FunctionName": {
-                    "Ref": "ExampleappKinesisconsumer"
-                },
-                "FunctionVersion": {
-                    "Fn::GetAtt": [
-                        "KinesisconsumerVersion",
-                        "Version"
-                    ]
-                },
-                "Name": "current"
-            },
-            "Type": "AWS::Lambda::Alias"
-        },
-        "KinesisconsumerRole": {
-            "Properties": {
-                "AssumeRolePolicyDocument": {
-                    "Statement": [
-                        {
-                            "Action": [
-                                "sts:AssumeRole"
-                            ],
-                            "Effect": "Allow",
-                            "Principal": {
-                                "Service": [
-                                    "lambda.amazonaws.com"
-                                ]
-                            }
-                        }
-                    ],
-                    "Version": "2012-10-17"
-                },
-                "Policies": [
-                    {
-                        "PolicyDocument": {
-                            "Statement": [
-                                {
-                                    "Action": [
-                                        "lambda:InvokeFunction"
-                                    ],
-                                    "Effect": "Allow",
-                                    "Resource": [
-                                        "*"
-                                    ]
-                                },
-                                {
-                                    "Action": [
-                                        "logs:CreateLogGroup",
-                                        "logs:CreateLogStream",
-                                        "logs:PutLogEvents"
-                                    ],
-                                    "Effect": "Allow",
-                                    "Resource": "arn:aws:logs:*:*:*"
-                                }
-                            ],
-                            "Version": "2012-10-17"
-                        },
-                        "PolicyName": "KinesisconsumerLogsPolicy"
-                    },
-                    {
-                        "PolicyDocument": {
-                            "Statement": [
-                                {
-                                    "Action": [
-                                        "kinesis:DescribeStream",
-                                        "kinesis:ListStreams",
-                                        "kinesis:GetShardIterator",
-                                        "kinesis:GetRecords"
-                                    ],
-                                    "Effect": "Allow",
-                                    "Resource": "*"
-                                }
-                            ],
-                            "Version": "2012-10-17"
-                        },
-                        "PolicyName": "KinesisconsumerReadKinesisPolicy"
-                    }
-                ]
-            },
-            "Type": "AWS::IAM::Role"
-        },
-        "KinesisconsumerVersion": {
-            "DependsOn": [
-                "VersionCurrentalias",
-                "ExampleappKinesisconsumer"
-            ],
-            "Properties": {
-                "FunctionName": {
-                    "Ref": "ExampleappKinesisconsumer"
-                },
-                "S3ObjectVersion": {
-                    "Ref": "KinesisconsumerS3Version"
-                },
-                "ServiceToken": {
-                    "Ref": "VersionCurrentalias"
-                }
-            },
-            "Type": "Custom::LambdaVersion"
         },
         "SleepCurrentalias": {
             "DependsOn": [
@@ -329,6 +226,128 @@
                 },
                 "S3ObjectVersion": {
                     "Ref": "SleepS3Version"
+                },
+                "ServiceToken": {
+                    "Ref": "VersionCurrentalias"
+                }
+            },
+            "Type": "Custom::LambdaVersion"
+        },
+        "SnowplowconsumerCurrentalias": {
+            "DependsOn": [
+                "SnowplowconsumerVersion"
+            ],
+            "Properties": {
+                "FunctionName": {
+                    "Ref": "ExampleappSnowplowconsumer"
+                },
+                "FunctionVersion": {
+                    "Fn::GetAtt": [
+                        "SnowplowconsumerVersion",
+                        "Version"
+                    ]
+                },
+                "Name": "current"
+            },
+            "Type": "AWS::Lambda::Alias"
+        },
+        "SnowplowconsumerRole": {
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Statement": [
+                        {
+                            "Action": [
+                                "sts:AssumeRole"
+                            ],
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": [
+                                    "lambda.amazonaws.com"
+                                ]
+                            }
+                        }
+                    ],
+                    "Version": "2012-10-17"
+                },
+                "Policies": [
+                    {
+                        "PolicyDocument": {
+                            "Statement": [
+                                {
+                                    "Action": [
+                                        "lambda:InvokeFunction"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": [
+                                        "*"
+                                    ]
+                                },
+                                {
+                                    "Action": [
+                                        "logs:CreateLogGroup",
+                                        "logs:CreateLogStream",
+                                        "logs:PutLogEvents"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "arn:aws:logs:*:*:*"
+                                }
+                            ],
+                            "Version": "2012-10-17"
+                        },
+                        "PolicyName": "SnowplowconsumerLogsPolicy"
+                    },
+                    {
+                        "PolicyDocument": {
+                            "Statement": [
+                                {
+                                    "Action": [
+                                        "dynamodb:DescribeTablem",
+                                        "dynamodb:GetItem",
+                                        "dynamodb:Query",
+                                        "dynamodb:Scan",
+                                        "dynamodb:UpdateItem"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*"
+                                }
+                            ],
+                            "Version": "2012-10-17"
+                        },
+                        "PolicyName": "SnowplowconsumerWriteDynamoPolicy"
+                    },
+                    {
+                        "PolicyDocument": {
+                            "Statement": [
+                                {
+                                    "Action": [
+                                        "kinesis:DescribeStream",
+                                        "kinesis:ListStreams",
+                                        "kinesis:GetShardIterator",
+                                        "kinesis:GetRecords"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "*"
+                                }
+                            ],
+                            "Version": "2012-10-17"
+                        },
+                        "PolicyName": "SnowplowconsumerReadKinesisPolicy"
+                    }
+                ]
+            },
+            "Type": "AWS::IAM::Role"
+        },
+        "SnowplowconsumerVersion": {
+            "DependsOn": [
+                "VersionCurrentalias",
+                "ExampleappSnowplowconsumer"
+            ],
+            "Properties": {
+                "FunctionName": {
+                    "Ref": "ExampleappSnowplowconsumer"
+                },
+                "S3ObjectVersion": {
+                    "Ref": "SnowplowconsumerS3Version"
                 },
                 "ServiceToken": {
                     "Ref": "VersionCurrentalias"

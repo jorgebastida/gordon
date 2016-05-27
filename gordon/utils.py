@@ -8,7 +8,9 @@ import json
 import hashlib
 import zipfile
 from datetime import datetime
+from collections import Iterable
 
+import six
 import boto3
 from botocore.exceptions import ClientError
 import yaml
@@ -147,10 +149,10 @@ def load_settings(filename, default=None, jinja2_enrich=False, context=None, pro
 
     def _jinja2_enrich(obj):
         if isinstance(obj, dict):
-            return dict((k, _jinja2_enrich(v)) for k, v in obj.iteritems())
-        elif hasattr(obj, '__iter__'):
+            return dict((k, _jinja2_enrich(v)) for k, v in six.iteritems(obj))
+        elif isinstance(obj, Iterable) and not isinstance(obj, six.string_types):
             return [_jinja2_enrich(v) for v in obj]
-        elif isinstance(obj, basestring):
+        elif isinstance(obj, six.string_types):
             return jinja2.Template(obj).render(**context)
         return obj
 
@@ -159,10 +161,10 @@ def load_settings(filename, default=None, jinja2_enrich=False, context=None, pro
 
     def _protocol_enrich(obj):
         if isinstance(obj, dict):
-            return dict((k, _protocol_enrich(v)) for k, v in obj.iteritems())
-        elif hasattr(obj, '__iter__'):
+            return dict((k, _protocol_enrich(v)) for k, v in six.iteritems(obj))
+        elif isinstance(obj, Iterable) and not isinstance(obj, six.string_types):
             return [_protocol_enrich(v) for v in obj]
-        elif isinstance(obj, basestring):
+        elif isinstance(obj, six.string_types):
             match = re.match(r'^(\w+)\:\/\/(.*)$', obj)
             if match:
                 protocol, value = match.groups()
@@ -187,7 +189,7 @@ def fix_troposphere_references(template):
     def _fix_references(value):
         if isinstance(value, troposphere.Ref):
             name = value.data['Ref']
-            if name not in (template.parameters.keys() + template.resources.keys()) and not name.startswith('AWS::'):
+            if name not in (list(template.parameters.keys()) + list(template.resources.keys())) and not name.startswith('AWS::'):
                 template.add_parameter(
                     troposphere.Parameter(
                         name,
@@ -200,11 +202,11 @@ def fix_troposphere_references(template):
                 _fix_references(v)
 
         elif isinstance(value, troposphere.BaseAWSObject):
-            for _, v in value.properties.iteritems():
+            for _, v in six.iteritems(value.properties):
                 _fix_references(v)
 
-    for _, resource in template.resources.iteritems():
-        for _, value in resource.properties.iteritems():
+    for _, resource in six.iteritems(template.resources):
+        for _, value in six.iteritems(resource.properties):
             _fix_references(value)
 
     return template
@@ -243,7 +245,7 @@ def get_cf_stack(name):
 def filter_context_for_template(context, template_body):
     """Extracts all required parameter of ``template_body`` from ``context``."""
     template = json.loads(template_body)
-    parameters = [[k, v] for k, v in context.iteritems() if k in template['Parameters']]
+    parameters = [[k, v] for k, v in six.iteritems(context) if k in template['Parameters']]
     return dict(parameters)
 
 
@@ -283,7 +285,7 @@ def create_stack(name, template_filename, bucket, context, timeout_in_minutes, *
     parameters = filter_context_for_template(context, template_body)
     stack = client.create_stack(
         StackName=name,
-        Parameters=[{'ParameterKey': k, 'ParameterValue': v} for k, v in parameters.iteritems()],
+        Parameters=[{'ParameterKey': k, 'ParameterValue': v} for k, v in six.iteritems(parameters)],
         TimeoutInMinutes=timeout_in_minutes,
         Capabilities=['CAPABILITY_IAM'],
         OnFailure='DO_NOTHING',
@@ -319,7 +321,7 @@ def update_stack(name, template_filename, bucket, context, **kwargs):
     try:
         stack = client.update_stack(
             StackName=name,
-            Parameters=[{'ParameterKey': k, 'ParameterValue': v} for k, v in parameters.iteritems()],
+            Parameters=[{'ParameterKey': k, 'ParameterValue': v} for k, v in six.iteritems(parameters)],
             Capabilities=['CAPABILITY_IAM'],
             **extra
         )

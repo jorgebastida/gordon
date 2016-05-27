@@ -8,6 +8,7 @@ install_requires = [
     'PyYAML>=3',
     'troposphere>=1.6',
     'Jinja2',
+    'six'
 ]
 
 # as of Python >= 2.7 argparse module is maintained within Python.

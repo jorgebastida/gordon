@@ -3,9 +3,9 @@ import os
 import shutil
 import tempfile
 import zipfile
-import StringIO
 import subprocess
 
+import six
 import troposphere
 from troposphere import iam, awslambda, s3
 from clint.textui import colored, puts, indent
@@ -141,7 +141,7 @@ class Lambda(base.BaseResource):
                 )
             )
 
-        for policy_nme, policy_document in self.settings.get('policies', {}).iteritems():
+        for policy_nme, policy_document in six.iteritems(self.settings.get('policies', {})):
             policies.append(
                 iam.Policy(
                     PolicyName=utils.valid_cloudformation_name(self.name, policy_nme, 'policy'),
@@ -161,7 +161,7 @@ class Lambda(base.BaseResource):
 
         role = self.settings.get('role')
 
-        if isinstance(role, basestring):
+        if isinstance(role, six.string_types):
             return role
         elif role is None:
             pass
@@ -344,7 +344,7 @@ class Lambda(base.BaseResource):
         )
 
         filename = os.path.join(code_path, self.get_bucket_key())
-        with open(filename, 'w') as f:
+        with open(filename, 'wb') as f:
             f.write(self.get_zip_file().read())
 
         context, context_key = {}, self.get_context_key()
@@ -392,12 +392,12 @@ class Lambda(base.BaseResource):
 
         try:
             self._collect_lambda_content(destination)
-        except subprocess.CalledProcessError, exc:
+        except subprocess.CalledProcessError as exc:
             raise exceptions.LambdaBuildProcessError(exc, self)
 
         self._clean_package(destination)
 
-        output = StringIO.StringIO()
+        output = six.BytesIO()
         zf = zipfile.ZipFile(output, 'w')
 
         for basedir, dirs, files in os.walk(destination):
@@ -441,7 +441,7 @@ class Lambda(base.BaseResource):
             if hasattr(commands, '__call__'):
                 commands()
                 return
-            elif isinstance(commands, basestring):
+            elif isinstance(commands, six.string_types):
                 commands = [commands]
 
             for command in commands:

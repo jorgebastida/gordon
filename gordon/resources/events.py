@@ -1,3 +1,4 @@
+import six
 import troposphere
 from troposphere import events
 
@@ -27,7 +28,7 @@ class CloudWatchEvent(BaseResource):
 
     def register_resources_template(self, template):
         targets, target_lambdas = [], []
-        for name, target in self.settings.get('targets', {}).iteritems():
+        for name, target in six.iteritems(self.settings.get('targets', {})):
             target_lambdas.append(target['lambda'])
             targets.append(
                 events.Target(

@@ -1,3 +1,5 @@
+import six
+
 from gordon.utils import BaseLambdaAWSCustomObject
 
 
@@ -7,6 +9,6 @@ class Sleep(BaseLambdaAWSCustomObject):
 
     resource_type = "Custom::Sleep"
     props = {
-        'ServiceToken': (basestring, True),
+        'ServiceToken': (six.string_types, True),
         'Time': (int, True)
     }

@@ -1,3 +1,4 @@
+import six
 from gordon.utils import BaseLambdaAWSCustomObject
 
 
@@ -11,7 +12,7 @@ class LambdaVersion(BaseLambdaAWSCustomObject):
 
     resource_type = "Custom::LambdaVersion"
     props = {
-        'ServiceToken': (basestring, True),
-        'FunctionName': (basestring, True),
-        'S3ObjectVersion': (basestring, True)
+        'ServiceToken': (six.string_types, True),
+        'FunctionName': (six.string_types, True),
+        'S3ObjectVersion': (six.string_types, True)
     }

@@ -1,15 +1,19 @@
 ---
-project: kinesisexample
+project: snowplowexample
 default-region: eu-west-1
-code-bucket: gordon-kinesispython-0do1mc7
+code-bucket: gordon-snowplowexample-fdo1mc9
 apps:
   - gordon.contrib.helpers
   - gordon.contrib.lambdas
   - exampleapp
 
+contexts:
+  default:
+    dynamodb_table: ref://DynamodbTable
+
 kinesis:
   example_kinesis_integration:
-    lambda: exampleapp.kinesisconsumer
+    lambda: exampleapp.snowplowconsumer
     stream: ref://KinesisIntegrationArn
     batch_size: 1
     starting_position: LATEST

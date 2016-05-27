@@ -49,6 +49,8 @@ Example Projects
 * [Lambda based Custom CloudFormation Resouces](https://github.com/jorgebastida/gordon/tree/master/examples/cloudformation-custom-resources): Manage CloudFormation resources using Lambdas.
 * [Telegram Bot](https://github.com/jorgebastida/gordon/tree/master/examples/telegram): Create a simple bot in telegram.
 * [Twilio](https://github.com/jorgebastida/gordon/tree/master/examples/twilio): Integrate your lambdas with Twilio using TwiML.
+* [Snowplow Analytics](https://github.com/jorgebastida/gordon/tree/master/examples/snowplow): Consume Snowplow Analytics events from gordon.
+
 
 Why should you use this project?
 -----------------------------------

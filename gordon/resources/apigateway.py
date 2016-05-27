@@ -1,6 +1,8 @@
 import copy
 import uuid
 import hashlib
+
+import six
 import troposphere
 from troposphere.apigateway import (
     RestApi, Resource, Method, Integration, Deployment, MethodResponse,
@@ -231,11 +233,11 @@ class ApiGateway(BaseResource):
         deployment_resources.append(invoke_lambda_role)
 
         deployment_dependencies = []
-        for path, resource in self.settings.get('resources', {}).iteritems():
+        for path, resource in six.iteritems(self.settings.get('resources', {})):
             resource_reference = self.get_or_create_resource(path, api, template)
             methods = resource['methods']
 
-            if isinstance(methods, basestring):
+            if isinstance(methods, six.string_types):
                 methods = [methods]
 
             if not isinstance(methods, dict):
@@ -243,7 +245,7 @@ class ApiGateway(BaseResource):
                 method_properties.pop('methods', None)
                 methods = dict([[method, method_properties] for method in methods])
 
-            for method, configuration in methods.iteritems():
+            for method, configuration in six.iteritems(methods):
                 method_name = [self.name]
                 method_name.extend(path.split('/'))
                 method_name.append(method)

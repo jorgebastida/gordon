@@ -4,7 +4,9 @@ import json
 import tempfile
 import zipfile
 import shutil
+from collections import Iterable
 
+import six
 import boto3
 import troposphere
 from clint.textui import colored, puts
@@ -48,10 +50,10 @@ class Serializable(object):
         if hasattr(obj, 'serialize'):
             return obj.serialize()
         elif isinstance(obj, dict):
-            return dict((k, self._serialize(v)) for k, v in obj.iteritems())
+            return dict((k, self._serialize(v)) for k, v in six.iteritems(obj))
         elif isinstance(obj, troposphere.Ref):
             return {'_type': 'Ref', 'name': obj.data['Ref']}
-        elif hasattr(obj, '__iter__'):
+        elif isinstance(obj, Iterable) and not isinstance(obj, six.string_types):
             return [self._serialize(v) for v in obj]
         return obj
 
@@ -65,11 +67,11 @@ class Serializable(object):
     def from_dict(cls, data):
         def _unserialize(data):
             if isinstance(data, dict) and '_type' in data:
-                params = dict([[k, _unserialize(v)] for k, v in data.iteritems()])
+                params = dict([[k, _unserialize(v)] for k, v in six.iteritems(data)])
                 return globals()[data['_type']](**params)
             elif isinstance(data, dict):
-                return dict([[k, _unserialize(v)] for k, v in data.iteritems()])
-            elif hasattr(data, '__iter__'):
+                return dict([[k, _unserialize(v)] for k, v in six.iteritems(data)])
+            elif isinstance(data, Iterable) and not isinstance(data, six.string_types):
                 return [_unserialize(e) for e in data]
             else:
                 return data
@@ -127,13 +129,16 @@ class ActionsTemplate(Serializable):
         for action in self.actions:
             action_outputs[action.name] = action.apply(context, project)
         outputs = {}
-        for name, output in self.outputs.iteritems():
+        for name, output in six.iteritems(self.outputs):
             if isinstance(output.value, GetAttr):
                 value = action_outputs[output.value.action].get(output.value.attr, output.default)
             else:
                 value = output.value
             outputs[name] = value
         return outputs
+
+    def __bool__(self):
+        return bool(self.actions)
 
     def __nonzero__(self):
         return bool(self.actions)
@@ -237,10 +242,10 @@ class UploadToS3(BaseAction):
 
 def enrich_references(obj, context):
     if isinstance(obj, dict):
-        return dict((k, enrich_references(v, context)) for k, v in obj.iteritems())
+        return dict((k, enrich_references(v, context)) for k, v in six.iteritems(obj))
     elif isinstance(obj, Ref):
         return context[obj.name]
-    elif hasattr(obj, '__iter__'):
+    elif isinstance(obj, Iterable) and not isinstance(obj, six.string_types):
         return [enrich_references(v, context) for v in obj]
     return obj
 
@@ -260,7 +265,7 @@ class InjectContextAndUploadToS3(UploadToS3):
         zfile = zipfile.ZipFile(tmpfile, 'a')
 
         context_info = zipfile.ZipInfo(context_destinaton)
-        context_info.external_attr = 0444 << 16L
+        context_info.external_attr = 0o444 << 16
         zfile.writestr(context_info, json.dumps(context_to_inject))
         zfile.close()
         return tmpfile
