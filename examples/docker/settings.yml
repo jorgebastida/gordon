@@ -1,0 +1,7 @@
+---
+project: docker
+default-region: eu-west-1
+code-bucket: gordon-docker-0do1mc7
+apps:
+  - gordon.contrib.lambdas
+  - helloworld

@@ -388,7 +388,13 @@ class Lambda(base.BaseResource):
     def get_zip_file(self):
         """Returns a zip file file-like object with all the required source
         on it."""
-        destination = tempfile.mkdtemp()
+
+        # Create gordon workspace
+        gord_tmp_dir = os.path.join(os.path.expanduser("~"), '.gordon')
+        if not os.path.exists(gord_tmp_dir):
+            os.makedirs(gord_tmp_dir)
+
+        destination = tempfile.mkdtemp(dir=gord_tmp_dir)
 
         try:
             self._collect_lambda_content(destination)

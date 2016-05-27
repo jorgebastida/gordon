@@ -13,7 +13,8 @@ Features
 * 100% Boilerplate free
 * Python/Javascript/Java/Golang runtimes supported.
 * Simple yml configuration
-* Seamless integration with (``pip``,``npm``, ``gradle`` ...)
+* Seamless integration with (``pip``,``npm``, ``gradle``, ...)
+* 100% Customizable lambda build process. Use ``Docker``, ``Makefile`` or... a simple ``shell`` script.
 * Dead-simple custom multi-stage and multi region deployments ``--stage=prod``
 * Supported integrations
   * APIGateway  
@@ -50,6 +51,7 @@ Example Projects
 * [Telegram Bot](https://github.com/jorgebastida/gordon/tree/master/examples/telegram): Create a simple bot in telegram.
 * [Twilio](https://github.com/jorgebastida/gordon/tree/master/examples/twilio): Integrate your lambdas with Twilio using TwiML.
 * [Snowplow Analytics](https://github.com/jorgebastida/gordon/tree/master/examples/snowplow): Consume Snowplow Analytics events from gordon.
+* [Docker](https://github.com/jorgebastida/gordon/tree/master/examples/docker): Compile lambdas with native dependencies within a docker container thanks to [lambci/docker-lambda](https://github.com/lambci/docker-lambda)
 
 
 Why should you use this project?

@@ -1,0 +1,17 @@
+lambdas:
+
+    hellojs:
+        code: hellojs
+        runtime: node
+        handler: code.handler
+        build:
+            - cp -Rf * {target}
+            - docker run --rm -v {target}:/var/task lambci/lambda:build npm install
+
+    hellopython:
+        code: hellopy
+        runtime: python2.7
+        handler: code.handler
+        build:
+          - cp -Rf * {target}
+          - docker run --rm -v {target}:/var/task lambci/lambda:build-python2.7 pip install -r requirements.txt -q -t {target}
