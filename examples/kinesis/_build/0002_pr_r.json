@@ -72,6 +72,7 @@
             }, 
             "filename": "code/contrib_helpers_sleep.zip", 
             "context_to_inject": {}, 
+            "context_destinaton": ".context", 
             "key": "contrib_helpers_sleep.zip"
         }, 
         {
@@ -83,6 +84,7 @@
             }, 
             "filename": "code/contrib_lambdas_version.zip", 
             "context_to_inject": {}, 
+            "context_destinaton": ".context", 
             "key": "contrib_lambdas_version.zip"
         }, 
         {
@@ -94,6 +96,7 @@
             }, 
             "filename": "code/exampleapp_kinesisconsumer.zip", 
             "context_to_inject": {}, 
+            "context_destinaton": ".context", 
             "key": "exampleapp_kinesisconsumer.zip"
         }
     ], 

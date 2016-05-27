@@ -1,7 +1,7 @@
 lambdas:
   kinesisconsumer:
     code: kinesisconsumer.py
-
+    timeout: 20
     policies:
       read_kinesis:
         Version: "2012-10-17"
@@ -12,5 +12,5 @@ lambdas:
               - "kinesis:ListStreams"
               - "kinesis:GetShardIterator"
               - "kinesis:GetRecords"
-            Resource: "arn:aws:kinesis:*:*:*"
+            Resource: "*"
             Effect: "Allow"

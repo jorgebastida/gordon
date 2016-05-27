@@ -265,8 +265,6 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
             for r in self.get_resources(resource_type):
                 r.register_pre_project_template(template)
 
-        print(template, bool(template))
-        
         if template:
             output_filename = output_filename.format(self._get_next_build_sequence_id())
             puts(colored.cyan(output_filename))
