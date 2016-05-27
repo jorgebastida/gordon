@@ -31,7 +31,7 @@ Features
   * ARN translation helpers
 * Extensive Documentation
 * Good test suite
-* Love
+* Love ❤️
 
 
 Example Projects
