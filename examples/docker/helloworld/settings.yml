@@ -8,10 +8,11 @@ lambdas:
             - cp -Rf * {target}
             - docker run --rm -v {target}:/var/task lambci/lambda:build npm install
 
-    hellopython:
-        code: hellopy
-        runtime: python2.7
-        handler: code.handler
-        build:
-          - cp -Rf * {target}
-          - docker run --rm -v {target}:/var/task lambci/lambda:build-python2.7 pip install -r requirements.txt -q -t {target}
+    # Note: pip support is not available at the moment
+    # hellopython:
+    #     code: hellopy
+    #     runtime: python2.7
+    #     handler: code.handler
+    #     build:
+    #       - cp -Rf * {target}
+    #       - docker run --rm -v {target}:/var/task lambci/lambda:build-python2.7 pip install -r requirements.txt -q -t {target}
