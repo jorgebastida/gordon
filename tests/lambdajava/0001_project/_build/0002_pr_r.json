@@ -1,111 +1,111 @@
 {
-    "actions": [
-        {
-            "filename": "code/contrib_helpers_sleep.zip", 
-            "key": "contrib_helpers_sleep.zip", 
-            "context_to_inject": {}, 
-            "context_destinaton": ".context", 
-            "bucket": {
-                "name": "CodeBucket", 
-                "_type": "Ref"
-            }, 
-            "name": "sleep-upload", 
-            "_type": "InjectContextAndUploadToS3"
-        }, 
-        {
-            "filename": "code/contrib_lambdas_version.zip", 
-            "key": "contrib_lambdas_version.zip", 
-            "context_to_inject": {}, 
-            "context_destinaton": ".context", 
-            "bucket": {
-                "name": "CodeBucket", 
-                "_type": "Ref"
-            }, 
-            "name": "version-upload", 
-            "_type": "InjectContextAndUploadToS3"
-        }, 
-        {
-            "filename": "code/javaexample_javaexample.zip", 
-            "key": "javaexample_javaexample.zip", 
-            "context_to_inject": {}, 
-            "context_destinaton": ".context", 
-            "bucket": {
-                "name": "CodeBucket", 
-                "_type": "Ref"
-            }, 
-            "name": "javaexample-upload", 
-            "_type": "InjectContextAndUploadToS3"
-        }
-    ], 
-    "outputs": {
-        "JavaexampleS3Url": {
-            "value": {
-                "attr": "s3url", 
-                "action": "javaexample-upload", 
-                "_type": "GetAttr"
-            }, 
-            "name": "JavaexampleS3Url", 
-            "_type": "Output", 
-            "default": ""
-        }, 
-        "JavaexampleS3Version": {
-            "value": {
-                "attr": "s3version", 
-                "action": "javaexample-upload", 
-                "_type": "GetAttr"
-            }, 
-            "name": "JavaexampleS3Version", 
-            "_type": "Output", 
-            "default": ""
-        }, 
-        "SleepS3Version": {
-            "value": {
-                "attr": "s3version", 
-                "action": "sleep-upload", 
-                "_type": "GetAttr"
-            }, 
-            "name": "SleepS3Version", 
-            "_type": "Output", 
-            "default": ""
-        }, 
-        "SleepS3Url": {
-            "value": {
-                "attr": "s3url", 
-                "action": "sleep-upload", 
-                "_type": "GetAttr"
-            }, 
-            "name": "SleepS3Url", 
-            "_type": "Output", 
-            "default": ""
-        }, 
-        "VersionS3Url": {
-            "value": {
-                "attr": "s3url", 
-                "action": "version-upload", 
-                "_type": "GetAttr"
-            }, 
-            "name": "VersionS3Url", 
-            "_type": "Output", 
-            "default": ""
-        }, 
-        "VersionS3Version": {
-            "value": {
-                "attr": "s3version", 
-                "action": "version-upload", 
-                "_type": "GetAttr"
-            }, 
-            "name": "VersionS3Version", 
-            "_type": "Output", 
-            "default": ""
-        }
-    }, 
     "parameters": {
         "CodeBucket": {
-            "name": "CodeBucket", 
+            "default": "", 
             "_type": "Parameter", 
-            "default": ""
+            "name": "CodeBucket"
+        }
+    }, 
+    "outputs": {
+        "SleepS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "value": {
+                "_type": "GetAttr", 
+                "attr": "s3version", 
+                "action": "sleep-upload"
+            }, 
+            "name": "SleepS3Version"
+        }, 
+        "VersionS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "value": {
+                "_type": "GetAttr", 
+                "attr": "s3url", 
+                "action": "version-upload"
+            }, 
+            "name": "VersionS3Url"
+        }, 
+        "VersionS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "value": {
+                "_type": "GetAttr", 
+                "attr": "s3version", 
+                "action": "version-upload"
+            }, 
+            "name": "VersionS3Version"
+        }, 
+        "JavaexampleS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "value": {
+                "_type": "GetAttr", 
+                "attr": "s3url", 
+                "action": "javaexample-upload"
+            }, 
+            "name": "JavaexampleS3Url"
+        }, 
+        "SleepS3Url": {
+            "default": "", 
+            "_type": "Output", 
+            "value": {
+                "_type": "GetAttr", 
+                "attr": "s3url", 
+                "action": "sleep-upload"
+            }, 
+            "name": "SleepS3Url"
+        }, 
+        "JavaexampleS3Version": {
+            "default": "", 
+            "_type": "Output", 
+            "value": {
+                "_type": "GetAttr", 
+                "attr": "s3version", 
+                "action": "javaexample-upload"
+            }, 
+            "name": "JavaexampleS3Version"
         }
     }, 
     "_type": "ActionsTemplate", 
-    "parallelizable": false
+    "parallelizable": false, 
+    "actions": [
+        {
+            "filename": "code/contrib_helpers_sleep.zip", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "_type": "InjectContextAndUploadToS3", 
+            "context_destinaton": ".context", 
+            "context_to_inject": {}, 
+            "key": "contrib_helpers_sleep.zip", 
+            "name": "sleep-upload"
+        }, 
+        {
+            "filename": "code/contrib_lambdas_version.zip", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "_type": "InjectContextAndUploadToS3", 
+            "context_destinaton": ".context", 
+            "context_to_inject": {}, 
+            "key": "contrib_lambdas_version.zip", 
+            "name": "version-upload"
+        }, 
+        {
+            "filename": "code/javaexample_javaexample.zip", 
+            "bucket": {
+                "_type": "Ref", 
+                "name": "CodeBucket"
+            }, 
+            "_type": "InjectContextAndUploadToS3", 
+            "context_destinaton": ".context", 
+            "context_to_inject": {}, 
+            "key": "javaexample_javaexample.zip", 
+            "name": "javaexample-upload"
+        }
+    ]
 }
