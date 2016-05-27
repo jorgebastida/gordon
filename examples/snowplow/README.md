@@ -16,9 +16,10 @@ Documentation relevant to this example:
 How to deploy it?
 ------------------
 
-* Create a dynamodb table.
+* Create a dynamodb table, and add the name to ``DynamodbTable`` in ``parameters/dev.yml``
 * Create a Kinesis stream and get the ARN by running:
  * ``$ aws kinesis describe-stream --stream-name NAME``
+* Add the arn to ``KinesisIntegrationArn`` in ``parameters/dev.yml``
 * ``$ gordon build``
 * ``$ gordon apply``
 * Send a test message to your kinesis by doing:
