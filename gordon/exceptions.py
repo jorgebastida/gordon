@@ -53,10 +53,12 @@ class AbnormalCloudFormationStatusError(BaseGordonException):
     The stack cannot return to a good state. In other words, a dependent
     resource cannot return to its original state, which causes a failure.
 
-    What can you do now? Well... you need to manually delete the stack from the
-    CloudFormation console, and run this commanda again. Before doing that,
-    it would be good if you check what failed... because it is quite possible
-    this will happend again if you don't solve the root issue.
+    What can you do now? Well... you need to delete the stack  and run this
+    commanda again. Before doing that, it would be good if you check what
+    failed... because it is quite possible this will happend again if you
+    don't solve the root issue.
+
+    You can either use the AWS Console, or use gordon's delete action.
 
     Keep in mind that deleting the stack will remove all resources deployed
     by Gordon (Lambdas, EventSourceMapping, APIGateways, etc...) which will

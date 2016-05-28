@@ -342,11 +342,10 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
                 f.write(template.to_json(indent=4))
 
 
-class ProjectApply(BaseProject):
-    """Representation of a project on apply time."""
+class ProjectApplyLoopBase(BaseProject):
 
     def __init__(self, *args, **kwargs):
-        super(ProjectApply, self).__init__(*args, **kwargs)
+        super(ProjectApplyLoopBase, self).__init__(*args, **kwargs)
         self.stage = kwargs.pop('stage', None)
         self.timeout_in_minutes = kwargs.pop('timeout_in_minutes', 15)
         self.region = utils.setup_region(kwargs.pop('region', None), self.settings)
@@ -358,12 +357,13 @@ class ProjectApply(BaseProject):
                 )
             )
 
-    def apply(self):
+    def get_initial_context(self):
+        return {"Stage": self.stage, 'Region': self.region}
+
+    def steps(self):
         """Loop all over the .json files in the build folder and apply each of
         them. Use the output of each of them to populate the context of the
         subsequent templates."""
-
-        puts(colored.blue("Applying project..."))
 
         if not os.path.exists(self.build_path):
             raise exceptions.ProjectNotBuildError()
@@ -381,10 +381,17 @@ class ProjectApply(BaseProject):
             steps.append((int(match.groups()[0]), match.groups()[1], filename, template_type))
             steps = sorted(steps, key=lambda x: x[0])
 
-        context = {"Stage": self.stage, 'Region': self.region}
+        return steps
+
+
+class ProjectApply(ProjectApplyLoopBase):
+
+    def apply(self):
+        puts(colored.blue("Applying project..."))
+        context = self.get_initial_context()
         context.update(self.collect_parameters())
 
-        for (number, name, filename, template_type) in steps:
+        for (number, name, filename, template_type) in self.steps():
             with indent(2):
                 puts(colored.cyan("{} ({})".format(filename, template_type)))
             with indent(4):
@@ -452,6 +459,59 @@ class ProjectApply(BaseProject):
 
         for output in stack.get('Outputs', []):
             context[output['OutputKey']] = output['OutputValue']
+
+
+class ProjectDelete(ProjectApplyLoopBase):
+
+    def __init__(self, *args, **kwargs):
+        super(ProjectDelete, self).__init__(*args, **kwargs)
+        self.dry_run = kwargs.pop('dry_run', True)
+
+    def steps(self):
+        return super(ProjectDelete, self).steps()[::-1]
+
+    def delete(self):
+
+        if self.dry_run:
+            puts(
+                colored.yellow(
+                    ("\nYou are trying to delete this project's resources!\n"
+                     "By default this command runs in dry-run mode. If you are ok \n"
+                     "with the following resources being deleted, you can run this\n"
+                     "command with --confirm to do the actual deletion.\n"
+                     "\nNOTHING IS GOING TO BE DELETED!\n")
+                )
+            )
+            puts(colored.blue("The following resources would be deleted..."))
+        else:
+            puts(colored.blue("Deleting project resources..."))
+
+        context = self.get_initial_context()
+
+        with indent(2):
+            puts(colored.magenta("\nRegion:{Region}\nStage: {Stage}\n".format(**context)))
+
+        for (number, name, filename, template_type) in self.steps():
+            with indent(2):
+                puts(colored.cyan("{} ({})".format(filename, template_type)))
+            with indent(4):
+                if self.debug:
+                    puts(colored.white(u"✸ Delete template {} with context {}".format(filename, context)))
+                getattr(self, 'delete_{}_template'.format(template_type))(name, filename, context)
+
+    def delete_custom_template(self, name, filename, context):
+        """Delete ``filename`` template with ``context``
+        Note: Currently custom templates dont' have any delete hook.
+        """
+        pass
+
+    def delete_cloudformation_template(self, name, filename, context):
+        """Delete ``filename`` template with ``context``-"""
+        stack_name = utils.generate_stack_name(context['Stage'], self.name, name)
+        utils.delete_cf_stack(
+            name=stack_name,
+            dry_run=self.dry_run
+        )
 
 
 class Bootstrap(object):

@@ -17,7 +17,7 @@ import yaml
 import jinja2
 import troposphere
 from troposphere import cloudformation
-from clint.textui import colored, puts
+from clint.textui import colored, puts, indent
 
 from . import exceptions
 from gordon import get_version
@@ -380,6 +380,45 @@ def create_or_update_cf_stack(name, template_filename, bucket=None, context=None
     stack = wait_for_cf_status(stack['StackId'], FINAL_STATUS)
 
     return stack
+
+
+def delete_s3_bucket(bucket_name, dry_run=True):
+    s3client = boto3.client('s3')
+    versions = s3client.list_object_versions(Bucket=bucket_name).get('Versions', [])
+    objects = [{'Key': o['Key'], 'VersionId': o['VersionId']} for o in versions]
+    if objects:
+        for obj in objects:
+            puts(colored.red("AWS::S3::Key {}/{}".format(bucket_name, obj['Key'])))
+        if not dry_run:
+            s3client.delete_objects(
+                Bucket=bucket_name,
+                Delete={'Objects': objects, 'Quiet': False}
+            )
+    puts(colored.red("S3 Bucket: {}".format(bucket_name)))
+    if not dry_run:
+        s3client.delete_bucket(Bucket=bucket_name)
+
+
+def delete_cf_stack(name, dry_run=True):
+    client = boto3.client('cloudformation')
+    try:
+        stack = client.describe_stack_resources(StackName=name)
+    except ClientError as e:
+        if e.response['Error']['Code'] == 'ValidationError':
+            puts(colored.red("Stack '{}' not found.".format(name)))
+            return
+
+    for resource in stack['StackResources']:
+        puts(colored.red("{} {}".format(resource['ResourceType'], resource['PhysicalResourceId'])))
+        if resource['ResourceType'] == 'AWS::S3::Bucket':
+            with indent(2):
+                delete_s3_bucket(resource['PhysicalResourceId'], dry_run=dry_run)
+
+    puts(colored.red("AWS::Cloudformation::Stack {}".format(name)))
+    if not dry_run:
+        client.delete_stack(
+            StackName=name
+        )
 
 
 class BaseLambdaAWSCustomObject(cloudformation.AWSCustomObject):

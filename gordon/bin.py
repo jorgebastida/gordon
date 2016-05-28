@@ -4,7 +4,7 @@ import argparse
 
 from clint.textui import colored, puts
 
-from .core import Bootstrap, ProjectBuild, ProjectApply
+from .core import Bootstrap, ProjectBuild, ProjectApply, ProjectDelete
 from .exceptions import BaseGordonException
 
 
@@ -65,6 +65,20 @@ def main(argv=None):
                               type=int,
                               default=15,
                               help="CloudFormation timeout.")
+
+    delete_parser = subparsers.add_parser('delete', description='Delete this project stacks')
+    add_default_arguments(delete_parser)
+    delete_parser.set_defaults(cls=ProjectDelete)
+    delete_parser.set_defaults(func="delete")
+    delete_parser.add_argument("-s", "--stage",
+                               dest="stage",
+                               type=str,
+                               default='dev',
+                               help="Stage where to apply this project")
+    delete_parser.add_argument("--confirm",
+                               dest="dry_run",
+                               action="store_false",
+                               help="Confirm the deletion of the resources")
 
     options, args = parser.parse_known_args(argv)
 
