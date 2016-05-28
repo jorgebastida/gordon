@@ -57,9 +57,11 @@ Example Projects
 Why should you use this project?
 -----------------------------------
 
-Because this project doesn't introduces anything new. Gordon is a thin layer of sugar around the fact that writing CloudFormation templates by hand is a nightmare and some conventions around how to structure a project using Lambdas... and not much more, which is great!
+Because this project doesn't introduces anything new. Gordon is just a thin layer of sugar around AWS services and few conventions, which makes deploying and wiring Lambdas really easy.
 
-Why introduce yet-another framework when you can build lambdas using tools you already know (``pip``, ``npm``, ``grunt``, ``gulp``, ``gradle``, ``Makefile``...) and deploy them using a service Amazon cares about and maintains?
+Under the hood, gordon just generates self-contained CloudFormation templates... which is great!
+
+Why introduce yet-another framework when you can build lambdas using AWS services and tools you already know how to use (``pip``, ``npm``, ``grunt``, ``gulp``, ``gradle``, ``Makefile``...)
 
 Keep it simple! 😀
 
@@ -83,7 +85,7 @@ This project tries to solve these three issues by:
 
 Does gordon use gordon to deploy gordon?
 -----------------------------------------
-Yes, we eat our own dog food; We use gordon to create gordon. The idea is that, (unlike many other projects), we don't think streaming API commands to AWS is a nice solution, so instead, we fill the gaps with custom CloudFormation resources.
+Yes, we eat our own dog food; We use gordon to create gordon. The idea is that, (unlike many other projects) we don't think streaming API commands to AWS is a nice solution, so instead, we fill the gaps with custom CloudFormation resources.
 
 Those Custom CloudFormation resources are implemented using Lambdas (deployed by gordon)... crazy uh?!
 
