@@ -460,10 +460,15 @@ class Bootstrap(object):
     def __init__(self, path, **kwargs):
         self.path = path
         self.region = utils.setup_region(kwargs.pop('region', None))
-        self.project_name = kwargs.pop('project_name', None)
-        self.app_name = kwargs.pop('app_name', None)
+        self.project_name = self._clean_name(kwargs.pop('project_name', ''))
+        self.app_name = self._clean_name(kwargs.pop('app_name', ''))
         self.runtime = kwargs.pop('runtime', None)
         self.root = os.path.dirname(os.path.abspath(__file__))
+
+    def _clean_name(self, name):
+        name = name.lower()
+        name = [p for p in re.split(r'[^a-zA-Z0-9]', name) if p]
+        return u'-'.join(name)
 
     def startproject(self):
         """Create a new project called ``project_name``."""
