@@ -1,111 +1,111 @@
 {
-    "_type": "ActionsTemplate", 
-    "parameters": {
-        "CodeBucket": {
-            "_type": "Parameter", 
-            "default": "", 
-            "name": "CodeBucket"
-        }
-    }, 
-    "outputs": {
-        "ConsumerS3Version": {
-            "_type": "Output", 
-            "default": "", 
-            "value": {
-                "_type": "GetAttr", 
-                "attr": "s3version", 
-                "action": "consumer-upload"
-            }, 
-            "name": "ConsumerS3Version"
-        }, 
-        "VersionS3Version": {
-            "_type": "Output", 
-            "default": "", 
-            "value": {
-                "_type": "GetAttr", 
-                "attr": "s3version", 
-                "action": "version-upload"
-            }, 
-            "name": "VersionS3Version"
-        }, 
-        "SleepS3Version": {
-            "_type": "Output", 
-            "default": "", 
-            "value": {
-                "_type": "GetAttr", 
-                "attr": "s3version", 
-                "action": "sleep-upload"
-            }, 
-            "name": "SleepS3Version"
-        }, 
-        "VersionS3Url": {
-            "_type": "Output", 
-            "default": "", 
-            "value": {
-                "_type": "GetAttr", 
-                "attr": "s3url", 
-                "action": "version-upload"
-            }, 
-            "name": "VersionS3Url"
-        }, 
-        "ConsumerS3Url": {
-            "_type": "Output", 
-            "default": "", 
-            "value": {
-                "_type": "GetAttr", 
-                "attr": "s3url", 
-                "action": "consumer-upload"
-            }, 
-            "name": "ConsumerS3Url"
-        }, 
-        "SleepS3Url": {
-            "_type": "Output", 
-            "default": "", 
-            "value": {
-                "_type": "GetAttr", 
-                "attr": "s3url", 
-                "action": "sleep-upload"
-            }, 
-            "name": "SleepS3Url"
-        }
-    }, 
     "actions": [
         {
-            "key": "contrib_helpers_sleep.zip", 
-            "filename": "code/contrib_helpers_sleep.zip", 
-            "bucket": {
-                "_type": "Ref", 
-                "name": "CodeBucket"
-            }, 
-            "context_destinaton": ".context", 
             "name": "sleep-upload", 
+            "context_destinaton": ".context", 
             "context_to_inject": {}, 
+            "filename": "code/contrib_helpers_sleep.zip", 
+            "key": "contrib_helpers_sleep.zip", 
+            "bucket": {
+                "name": "CodeBucket", 
+                "_type": "Ref"
+            }, 
             "_type": "InjectContextAndUploadToS3"
         }, 
         {
-            "key": "contrib_lambdas_version.zip", 
-            "filename": "code/contrib_lambdas_version.zip", 
-            "bucket": {
-                "_type": "Ref", 
-                "name": "CodeBucket"
-            }, 
-            "context_destinaton": ".context", 
             "name": "version-upload", 
+            "context_destinaton": ".context", 
             "context_to_inject": {}, 
+            "filename": "code/contrib_lambdas_version.zip", 
+            "key": "contrib_lambdas_version.zip", 
+            "bucket": {
+                "name": "CodeBucket", 
+                "_type": "Ref"
+            }, 
             "_type": "InjectContextAndUploadToS3"
         }, 
         {
-            "key": "kinesisconsumer_consumer.zip", 
-            "filename": "code/kinesisconsumer_consumer.zip", 
-            "bucket": {
-                "_type": "Ref", 
-                "name": "CodeBucket"
-            }, 
-            "context_destinaton": ".context", 
             "name": "consumer-upload", 
+            "context_destinaton": ".context", 
             "context_to_inject": {}, 
+            "filename": "code/kinesisconsumer_consumer.zip", 
+            "key": "kinesisconsumer_consumer.zip", 
+            "bucket": {
+                "name": "CodeBucket", 
+                "_type": "Ref"
+            }, 
             "_type": "InjectContextAndUploadToS3"
         }
     ], 
+    "outputs": {
+        "SleepS3Version": {
+            "value": {
+                "attr": "s3version", 
+                "action": "sleep-upload", 
+                "_type": "GetAttr"
+            }, 
+            "name": "SleepS3Version", 
+            "_type": "Output", 
+            "default": ""
+        }, 
+        "ConsumerS3Url": {
+            "value": {
+                "attr": "s3url", 
+                "action": "consumer-upload", 
+                "_type": "GetAttr"
+            }, 
+            "name": "ConsumerS3Url", 
+            "_type": "Output", 
+            "default": ""
+        }, 
+        "ConsumerS3Version": {
+            "value": {
+                "attr": "s3version", 
+                "action": "consumer-upload", 
+                "_type": "GetAttr"
+            }, 
+            "name": "ConsumerS3Version", 
+            "_type": "Output", 
+            "default": ""
+        }, 
+        "SleepS3Url": {
+            "value": {
+                "attr": "s3url", 
+                "action": "sleep-upload", 
+                "_type": "GetAttr"
+            }, 
+            "name": "SleepS3Url", 
+            "_type": "Output", 
+            "default": ""
+        }, 
+        "VersionS3Version": {
+            "value": {
+                "attr": "s3version", 
+                "action": "version-upload", 
+                "_type": "GetAttr"
+            }, 
+            "name": "VersionS3Version", 
+            "_type": "Output", 
+            "default": ""
+        }, 
+        "VersionS3Url": {
+            "value": {
+                "attr": "s3url", 
+                "action": "version-upload", 
+                "_type": "GetAttr"
+            }, 
+            "name": "VersionS3Url", 
+            "_type": "Output", 
+            "default": ""
+        }
+    }, 
+    "parameters": {
+        "CodeBucket": {
+            "name": "CodeBucket", 
+            "_type": "Parameter", 
+            "default": ""
+        }
+    }, 
+    "_type": "ActionsTemplate", 
     "parallelizable": false
 }

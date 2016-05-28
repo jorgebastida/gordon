@@ -164,3 +164,8 @@ class LambdaBuildProcessError(BaseGordonException):
 class InvalidApigatewayIntegrationTypeError(BaseGordonException):
     hint = u"Invalid Apigateway integrantion type: {}"
     code = 22
+
+
+class LambdaNotFound(BaseGordonException):
+    hint = u"Lambda with name {} can't be found."
+    code = 23

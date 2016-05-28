@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 import os
+import sys
+import json
 import shutil
 import tempfile
 import zipfile
 import subprocess
+import importlib
 
 import six
 import troposphere
@@ -385,23 +388,66 @@ class Lambda(base.BaseResource):
             )
         )
 
-    def get_zip_file(self):
-        """Returns a zip file file-like object with all the required source
-        on it."""
-
-        # Create gordon workspace
-        gord_tmp_dir = os.path.join(os.path.expanduser("~"), '.gordon')
-        if not os.path.exists(gord_tmp_dir):
-            os.makedirs(gord_tmp_dir)
-
-        destination = tempfile.mkdtemp(dir=gord_tmp_dir)
+    def collect_and_run(self):
+        self.project.create_workspace()
+        destination = tempfile.mkdtemp(dir=self.project.get_workspace())
 
         try:
             self._collect_lambda_content(destination)
         except subprocess.CalledProcessError as exc:
             raise exceptions.LambdaBuildProcessError(exc, self)
 
-        self._clean_package(destination)
+        self.run(destination)
+
+    def _get_default_run_command(self):
+        raise NotImplementedError()
+
+    def _get_loader_requirements(self):
+        return []
+
+    def run(self, path):
+        module, handler = self.get_handler().rsplit('.', 1)
+
+        for source, dest in self._get_loader_requirements():
+            shutil.copyfile(
+                os.path.join(self.project._gordon_root, 'loaders', source),
+                os.path.join(path, dest)
+            )
+
+        command = self.settings.get('run', self._get_default_run_command())
+        command = command.format(
+            lambda_path=path,
+            name=self.name,
+            memory=self.get_memory(),
+            module=module,
+            handler=handler,
+            timeout=self.get_timeout()
+        )
+
+        with utils.cd(path):
+            try:
+                out = subprocess.check_output(
+                    command,
+                    shell=True,
+                    stdin=sys.stdin,
+                    stderr=subprocess.STDOUT
+                )
+            except subprocess.CalledProcessError as exc:
+                print(exc.output)
+            else:
+                print(out)
+
+    def get_zip_file(self):
+        """Returns a zip file file-like object with all the required source
+        on it."""
+
+        self.project.create_workspace()
+        destination = tempfile.mkdtemp(dir=self.project.get_workspace())
+
+        try:
+            self._collect_lambda_content(destination)
+        except subprocess.CalledProcessError as exc:
+            raise exceptions.LambdaBuildProcessError(exc, self)
 
         output = six.BytesIO()
         zf = zipfile.ZipFile(output, 'w')
@@ -425,11 +471,6 @@ class Lambda(base.BaseResource):
 
     def _get_build_command(self, destination):
         return self.settings.get('build', self._get_default_build_command(destination))
-
-    def _clean_package(self, destination):
-        """Clean lambda package content before creating a .zip file
-        """
-        pass
 
     def _collect_lambda_content(self, destination):
         """Collects all required files to be included in the .zip file of the
@@ -465,7 +506,7 @@ class Lambda(base.BaseResource):
                 )
                 if self.project.debug:
                     with indent(4):
-                        puts(colored.white(command))
+                        self.project.puts(colored.white(command))
                 out = subprocess.check_output(
                     command,
                     shell=True,
@@ -473,7 +514,7 @@ class Lambda(base.BaseResource):
                 )
                 if self.project.debug and out:
                     with indent(4):
-                        puts(out)
+                        self.project.puts(out)
 
     def _collect_folder(self, source, destination):
         for basedir, dirs, files in os.walk(source):
@@ -541,6 +582,12 @@ class PythonLambda(Lambda):
             commands.append('cd {target} && find . -name "*.pyc" -delete')
         return commands
 
+    def _get_default_run_command(self):
+        return 'touch __init__.py && python __gordon_loader.py {module} {handler} {name} {memory} {timeout}'
+
+    def _get_loader_requirements(self):
+        return [['python.py', '__gordon_loader.py']]
+
 
 class NodeLambda(Lambda):
 
@@ -564,6 +611,42 @@ class NodeLambda(Lambda):
             commands.append('cd {target} && {npm_path} install {npm_install_extra}')
         return commands
 
+    def _get_default_run_command(self):
+        return 'node __gordon_loader.js {module} {handler} {name} {memory} {timeout}'
+
+    def _get_loader_requirements(self):
+        return [['node.js', '__gordon_loader.js']]
+
+    # def run(self, path):
+    #     module, handler = self.get_handler().rsplit('.', 1)
+    #
+    #     shutil.copyfile(
+    #         os.path.join(self.project._gordon_root, 'loaders', 'node.js'),
+    #         os.path.join(path, '__gordon_loader.js')
+    #     )
+    #
+    #     with utils.cd(path):
+    #         try:
+    #             out = subprocess.check_output(
+    #                 "node __gordon_loader.js {} {} {} {}".format(module, handler, self.name, self.get_memory()),
+    #                 shell=True,
+    #                 stdin=sys.stdin,
+    #                 stderr=subprocess.STDOUT
+    #             )
+    #         except subprocess.CalledProcessError as exc:
+    #             print(exc.output)
+    #         else:
+    #             print(out)
+
+        #
+        # getattr(module, handler)(
+        #     json.loads(sys.stdin.read()),
+        #     utils.LambdaContext(
+        #         timeout=self.get_timeout(),
+        #         function_name=self.name,
+        #         memory_limit_in_mb=self.get_memory()
+        #     )
+        # )
 
 class JavaLambda(Lambda):
 

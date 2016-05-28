@@ -199,22 +199,22 @@ class UploadToS3(BaseAction):
         # If the object is present, and the hash in the metadata is the same
         # we don't need to upload it.
         if obj and file_hash == obj['Metadata'].get('sha1'):
-            self._success(file_hash)
+            self._success(file_hash, project.puts)
             if self.project.debug:
-                puts(colored.white(u"✸ File with hash {} already present in {}/{}.".format(
+                project.puts(colored.white(u"✸ File with hash {} already present in {}/{}.".format(
                     file_hash[:8], self.bucket, self.key))
                 )
             return self.output(obj['VersionId'])
 
         # If the key is not present or the hash doesn't match, we need to upload it.
         if self.project.debug:
-            puts(colored.white(u"✸ Uploading file with hash {} to {}/{}.".format(
+            project.puts(colored.white(u"✸ Uploading file with hash {} to {}/{}.".format(
                 file_hash[:8], self.bucket, self.key))
             )
 
         obj = boto3.resource('s3').Object(self.bucket, self.key)
         obj.upload_file(self.filename, ExtraArgs={'Metadata': {'sha1': file_hash}})
-        self._success(file_hash)
+        self._success(file_hash, project.puts)
         return self.output(obj.version_id)
 
     def output(self, version):
@@ -230,8 +230,8 @@ class UploadToS3(BaseAction):
     def prepare_file(self, filename):
         return filename
 
-    def _success(self, metadata):
-        puts(
+    def _success(self, metadata, puts_function):
+        puts_function(
             colored.green(
                 u"✓ {} ({})".format(
                     os.path.relpath(self._friendly_name, self.project.build_path), metadata[:8]
