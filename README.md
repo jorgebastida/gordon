@@ -72,7 +72,7 @@ One of the best advantages of using AWS is the fact that reproducibility is at i
 
 Then... why not use only CloudFormation? Well, there are three reasons:
 
-1. **Complexity**: CloudFormation stacks are defined using JSON templates which are a nightmare to write and maintain. And remember, Friends don't let friends write JSON files.
+1. **Complexity**: CloudFormation stacks are defined using JSON templates which are a nightmare to write and maintain. And remember... friends don't let friends write JSON files.
 2. **Glue**: There is a lot of glue to put in between a "normal user" and the reality-check of deploying and wiring a Lambda into AWS.
 3. **APIs**: Not all AWS APIs are released when services are announced... ain't frameworks (boto3), nor integrations with CloudFormation.
 
