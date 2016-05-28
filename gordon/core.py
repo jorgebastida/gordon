@@ -23,6 +23,7 @@ SETTINGS_FILE = 'settings.yml'
 
 AWS_LAMBDA_REGIONS = (
     'eu-west-1',
+    'eu-central-1',
     'ap-northeast-1',
     'us-east-1',
     'us-west-2',
