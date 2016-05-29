@@ -50,6 +50,7 @@ Example Projects
 * [Contexts](https://github.com/jorgebastida/gordon/tree/master/examples/contexts): Add dynamic configuration to your lambdas.
 * [Lambda based Custom CloudFormation Resouces](https://github.com/jorgebastida/gordon/tree/master/examples/cloudformation-custom-resources): Manage CloudFormation resources using Lambdas.
 * [Telegram Bot](https://github.com/jorgebastida/gordon/tree/master/examples/telegram): Create a simple bot in telegram.
+* [Slack Bot](https://github.com/jorgebastida/gordon/tree/master/examples/slack): Create a simple slash command bot for Slack.
 * [Twilio](https://github.com/jorgebastida/gordon/tree/master/examples/twilio): Integrate your lambdas with Twilio using TwiML.
 * [Snowplow Analytics](https://github.com/jorgebastida/gordon/tree/master/examples/snowplow): Consume Snowplow Analytics events from gordon.
 * [Docker](https://github.com/jorgebastida/gordon/tree/master/examples/docker): Compile lambdas with native dependencies within a docker container thanks to [lambci/docker-lambda](https://github.com/lambci/docker-lambda)

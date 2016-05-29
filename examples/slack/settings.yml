@@ -1,0 +1,28 @@
+---
+project: slackexample
+default-region: eu-west-1
+code-bucket: gordon-slackexample-1zo1mc8
+apps:
+  - gordon.contrib.lambdas
+  - botapp
+
+contexts:
+  default:
+    token: ref://Token
+
+apigateway:
+
+  slackexampleapi:
+    description: My Slack Bot API
+    resources:
+
+      /my-python-bot-webhook:
+        methods: POST
+        integration:
+          lambda: botapp.python_bot
+        request_templates:
+            # Slack sends requests with content type application/x-www-form-urlencoded
+            # To enable API gateway to parse them we need to
+            # passthrough that content-type
+            application/x-www-form-urlencoded: |
+                {"body": $input.json("$")}

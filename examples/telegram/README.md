@@ -3,7 +3,7 @@ Telegram Example
 
 ![gordon](http://gordondoc.s3-website-eu-west-1.amazonaws.com/_static/examples/telegram.svg)
 
-This project defines one API Gateway called ``telegramexampleapi``and connects one
+This project defines one API Gateway called ``telegramexampleapi`` and connects one
 lambda written in javascript called ``javascript_bot`` with the ``/my-js-bot-webhook`` url.
 
 In order to create your bot, you'll need to follow the steps described in the [Telegram Bots:An introduction for developers](https://core.telegram.org/bots) page.

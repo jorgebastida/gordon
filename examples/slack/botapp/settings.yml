@@ -1,0 +1,6 @@
+lambdas:
+
+  python_bot:
+    code: mypythonbot
+    handler: code.handler
+    runtime: python
