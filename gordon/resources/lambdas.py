@@ -5,6 +5,7 @@ import shutil
 import tempfile
 import zipfile
 import subprocess
+import platform
 
 import six
 import troposphere
@@ -390,8 +391,16 @@ class Lambda(base.BaseResource):
         self.project.create_workspace()
         destination = tempfile.mkdtemp(dir=self.project.get_workspace())
 
+        # Translate pythona architecture to go architecture.
+        # https://go.googlesource.com/go/+/master/src/cmd/dist/build.go#1086
+        go_target_arch = {'i386': '386', 'x86_64': 'amd64'}[platform.processor()]
+
         try:
-            self._collect_lambda_content(destination)
+            self._collect_lambda_content(
+                destination,
+                go_target_os=platform.system().lower(),
+                go_target_arch=go_target_arch
+            )
         except subprocess.CalledProcessError as exc:
             raise exceptions.LambdaBuildProcessError(exc, self)
 
@@ -467,16 +476,16 @@ class Lambda(base.BaseResource):
     def _get_build_command(self, destination):
         return self.settings.get('build', self._get_default_build_command(destination))
 
-    def _collect_lambda_content(self, destination):
+    def _collect_lambda_content(self, destination, **kwargs):
         """Collects all required files to be included in the .zip file of the
         lambda. Returns a temporal directory path
         """
         if os.path.isfile(os.path.join(self.get_root(), self.settings['code'])):
             self._collect_lambda_file_content(destination)
         else:
-            self._collect_lambda_module_content(destination)
+            self._collect_lambda_module_content(destination, **kwargs)
 
-    def _collect_lambda_module_content(self, destination):
+    def _collect_lambda_module_content(self, destination, go_target_arch='amd64', go_target_os='linux'):
         root = os.path.join(self.get_root(), self.settings['code'])
         with utils.cd(root):
             commands = self._get_build_command(destination)
@@ -497,7 +506,9 @@ class Lambda(base.BaseResource):
                     gradle_build_extra=self._gradle_build_extra(),
                     project_path=self.project.path,
                     project_name=self.project.name,
-                    lambda_name=self.name
+                    lambda_name=self.name,
+                    go_target_os=go_target_os,
+                    go_target_arch=go_target_arch,
                 )
                 if self.project.debug:
                     with indent(4):

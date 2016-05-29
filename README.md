@@ -11,7 +11,8 @@ Features
 ---------
 * 100% CloudFormation resource creation.
 * 100% Boilerplate free
-* Python/Javascript/Java/Golang runtimes supported.
+* Python/Javascript/Java/Golang/... runtimes supported.
+* Run Lambdas locally (Python/Javascript/Java/Golang/...)
 * Simple yml configuration
 * Seamless integration with (``pip``,``npm``, ``gradle``, ...)
 * 100% Customizable lambda build process. Use ``Docker``, ``Makefile`` or... a simple ``shell`` script.
