@@ -402,9 +402,13 @@ class Lambda(base.BaseResource):
                 go_target_arch=go_target_arch
             )
         except subprocess.CalledProcessError as exc:
+            shutil.rmtree(destination)
             raise exceptions.LambdaBuildProcessError(exc, self)
 
-        self.run(destination)
+        try:
+            self.run(destination)
+        finally:
+            shutil.rmtree(destination)
 
     def _get_default_run_command(self):
         raise NotImplementedError()
@@ -451,6 +455,7 @@ class Lambda(base.BaseResource):
         try:
             self._collect_lambda_content(destination)
         except subprocess.CalledProcessError as exc:
+            shutil.rmtree(destination)
             raise exceptions.LambdaBuildProcessError(exc, self)
 
         output = six.BytesIO()
