@@ -6,5 +6,5 @@ lambdas:
     runtime: nodejs4.3
     build:
         - cp -Rf * {target}
-        - GOOS=linux GOARCH=amd64 go build -o {target}/code_go_compiled code.go
+        - GOOS={go_target_os} GOARCH={go_target_arch} go build -o {target}/code_go_compiled code.go
         - chmod +x {target}/code_go_compiled

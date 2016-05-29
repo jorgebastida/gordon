@@ -1,5 +1,4 @@
 {
-    "_type": "ActionsTemplate", 
     "parameters": {
         "CodeBucket": {
             "_type": "Parameter", 
@@ -7,6 +6,8 @@
             "name": "CodeBucket"
         }
     }, 
+    "_type": "ActionsTemplate", 
+    "parallelizable": false, 
     "outputs": {
         "ExampleS3Version": {
             "_type": "Output", 
@@ -18,15 +19,15 @@
             }, 
             "name": "ExampleS3Version"
         }, 
-        "VersionS3Version": {
+        "ExampleS3Url": {
             "_type": "Output", 
             "default": "", 
             "value": {
                 "_type": "GetAttr", 
-                "attr": "s3version", 
-                "action": "version-upload"
+                "attr": "s3url", 
+                "action": "example-upload"
             }, 
-            "name": "VersionS3Version"
+            "name": "ExampleS3Url"
         }, 
         "SleepS3Version": {
             "_type": "Output", 
@@ -38,6 +39,16 @@
             }, 
             "name": "SleepS3Version"
         }, 
+        "VersionS3Version": {
+            "_type": "Output", 
+            "default": "", 
+            "value": {
+                "_type": "GetAttr", 
+                "attr": "s3version", 
+                "action": "version-upload"
+            }, 
+            "name": "VersionS3Version"
+        }, 
         "VersionS3Url": {
             "_type": "Output", 
             "default": "", 
@@ -47,16 +58,6 @@
                 "action": "version-upload"
             }, 
             "name": "VersionS3Url"
-        }, 
-        "ExampleS3Url": {
-            "_type": "Output", 
-            "default": "", 
-            "value": {
-                "_type": "GetAttr", 
-                "attr": "s3url", 
-                "action": "example-upload"
-            }, 
-            "name": "ExampleS3Url"
         }, 
         "SleepS3Url": {
             "_type": "Output", 
@@ -71,41 +72,40 @@
     }, 
     "actions": [
         {
-            "key": "contrib_helpers_sleep.zip", 
             "filename": "code/contrib_helpers_sleep.zip", 
+            "_type": "InjectContextAndUploadToS3", 
+            "context_to_inject": {}, 
+            "key": "contrib_helpers_sleep.zip", 
+            "context_destinaton": ".context", 
             "bucket": {
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
-            "context_destinaton": ".context", 
-            "name": "sleep-upload", 
-            "context_to_inject": {}, 
-            "_type": "InjectContextAndUploadToS3"
+            "name": "sleep-upload"
         }, 
         {
-            "key": "contrib_lambdas_version.zip", 
             "filename": "code/contrib_lambdas_version.zip", 
+            "_type": "InjectContextAndUploadToS3", 
+            "context_to_inject": {}, 
+            "key": "contrib_lambdas_version.zip", 
+            "context_destinaton": ".context", 
             "bucket": {
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
-            "context_destinaton": ".context", 
-            "name": "version-upload", 
-            "context_to_inject": {}, 
-            "_type": "InjectContextAndUploadToS3"
+            "name": "version-upload"
         }, 
         {
-            "key": "cron_example.zip", 
             "filename": "code/cron_example.zip", 
+            "_type": "InjectContextAndUploadToS3", 
+            "context_to_inject": {}, 
+            "key": "cron_example.zip", 
+            "context_destinaton": ".context", 
             "bucket": {
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
-            "context_destinaton": ".context", 
-            "name": "example-upload", 
-            "context_to_inject": {}, 
-            "_type": "InjectContextAndUploadToS3"
+            "name": "example-upload"
         }
-    ], 
-    "parallelizable": false
+    ]
 }

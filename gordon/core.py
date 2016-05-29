@@ -51,6 +51,7 @@ class BaseResourceContainer(object):
     def _load_resources(self):
         """Load resources defined in ``self.settings`` and stores them in
         ``self._resources`` map."""
+        puts = (getattr(self, 'project', None) or self).puts
         for resource_type, resource_cls in six.iteritems(AVAILABLE_RESOURCES):
             for name in self.settings.get(resource_type, {}):
                 extra = {
@@ -98,6 +99,7 @@ class BaseProject(object):
     """Base Project representation accross different actions."""
 
     DEFAULT_SETTINS = {}
+    quiet = False
 
     def __init__(self, path, *args, **kwargs):
         self.path = path
@@ -110,6 +112,18 @@ class BaseProject(object):
             protocols=protocols.BASE_BUILD_PROTOCOLS
         )
         self.name = self.settings['project']
+        self._gordon_root = os.path.dirname(__file__)
+
+    def create_workspace(self):
+        if not os.path.exists(self.get_workspace()):
+            os.makedirs(self.get_workspace())
+
+    def get_workspace(self):
+        return os.path.join(os.path.expanduser("~"), '.gordon')
+
+    def puts(self, *args, **kwargs):
+        if not self.quiet:
+            puts(*args, **kwargs)
 
 
 class ProjectBuild(BaseProject, BaseResourceContainer):
@@ -125,9 +139,9 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
         self._in_project_resource_references = {}
         self._in_project_cf_resource_references = {}
         BaseProject.__init__(self, *args, **kwargs)
-        puts(colored.blue("Loading project resources"))
+        self.puts(colored.blue("Loading project resources"))
         BaseResourceContainer.__init__(self, *args, **kwargs)
-        puts(colored.blue("Loading installed applications"))
+        self.puts(colored.blue("Loading installed applications"))
         self._load_installed_applications()
         for resource_type in AVAILABLE_RESOURCES:
             for resouce in self.get_resources(resource_type):
@@ -164,7 +178,7 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
                 raise exceptions.InvalidAppFormatError(application)
 
             with indent(2):
-                puts(colored.cyan("{}:".format(application_name)))
+                self.puts(colored.cyan("{}:".format(application_name)))
 
             self.add_application(
                 App(
@@ -213,7 +227,7 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
 
     def build(self):
         """Build current current project"""
-        puts(colored.blue("Building project..."))
+        self.puts(colored.blue("Building project..."))
 
         if os.path.exists(self.build_path):
             shutil.rmtree(self.build_path)
@@ -268,7 +282,7 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
 
         if template:
             output_filename = output_filename.format(self._get_next_build_sequence_id())
-            puts(colored.cyan(output_filename))
+            self.puts(colored.cyan(output_filename))
             with open(os.path.join(self.build_path, output_filename), 'w') as f:
                 f.write(template.to_json(indent=4))
 
@@ -286,7 +300,7 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
 
         template = utils.fix_troposphere_references(template)
 
-        puts(colored.cyan(output_filename))
+        self.puts(colored.cyan(output_filename))
         with open(os.path.join(self.build_path, output_filename), 'w') as f:
             f.write(template.to_json())
 
@@ -302,7 +316,7 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
 
         if template:
             output_filename = output_filename.format(self._get_next_build_sequence_id())
-            puts(colored.cyan(output_filename))
+            self.puts(colored.cyan(output_filename))
             with open(os.path.join(self.build_path, output_filename), 'w') as f:
                 f.write(template.to_json(indent=4))
 
@@ -321,7 +335,7 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
 
         if template and template.resources:
             output_filename = output_filename.format(self._get_next_build_sequence_id())
-            puts(colored.cyan(output_filename))
+            self.puts(colored.cyan(output_filename))
             with open(os.path.join(self.build_path, output_filename), 'w') as f:
                 f.write(template.to_json())
 
@@ -338,9 +352,25 @@ class ProjectBuild(BaseProject, BaseResourceContainer):
 
         if template:
             output_filename = output_filename.format(self._get_next_build_sequence_id())
-            puts(colored.cyan(output_filename))
+            self.puts(colored.cyan(output_filename))
             with open(os.path.join(self.build_path, output_filename), 'w') as f:
                 f.write(template.to_json(indent=4))
+
+
+class ProjectRun(ProjectBuild):
+
+    quiet = True
+
+    def __init__(self, *args, **kwargs):
+        super(ProjectRun, self).__init__(*args, **kwargs)
+        self.lambda_friendly_name = kwargs['lambda_name']
+
+    def run(self):
+        grn = utils.lambda_friendly_name_to_grn(self.lambda_friendly_name).rsplit(':', 1)[0]
+        lambdas = [l for l in self.get_resources('lambdas') if l.in_project_name == grn]
+        if not lambdas:
+            raise exceptions.LambdaNotFound(self.lambda_friendly_name)
+        lambdas[0].collect_and_run()
 
 
 class ProjectApplyLoopBase(BaseProject):
@@ -351,7 +381,7 @@ class ProjectApplyLoopBase(BaseProject):
         self.timeout_in_minutes = kwargs.pop('timeout_in_minutes', 15)
         self.region = utils.setup_region(kwargs.pop('region', None), self.settings)
         if self.region not in AWS_LAMBDA_REGIONS:
-            puts(
+            self.puts(
                 colored.yellow(
                     ("Note: You are trying to use gordon in a region "
                      "were Lambdas are not supported. This might not end nicely!")
@@ -388,7 +418,7 @@ class ProjectApplyLoopBase(BaseProject):
 class ProjectApply(ProjectApplyLoopBase):
 
     def apply(self):
-        puts(colored.blue("Applying project..."))
+        self.puts(colored.blue("Applying project..."))
         context = self.get_initial_context()
         context.update(self.collect_parameters())
 
@@ -400,7 +430,7 @@ class ProjectApply(ProjectApplyLoopBase):
                     puts(colored.white(u"✸ Applying template {} with context {}".format(filename, context)))
                 getattr(self, 'apply_{}_template'.format(template_type))(name, filename, context)
 
-        puts(colored.blue("Project Outputs:"))
+        self.puts(colored.blue("Project Outputs:"))
         for k, v in six.iteritems(context):
             if k.startswith('Clioutput'):
                 with indent(2):
@@ -474,7 +504,7 @@ class ProjectDelete(ProjectApplyLoopBase):
     def delete(self):
 
         if self.dry_run:
-            puts(
+            self.puts(
                 colored.yellow(
                     ("\nYou are trying to delete this project's resources!\n"
                      "By default this command runs in dry-run mode. If you are ok \n"
@@ -483,21 +513,21 @@ class ProjectDelete(ProjectApplyLoopBase):
                      "\nNOTHING IS GOING TO BE DELETED!\n")
                 )
             )
-            puts(colored.blue("The following resources would be deleted..."))
+            self.puts(colored.blue("The following resources would be deleted..."))
         else:
-            puts(colored.blue("Deleting project resources..."))
+            self.puts(colored.blue("Deleting project resources..."))
 
         context = self.get_initial_context()
 
         with indent(2):
-            puts(colored.magenta("\nRegion:{Region}\nStage: {Stage}\n".format(**context)))
+            self.puts(colored.magenta("\nRegion:{Region}\nStage: {Stage}\n".format(**context)))
 
         for (number, name, filename, template_type) in self.steps():
             with indent(2):
-                puts(colored.cyan("{} ({})".format(filename, template_type)))
+                self.puts(colored.cyan("{} ({})".format(filename, template_type)))
             with indent(4):
                 if self.debug:
-                    puts(colored.white(u"✸ Delete template {} with context {}".format(filename, context)))
+                    self.puts(colored.white(u"✸ Delete template {} with context {}".format(filename, context)))
                 getattr(self, 'delete_{}_template'.format(template_type))(name, filename, context)
 
     def delete_custom_template(self, name, filename, context):

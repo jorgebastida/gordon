@@ -30,13 +30,13 @@ Documentation
    :maxdepth: 2
 
    project
-   apps
    lambdas
    requirements
    eventsources
    parameters
    contexts
-
+   run_local
+   run_aws
 
 In detail
 ----------

@@ -4,7 +4,7 @@ import argparse
 
 from clint.textui import colored, puts
 
-from .core import Bootstrap, ProjectBuild, ProjectApply, ProjectDelete
+from .core import Bootstrap, ProjectBuild, ProjectApply, ProjectDelete, ProjectRun
 from .exceptions import BaseGordonException
 
 
@@ -65,6 +65,14 @@ def main(argv=None):
                               type=int,
                               default=15,
                               help="CloudFormation timeout.")
+
+    run_parser = subparsers.add_parser('run', description='Run lambda locally')
+    add_default_arguments(run_parser)
+    run_parser.set_defaults(cls=ProjectRun)
+    run_parser.set_defaults(func="run")
+    run_parser.add_argument("lambda_name",
+                            type=str,
+                            help="Lambda you want to run locally in the format APP.LAMBDA_NAME")
 
     delete_parser = subparsers.add_parser('delete', description='Delete this project stacks')
     add_default_arguments(delete_parser)

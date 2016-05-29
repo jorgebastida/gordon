@@ -1,5 +1,4 @@
 {
-    "_type": "ActionsTemplate", 
     "parameters": {
         "CodeBucket": {
             "_type": "Parameter", 
@@ -7,26 +6,18 @@
             "name": "CodeBucket"
         }
     }, 
+    "_type": "ActionsTemplate", 
+    "parallelizable": false, 
     "outputs": {
-        "JavaexampleS3Version": {
+        "JavaexampleS3Url": {
             "_type": "Output", 
             "default": "", 
             "value": {
                 "_type": "GetAttr", 
-                "attr": "s3version", 
+                "attr": "s3url", 
                 "action": "javaexample-upload"
             }, 
-            "name": "JavaexampleS3Version"
-        }, 
-        "VersionS3Version": {
-            "_type": "Output", 
-            "default": "", 
-            "value": {
-                "_type": "GetAttr", 
-                "attr": "s3version", 
-                "action": "version-upload"
-            }, 
-            "name": "VersionS3Version"
+            "name": "JavaexampleS3Url"
         }, 
         "SleepS3Version": {
             "_type": "Output", 
@@ -37,6 +28,16 @@
                 "action": "sleep-upload"
             }, 
             "name": "SleepS3Version"
+        }, 
+        "VersionS3Version": {
+            "_type": "Output", 
+            "default": "", 
+            "value": {
+                "_type": "GetAttr", 
+                "attr": "s3version", 
+                "action": "version-upload"
+            }, 
+            "name": "VersionS3Version"
         }, 
         "VersionS3Url": {
             "_type": "Output", 
@@ -58,54 +59,53 @@
             }, 
             "name": "SleepS3Url"
         }, 
-        "JavaexampleS3Url": {
+        "JavaexampleS3Version": {
             "_type": "Output", 
             "default": "", 
             "value": {
                 "_type": "GetAttr", 
-                "attr": "s3url", 
+                "attr": "s3version", 
                 "action": "javaexample-upload"
             }, 
-            "name": "JavaexampleS3Url"
+            "name": "JavaexampleS3Version"
         }
     }, 
     "actions": [
         {
-            "key": "contrib_helpers_sleep.zip", 
             "filename": "code/contrib_helpers_sleep.zip", 
+            "_type": "InjectContextAndUploadToS3", 
+            "context_to_inject": {}, 
+            "key": "contrib_helpers_sleep.zip", 
+            "context_destinaton": ".context", 
             "bucket": {
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
-            "context_destinaton": ".context", 
-            "name": "sleep-upload", 
-            "context_to_inject": {}, 
-            "_type": "InjectContextAndUploadToS3"
+            "name": "sleep-upload"
         }, 
         {
-            "key": "contrib_lambdas_version.zip", 
             "filename": "code/contrib_lambdas_version.zip", 
+            "_type": "InjectContextAndUploadToS3", 
+            "context_to_inject": {}, 
+            "key": "contrib_lambdas_version.zip", 
+            "context_destinaton": ".context", 
             "bucket": {
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
-            "context_destinaton": ".context", 
-            "name": "version-upload", 
-            "context_to_inject": {}, 
-            "_type": "InjectContextAndUploadToS3"
+            "name": "version-upload"
         }, 
         {
-            "key": "javaexample_javaexample.zip", 
             "filename": "code/javaexample_javaexample.zip", 
+            "_type": "InjectContextAndUploadToS3", 
+            "context_to_inject": {}, 
+            "key": "javaexample_javaexample.zip", 
+            "context_destinaton": ".context", 
             "bucket": {
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
-            "context_destinaton": ".context", 
-            "name": "javaexample-upload", 
-            "context_to_inject": {}, 
-            "_type": "InjectContextAndUploadToS3"
+            "name": "javaexample-upload"
         }
-    ], 
-    "parallelizable": false
+    ]
 }

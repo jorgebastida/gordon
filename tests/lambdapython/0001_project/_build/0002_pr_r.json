@@ -1,5 +1,4 @@
 {
-    "_type": "ActionsTemplate", 
     "parameters": {
         "CodeBucket": {
             "_type": "Parameter", 
@@ -7,7 +6,19 @@
             "name": "CodeBucket"
         }
     }, 
+    "_type": "ActionsTemplate", 
+    "parallelizable": false, 
     "outputs": {
+        "SleepS3Version": {
+            "_type": "Output", 
+            "default": "", 
+            "value": {
+                "_type": "GetAttr", 
+                "attr": "s3version", 
+                "action": "sleep-upload"
+            }, 
+            "name": "SleepS3Version"
+        }, 
         "PyexampleS3Url": {
             "_type": "Output", 
             "default": "", 
@@ -38,16 +49,6 @@
             }, 
             "name": "VersionS3Version"
         }, 
-        "SleepS3Version": {
-            "_type": "Output", 
-            "default": "", 
-            "value": {
-                "_type": "GetAttr", 
-                "attr": "s3version", 
-                "action": "sleep-upload"
-            }, 
-            "name": "SleepS3Version"
-        }, 
         "VersionS3Url": {
             "_type": "Output", 
             "default": "", 
@@ -71,41 +72,40 @@
     }, 
     "actions": [
         {
-            "key": "contrib_helpers_sleep.zip", 
             "filename": "code/contrib_helpers_sleep.zip", 
+            "_type": "InjectContextAndUploadToS3", 
+            "context_to_inject": {}, 
+            "key": "contrib_helpers_sleep.zip", 
+            "context_destinaton": ".context", 
             "bucket": {
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
-            "context_destinaton": ".context", 
-            "name": "sleep-upload", 
-            "context_to_inject": {}, 
-            "_type": "InjectContextAndUploadToS3"
+            "name": "sleep-upload"
         }, 
         {
-            "key": "contrib_lambdas_version.zip", 
             "filename": "code/contrib_lambdas_version.zip", 
+            "_type": "InjectContextAndUploadToS3", 
+            "context_to_inject": {}, 
+            "key": "contrib_lambdas_version.zip", 
+            "context_destinaton": ".context", 
             "bucket": {
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
-            "context_destinaton": ".context", 
-            "name": "version-upload", 
-            "context_to_inject": {}, 
-            "_type": "InjectContextAndUploadToS3"
+            "name": "version-upload"
         }, 
         {
-            "key": "pyexample_pyexample.zip", 
             "filename": "code/pyexample_pyexample.zip", 
+            "_type": "InjectContextAndUploadToS3", 
+            "context_to_inject": {}, 
+            "key": "pyexample_pyexample.zip", 
+            "context_destinaton": ".context", 
             "bucket": {
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
-            "context_destinaton": ".context", 
-            "name": "pyexample-upload", 
-            "context_to_inject": {}, 
-            "_type": "InjectContextAndUploadToS3"
+            "name": "pyexample-upload"
         }
-    ], 
-    "parallelizable": false
+    ]
 }

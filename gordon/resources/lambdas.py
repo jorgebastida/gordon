@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 import os
+import sys
 import shutil
 import tempfile
 import zipfile
 import subprocess
+import platform
 
 import six
 import troposphere
 from troposphere import iam, awslambda, s3
-from clint.textui import colored, puts, indent
+from clint.textui import colored, indent
 
 from gordon import actions
 from gordon import utils
@@ -385,23 +387,71 @@ class Lambda(base.BaseResource):
             )
         )
 
+    def collect_and_run(self):
+        self.project.create_workspace()
+        destination = tempfile.mkdtemp(dir=self.project.get_workspace())
+
+        # Translate pythona architecture to go architecture.
+        # https://go.googlesource.com/go/+/master/src/cmd/dist/build.go#1086
+        go_target_arch = {'i386': '386', 'x86_64': 'amd64'}[platform.processor()]
+
+        try:
+            self._collect_lambda_content(
+                destination,
+                go_target_os=platform.system().lower(),
+                go_target_arch=go_target_arch
+            )
+        except subprocess.CalledProcessError as exc:
+            raise exceptions.LambdaBuildProcessError(exc, self)
+
+        self.run(destination)
+
+    def _get_default_run_command(self):
+        raise NotImplementedError()
+
+    def _get_loader_requirements(self):
+        return []
+
+    def run(self, path):
+        for source, dest in self._get_loader_requirements():
+            shutil.copyfile(
+                os.path.join(self.project._gordon_root, 'loaders', source),
+                os.path.join(path, dest)
+            )
+
+        command = self.settings.get('run', self._get_default_run_command())
+        command = command.format(
+            lambda_path=path,
+            name=self.name,
+            memory=self.get_memory(),
+            handler=self.get_handler(),
+            timeout=self.get_timeout()
+        )
+
+        with utils.cd(path):
+            try:
+                out = subprocess.check_output(
+                    command,
+                    shell=True,
+                    stdin=sys.stdin,
+                    stderr=subprocess.STDOUT
+                )
+            except subprocess.CalledProcessError as exc:
+                print(exc.output)
+            else:
+                print(out)
+
     def get_zip_file(self):
         """Returns a zip file file-like object with all the required source
         on it."""
 
-        # Create gordon workspace
-        gord_tmp_dir = os.path.join(os.path.expanduser("~"), '.gordon')
-        if not os.path.exists(gord_tmp_dir):
-            os.makedirs(gord_tmp_dir)
-
-        destination = tempfile.mkdtemp(dir=gord_tmp_dir)
+        self.project.create_workspace()
+        destination = tempfile.mkdtemp(dir=self.project.get_workspace())
 
         try:
             self._collect_lambda_content(destination)
         except subprocess.CalledProcessError as exc:
             raise exceptions.LambdaBuildProcessError(exc, self)
-
-        self._clean_package(destination)
 
         output = six.BytesIO()
         zf = zipfile.ZipFile(output, 'w')
@@ -426,21 +476,16 @@ class Lambda(base.BaseResource):
     def _get_build_command(self, destination):
         return self.settings.get('build', self._get_default_build_command(destination))
 
-    def _clean_package(self, destination):
-        """Clean lambda package content before creating a .zip file
-        """
-        pass
-
-    def _collect_lambda_content(self, destination):
+    def _collect_lambda_content(self, destination, **kwargs):
         """Collects all required files to be included in the .zip file of the
         lambda. Returns a temporal directory path
         """
         if os.path.isfile(os.path.join(self.get_root(), self.settings['code'])):
             self._collect_lambda_file_content(destination)
         else:
-            self._collect_lambda_module_content(destination)
+            self._collect_lambda_module_content(destination, **kwargs)
 
-    def _collect_lambda_module_content(self, destination):
+    def _collect_lambda_module_content(self, destination, go_target_arch='amd64', go_target_os='linux'):
         root = os.path.join(self.get_root(), self.settings['code'])
         with utils.cd(root):
             commands = self._get_build_command(destination)
@@ -461,11 +506,13 @@ class Lambda(base.BaseResource):
                     gradle_build_extra=self._gradle_build_extra(),
                     project_path=self.project.path,
                     project_name=self.project.name,
-                    lambda_name=self.name
+                    lambda_name=self.name,
+                    go_target_os=go_target_os,
+                    go_target_arch=go_target_arch,
                 )
                 if self.project.debug:
                     with indent(4):
-                        puts(colored.white(command))
+                        self.project.puts(colored.white(command))
                 out = subprocess.check_output(
                     command,
                     shell=True,
@@ -473,7 +520,7 @@ class Lambda(base.BaseResource):
                 )
                 if self.project.debug and out:
                     with indent(4):
-                        puts(out)
+                        self.project.puts(out)
 
     def _collect_folder(self, source, destination):
         for basedir, dirs, files in os.walk(source):
@@ -541,6 +588,12 @@ class PythonLambda(Lambda):
             commands.append('cd {target} && find . -name "*.pyc" -delete')
         return commands
 
+    def _get_default_run_command(self):
+        return 'touch __init__.py && python _gloader.py {handler} {name} {memory} {timeout}'
+
+    def _get_loader_requirements(self):
+        return [['python.py', '_gloader.py']]
+
 
 class NodeLambda(Lambda):
 
@@ -564,6 +617,12 @@ class NodeLambda(Lambda):
             commands.append('cd {target} && {npm_path} install {npm_install_extra}')
         return commands
 
+    def _get_default_run_command(self):
+        return 'node _gloader.js {handler} {name} {memory} {timeout}'
+
+    def _get_loader_requirements(self):
+        return [['node.js', '_gloader.js']]
+
 
 class JavaLambda(Lambda):
 
@@ -574,5 +633,11 @@ class JavaLambda(Lambda):
     }
     extension = 'java'
 
+    def _get_loader_requirements(self):
+            return [['java/build/libs/java.jar', '_gloader.jar']]
+
     def _get_default_build_command(self, destination):
         return "{gradle_path} build -Ptarget={target} {gradle_build_extra}"
+
+    def _get_default_run_command(self):
+        return 'java -cp "_gloader.jar:lib/*:." gordon.GordonLoader {handler} {name} {memory} {timeout}'

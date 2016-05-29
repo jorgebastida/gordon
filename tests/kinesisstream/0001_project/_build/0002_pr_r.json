@@ -1,5 +1,4 @@
 {
-    "_type": "ActionsTemplate", 
     "parameters": {
         "CodeBucket": {
             "_type": "Parameter", 
@@ -7,16 +6,18 @@
             "name": "CodeBucket"
         }
     }, 
+    "_type": "ActionsTemplate", 
+    "parallelizable": false, 
     "outputs": {
-        "ConsumerS3Version": {
+        "SleepS3Version": {
             "_type": "Output", 
             "default": "", 
             "value": {
                 "_type": "GetAttr", 
                 "attr": "s3version", 
-                "action": "consumer-upload"
+                "action": "sleep-upload"
             }, 
-            "name": "ConsumerS3Version"
+            "name": "SleepS3Version"
         }, 
         "VersionS3Version": {
             "_type": "Output", 
@@ -28,16 +29,6 @@
             }, 
             "name": "VersionS3Version"
         }, 
-        "SleepS3Version": {
-            "_type": "Output", 
-            "default": "", 
-            "value": {
-                "_type": "GetAttr", 
-                "attr": "s3version", 
-                "action": "sleep-upload"
-            }, 
-            "name": "SleepS3Version"
-        }, 
         "VersionS3Url": {
             "_type": "Output", 
             "default": "", 
@@ -48,15 +39,15 @@
             }, 
             "name": "VersionS3Url"
         }, 
-        "ConsumerS3Url": {
+        "ConsumerS3Version": {
             "_type": "Output", 
             "default": "", 
             "value": {
                 "_type": "GetAttr", 
-                "attr": "s3url", 
+                "attr": "s3version", 
                 "action": "consumer-upload"
             }, 
-            "name": "ConsumerS3Url"
+            "name": "ConsumerS3Version"
         }, 
         "SleepS3Url": {
             "_type": "Output", 
@@ -67,45 +58,54 @@
                 "action": "sleep-upload"
             }, 
             "name": "SleepS3Url"
+        }, 
+        "ConsumerS3Url": {
+            "_type": "Output", 
+            "default": "", 
+            "value": {
+                "_type": "GetAttr", 
+                "attr": "s3url", 
+                "action": "consumer-upload"
+            }, 
+            "name": "ConsumerS3Url"
         }
     }, 
     "actions": [
         {
-            "key": "contrib_helpers_sleep.zip", 
             "filename": "code/contrib_helpers_sleep.zip", 
+            "_type": "InjectContextAndUploadToS3", 
+            "context_to_inject": {}, 
+            "key": "contrib_helpers_sleep.zip", 
+            "context_destinaton": ".context", 
             "bucket": {
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
-            "context_destinaton": ".context", 
-            "name": "sleep-upload", 
-            "context_to_inject": {}, 
-            "_type": "InjectContextAndUploadToS3"
+            "name": "sleep-upload"
         }, 
         {
-            "key": "contrib_lambdas_version.zip", 
             "filename": "code/contrib_lambdas_version.zip", 
+            "_type": "InjectContextAndUploadToS3", 
+            "context_to_inject": {}, 
+            "key": "contrib_lambdas_version.zip", 
+            "context_destinaton": ".context", 
             "bucket": {
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
-            "context_destinaton": ".context", 
-            "name": "version-upload", 
-            "context_to_inject": {}, 
-            "_type": "InjectContextAndUploadToS3"
+            "name": "version-upload"
         }, 
         {
-            "key": "kinesisconsumer_consumer.zip", 
             "filename": "code/kinesisconsumer_consumer.zip", 
+            "_type": "InjectContextAndUploadToS3", 
+            "context_to_inject": {}, 
+            "key": "kinesisconsumer_consumer.zip", 
+            "context_destinaton": ".context", 
             "bucket": {
                 "_type": "Ref", 
                 "name": "CodeBucket"
             }, 
-            "context_destinaton": ".context", 
-            "name": "consumer-upload", 
-            "context_to_inject": {}, 
-            "_type": "InjectContextAndUploadToS3"
+            "name": "consumer-upload"
         }
-    ], 
-    "parallelizable": false
+    ]
 }

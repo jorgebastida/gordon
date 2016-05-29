@@ -83,6 +83,16 @@ This command will:
 
 This command (for obvious reasons), will use your AWS credentials to apply your project templates.
 
+delete
+^^^^^^^
+
+Removes all deployed project resources of one specific region and stage.
+
+This is a **destructive action**, so gordon will by default do a ``dry-run`` and output all resources which would be deleted.
+
+If you are ok with those resources being deleted, you can run the same command but adding
+the argument ``--confirm`` in order to confirm your desire of gordon deleting all of them.
+
 
 .. _project-anatomy:
 
