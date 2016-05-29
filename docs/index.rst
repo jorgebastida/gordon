@@ -32,6 +32,7 @@ Documentation
    project
    apps
    lambdas
+   run
    requirements
    eventsources
    parameters

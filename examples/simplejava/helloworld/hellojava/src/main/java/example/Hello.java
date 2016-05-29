@@ -1,10 +1,6 @@
 package example;
 
 import com.amazonaws.services.lambda.runtime.Context;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
-import java.io.File;
-import com.amazonaws.services.lambda.runtime.Context;
 import org.json.JSONObject;
 
 

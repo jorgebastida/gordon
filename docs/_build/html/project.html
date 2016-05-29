@@ -143,6 +143,13 @@ deploy it. Gordon doesn&#8217;t know/care what is the current status (if any) of
 </div></blockquote>
 <p>This command (for obvious reasons), will use your AWS credentials to apply your project templates.</p>
 </div>
+<div class="section" id="delete">
+<h3>delete<a class="headerlink" href="#delete" title="Permalink to this headline">¶</a></h3>
+<p>Removes all deployed project resources of one specific region and stage.</p>
+<p>This is a <strong>destructive action</strong>, so gordon will by default do a <code class="docutils literal"><span class="pre">dry-run</span></code> and output all resources which would be deleted.</p>
+<p>If you are ok with those resources being deleted, you can run the same command but adding
+the argument <code class="docutils literal"><span class="pre">--confirm</span></code> in order to confirm your desire of gordon deleting all of them.</p>
+</div>
 </div>
 <div class="section" id="anatomy-of-the-project">
 <span id="project-anatomy"></span><h2>Anatomy of the project<a class="headerlink" href="#anatomy-of-the-project" title="Permalink to this headline">¶</a></h2>
@@ -349,6 +356,7 @@ applications and provide you (and your gordon project) with some basic functiona
 <li><a class="reference internal" href="#project-actions">Project Actions</a><ul>
 <li><a class="reference internal" href="#build">build</a></li>
 <li><a class="reference internal" href="#apply">apply</a></li>
+<li><a class="reference internal" href="#delete">delete</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#anatomy-of-the-project">Anatomy of the project</a></li>
