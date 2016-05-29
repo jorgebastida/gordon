@@ -35,7 +35,7 @@ We'll try to make this mock more clever overtime. PR Welcome!
 Java Lambdas
 ---------------
 
-Java lambdas require you to write a new constructor which accepts a ``String`` as the first argument.
+Java lambdas require you to write a new constructor which accepts a ``String`` as the first argument and ``Context`` as second.
 
 .. code-block:: java
 
