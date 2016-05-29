@@ -14,8 +14,11 @@ s3:
     bucket: us-east-1-gordon-test
     notifications:
 
-      - id: s3consumer_on_create_and_delete
+      3consumer_on_create_and_delete:
+
         lambda: exampleapp.s3consumer
         events:
           - s3:ObjectCreated:*
           - s3:ObjectRemoved:*
+        key_filters:
+          suffix: .png

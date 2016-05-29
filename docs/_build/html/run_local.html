@@ -25,7 +25,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="Gordon 0.0.1 documentation" href="index.html" />
     <link rel="next" title="Running lambdas in AWS" href="run_aws.html" />
-    <link rel="prev" title="Lambdas" href="lambdas.html" />
+    <link rel="prev" title="Contexts" href="contexts.html" />
    
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
@@ -51,18 +51,18 @@ be executed after collecting all resources and applying the full <code class="do
 <div class="section" id="python-lambdas">
 <h2>Python lambdas<a class="headerlink" href="#python-lambdas" title="Permalink to this headline">¶</a></h2>
 <p>Python lambdas don&#8217;t require any specific setup, but you should keep in mind the limitations of of the mock <code class="docutils literal"><span class="pre">LambdaContext</span></code> object that gordon
-uses as second argument of your lambda. You can find the current implementation <a class="reference external" href="https://github.com/jorgebastida/gordon/blob/master/gordon/loaders/python.py">here</a>.</p>
+uses as second argument of your lambda. You can find the current implementation <a class="reference external" href="https://github.com/jorgebastida/gordon/blob/master/gordon/loaders/python.py">Python Loader</a>.</p>
 <p>We&#8217;ll try to make this mock more clever overtime. PR Welcome!</p>
 </div>
 <div class="section" id="node-lambdas">
 <h2>Node Lambdas<a class="headerlink" href="#node-lambdas" title="Permalink to this headline">¶</a></h2>
 <p>Node lambdas don&#8217;t require any specific setup, but you should keep in mind the limitations of of the mock <code class="docutils literal"><span class="pre">LambdaContext</span></code> object that gordon
-uses as second argument of your lambda. You can find the current implementation <a class="reference external" href="https://github.com/jorgebastida/gordon/blob/master/gordon/loaders/node.js">here</a>.</p>
+uses as second argument of your lambda. You can find the current implementation <a class="reference external" href="https://github.com/jorgebastida/gordon/blob/master/gordon/loaders/node.js">Node Loader</a>.</p>
 <p>We&#8217;ll try to make this mock more clever overtime. PR Welcome!</p>
 </div>
 <div class="section" id="java-lambdas">
 <h2>Java Lambdas<a class="headerlink" href="#java-lambdas" title="Permalink to this headline">¶</a></h2>
-<p>Java lambdas require you to write a new constructor which accepts a <code class="docutils literal"><span class="pre">String</span></code> as the first argument.</p>
+<p>Java lambdas require you to write a new constructor which accepts a <code class="docutils literal"><span class="pre">String</span></code> as the first argument and <code class="docutils literal"><span class="pre">Context</span></code> as second.</p>
 <div class="highlight-java"><div class="highlight"><pre><span class="kn">package</span> <span class="nn">example</span><span class="o">;</span>
 
 <span class="kn">import</span> <span class="nn">com.amazonaws.services.lambda.runtime.Context</span><span class="o">;</span>
@@ -106,7 +106,7 @@ uses as second argument of your lambda. You can find the current implementation 
 <p>As you can see we have defined a constructor with the following signature <code class="docutils literal"><span class="pre">public</span> <span class="pre">String</span> <span class="pre">handler(String</span> <span class="pre">json_event,</span> <span class="pre">Context</span> <span class="pre">context)</span></code> which
 calls our lambda handler after creating a <code class="docutils literal"><span class="pre">EventClass</span></code> instance using the data from the json in <code class="docutils literal"><span class="pre">json_event</span></code>.</p>
 <p>In a similar way than Python and Javascript lambdas you should keep in mind the limitations of of the <code class="docutils literal"><span class="pre">MockContext</span></code> object that gordon
-uses as second argument of your lambda. You can find the current implementation <a class="reference external" href="https://github.com/jorgebastida/gordon/blob/master/gordon/loaders/java/src/main/java/gordon/GordonLoader.java">here</a>.</p>
+uses as second argument of your lambda. You can find the current implementation <a class="reference external" href="https://github.com/jorgebastida/gordon/blob/master/gordon/loaders/java/src/main/java/gordon/GordonLoader.java">Java Loader</a>.</p>
 <p>We&#8217;ll try to make this mock more clever overtime. PR Welcome!</p>
 </div>
 </div>
@@ -132,7 +132,7 @@ uses as second argument of your lambda. You can find the current implementation 
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="lambdas.html" title="previous chapter">Lambdas</a></li>
+      <li>Previous: <a href="contexts.html" title="previous chapter">Contexts</a></li>
       <li>Next: <a href="run_aws.html" title="next chapter">Running lambdas in AWS</a></li>
   </ul></li>
 </ul>

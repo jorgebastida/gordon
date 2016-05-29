@@ -11,14 +11,14 @@ function LambdaContext(functionName, memoryLimitInMB, timeout){
     this.identity = null;
     this.clientContext = null;
     this.invokedFunctionArn = '';
+}
 
-    this.getRemainingTimeInMillis = function() {
-        return 0;
-    }
+LambdaContext.prototype.getRemainingTimeInMillis = function() {
+    return 0;
+}
 
-    this.succeed = function(message) {
-        console.log(message);
-    }
+LambdaContext.prototype.succeed = function(message) {
+    console.log(message);
 }
 
 // This language needs more love

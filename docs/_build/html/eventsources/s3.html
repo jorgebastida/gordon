@@ -76,15 +76,15 @@ The idea is simple, every time an object get&#8217;s created/deleted, S3, will t
     <span class="l-Scalar-Plain">bucket</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">BUCKET_NAME</span> <span class="p-Indicator">}</span>
     <span class="l-Scalar-Plain">notifications</span><span class="p-Indicator">:</span>
 
-      <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">id</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">NOTFICATION_ID</span> <span class="p-Indicator">}</span>
+      <span class="p-Indicator">{</span> <span class="nv">NOTFICATION_ID</span> <span class="p-Indicator">}:</span>
         <span class="l-Scalar-Plain">lambda</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">LAMBDA_NAME</span> <span class="p-Indicator">}</span>
         <span class="l-Scalar-Plain">queue</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">QUEUE_NAME</span> <span class="p-Indicator">}</span>
         <span class="l-Scalar-Plain">topic</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">TOPIC_NAME</span> <span class="p-Indicator">}</span>
         <span class="l-Scalar-Plain">events</span><span class="p-Indicator">:</span>
           <span class="p-Indicator">-</span> <span class="p-Indicator">{</span> <span class="nv">EVENT_NAME</span> <span class="p-Indicator">}</span>
         <span class="l-Scalar-Plain">key_filters</span><span class="p-Indicator">:</span>
-          <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">prefix</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">STRING</span> <span class="p-Indicator">}</span>
-          <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">suffix</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">STRING</span> <span class="p-Indicator">}</span>
+          <span class="l-Scalar-Plain">prefix</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">STRING</span> <span class="p-Indicator">}</span>
+          <span class="l-Scalar-Plain">suffix</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">STRING</span> <span class="p-Indicator">}</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -351,10 +351,10 @@ be able to subscribe any other notification to: <code class="docutils literal"><
 <td>No</td>
 </tr>
 <tr class="row-odd"><td>Valid types</td>
-<td><code class="docutils literal"><span class="pre">list</span></code></td>
+<td><code class="docutils literal"><span class="pre">map</span></code></td>
 </tr>
 <tr class="row-even"><td>Description</td>
-<td>List of filters you want to apply</td>
+<td>Map of filters you want to apply</td>
 </tr>
 </tbody>
 </table>
@@ -369,22 +369,22 @@ more than one of each (<code class="docutils literal"><span class="pre">prefix</
     <span class="l-Scalar-Plain">bucket</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">my_bucket_name</span>
     <span class="l-Scalar-Plain">notifications</span><span class="p-Indicator">:</span>
 
-      <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">id</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">lambda_on_create_cat</span>
+      <span class="l-Scalar-Plain">lambda_on_create_cat</span><span class="p-Indicator">:</span>
         <span class="l-Scalar-Plain">lambda</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">app.s3consumer</span>
         <span class="l-Scalar-Plain">events</span><span class="p-Indicator">:</span>
           <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">s3:ObjectCreated:*</span>
         <span class="l-Scalar-Plain">key_filters</span><span class="p-Indicator">:</span>
-          <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">prefix</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">cat_</span>
-          <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">suffix</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">.png</span>
+          <span class="l-Scalar-Plain">prefix</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">cat_</span>
+          <span class="l-Scalar-Plain">suffix</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">.png</span>
 
-      <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">id</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">queue_on_remove_dog</span>
+      <span class="l-Scalar-Plain">queue_on_remove_dog</span><span class="p-Indicator">:</span>
         <span class="l-Scalar-Plain">queue</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">removed_dogs_queue</span>
         <span class="l-Scalar-Plain">events</span><span class="p-Indicator">:</span>
           <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">s3:ObjectRemoved:*</span>
         <span class="l-Scalar-Plain">key_filters</span><span class="p-Indicator">:</span>
-          <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">prefix</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">dog_</span>
+          <span class="l-Scalar-Plain">prefix</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">dog_</span>
 
-      <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">id</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">topic_on_redundacy_lost</span>
+      <span class="l-Scalar-Plain">topic_on_redundacy_lost</span><span class="p-Indicator">:</span>
         <span class="l-Scalar-Plain">topic</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">redundacy_lost_topic</span>
         <span class="l-Scalar-Plain">events</span><span class="p-Indicator">:</span>
           <span class="p-Indicator">-</span> <span class="l-Scalar-Plain">s3:ReducedRedundancyLostObject:*</span>

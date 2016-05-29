@@ -36,15 +36,15 @@ Anatomy of the integration
        bucket: { BUCKET_NAME }
        notifications:
 
-         - id: { NOTFICATION_ID }
+         { NOTFICATION_ID }:
            lambda: { LAMBDA_NAME }
            queue: { QUEUE_NAME }
            topic: { TOPIC_NAME }
            events:
              - { EVENT_NAME }
            key_filters:
-             - prefix: { STRING }
-             - suffix: { STRING }
+             prefix: { STRING }
+             suffix: { STRING }
 
 
 
@@ -208,8 +208,8 @@ Key Filters
 ===========================  ============================================================================================================
 Name                         ``key_filters``
 Required                     No
-Valid types                  ``list``
-Description                  List of filters you want to apply
+Valid types                  ``map``
+Description                  Map of filters you want to apply
 ===========================  ============================================================================================================
 
 Filters are optional to all notifications. The current AWS API only allows you to filter events by the key's ``prefix`` and ``suffix``. One notification can't define
@@ -226,22 +226,22 @@ Full Example
       bucket: my_bucket_name
       notifications:
 
-        - id: lambda_on_create_cat
+        lambda_on_create_cat:
           lambda: app.s3consumer
           events:
             - s3:ObjectCreated:*
           key_filters:
-            - prefix: cat_
-            - suffix: .png
+            prefix: cat_
+            suffix: .png
 
-        - id: queue_on_remove_dog
+        queue_on_remove_dog:
           queue: removed_dogs_queue
           events:
             - s3:ObjectRemoved:*
           key_filters:
-            - prefix: dog_
+            prefix: dog_
 
-        - id: topic_on_redundacy_lost
+        topic_on_redundacy_lost:
           topic: redundacy_lost_topic
           events:
             - s3:ReducedRedundancyLostObject:*

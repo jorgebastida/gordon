@@ -50,20 +50,18 @@ class BaseNotification(object):
 
         # Validate that filters are a subset of (prefix, suffix) and keys
         # are not duplicated.
-        _filters = self.settings.get('key_filters', [])
-        _filters_keys = [f.keys()[0] for f in _filters]
-        if set(_filters_keys) > set(('prefix', 'suffix')) or\
-           any([v > 1 for v in dict(Counter(_filters_keys)).values()]):
+        _filters = self.settings.get('key_filters', {})
+        if set(_filters.values()) > set(('prefix', 'suffix')):
             raise exceptions.ResourceValidationError(
                 """You can't create filters for '{}'.""".format(
-                    ', '.join(_filters_keys)
+                    ', '.join(_filters)
                 )
             )
         else:
-            self.filters = [(f.keys()[0], f.values()[0]) for f in _filters]
+            self.filters = [(k, v) for k, v in six.iteritems(_filters)]
 
     @classmethod
-    def from_dict(cls, data, bucket_notification_configuration):
+    def from_dict(cls, data, id, bucket_notification_configuration):
         notification_type = set(('lambda', 'topic', 'queue')) & set(data.keys())
 
         if len(notification_type) != 1:
@@ -78,6 +76,7 @@ class BaseNotification(object):
                 'queue': QueueNotification,
                 'topic': TopicNotification}.get(
                     list(notification_type)[0])(
+                        id=id,
                         bucket_notification_configuration=bucket_notification_configuration,
                         **data
                 )
@@ -108,13 +107,12 @@ class LambdaFunctionNotification(BaseNotification):
         )
 
     def get_destination_arn(self):
-        return troposphere.GetAtt(
+        return troposphere.Ref(
             self.bucket_notification_configuration.project.reference(
                 utils.lambda_friendly_name_to_grn(
                     self.settings['lambda']
                 )
-            ),
-            'Arn'
+            )
         )
 
 
@@ -254,14 +252,13 @@ class BucketNotificationConfiguration(base.BaseResource):
 
     def __init__(self, *args, **kwargs):
         super(BucketNotificationConfiguration, self).__init__(*args, **kwargs)
-        self._notifications = []
+        self._notifications = {}
 
-        for notification_data in self.settings.get('notifications', []):
-            self._notifications.append(
-                BaseNotification.from_dict(
+        for notification_id, notification_data in six.iteritems(self.settings.get('notifications', {})):
+            self._notifications[notification_id] = BaseNotification.from_dict(
+                    id=notification_id,
                     data=notification_data,
                     bucket_notification_configuration=self
-                )
             )
 
         self._validate_notifications()
@@ -282,7 +279,7 @@ class BucketNotificationConfiguration(base.BaseResource):
         # Validate that notifications events don't overlap
         top_events_for_bucket = set()
         sub_events_for_top = defaultdict(list)
-        for notification in self._notifications:
+        for notification_id, notification in six.iteritems(self._notifications):
             for event, top, sub in notification.events:
                 if top in top_events_for_bucket or \
                    top in sub_events_for_top or\
@@ -300,7 +297,7 @@ class BucketNotificationConfiguration(base.BaseResource):
         # Validate that all key prefix/suffix filters for a bucket
         # don't overlap one to each other.
         all_filters = defaultdict(list)
-        for notification in self._notifications:
+        for notification_id, notification in six.iteritems(self._notifications):
             for name, value in notification.filters:
                 all_filters[name].append(value)
 
@@ -319,7 +316,7 @@ class BucketNotificationConfiguration(base.BaseResource):
     def register_resources_template(self, template):
 
         extra = defaultdict(list)
-        for notification in self._notifications:
+        for notification_id, notification in six.iteritems(self._notifications):
             notification.register_destination_publish_permission(template)
 
             extra[notification.api_property].append(
@@ -336,9 +333,7 @@ class BucketNotificationConfiguration(base.BaseResource):
             S3BucketNotificationConfiguration.create_with(
                 utils.valid_cloudformation_name(self.name),
                 DependsOn=[self.project.reference(bucket_notification_configuration_lambda)],
-                lambda_arn=troposphere.GetAtt(
-                    self.project.reference(bucket_notification_configuration_lambda), 'Arn'
-                ),
+                lambda_arn=troposphere.Ref(self.project.reference(bucket_notification_configuration_lambda)),
                 Bucket=self.get_bucket_name(),
                 **dict([[k, v] for k, v in six.iteritems(extra) if v])
             )

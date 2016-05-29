@@ -18,7 +18,7 @@ Python lambdas
 ----------------
 
 Python lambdas don't require any specific setup, but you should keep in mind the limitations of of the mock ``LambdaContext`` object that gordon
-uses as second argument of your lambda. You can find the current implementation `here <https://github.com/jorgebastida/gordon/blob/master/gordon/loaders/python.py>`_.
+uses as second argument of your lambda. You can find the current implementation `Python Loader <https://github.com/jorgebastida/gordon/blob/master/gordon/loaders/python.py>`_.
 
 We'll try to make this mock more clever overtime. PR Welcome!
 
@@ -27,7 +27,7 @@ Node Lambdas
 --------------------
 
 Node lambdas don't require any specific setup, but you should keep in mind the limitations of of the mock ``LambdaContext`` object that gordon
-uses as second argument of your lambda. You can find the current implementation `here <https://github.com/jorgebastida/gordon/blob/master/gordon/loaders/node.js>`_.
+uses as second argument of your lambda. You can find the current implementation `Node Loader <https://github.com/jorgebastida/gordon/blob/master/gordon/loaders/node.js>`_.
 
 We'll try to make this mock more clever overtime. PR Welcome!
 
@@ -84,6 +84,6 @@ As you can see we have defined a constructor with the following signature ``publ
 calls our lambda handler after creating a ``EventClass`` instance using the data from the json in ``json_event``.
 
 In a similar way than Python and Javascript lambdas you should keep in mind the limitations of of the ``MockContext`` object that gordon
-uses as second argument of your lambda. You can find the current implementation `here <https://github.com/jorgebastida/gordon/blob/master/gordon/loaders/java/src/main/java/gordon/GordonLoader.java>`_.
+uses as second argument of your lambda. You can find the current implementation `Java Loader <https://github.com/jorgebastida/gordon/blob/master/gordon/loaders/java/src/main/java/gordon/GordonLoader.java>`_.
 
 We'll try to make this mock more clever overtime. PR Welcome!

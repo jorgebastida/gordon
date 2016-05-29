@@ -409,7 +409,7 @@ def delete_cf_stack(name, dry_run=True):
             return
 
     for resource in stack['StackResources']:
-        puts(colored.red("{} {}".format(resource['ResourceType'], resource['PhysicalResourceId'])))
+        puts(colored.red("{} {}".format(resource['ResourceType'], resource.get('PhysicalResourceId', ''))))
         if resource['ResourceType'] == 'AWS::S3::Bucket':
             with indent(2):
                 delete_s3_bucket(resource['PhysicalResourceId'], dry_run=dry_run)
