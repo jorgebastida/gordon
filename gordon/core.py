@@ -43,8 +43,6 @@ AVAILABLE_RESOURCES = {
 class BaseResourceContainer(object):
     """Base abstraction about types which can define resources in their settings."""
 
-    quiet = False
-
     def __init__(self, *args, **kwargs):
         self._resources = defaultdict(list)
         self._load_resources()
@@ -52,6 +50,7 @@ class BaseResourceContainer(object):
     def _load_resources(self):
         """Load resources defined in ``self.settings`` and stores them in
         ``self._resources`` map."""
+        puts = (getattr(self, 'project', None) or self).puts
         for resource_type, resource_cls in six.iteritems(AVAILABLE_RESOURCES):
             for name in self.settings.get(resource_type, {}):
                 extra = {
@@ -60,7 +59,7 @@ class BaseResourceContainer(object):
                 }
 
                 with indent(4 if hasattr(self, 'project') else 2):
-                    self.puts(colored.green(u"✓ {}:{}".format(resource_type, name)))
+                    puts(colored.green(u"✓ {}:{}".format(resource_type, name)))
 
                 self._resources[resource_type].append(
                     resource_cls.factory(
@@ -73,12 +72,6 @@ class BaseResourceContainer(object):
     def get_resources(self, resource_type):
         for r in self._resources[resource_type]:
             yield r
-
-    def puts(self, *args, **kwargs):
-        if hasattr(self, 'project'):
-            return self.project.puts(*args, **kwargs)
-        if not self.quiet:
-            puts(*args, **kwargs)
 
 
 class App(BaseResourceContainer):
@@ -105,6 +98,7 @@ class BaseProject(object):
     """Base Project representation accross different actions."""
 
     DEFAULT_SETTINS = {}
+    quiet = False
 
     def __init__(self, path, *args, **kwargs):
         self.path = path
@@ -125,6 +119,10 @@ class BaseProject(object):
 
     def get_workspace(self):
         return os.path.join(os.path.expanduser("~"), '.gordon')
+
+    def puts(self, *args, **kwargs):
+        if not self.quiet:
+            puts(*args, **kwargs)
 
 
 class ProjectBuild(BaseProject, BaseResourceContainer):
