@@ -1,6 +1,12 @@
 package example;
 
 import com.amazonaws.services.lambda.runtime.Context;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+import java.io.File;
+import com.amazonaws.services.lambda.runtime.Context;
+import org.json.JSONObject;
+
 
 public class Hello {
 
@@ -47,6 +53,16 @@ public class Hello {
         System.out.println("value2 = " + event.key2);
         System.out.println("value3 = " + event.key3);
         return String.format(event.key1);
+    }
+
+    public String handler(String json_event, Context context) {
+        JSONObject event_data = new JSONObject(json_event);
+        EventClass event = new EventClass(
+            event_data.getString("key1"),
+            event_data.getString("key2"),
+            event_data.getString("key3")
+        );
+        return this.handler(event, context);
     }
 
 }

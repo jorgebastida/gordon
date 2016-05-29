@@ -1,17 +1,15 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
-import json
 import shutil
 import tempfile
 import zipfile
 import subprocess
-import importlib
 
 import six
 import troposphere
 from troposphere import iam, awslambda, s3
-from clint.textui import colored, puts, indent
+from clint.textui import colored, indent
 
 from gordon import actions
 from gordon import utils
@@ -406,8 +404,6 @@ class Lambda(base.BaseResource):
         return []
 
     def run(self, path):
-        module, handler = self.get_handler().rsplit('.', 1)
-
         for source, dest in self._get_loader_requirements():
             shutil.copyfile(
                 os.path.join(self.project._gordon_root, 'loaders', source),
@@ -419,8 +415,7 @@ class Lambda(base.BaseResource):
             lambda_path=path,
             name=self.name,
             memory=self.get_memory(),
-            module=module,
-            handler=handler,
+            handler=self.get_handler(),
             timeout=self.get_timeout()
         )
 
@@ -583,10 +578,10 @@ class PythonLambda(Lambda):
         return commands
 
     def _get_default_run_command(self):
-        return 'touch __init__.py && python __gordon_loader.py {module} {handler} {name} {memory} {timeout}'
+        return 'touch __init__.py && python _gloader.py {handler} {name} {memory} {timeout}'
 
     def _get_loader_requirements(self):
-        return [['python.py', '__gordon_loader.py']]
+        return [['python.py', '_gloader.py']]
 
 
 class NodeLambda(Lambda):
@@ -612,41 +607,11 @@ class NodeLambda(Lambda):
         return commands
 
     def _get_default_run_command(self):
-        return 'node __gordon_loader.js {module} {handler} {name} {memory} {timeout}'
+        return 'node _gloader.js {handler} {name} {memory} {timeout}'
 
     def _get_loader_requirements(self):
-        return [['node.js', '__gordon_loader.js']]
+        return [['node.js', '_gloader.js']]
 
-    # def run(self, path):
-    #     module, handler = self.get_handler().rsplit('.', 1)
-    #
-    #     shutil.copyfile(
-    #         os.path.join(self.project._gordon_root, 'loaders', 'node.js'),
-    #         os.path.join(path, '__gordon_loader.js')
-    #     )
-    #
-    #     with utils.cd(path):
-    #         try:
-    #             out = subprocess.check_output(
-    #                 "node __gordon_loader.js {} {} {} {}".format(module, handler, self.name, self.get_memory()),
-    #                 shell=True,
-    #                 stdin=sys.stdin,
-    #                 stderr=subprocess.STDOUT
-    #             )
-    #         except subprocess.CalledProcessError as exc:
-    #             print(exc.output)
-    #         else:
-    #             print(out)
-
-        #
-        # getattr(module, handler)(
-        #     json.loads(sys.stdin.read()),
-        #     utils.LambdaContext(
-        #         timeout=self.get_timeout(),
-        #         function_name=self.name,
-        #         memory_limit_in_mb=self.get_memory()
-        #     )
-        # )
 
 class JavaLambda(Lambda):
 
@@ -657,5 +622,11 @@ class JavaLambda(Lambda):
     }
     extension = 'java'
 
+    def _get_loader_requirements(self):
+            return [['java/build/libs/java.jar', '_gloader.jar']]
+
     def _get_default_build_command(self, destination):
         return "{gradle_path} build -Ptarget={target} {gradle_build_extra}"
+
+    def _get_default_run_command(self):
+        return 'java -cp "_gloader.jar:lib/*:." gordon.GordonLoader {handler} {name} {memory} {timeout}'

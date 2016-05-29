@@ -25,10 +25,11 @@ class LambdaContext(object):
         return int((time.time * 1000) - self.start_time)
 
 
-def main(module, handler, name, memory, timeout):
+def main(handler, name, memory, timeout):
     sys.path.insert(0, '.')
-    module = importlib.import_module(module)
-    getattr(module, handler)(
+    module_name, handler_name = handler.rsplit('.', 1)
+    module = importlib.import_module(module_name)
+    getattr(module, handler_name)(
         json.loads(sys.stdin.read()),
         LambdaContext(
             function_name=name,
@@ -39,9 +40,8 @@ def main(module, handler, name, memory, timeout):
 
 if __name__ == '__main__':
     main(
-        module=sys.argv[1],
-        handler=sys.argv[2],
-        name=sys.argv[3],
-        memory=sys.argv[4],
-        timeout=sys.argv[5],
+        handler=sys.argv[1],
+        name=sys.argv[2],
+        memory=sys.argv[3],
+        timeout=sys.argv[4],
     )

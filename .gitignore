@@ -6,4 +6,3 @@ htmlcov
 *.zip
 .gradle
 .tox
-build/
