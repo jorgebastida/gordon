@@ -35,7 +35,7 @@ We'll try to make this mock more clever overtime. PR Welcome!
 Java Lambdas
 ---------------
 
-Java lambdas require you to write a new constructor which accepts a ``String`` as the first argument and ``Context`` as second.
+Java lambdas require you to write an adapter which accepts a ``String`` as the first argument and ``Context`` as second.
 
 .. code-block:: java
 
@@ -80,7 +80,7 @@ Java lambdas require you to write a new constructor which accepts a ``String`` a
     }
 
 
-As you can see we have defined a constructor with the following signature ``public String handler(String json_event, Context context)`` which
+As you can see we have defined an adapter with the following signature ``public String handler(String json_event, Context context)`` which
 calls our lambda handler after creating a ``EventClass`` instance using the data from the json in ``json_event``.
 
 In a similar way than Python and Javascript lambdas you should keep in mind the limitations of of the ``MockContext`` object that gordon
