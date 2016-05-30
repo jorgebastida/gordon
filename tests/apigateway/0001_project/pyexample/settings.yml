@@ -1,0 +1,17 @@
+lambdas:
+
+  hellopy:
+    code: example
+    handler: code.handler
+    runtime: python2.7
+    memory: 192
+    timeout: 123
+    description: My hello description
+
+  byepy:
+    code: example
+    handler: code.bye_handler
+    runtime: python2.7
+    memory: 192
+    timeout: 123
+    description: My bye description

@@ -1,0 +1,143 @@
+{
+    "_type": "ActionsTemplate",
+    "actions": [
+        {
+            "_type": "InjectContextAndUploadToS3",
+            "bucket": {
+                "_type": "Ref",
+                "name": "CodeBucket"
+            },
+            "context_destinaton": ".context",
+            "context_to_inject": {},
+            "filename": "code/contrib_helpers_sleep.zip",
+            "key": "contrib_helpers_sleep.zip",
+            "name": "sleep-upload"
+        },
+        {
+            "_type": "InjectContextAndUploadToS3",
+            "bucket": {
+                "_type": "Ref",
+                "name": "CodeBucket"
+            },
+            "context_destinaton": ".context",
+            "context_to_inject": {},
+            "filename": "code/contrib_lambdas_version.zip",
+            "key": "contrib_lambdas_version.zip",
+            "name": "version-upload"
+        },
+        {
+            "_type": "InjectContextAndUploadToS3",
+            "bucket": {
+                "_type": "Ref",
+                "name": "CodeBucket"
+            },
+            "context_destinaton": ".context",
+            "context_to_inject": {},
+            "filename": "code/pyexample_byepy.zip",
+            "key": "pyexample_byepy.zip",
+            "name": "byepy-upload"
+        },
+        {
+            "_type": "InjectContextAndUploadToS3",
+            "bucket": {
+                "_type": "Ref",
+                "name": "CodeBucket"
+            },
+            "context_destinaton": ".context",
+            "context_to_inject": {},
+            "filename": "code/pyexample_hellopy.zip",
+            "key": "pyexample_hellopy.zip",
+            "name": "hellopy-upload"
+        }
+    ],
+    "outputs": {
+        "ByepyS3Url": {
+            "_type": "Output",
+            "default": "",
+            "name": "ByepyS3Url",
+            "value": {
+                "_type": "GetAttr",
+                "action": "byepy-upload",
+                "attr": "s3url"
+            }
+        },
+        "ByepyS3Version": {
+            "_type": "Output",
+            "default": "",
+            "name": "ByepyS3Version",
+            "value": {
+                "_type": "GetAttr",
+                "action": "byepy-upload",
+                "attr": "s3version"
+            }
+        },
+        "HellopyS3Url": {
+            "_type": "Output",
+            "default": "",
+            "name": "HellopyS3Url",
+            "value": {
+                "_type": "GetAttr",
+                "action": "hellopy-upload",
+                "attr": "s3url"
+            }
+        },
+        "HellopyS3Version": {
+            "_type": "Output",
+            "default": "",
+            "name": "HellopyS3Version",
+            "value": {
+                "_type": "GetAttr",
+                "action": "hellopy-upload",
+                "attr": "s3version"
+            }
+        },
+        "SleepS3Url": {
+            "_type": "Output",
+            "default": "",
+            "name": "SleepS3Url",
+            "value": {
+                "_type": "GetAttr",
+                "action": "sleep-upload",
+                "attr": "s3url"
+            }
+        },
+        "SleepS3Version": {
+            "_type": "Output",
+            "default": "",
+            "name": "SleepS3Version",
+            "value": {
+                "_type": "GetAttr",
+                "action": "sleep-upload",
+                "attr": "s3version"
+            }
+        },
+        "VersionS3Url": {
+            "_type": "Output",
+            "default": "",
+            "name": "VersionS3Url",
+            "value": {
+                "_type": "GetAttr",
+                "action": "version-upload",
+                "attr": "s3url"
+            }
+        },
+        "VersionS3Version": {
+            "_type": "Output",
+            "default": "",
+            "name": "VersionS3Version",
+            "value": {
+                "_type": "GetAttr",
+                "action": "version-upload",
+                "attr": "s3version"
+            }
+        }
+    },
+    "parallelizable": false,
+    "parameters": {
+        "CodeBucket": {
+            "_type": "Parameter",
+            "default": "",
+            "name": "CodeBucket"
+        }
+    }
+}

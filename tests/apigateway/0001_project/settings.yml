@@ -1,0 +1,48 @@
+---
+project: apigateway
+default-region: us-east-1
+code-bucket: ref://CodeBucketName
+apps:
+  - gordon.contrib.helpers
+  - gordon.contrib.lambdas
+  - pyexample
+
+
+apigateway:
+    helloapi:
+        description: My first API
+        resources:
+            /:
+                methods: GET
+                integration:
+                    lambda: pyexample.hellopy
+
+            /404:
+                methods: GET
+                integration:
+                    lambda: pyexample.hellopy
+                    responses:
+                        - pattern: ""
+                          code: "404"
+                responses:
+                    - code: "404"
+
+            /shop/{item}:
+                methods: GET
+                integration:
+                    lambda: pyexample.hellopy
+
+            /http:
+                methods: GET
+                integration:
+                    type: HTTP
+                    uri: https://httpbin.org/get?hello=world
+
+            /complex/:
+                methods:
+                    GET:
+                        integration:
+                            lambda: pyexample.hellopy
+                    POST:
+                        integration:
+                            lambda: pyexample.byepy
