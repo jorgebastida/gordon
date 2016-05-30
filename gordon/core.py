@@ -71,7 +71,7 @@ class BaseResourceContainer(object):
                 )
 
     def get_resources(self, resource_type):
-        for r in self._resources[resource_type]:
+        for r in sorted(self._resources[resource_type], key=lambda r: r.name):
             yield r
 
 

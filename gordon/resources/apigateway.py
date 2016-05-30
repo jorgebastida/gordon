@@ -141,7 +141,7 @@ class ApiGateway(BaseResource):
                 extra['ResponseParameters'] = response['parameters']
             responses.append(
                 MethodResponse(
-                    StatusCode=unicode(response['code']),
+                    StatusCode=six.text_type(response['code']),
                     **extra
                 )
             )
@@ -158,8 +158,8 @@ class ApiGateway(BaseResource):
                 extra['ResponseTemplates'] = response['template']
             responses.append(
                 IntegrationResponse(
-                    SelectionPattern=unicode(response['pattern']),
-                    StatusCode=unicode(response['code']),
+                    SelectionPattern=six.text_type(response['pattern']),
+                    StatusCode=six.text_type(response['code']),
                     **extra
                 )
             )
@@ -267,10 +267,10 @@ class ApiGateway(BaseResource):
                 deployment_dependencies.append(m.name)
                 deployment_resources.append(m)
 
-        deploy_hash = hashlib.sha1(str(uuid.uuid4())).hexdigest()
+        deploy_hash = hashlib.sha1(six.text_type(uuid.uuid4()).encode('utf-8')).hexdigest()
         deploy = Deployment(
             utils.valid_cloudformation_name(self.name, "Deployment", deploy_hash[:8]),
-            DependsOn=deployment_dependencies,
+            DependsOn=sorted(deployment_dependencies),
             StageName=troposphere.Ref('Stage'),
             RestApiId=troposphere.Ref(api)
         )
