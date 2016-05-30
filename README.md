@@ -37,6 +37,9 @@ Features
 
 Example Projects
 ------------------
+
+We think documentation and examples are an important pilar... so here you have a nice list of things you can play with!
+
 * [Python HelloWorld Lambda](https://github.com/jorgebastida/gordon/tree/master/examples/modulepython): Simple Lambda written in Python.
 * [Javascript HelloWorld Lambda](https://github.com/jorgebastida/gordon/tree/master/examples/modulejs): Simple Lambda written in Javascript.
 * [Javascript ES6 HelloWorld Lambda](https://github.com/jorgebastida/gordon/tree/master/examples/simplejs-es6): Simple Lambda written in Javascript using ES-6.
