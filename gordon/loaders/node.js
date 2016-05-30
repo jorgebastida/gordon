@@ -18,7 +18,7 @@ LambdaContext.prototype.getRemainingTimeInMillis = function() {
 }
 
 LambdaContext.prototype.succeed = function(message) {
-    console.log(message);
+    console.log("output: " + message);
 }
 
 // This language needs more love

@@ -29,7 +29,7 @@ def main(handler, name, memory, timeout):
     sys.path.insert(0, '.')
     module_name, handler_name = handler.rsplit('.', 1)
     module = importlib.import_module(module_name)
-    getattr(module, handler_name)(
+    out = getattr(module, handler_name)(
         json.loads(sys.stdin.read()),
         LambdaContext(
             function_name=name,
@@ -37,6 +37,7 @@ def main(handler, name, memory, timeout):
             timeout=timeout
         )
     )
+    print("output: {}".format(out))
 
 if __name__ == '__main__':
     main(

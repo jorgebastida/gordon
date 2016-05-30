@@ -37,3 +37,13 @@ class BuildTest(BaseBuildTest):
         self.assertBuild('0001_project', '0001_p.json')
         self.assertBuild('0001_project', '0002_pr_r.json')
         self.assertBuild('0001_project', '0003_r.json')
+
+        self.assertRun(
+            '0001_project',
+            'javaexample.javaexample',
+            '{"key1":"value1", "key2":"value2", "key3":"value3"}',
+            ['Loading function',
+            'value1 = value1',
+            'output: value1',
+            '']
+        )

@@ -7,12 +7,13 @@ import shutil
 import unittest
 from nose.plugins.attrib import attr
 from nose.tools import nottest
+import tempfile
 
 import six
 import boto3
 
 from gordon.bin import main as gordon
-from gordon.utils import cd, generate_stack_name, delete_s3_bucket
+from gordon.utils import cd, generate_stack_name, delete_s3_bucket, Capturing
 
 
 class MockContext(object):
@@ -99,13 +100,24 @@ class BaseBuildTest(unittest.TestCase):
                     template['Resources'] = new_resources
             self.assertEqual(a, b)
 
+    def assertRun(self, filename, lambda_name, stdin_input, expected_output):
+        fake_stdin = tempfile.NamedTemporaryFile(mode='w')
+        fake_stdin.write(stdin_input)
+        fake_stdin.seek(0)
+
+        with cd(os.path.join(self.test_path, filename)):
+            with Capturing() as output:
+                code = gordon(['gordon', 'run', lambda_name], stdin=fake_stdin)
+            self.assertEqual(output, expected_output)
+            self.assertEqual(code, 0)
+
 
 @attr('integration')
 class BaseIntegrationTest(BaseBuildTest):
 
     def __init__(self, *args, **kwargs):
         super(BaseIntegrationTest, self).__init__(*args, **kwargs)
-        self.uid = 'gt{}'.format(hashlib.sha1(str(uuid.uuid4())).hexdigest()[:5])
+        self.uid = 'gt{}'.format(hashlib.sha1(six.text_type(uuid.uuid4()).encode('utf-8')).hexdigest()[:5])
         self.test_path = os.path.join('tests', self._test_name)
         self.extra_env = {}
 

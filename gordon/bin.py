@@ -8,7 +8,8 @@ from .core import Bootstrap, ProjectBuild, ProjectApply, ProjectDelete, ProjectR
 from .exceptions import BaseGordonException
 
 
-def main(argv=None):
+def main(argv=None, stdin=None):
+    stdin = stdin or sys.stdin
     argv = (argv or sys.argv)[1:]
 
     parser = argparse.ArgumentParser(usage=("%(prog)s [build | apply | startproject | startapp]"))
@@ -92,7 +93,7 @@ def main(argv=None):
 
     path = os.getcwd()
     try:
-        obj = options.cls(path=path, **vars(options))
+        obj = options.cls(path=path, stdin=stdin, **vars(options))
         getattr(obj, options.func)()
     except BaseGordonException as exc:
         puts(colored.red("\n{}".format(exc.get_hint())))

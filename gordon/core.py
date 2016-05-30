@@ -101,8 +101,9 @@ class BaseProject(object):
     DEFAULT_SETTINS = {}
     quiet = False
 
-    def __init__(self, path, *args, **kwargs):
+    def __init__(self, path, stdin, *args, **kwargs):
         self.path = path
+        self.stdin = stdin
         self.debug = kwargs.pop('debug', False)
         self.build_path = os.path.join(self.path, '_build')
         self.root = os.path.dirname(os.path.abspath(__file__))
@@ -370,7 +371,7 @@ class ProjectRun(ProjectBuild):
         lambdas = [l for l in self.get_resources('lambdas') if l.in_project_name == grn]
         if not lambdas:
             raise exceptions.LambdaNotFound(self.lambda_friendly_name)
-        lambdas[0].collect_and_run()
+        lambdas[0].collect_and_run(stdin=self.stdin)
 
 
 class ProjectApplyLoopBase(BaseProject):

@@ -412,3 +412,17 @@ class cd:
 
     def __exit__(self, etype, value, traceback):
         os.chdir(self.old_path)
+
+
+class Capturing(list):
+    def __enter__(self):
+        self._stdout = sys.stdout
+        #import codecs
+        #codecinfo = codecs.lookup("utf8")
+        #sys.stdout = self._stringio = codecs.StreamReaderWriter(six.StringIO(), codecinfo.streamreader, codecinfo.streamwriter)
+        sys.stdout = self._stringio = six.StringIO()
+        return self
+
+    def __exit__(self, *args):
+        self.extend(self._stringio.getvalue().splitlines())
+        sys.stdout = self._stdout

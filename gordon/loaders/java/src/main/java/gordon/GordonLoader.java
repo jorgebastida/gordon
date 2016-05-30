@@ -83,7 +83,7 @@ public class GordonLoader {
         }
         // Call the user handler
         Object result = m.invoke(instance, input, context);
-
+        System.out.println("output: " + result.toString());
     }
 
 }

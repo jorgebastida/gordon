@@ -387,7 +387,7 @@ class Lambda(base.BaseResource):
             )
         )
 
-    def collect_and_run(self):
+    def collect_and_run(self, stdin):
         self.project.create_workspace()
         destination = tempfile.mkdtemp(dir=self.project.get_workspace())
 
@@ -406,7 +406,7 @@ class Lambda(base.BaseResource):
             raise exceptions.LambdaBuildProcessError(exc, self)
 
         try:
-            self.run(destination)
+            self.run(destination, stdin)
         finally:
             shutil.rmtree(destination)
 
@@ -416,7 +416,7 @@ class Lambda(base.BaseResource):
     def _get_loader_requirements(self):
         return []
 
-    def run(self, path):
+    def run(self, path, stdin):
         for source, dest in self._get_loader_requirements():
             shutil.copyfile(
                 os.path.join(self.project._gordon_root, 'loaders', source),
@@ -437,13 +437,13 @@ class Lambda(base.BaseResource):
                 out = subprocess.check_output(
                     command,
                     shell=True,
-                    stdin=sys.stdin,
+                    stdin=stdin,
                     stderr=subprocess.STDOUT
                 )
             except subprocess.CalledProcessError as exc:
                 print(exc.output)
             else:
-                print(out)
+                print(out.decode('utf-8'))
 
     def get_zip_file(self):
         """Returns a zip file file-like object with all the required source
