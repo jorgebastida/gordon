@@ -23,7 +23,7 @@ setup(
     license='BSD',
     author='Jorge Bastida',
     author_email='me@jorgebastida.com',
-    description='Gordon is a tool to create, wire and deploy AWS Lambdas using CloudFormation in an easy way.',
+    description='Gordon is a tool to create, wire and deploy AWS Lambdas using CloudFormation',
     keywords="aws lambda apigateway kinesis dynamodb s3 cloudwatch",
     packages=find_packages(),
     platforms='any',

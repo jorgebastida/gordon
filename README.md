@@ -3,7 +3,7 @@
 [![GitHub license](https://img.shields.io/badge/license-BSD-blue.svg)](COPYING)
 ![Python Versions](https://img.shields.io/badge/python-2.7%20%7C%203.3%20%7C%203.4%20%7C%203.5-green.svg)
 
-Gordon is a tool to create, wire and deploy AWS Lambdas using CloudFormation in an easy way.
+Gordon is a tool to create, wire and deploy AWS Lambdas using CloudFormation
 
 Documentation: http://gordondoc.s3-website-eu-west-1.amazonaws.com/
 
@@ -48,12 +48,12 @@ Example Projects
 * [Kinesis Stream Consumer](https://github.com/jorgebastida/gordon/tree/master/examples/kinesispython): Consume Events published in a Kinesis Stream.
 * [S3 Consumer](https://github.com/jorgebastida/gordon/tree/master/examples/s3): Run your lambdas when a file is created/deleted on S3.
 * [Contexts](https://github.com/jorgebastida/gordon/tree/master/examples/contexts): Add dynamic configuration to your lambdas.
-* [Lambda based Custom CloudFormation Resouces](https://github.com/jorgebastida/gordon/tree/master/examples/cloudformation-custom-resources): Manage CloudFormation resources using Lambdas.
-* [Telegram Bot](https://github.com/jorgebastida/gordon/tree/master/examples/telegram): Create a simple bot in telegram.
-* [Slack Bot](https://github.com/jorgebastida/gordon/tree/master/examples/slack): Create a simple slash command bot for Slack.
-* [Twilio](https://github.com/jorgebastida/gordon/tree/master/examples/twilio): Integrate your lambdas with Twilio using TwiML.
-* [Snowplow Analytics](https://github.com/jorgebastida/gordon/tree/master/examples/snowplow): Consume Snowplow Analytics events from gordon.
-* [Docker](https://github.com/jorgebastida/gordon/tree/master/examples/docker): Compile lambdas with native dependencies within a docker container thanks to [lambci/docker-lambda](https://github.com/lambci/docker-lambda)
+* [Lambda based Custom CloudFormation Resouces](https://github.com/jorgebastida/gordon/tree/master/examples/cloudformation-custom-resources): Manage CloudFormation resources using Lambdas. 🔥
+* [Telegram Bot](https://github.com/jorgebastida/gordon/tree/master/examples/telegram): Create a simple bot in telegram. 🔥
+* [Slack Bot](https://github.com/jorgebastida/gordon/tree/master/examples/slack): Create a simple slash command bot for Slack. 🔥
+* [Twilio](https://github.com/jorgebastida/gordon/tree/master/examples/twilio): Integrate your lambdas with Twilio using TwiML. 🔥
+* [Snowplow Analytics](https://github.com/jorgebastida/gordon/tree/master/examples/snowplow): Consume Snowplow Analytics events from gordon. 🔥
+* [Docker](https://github.com/jorgebastida/gordon/tree/master/examples/docker): Compile lambdas with native dependencies within a docker container thanks to [lambci/docker-lambda](https://github.com/lambci/docker-lambda) 🔥
 
 
 Why should you use this project?
