@@ -58,6 +58,7 @@ class Serializable(object):
         return obj
 
     def to_json(self, *args, **kwargs):
+        kwargs['sort_keys'] = True
         return json.dumps(self.serialize(), *args, **kwargs)
 
     def __eq__(self, obj):
