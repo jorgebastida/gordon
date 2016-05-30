@@ -96,3 +96,8 @@ Yes, we eat our own dog food; We use gordon to create gordon. The idea is that, 
 Those Custom CloudFormation resources are implemented using Lambdas (deployed by gordon)... crazy uh?!
 
 Why all this madness? Again... because reproducibility. If you manage some resources using CloudFormation, and some others streaming API commands, if/when you try to reproduce or decommission your environment... you are pretty much f\*\*\*.
+
+Feedback
+-----------
+
+We would love to hear as much feedback as possible! If you have any comment, please drop me an email to me@jorgebastida.com
