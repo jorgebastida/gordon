@@ -20,11 +20,11 @@ public class GordonLoader {
         }
 
         public String getLogGroupName(){
-            return null;
+            return "LogGroupName";
         }
 
         public String getLogStreamName(){
-            return null;
+            return "LogStreamName";
         }
 
         public String getFunctionName(){
@@ -36,7 +36,7 @@ public class GordonLoader {
         }
 
         public String getInvokedFunctionArn(){
-            return "";
+            return "InvokedFunctionArn";
         }
 
         public CognitoIdentity getIdentity(){

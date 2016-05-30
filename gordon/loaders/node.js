@@ -10,11 +10,15 @@ function LambdaContext(functionName, memoryLimitInMB, timeout){
     this.logStreamName = 'logStreamName';
     this.identity = null;
     this.clientContext = null;
-    this.invokedFunctionArn = '';
+    this.invokedFunctionArn = 'invoked_function_arn';
+
+    var date = new Date();
+    this.startTime = date.getTime();
 }
 
 LambdaContext.prototype.getRemainingTimeInMillis = function() {
-    return 0;
+    var date = new Date();
+    return Math.max(this.timeout * 1000 - parseInt(date.getTime() - this.startTime), 0);
 }
 
 LambdaContext.prototype.succeed = function(message) {

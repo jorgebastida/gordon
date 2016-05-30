@@ -22,7 +22,7 @@ class LambdaContext(object):
         self.start_time = time.time() * 1000
 
     def get_remaining_time_in_millis(self):
-        return int((time.time * 1000) - self.start_time)
+        return max(self.timeout * 1000 - int((time.time() * 1000) - self.start_time), 0)
 
 
 def main(handler, name, memory, timeout):
