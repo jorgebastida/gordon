@@ -2,6 +2,26 @@ include README.md
 include COPYING
 include CHANGELOG
 include AUTHORS
-recursive-include tests
+
+recursive-include tests *.py
+recursive-include tests *.js
+recursive-include tests *.yml
+recursive-include tests *.txt
+recursive-include tests *.json
+recursive-include tests build.gradle
+recursive-include tests *.java
+recursive-exclude tests *.pyc
+recursive-exclude tests .DS_Store
+
 recursive-include gordon *.yml
-recursive-exclude . __pycache__
+recursive-include gordon *.txt
+
+recursive-include gordon/defaults *.java
+recursive-include gordon/defaults *.js
+recursive-include gordon/defaults *.py
+recursive-include gordon/defaults *.yml
+recursive-include gordon/defaults build.gradle
+
+include gordon/loaders/python.py
+include gordon/loaders/node.js
+include gordon/loaders/java/build/libs/java.jar
