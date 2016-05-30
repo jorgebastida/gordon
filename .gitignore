@@ -6,3 +6,6 @@ htmlcov
 *.zip
 .gradle
 .tox
+__pycache__
+build
+dist
