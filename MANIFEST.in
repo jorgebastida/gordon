@@ -1,0 +1,7 @@
+include README.md
+include COPYING
+include CHANGELOG
+include AUTHORS
+recursive-include tests
+recursive-include gordon *.yml
+recursive-exclude . __pycache__
