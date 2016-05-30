@@ -8,6 +8,7 @@ import unittest
 from nose.plugins.attrib import attr
 from nose.tools import nottest
 
+import six
 import boto3
 
 from gordon.bin import main as gordon
@@ -75,14 +76,28 @@ class BaseBuildTest(unittest.TestCase):
             shutil.rmtree(build_path)
 
     def assertBuild(self, step, filename):
-        self.assertEqualJsonFiles(
+        self.assertEqualBuildJsonFiles(
             os.path.join(self.test_path, step, '_build', filename),
             os.path.join(self.test_path, step, '_tests', filename)
         )
 
-    def assertEqualJsonFiles(self, a, b):
+    def assertEqualBuildJsonFiles(self, a, b):
         with open(a, 'r') as af, open(b, 'r') as bf:
-            self.assertEqual(json.loads(af.read()), json.loads(bf.read()))
+            a = json.loads(af.read())
+            b = json.loads(bf.read())
+            template_type = 'custom' if '_type' in a else 'cloudformation'
+            if template_type == 'cloudformation':
+                # Certain cloudformation resources names need to change from
+                # build to build, so we need to make some adjustments before
+                # comparing them
+                for template in (a, b):
+                    new_resources = {}
+                    for name, resource in six.iteritems(template.get('Resources', {})):
+                        if resource['Type'] == 'AWS::ApiGateway::Deployment':
+                            name = name[:-8]
+                        new_resources[name] = resource
+                    template['Resources'] = new_resources
+            self.assertEqual(a, b)
 
 
 @attr('integration')
