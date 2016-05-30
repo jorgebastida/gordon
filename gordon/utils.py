@@ -417,9 +417,6 @@ class cd:
 class Capturing(list):
     def __enter__(self):
         self._stdout = sys.stdout
-        #import codecs
-        #codecinfo = codecs.lookup("utf8")
-        #sys.stdout = self._stringio = codecs.StreamReaderWriter(six.StringIO(), codecinfo.streamreader, codecinfo.streamwriter)
         sys.stdout = self._stringio = six.StringIO()
         return self
 
