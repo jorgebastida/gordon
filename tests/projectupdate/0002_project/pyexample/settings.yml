@@ -1,0 +1,8 @@
+lambdas:
+  pyexample:
+    code: example
+    handler: code.handler
+    runtime: python2.7
+    description: My second description
+    memory: 256
+    timeout: 199

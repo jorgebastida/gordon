@@ -16,7 +16,7 @@ How to run all ``core`` and ``build`` tests?
 ---------------------------------------------
 
 ```shell
-python setup.py nosetests -a '!integration'
+tox
 ```
 
 
@@ -24,20 +24,12 @@ How to run all ``integration`` tests?
 ---------------------------------------
 
 ```shell
-python setup.py nosetests -a 'integration' --stop --nologcapture
+nosetests -a 'integration' --stop --nologcapture
 ```
 
 How to run one ``integration`` test?
 -------------------------------------
 
 ```shell
-python setup.py nosetests -a 'integration' --stop --nologcapture --where=tests/lambdapython/
-```
-
-
-How to run coverage
---------------------------------
-
-```shell
-coverage run --source=gordon setup.py nosetests -a 'integration' --stop --nologcapture
+nosetests -a 'integration' --stop --nologcapture tests/projectupdate/
 ```

@@ -1,0 +1,393 @@
+{
+    "Outputs": {
+        "ClioutputLambdaPyexamplePyexample": {
+            "Value": {
+                "Ref": "PyexampleCurrentalias"
+            }
+        }
+    },
+    "Parameters": {
+        "CodeBucket": {
+            "Description": "Bucket where the code is located.",
+            "Type": "String"
+        },
+        "PyexampleS3Version": {
+            "Type": "String"
+        },
+        "Region": {
+            "Description": "AWS Region",
+            "Type": "String"
+        },
+        "SleepS3Version": {
+            "Type": "String"
+        },
+        "Stage": {
+            "Default": "dev",
+            "Description": "Name of the Stage",
+            "Type": "String"
+        },
+        "VersionS3Version": {
+            "Type": "String"
+        }
+    },
+    "Resources": {
+        "ContribHelpersSleep": {
+            "DependsOn": [
+                "SleepRole"
+            ],
+            "Properties": {
+                "Code": {
+                    "S3Bucket": {
+                        "Ref": "CodeBucket"
+                    },
+                    "S3Key": "contrib_helpers_sleep.zip",
+                    "S3ObjectVersion": {
+                        "Ref": "SleepS3Version"
+                    }
+                },
+                "Description": "Sleeps several seconds before succeeding.",
+                "Handler": "sleep.handler",
+                "MemorySize": 128,
+                "Role": {
+                    "Fn::GetAtt": [
+                        "SleepRole",
+                        "Arn"
+                    ]
+                },
+                "Runtime": "python2.7",
+                "Timeout": 300
+            },
+            "Type": "AWS::Lambda::Function"
+        },
+        "ContribLambdasVersion": {
+            "DependsOn": [
+                "VersionRole"
+            ],
+            "Properties": {
+                "Code": {
+                    "S3Bucket": {
+                        "Ref": "CodeBucket"
+                    },
+                    "S3Key": "contrib_lambdas_version.zip",
+                    "S3ObjectVersion": {
+                        "Ref": "VersionS3Version"
+                    }
+                },
+                "Description": "Publishes new versions of Lambdas.",
+                "Handler": "version.handler",
+                "MemorySize": 128,
+                "Role": {
+                    "Fn::GetAtt": [
+                        "VersionRole",
+                        "Arn"
+                    ]
+                },
+                "Runtime": "python2.7",
+                "Timeout": 300
+            },
+            "Type": "AWS::Lambda::Function"
+        },
+        "PyexampleCurrentalias": {
+            "DependsOn": [
+                "PyexampleVersion"
+            ],
+            "Properties": {
+                "FunctionName": {
+                    "Ref": "PyexamplePyexample"
+                },
+                "FunctionVersion": {
+                    "Fn::GetAtt": [
+                        "PyexampleVersion",
+                        "Version"
+                    ]
+                },
+                "Name": "current"
+            },
+            "Type": "AWS::Lambda::Alias"
+        },
+        "PyexamplePyexample": {
+            "DependsOn": [
+                "PyexampleRole"
+            ],
+            "Properties": {
+                "Code": {
+                    "S3Bucket": {
+                        "Ref": "CodeBucket"
+                    },
+                    "S3Key": "pyexample_pyexample.zip",
+                    "S3ObjectVersion": {
+                        "Ref": "PyexampleS3Version"
+                    }
+                },
+                "Description": "My second description",
+                "Handler": "code.handler",
+                "MemorySize": 256,
+                "Role": {
+                    "Fn::GetAtt": [
+                        "PyexampleRole",
+                        "Arn"
+                    ]
+                },
+                "Runtime": "python2.7",
+                "Timeout": 199
+            },
+            "Type": "AWS::Lambda::Function"
+        },
+        "PyexampleRole": {
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Statement": [
+                        {
+                            "Action": [
+                                "sts:AssumeRole"
+                            ],
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": [
+                                    "lambda.amazonaws.com"
+                                ]
+                            }
+                        }
+                    ],
+                    "Version": "2012-10-17"
+                },
+                "Policies": [
+                    {
+                        "PolicyDocument": {
+                            "Statement": [
+                                {
+                                    "Action": [
+                                        "lambda:InvokeFunction"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": [
+                                        "*"
+                                    ]
+                                },
+                                {
+                                    "Action": [
+                                        "logs:CreateLogGroup",
+                                        "logs:CreateLogStream",
+                                        "logs:PutLogEvents"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "arn:aws:logs:*:*:*"
+                                }
+                            ],
+                            "Version": "2012-10-17"
+                        },
+                        "PolicyName": "PyexampleLogsPolicy"
+                    }
+                ]
+            },
+            "Type": "AWS::IAM::Role"
+        },
+        "PyexampleVersion": {
+            "DependsOn": [
+                "VersionCurrentalias",
+                "PyexamplePyexample"
+            ],
+            "Properties": {
+                "FunctionName": {
+                    "Ref": "PyexamplePyexample"
+                },
+                "S3ObjectVersion": {
+                    "Ref": "PyexampleS3Version"
+                },
+                "ServiceToken": {
+                    "Ref": "VersionCurrentalias"
+                }
+            },
+            "Type": "Custom::LambdaVersion"
+        },
+        "SleepCurrentalias": {
+            "DependsOn": [
+                "SleepVersion"
+            ],
+            "Properties": {
+                "FunctionName": {
+                    "Ref": "ContribHelpersSleep"
+                },
+                "FunctionVersion": {
+                    "Fn::GetAtt": [
+                        "SleepVersion",
+                        "Version"
+                    ]
+                },
+                "Name": "current"
+            },
+            "Type": "AWS::Lambda::Alias"
+        },
+        "SleepRole": {
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Statement": [
+                        {
+                            "Action": [
+                                "sts:AssumeRole"
+                            ],
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": [
+                                    "lambda.amazonaws.com"
+                                ]
+                            }
+                        }
+                    ],
+                    "Version": "2012-10-17"
+                },
+                "Policies": [
+                    {
+                        "PolicyDocument": {
+                            "Statement": [
+                                {
+                                    "Action": [
+                                        "lambda:InvokeFunction"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": [
+                                        "*"
+                                    ]
+                                },
+                                {
+                                    "Action": [
+                                        "logs:CreateLogGroup",
+                                        "logs:CreateLogStream",
+                                        "logs:PutLogEvents"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "arn:aws:logs:*:*:*"
+                                }
+                            ],
+                            "Version": "2012-10-17"
+                        },
+                        "PolicyName": "SleepLogsPolicy"
+                    }
+                ]
+            },
+            "Type": "AWS::IAM::Role"
+        },
+        "SleepVersion": {
+            "DependsOn": [
+                "VersionCurrentalias",
+                "ContribHelpersSleep"
+            ],
+            "Properties": {
+                "FunctionName": {
+                    "Ref": "ContribHelpersSleep"
+                },
+                "S3ObjectVersion": {
+                    "Ref": "SleepS3Version"
+                },
+                "ServiceToken": {
+                    "Ref": "VersionCurrentalias"
+                }
+            },
+            "Type": "Custom::LambdaVersion"
+        },
+        "VersionCurrentalias": {
+            "DependsOn": [
+                "VersionVersion"
+            ],
+            "Properties": {
+                "FunctionName": {
+                    "Ref": "ContribLambdasVersion"
+                },
+                "FunctionVersion": {
+                    "Fn::GetAtt": [
+                        "VersionVersion",
+                        "Version"
+                    ]
+                },
+                "Name": "current"
+            },
+            "Type": "AWS::Lambda::Alias"
+        },
+        "VersionRole": {
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Statement": [
+                        {
+                            "Action": [
+                                "sts:AssumeRole"
+                            ],
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": [
+                                    "lambda.amazonaws.com"
+                                ]
+                            }
+                        }
+                    ],
+                    "Version": "2012-10-17"
+                },
+                "Policies": [
+                    {
+                        "PolicyDocument": {
+                            "Statement": [
+                                {
+                                    "Action": [
+                                        "lambda:InvokeFunction"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": [
+                                        "*"
+                                    ]
+                                },
+                                {
+                                    "Action": [
+                                        "logs:CreateLogGroup",
+                                        "logs:CreateLogStream",
+                                        "logs:PutLogEvents"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "arn:aws:logs:*:*:*"
+                                }
+                            ],
+                            "Version": "2012-10-17"
+                        },
+                        "PolicyName": "VersionLogsPolicy"
+                    },
+                    {
+                        "PolicyDocument": {
+                            "Statement": [
+                                {
+                                    "Action": [
+                                        "lambda:PublishVersion",
+                                        "lambda:GetFunction"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Resource": "arn:aws:lambda:*:*:*"
+                                }
+                            ],
+                            "Version": "2012-10-17"
+                        },
+                        "PolicyName": "VersionManageVersionPolicy"
+                    }
+                ]
+            },
+            "Type": "AWS::IAM::Role"
+        },
+        "VersionVersion": {
+            "DependsOn": [
+                "ContribLambdasVersion",
+                "ContribLambdasVersion"
+            ],
+            "Properties": {
+                "FunctionName": {
+                    "Ref": "ContribLambdasVersion"
+                },
+                "S3ObjectVersion": {
+                    "Ref": "VersionS3Version"
+                },
+                "ServiceToken": {
+                    "Fn::GetAtt": [
+                        "ContribLambdasVersion",
+                        "Arn"
+                    ]
+                }
+            },
+            "Type": "Custom::LambdaVersion"
+        }
+    }
+}

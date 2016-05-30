@@ -1,0 +1,111 @@
+{
+    "outputs": {
+        "VersionS3Version": {
+            "default": "",
+            "_type": "Output",
+            "name": "VersionS3Version",
+            "value": {
+                "action": "version-upload",
+                "_type": "GetAttr",
+                "attr": "s3version"
+            }
+        },
+        "SleepS3Url": {
+            "default": "",
+            "_type": "Output",
+            "name": "SleepS3Url",
+            "value": {
+                "action": "sleep-upload",
+                "_type": "GetAttr",
+                "attr": "s3url"
+            }
+        },
+        "PyexampleS3Url": {
+            "default": "",
+            "_type": "Output",
+            "name": "PyexampleS3Url",
+            "value": {
+                "action": "pyexample-upload",
+                "_type": "GetAttr",
+                "attr": "s3url"
+            }
+        },
+        "PyexampleS3Version": {
+            "default": "",
+            "_type": "Output",
+            "name": "PyexampleS3Version",
+            "value": {
+                "action": "pyexample-upload",
+                "_type": "GetAttr",
+                "attr": "s3version"
+            }
+        },
+        "SleepS3Version": {
+            "default": "",
+            "_type": "Output",
+            "name": "SleepS3Version",
+            "value": {
+                "action": "sleep-upload",
+                "_type": "GetAttr",
+                "attr": "s3version"
+            }
+        },
+        "VersionS3Url": {
+            "default": "",
+            "_type": "Output",
+            "name": "VersionS3Url",
+            "value": {
+                "action": "version-upload",
+                "_type": "GetAttr",
+                "attr": "s3url"
+            }
+        }
+    },
+    "_type": "ActionsTemplate",
+    "actions": [
+        {
+            "_type": "InjectContextAndUploadToS3",
+            "name": "sleep-upload",
+            "bucket": {
+                "_type": "Ref",
+                "name": "CodeBucket"
+            },
+            "filename": "code/contrib_helpers_sleep.zip",
+            "context_to_inject": {},
+            "context_destinaton": ".context",
+            "key": "contrib_helpers_sleep.zip"
+        },
+        {
+            "_type": "InjectContextAndUploadToS3",
+            "name": "version-upload",
+            "bucket": {
+                "_type": "Ref",
+                "name": "CodeBucket"
+            },
+            "filename": "code/contrib_lambdas_version.zip",
+            "context_to_inject": {},
+            "context_destinaton": ".context",
+            "key": "contrib_lambdas_version.zip"
+        },
+        {
+            "_type": "InjectContextAndUploadToS3",
+            "name": "pyexample-upload",
+            "bucket": {
+                "_type": "Ref",
+                "name": "CodeBucket"
+            },
+            "filename": "code/pyexample_pyexample.zip",
+            "context_to_inject": {},
+            "context_destinaton": ".context",
+            "key": "pyexample_pyexample.zip"
+        }
+    ],
+    "parameters": {
+        "CodeBucket": {
+            "default": "",
+            "_type": "Parameter",
+            "name": "CodeBucket"
+        }
+    },
+    "parallelizable": false
+}

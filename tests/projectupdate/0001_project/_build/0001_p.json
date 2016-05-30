@@ -1,0 +1,64 @@
+{
+    "Outputs": {
+        "CodeBucket": {
+            "Description": "CodeBucket name",
+            "Value": {
+                "Fn::Join": [
+                    "-",
+                    [
+                        {
+                            "Ref": "CodeBucketName"
+                        },
+                        {
+                            "Ref": "AWS::Region"
+                        },
+                        {
+                            "Ref": "Stage"
+                        }
+                    ]
+                ]
+            }
+        }
+    },
+    "Parameters": {
+        "CodeBucketName": {
+            "Type": "String"
+        },
+        "Region": {
+            "Description": "AWS Region",
+            "Type": "String"
+        },
+        "Stage": {
+            "Default": "dev",
+            "Description": "Name of the Stage",
+            "Type": "String"
+        }
+    },
+    "Resources": {
+        "CodeBucket": {
+            "Properties": {
+                "AccessControl": "Private",
+                "BucketName": {
+                    "Fn::Join": [
+                        "-",
+                        [
+                            {
+                                "Ref": "CodeBucketName"
+                            },
+                            {
+                                "Ref": "AWS::Region"
+                            },
+                            {
+                                "Ref": "Stage"
+                            }
+                        ]
+                    ]
+                },
+                "VersioningConfiguration": {
+                    "Status": "Enabled"
+                }
+            },
+            "Type": "AWS::S3::Bucket"
+        }
+    }
+}
