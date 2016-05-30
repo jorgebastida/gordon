@@ -62,42 +62,6 @@ def mill(iterable):
         yield MILL_CHARS[i % len(MILL_CHARS)], elem
 
 
-def split_arn(arn):
-    match = re.match(r'arn\:aws\:(.+)\:(.+):(\d+):(.+)', arn)
-    if not match:
-        raise exceptions.ResourceValidationError(
-            "{} is a don't a valid arn.".format(arn)
-        )
-    return match.groups()
-
-
-def get_zip_metadata(filename, metadata_filename='.metadata'):
-    """Return metadata information attached to a zip file."""
-    zfile = zipfile.ZipFile(filename)
-    try:
-        return json.loads(zfile.read(metadata_filename))
-    except Exception:
-        return {}
-
-
-def file_hash(filename):
-    """Return a consistent sha1 hash of a file."""
-    with open(filename, 'rb') as f:
-        return hashlib.sha1(f.read()).hexdigest()
-
-
-def tree_hash(path):
-    """Return a consistent sha1 hash of a directory."""
-    digest = hashlib.sha1()
-    for root, dirs, files in os.walk(path):
-        relative = os.path.relpath(root, path)
-        for filename in sorted(files):
-            digest.update(os.path.join(relative, filename))
-            with open(os.path.join(root, filename), 'rb') as f:
-                digest.update(f.read())
-    return digest.hexdigest()
-
-
 def get_zip_hash(obj):
     """Return a consistent hash of the content of a zip file ``obj``."""
     digest = hashlib.sha1()
@@ -334,30 +298,32 @@ def update_stack(name, template_filename, bucket, context, **kwargs):
     return get_cf_stack(stack['StackId'])
 
 
-def wait_for_cf_status(stack_id, success_if, abort_if=None, every=1, limit=60 * 15):
+def wait_for_cf_status(stack_id, success_if, abort_if=None, spin_every=50, every=1000, limit=60 * 15 * 1000):
     """Waits up to ``limit`` seconds in ``every`` intervals until the stack
     with ID ``stack_id`` reached one of the status in ``success_if`` or
     ``abort_if``.
     """
     abort_if = abort_if or DELETE_STACK_STATUS
     clean_output = False
-    for m, i in mill(xrange(0, limit, every)):
-        stack = get_cf_stack(name=stack_id)
-        if stack:
-            stack_status = stack['StackStatus']
-            if i:
-                puts("\r{}".format(" " * 80), newline=False)
-                puts("\r    {} waiting... {}".format(get_cf_color(stack_status)(stack_status), m), newline=False)
-                sys.stdout.flush()
+    stack_status = 'N/A'
+    for m, i in mill(xrange(0, limit, spin_every)):
+        if not (i % every):
+            stack = get_cf_stack(name=stack_id)
+            if stack:
+                stack_status = stack['StackStatus']
 
-            if stack_status in success_if:
-                if clean_output:
-                    puts("")
-                return stack
-            elif stack_status in abort_if:
-                raise exceptions.AbnormalCloudFormationStatusError(stack, stack_status, success_if, abort_if)
-            clean_output = True
-        time.sleep(every)
+        if i:
+            puts("\r{}".format(" " * 80), newline=False)
+            puts("\r    {} waiting... {}".format(get_cf_color(stack_status)(stack_status), m), newline=False)
+            sys.stdout.flush()
+        if stack_status in success_if:
+            if clean_output:
+                puts("")
+            return stack
+        elif stack_status in abort_if:
+            raise exceptions.AbnormalCloudFormationStatusError(stack, stack_status, success_if, abort_if)
+        clean_output = True
+        time.sleep(spin_every / 1000.0)
     puts("")
 
 
@@ -382,19 +348,21 @@ def create_or_update_cf_stack(name, template_filename, bucket=None, context=None
     return stack
 
 
-def delete_s3_bucket(bucket_name, dry_run=True):
+def delete_s3_bucket(bucket_name, dry_run=True, quiet=False):
     s3client = boto3.client('s3')
     versions = s3client.list_object_versions(Bucket=bucket_name).get('Versions', [])
     objects = [{'Key': o['Key'], 'VersionId': o['VersionId']} for o in versions]
     if objects:
         for obj in objects:
-            puts(colored.red("AWS::S3::Key {}/{}".format(bucket_name, obj['Key'])))
+            if not quiet:
+                puts(colored.red("AWS::S3::Key {}/{}".format(bucket_name, obj['Key'])))
         if not dry_run:
             s3client.delete_objects(
                 Bucket=bucket_name,
                 Delete={'Objects': objects, 'Quiet': False}
             )
-    puts(colored.red("S3 Bucket: {}".format(bucket_name)))
+    if not quiet:
+        puts(colored.red("S3 Bucket: {}".format(bucket_name)))
     if not dry_run:
         s3client.delete_bucket(Bucket=bucket_name)
 

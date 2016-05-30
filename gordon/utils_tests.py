@@ -11,7 +11,7 @@ from nose.tools import nottest
 import boto3
 
 from gordon.bin import main as gordon
-from gordon.utils import cd, generate_stack_name
+from gordon.utils import cd, generate_stack_name, delete_s3_bucket
 
 
 class MockContext(object):
@@ -32,25 +32,6 @@ class MockContext(object):
         return self.remaining_time_in_millis
 
 
-def delete_s3_bucket(bucket_name):
-    s3client = boto3.client('s3')
-
-    versions = s3client.list_object_versions(Bucket=bucket_name).get('Versions', [])
-    objects = [{'Key': o['Key'], 'VersionId': o['VersionId']} for o in versions]
-    if objects:
-
-        for obj in objects:
-            print("  {}".format(obj['Key']))
-
-        s3client.delete_objects(
-            Bucket=bucket_name,
-            Delete={'Objects': objects, 'Quiet': False}
-
-        )
-
-    s3client.delete_bucket(Bucket=bucket_name)
-
-
 @nottest
 def delete_test_stacks(name):
     client = boto3.client('cloudformation')
@@ -62,7 +43,7 @@ def delete_test_stacks(name):
                [t for t in stack['Tags'] if t['Key'] == 'GordonVersion']:
                 for resource in client.describe_stack_resources(StackName=stack['StackName'])['StackResources']:
                     if resource['ResourceType'] == 'AWS::S3::Bucket':
-                        delete_s3_bucket(resource['PhysicalResourceId'])
+                        delete_s3_bucket(resource['PhysicalResourceId'], dry_run=False, quiet=True)
 
                 client.delete_stack(
                     StackName=stack['StackName']
