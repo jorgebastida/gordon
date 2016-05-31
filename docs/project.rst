@@ -5,8 +5,8 @@ Project
 
 Projects are the root container which contain all other resources. Projects are composed of:
 
-  * :doc:`apps`
-  * :doc:`settings`
+  * apps
+  * settings
 
 Once you start using gordon, you'll realize it makes sense to have several projects, and not only one monolitic one with dozens of applications.
 

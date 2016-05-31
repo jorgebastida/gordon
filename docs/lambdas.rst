@@ -17,7 +17,7 @@ some complex integrations, it becomes a bit of a burden to deal with all the
 required steps to put some changes live. Gordon tries to make the entire process
 as smooth as possible.
 
-In gordon, Lambdas are resources that you'll group and define within :doc:`apps`. The idea
+In gordon, Lambdas are resources that you'll group and define within apps. The idea
 is to keep Lambdas with the same business domain close to each other in the same app.
 
 .. image:: _static/structure/lambdas.png
@@ -100,7 +100,7 @@ The following is the anatomy of a lambda in gordon.
           { MAP }
         ...
 
-The best way to organize you lambdas is to register them inside the ``settings.yml`` file of your :doc:`apps` within your :doc:`project`.
+The best way to organize you lambdas is to register them inside the ``settings.yml`` file of your apps within your :doc:`project`.
 
 
 Lambda Properties

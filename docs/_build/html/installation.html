@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Installation &mdash; Gordon 0.0.1 documentation</title>
+    <title>Installation &mdash; Gordon 0.1.0 documentation</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.0.1',
+        VERSION:     '0.1.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Gordon 0.0.1 documentation" href="index.html" />
+    <link rel="top" title="Gordon 0.1.0 documentation" href="index.html" />
     <link rel="next" title="Quickstart" href="quickstart.html" />
     <link rel="prev" title="Welcome to Gordon" href="index.html" />
    
@@ -43,13 +43,21 @@
 <p>Gordon requires several python libraries, but all of them should get installed seamlessly using <code class="docutils literal"><span class="pre">pip</span></code>.</p>
 <div class="section" id="using-pip">
 <h2>Using pip<a class="headerlink" href="#using-pip" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>pip intall gordon
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>pip install gordon
+</pre></div>
+</div>
+<p>If you are on OSX El Capitan, use the following (Why? Check <a class="reference external" href="https://github.com/pypa/pip/issues/3165#issuecomment-145856429">Donald Stufft&#8217;s comment in pypa/pip</a>)</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>pip install gordon --ignore-installed six
 </pre></div>
 </div>
 </div>
 <div class="section" id="development-version">
 <h2>Development version<a class="headerlink" href="#development-version" title="Permalink to this headline">¶</a></h2>
 <p>The source code of Gordon is available on Github <a class="reference external" href="https://github.com/jorgebastida/gordon/">https://github.com/jorgebastida/gordon/</a>.</p>
+<p>You can install this version using:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python setup.py develop
+</pre></div>
+</div>
 </div>
 <div class="section" id="what-next">
 <h2>What next?<a class="headerlink" href="#what-next" title="Permalink to this headline">¶</a></h2>
