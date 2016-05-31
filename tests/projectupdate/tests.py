@@ -55,7 +55,7 @@ class BuildTest(BaseBuildTest):
         self.assertBuild('0001_project', '0003_r.json')
 
     def test_0002_project(self):
-        self._test_project_step('0001_project')
+        self._test_project_step('0002_project')
         self.assertBuild('0002_project', '0001_p.json')
         self.assertBuild('0002_project', '0002_pr_r.json')
         self.assertBuild('0002_project', '0003_r.json')
