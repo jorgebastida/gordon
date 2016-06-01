@@ -9,7 +9,7 @@
 
 Gordon is a tool to create, wire and deploy AWS Lambdas using CloudFormation
 
-Documentation: http://gordondoc.s3-website-eu-west-1.amazonaws.com/
+Documentation: http://gordon.readthedocs.io/en/latest/
 
 Features
 ---------
