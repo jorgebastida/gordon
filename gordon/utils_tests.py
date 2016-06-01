@@ -123,8 +123,9 @@ class BaseIntegrationTest(BaseBuildTest):
 
     def setUp(self):
         self.extra_env['CODE_BUCKET_NAME'] = 'gordon-tests-{}'.format(
-            hashlib.sha1(str(random.random())).hexdigest()[:10]
+            hashlib.sha1(six.text_type(random.random()).encode('utf-8')).hexdigest()[:10]
         )
+
         self._environ = dict(os.environ)
         os.environ.update(self.extra_env)
         self.addCleanup(self._restore_context)

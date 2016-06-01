@@ -574,7 +574,7 @@ class Bootstrap(object):
         context = {
             'project_name': self.project_name,
             'default_region': self.region,
-            'random': hashlib.sha1(str(random.random())).hexdigest()[:8]
+            'random': hashlib.sha1(six.text_type(random.random()).encode('utf-8')).hexdigest()[:8]
         }
 
         self._clone_defaults(
