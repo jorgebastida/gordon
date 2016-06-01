@@ -16,5 +16,5 @@ after_success:
 addons:
   apt:
     packages:
-      - default-jre
+      - default-jdk
       - gradle
