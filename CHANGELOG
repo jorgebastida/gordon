@@ -1,7 +1,8 @@
 0.2
 ====
 * Add ``api_key_required`` to apigateway integration.
-* Fix python3 support
+* Fix python3 support.
+* Fix setup.py to correctly install gordon in all platforms.
 
 0.1
 ====
