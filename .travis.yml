@@ -16,5 +16,5 @@ after_success:
 addons:
   apt:
     packages:
-      - openjdk-8-jre
+      - default-jre
       - gradle
