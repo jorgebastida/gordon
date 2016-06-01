@@ -549,6 +549,14 @@ class ProjectDelete(ProjectApplyLoopBase):
 class Bootstrap(object):
     """Project and apps bootstraper"""
 
+    valid_extensions = (
+        '.gradle',
+        '.java',
+        '.yml',
+        '.js',
+        '.py'
+    )
+
     def __init__(self, path, **kwargs):
         self.path = path
         self.region = utils.setup_region(kwargs.pop('region', None))
@@ -613,6 +621,10 @@ class Bootstrap(object):
                 os.makedirs(os.path.join(dest, relative, d))
 
             for filename in files:
+
+                if not filename.endswith(self.valid_extensions):
+                    continue
+
                 with open(os.path.join(base, filename), 'r') as f:
                     data = f.read()
 

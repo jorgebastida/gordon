@@ -3,6 +3,7 @@
 * Add ``api_key_required`` to apigateway integration.
 * Fix python3 support.
 * Fix setup.py to correctly install gordon in all platforms.
+* Fix bootstrap app creation
 
 0.1
 ====
