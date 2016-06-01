@@ -210,7 +210,7 @@ Resource authorization type
 Name                         ``api_key_required``
 Required                     No
 Default                      ``False``
-Valid Types                 ``Boolean``
+Valid Types                  ``Boolean``
 Description                  Indicates whether the method requires clients to submit a valid API key.
 ===========================  ============================================================================================================
 

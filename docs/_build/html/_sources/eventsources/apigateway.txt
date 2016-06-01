@@ -23,6 +23,7 @@ Anatomy of the integration
       resources:
         { URL }:
             methods: { LIST }
+            api_key_required: { BOOL }
             authorization_type: { STRING }
             responses: { LIST }
             parameters: { MAP }
@@ -204,6 +205,16 @@ http methods to integrations.
 Resource authorization type
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+
+===========================  ============================================================================================================
+Name                         ``api_key_required``
+Required                     No
+Default                      ``False``
+Valid Types                  ``Boolean``
+Description                  Indicates whether the method requires clients to submit a valid API key.
+===========================  ============================================================================================================
+
+
 ===========================  ============================================================================================================
 Name                         ``authorization_type``
 Required                     No
@@ -219,7 +230,7 @@ Resource Responses
 ===========================  ============================================================================================================
 Name                         ``responses``
 Required                     No
-Valid Tpes                   ``Response``
+Valid Types                   ``Response``
 Description                  Responses that can be sent to the client who calls this resource.
 ===========================  ============================================================================================================
 

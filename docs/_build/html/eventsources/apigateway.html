@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Apigateway &mdash; Gordon 0.1.0 documentation</title>
+    <title>Apigateway &mdash; Gordon 0.2.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.1.0',
+        VERSION:     '0.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="top" title="Gordon 0.1.0 documentation" href="../index.html" />
+    <link rel="top" title="Gordon 0.2.0 documentation" href="../index.html" />
     <link rel="up" title="Event Sources" href="../eventsources.html" />
     <link rel="next" title="Dynamodb" href="dynamodb.html" />
     <link rel="prev" title="Event Sources" href="../eventsources.html" />
@@ -56,6 +56,7 @@ before continuing.</p>
     <span class="l-Scalar-Plain">resources</span><span class="p-Indicator">:</span>
       <span class="p-Indicator">{</span> <span class="nv">URL</span> <span class="p-Indicator">}:</span>
           <span class="l-Scalar-Plain">methods</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">LIST</span> <span class="p-Indicator">}</span>
+          <span class="l-Scalar-Plain">api_key_required</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">BOOL</span> <span class="p-Indicator">}</span>
           <span class="l-Scalar-Plain">authorization_type</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">STRING</span> <span class="p-Indicator">}</span>
           <span class="l-Scalar-Plain">responses</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">LIST</span> <span class="p-Indicator">}</span>
           <span class="l-Scalar-Plain">parameters</span><span class="p-Indicator">:</span> <span class="p-Indicator">{</span> <span class="nv">MAP</span> <span class="p-Indicator">}</span>
@@ -316,6 +317,29 @@ http methods to integrations.</p>
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td>Name</td>
+<td><code class="docutils literal"><span class="pre">api_key_required</span></code></td>
+</tr>
+<tr class="row-even"><td>Required</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>Default</td>
+<td><code class="docutils literal"><span class="pre">False</span></code></td>
+</tr>
+<tr class="row-even"><td>Valid Types</td>
+<td><code class="docutils literal"><span class="pre">Boolean</span></code></td>
+</tr>
+<tr class="row-odd"><td>Description</td>
+<td>Indicates whether the method requires clients to submit a valid API key.</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>Name</td>
 <td><code class="docutils literal"><span class="pre">authorization_type</span></code></td>
 </tr>
 <tr class="row-even"><td>Required</td>
@@ -347,7 +371,7 @@ http methods to integrations.</p>
 <tr class="row-even"><td>Required</td>
 <td>No</td>
 </tr>
-<tr class="row-odd"><td>Valid Tpes</td>
+<tr class="row-odd"><td>Valid Types</td>
 <td><code class="docutils literal"><span class="pre">Response</span></code></td>
 </tr>
 <tr class="row-even"><td>Description</td>
