@@ -5,22 +5,23 @@
 ![Beta](https://img.shields.io/badge/status-beta-orange.svg)
 [![PyPI version](https://badge.fury.io/py/gordon.svg)](https://pypi.python.org/pypi/gordon/)
 [![Travis Build](https://api.travis-ci.org/jorgebastida/gordon.svg?branch=master)](https://travis-ci.org/jorgebastida/gordon)
-  
-  
+
+
 Gordon is a tool to create, wire and deploy AWS Lambdas using CloudFormation
 
 Documentation: http://gordondoc.s3-website-eu-west-1.amazonaws.com/
 
 Features
 ---------
-* 100% CloudFormation resource creation.
+* 100% CloudFormation resource creation
 * 100% Boilerplate free
+* 100% isolated and dead-simple multi-stage and multi region deployments
 * Python/Javascript/Java/Golang/... runtimes supported.
 * Run Lambdas locally (Python/Javascript/Java/Golang/...)
 * Simple yml configuration
 * Seamless integration with (``pip``,``npm``, ``gradle``, ...)
 * 100% Customizable lambda build process. Use ``Docker``, ``Makefile`` or... a simple ``shell`` script.
-* Dead-simple custom multi-stage and multi region deployments ``--stage=prod``
+
 * Supported integrations
   * APIGateway  
   * Scheduled CloudWatch Events (cron)
@@ -75,13 +76,21 @@ Why introduce yet-another framework when you can build lambdas using AWS service
 Keep it simple! 😀
 
 
+Isolation between stages?
+-----------------------------------
+
+Yes, we believe that there must be 100% isolation between your application stages (``dev``, ``staging``, ``prod``...). That means that resources which (for example) serve a development purpose **must** not be related to the ones which are serving production load. Putting that to the extreme, [and following AWS best practices](http://blogs.aws.amazon.com/security/post/TxQYSWLSAPYVGT/Guidelines-for-when-to-use-Accounts-Users-and-Groups) that means using different AWS accounts. This completely clash with the suggested approach that AWS suggest you to follow with services such as apigateway, where they emphasize to have several "stages" for the same apigateway resource. We disagree and completely ignore that functionality.
+
+Gordon keeps reproducibility and isolation at it's core. When you apply gordon projects in different stages or regions, you'll deploy completely isolated Cloudformation stacks which will contain an exact and isolated copy of all the resources you have defined.
+
+
 Why CloudFormation?
 -----------------------
 One of the best advantages of using AWS is the fact that reproducibility is at it's core and their ecosystem is full of services which encourage it. Their flagship is CloudFormation.
 
-Then... why not use only CloudFormation? Well, there are three reasons:
+Then... why not just use CloudFormation? Well, there are three reasons:
 
-1. **Complexity**: CloudFormation stacks are defined using JSON templates which are a nightmare to write and maintain. And remember... friends don't let friends write JSON files.
+1. **Complexity**: CloudFormation stacks are defined using JSON templates which are a nightmare to write and maintain. And remember... *Friends don't let friends write JSON files*.
 2. **Glue**: There is a lot of glue to put in between a "normal user" and the reality-check of deploying and wiring a Lambda into AWS.
 3. **APIs**: Not all AWS APIs are released when services are announced... ain't frameworks (boto3), nor integrations with CloudFormation.
 
