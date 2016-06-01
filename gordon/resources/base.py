@@ -173,9 +173,9 @@ class BaseResource(object):
         defined"""
         return self.project.path if self.app else None
 
-    def _get_true_false(self, field, default='t'):
+    def _get_true_false(self, field, default='t', settings=None):
         """Returns if this stream is enable or not."""
-        return str(self.settings.get(field, default)).lower()[0] == 't'
+        return str((settings or self.settings).get(field, default)).lower()[0] == 't'
 
     def validate(self):
         """Check if the current resource can co-exist with the rest of the

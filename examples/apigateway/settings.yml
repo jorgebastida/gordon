@@ -17,6 +17,7 @@ apigateway:
 
             /hi-from-js:
                 methods: GET
+                api_key_required: yes
                 integration:
                     lambda: helloworld.hellojs
 
@@ -46,7 +47,7 @@ apigateway:
                     - code: "200"
                       parameters:
                         method.response.header.color: color
-                        
+
             /shop/{item}:
                 methods: GET
                 integration:
