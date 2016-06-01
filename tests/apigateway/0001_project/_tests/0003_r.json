@@ -220,6 +220,7 @@
         },
         "Helloapi404Get": {
             "Properties": {
+                "ApiKeyRequired": false,
                 "AuthorizationType": "NONE",
                 "HttpMethod": "GET",
                 "Integration": {
@@ -271,6 +272,7 @@
         },
         "HelloapiComplexGet": {
             "Properties": {
+                "ApiKeyRequired": false,
                 "AuthorizationType": "NONE",
                 "HttpMethod": "GET",
                 "Integration": {
@@ -322,6 +324,7 @@
         },
         "HelloapiComplexPost": {
             "Properties": {
+                "ApiKeyRequired": false,
                 "AuthorizationType": "NONE",
                 "HttpMethod": "POST",
                 "Integration": {
@@ -371,7 +374,7 @@
             },
             "Type": "AWS::ApiGateway::Method"
         },
-        "HelloapiDeployment3838Db55": {
+        "HelloapiDeployment6Aee1C7E": {
             "DependsOn": [
                 "Helloapi404Get",
                 "HelloapiComplexGet",
@@ -392,6 +395,7 @@
         },
         "HelloapiGet": {
             "Properties": {
+                "ApiKeyRequired": false,
                 "AuthorizationType": "NONE",
                 "HttpMethod": "GET",
                 "Integration": {
@@ -446,6 +450,7 @@
         },
         "HelloapiHttpGet": {
             "Properties": {
+                "ApiKeyRequired": false,
                 "AuthorizationType": "NONE",
                 "HttpMethod": "GET",
                 "Integration": {
@@ -591,6 +596,7 @@
         },
         "HelloapiShopItemGet": {
             "Properties": {
+                "ApiKeyRequired": false,
                 "AuthorizationType": "NONE",
                 "HttpMethod": "GET",
                 "Integration": {
