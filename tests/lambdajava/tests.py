@@ -1,4 +1,5 @@
 import os
+import unittest
 
 import boto3
 
@@ -7,6 +8,7 @@ from gordon.utils import valid_cloudformation_name
 from gordon import utils
 
 
+@unittest.skipIf(os.environ.get('TRAVIS'), "Test not yet supported on travis")
 class IntegrationTest(BaseIntegrationTest):
 
     def test_0001_project(self):
@@ -30,6 +32,7 @@ class IntegrationTest(BaseIntegrationTest):
         self.assert_lambda_response(response, 'hello')
 
 
+@unittest.skipIf(os.environ.get('TRAVIS'), "Test not yet supported on travis")
 class BuildTest(BaseBuildTest):
 
     def test_0001_project(self):
