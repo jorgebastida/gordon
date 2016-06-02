@@ -42,7 +42,7 @@ Features
 Example Projects
 ------------------
 
-We think documentation and examples are an important pilar... so here you have a nice list of things you can play with!
+We think documentation and examples are an important pillar... so here you have a nice list of things you can play with!
 
 * [Python HelloWorld Lambda](https://github.com/jorgebastida/gordon/tree/master/examples/modulepython): Simple Lambda written in Python.
 * [Javascript HelloWorld Lambda](https://github.com/jorgebastida/gordon/tree/master/examples/modulejs): Simple Lambda written in Javascript.
