@@ -18,7 +18,7 @@ hello
 When your project is build, gordon will install all the requirements you have defined in your ``requirements.txt``
 file and will bundle them together before uploading your lambda to AWS.
 
-The lambda is quite dumb, and only and example.
+The lambda is quite dumb, and only an example.
 
 Documentation relevant to this example:
  * [Lambdas](http://gordon.readthedocs.io/en/latest/lambdas.html)
