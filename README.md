@@ -5,6 +5,7 @@
 ![Beta](https://img.shields.io/badge/status-beta-orange.svg)
 [![PyPI version](https://badge.fury.io/py/gordon.svg)](https://pypi.python.org/pypi/gordon/)
 [![Travis Build](https://api.travis-ci.org/jorgebastida/gordon.svg?branch=master)](https://travis-ci.org/jorgebastida/gordon)
+[![Join the chat at https://gitter.im/jorgebastida/gordon](https://img.shields.io/badge/chat-on%20gitter-blue.svg)](https://gitter.im/jorgebastida/gordon)
 
 
 Gordon is a tool to create, wire and deploy AWS Lambdas using CloudFormation
