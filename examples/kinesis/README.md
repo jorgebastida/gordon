@@ -5,7 +5,7 @@ Kinesis Example
 
 This simple project defines one lambda called ``kinesisconsumer`` and integrates it with one kinesis stream.
 
-Every time 10 changes are published to the stream, the lambda will be executed.
+Every time one change is published to the stream, the lambda will be executed.
 
 The lambda is quite dumb, and only prints the received event.
 
