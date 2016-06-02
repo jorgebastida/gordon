@@ -67,7 +67,7 @@ We think documentation and examples are an important pilar... so here you have a
 Why should you use this project?
 -----------------------------------
 
-Because this project doesn't introduces anything new. Gordon is just a thin layer of sugar around AWS services and few conventions, which makes deploying and wiring Lambdas really easy.
+Because this project doesn't introduce anything new. Gordon is just a thin layer of sugar around AWS services and few conventions, which makes deploying and wiring Lambdas really easy.
 
 Under the hood, gordon just generates self-contained CloudFormation templates... which is great!
 
