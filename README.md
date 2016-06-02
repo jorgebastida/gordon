@@ -21,7 +21,6 @@ Features
 * Simple yml configuration
 * Seamless integration with (``pip``,``npm``, ``gradle``, ...)
 * 100% Customizable lambda build process. Use ``Docker``, ``Makefile`` or... a simple ``shell`` script.
-
 * Supported integrations
   * APIGateway  
   * Scheduled CloudWatch Events (cron)
