@@ -5,6 +5,7 @@
 ![Beta](https://img.shields.io/badge/status-beta-orange.svg)
 [![PyPI version](https://badge.fury.io/py/gordon.svg)](https://pypi.python.org/pypi/gordon/)
 [![Travis Build](https://api.travis-ci.org/jorgebastida/gordon.svg?branch=master)](https://travis-ci.org/jorgebastida/gordon)
+[![Join the chat at https://gitter.im/jorgebastida/gordon](https://img.shields.io/badge/chat-on%20gitter-blue.svg)](https://gitter.im/jorgebastida/gordon)
 
 
 Gordon is a tool to create, wire and deploy AWS Lambdas using CloudFormation
@@ -53,7 +54,7 @@ We think documentation and examples are an important pillar... so here you have 
 * [ApiGateway](https://github.com/jorgebastida/gordon/tree/master/examples/apigateway): Integration for creating a simple web service.
 * [Cron](https://github.com/jorgebastida/gordon/tree/master/examples/cron): Schedule lambdas using cron syntax.
 * [Dynamodb Stream Consumer](https://github.com/jorgebastida/gordon/tree/master/examples/dynamodbpython): Consume as a stream changes to a dynamodb table.
-* [Kinesis Stream Consumer](https://github.com/jorgebastida/gordon/tree/master/examples/kinesispython): Consume Events published in a Kinesis Stream.
+* [Kinesis Stream Consumer](https://github.com/jorgebastida/gordon/tree/master/examples/kinesis): Consume Events published in a Kinesis Stream.
 * [S3 Consumer](https://github.com/jorgebastida/gordon/tree/master/examples/s3): Run your lambdas when a file is created/deleted on S3.
 * [Contexts](https://github.com/jorgebastida/gordon/tree/master/examples/contexts): Add dynamic configuration to your lambdas.
 * [Lambda based Custom CloudFormation Resouces](https://github.com/jorgebastida/gordon/tree/master/examples/cloudformation-custom-resources): Manage CloudFormation resources using Lambdas.
