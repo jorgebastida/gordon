@@ -1,5 +1,5 @@
 lambdas:
-  hellojava:
+  helloscala:
     code: helloscala
     runtime: java8
     handler: example.Hello::handler
