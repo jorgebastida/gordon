@@ -1,7 +1,7 @@
 Contexts Example
 ===========================
 
-![gordon](http://gordondoc.s3-website-eu-west-1.amazonaws.com/_static/examples/contexts.svg)
+![gordon](http://gordon.readthedocs.io/en/latest/_static/examples/contexts.svg)
 
 This simple project defines three Lambdas called ``hellopy``, ``hellojs`` and ``hellojava``.
 Each of these lambdas are written in one different language, but they do pretty much the same.
@@ -26,10 +26,10 @@ These three lambdas defined within the application ``helloworld`` read the ``.co
 and return the value of the key ``bucket``.
 
 Documentation relevant to this example:
- * [Lambdas](http://gordondoc.s3-website-eu-west-1.amazonaws.com/lambdas.html)
- * [Contexts](http://gordondoc.s3-website-eu-west-1.amazonaws.com/contexts.html)
- * [Parameters](http://gordondoc.s3-website-eu-west-1.amazonaws.com/parameters.html)
- * [Advanced Parameters](http://gordondoc.s3-website-eu-west-1.amazonaws.com/parameters_advanced.html)
+ * [Lambdas](http://gordon.readthedocs.io/en/latest/lambdas.html)
+ * [Contexts](http://gordon.readthedocs.io/en/latest/contexts.html)
+ * [Parameters](http://gordon.readthedocs.io/en/latest/parameters.html)
+ * [Advanced Parameters](http://gordon.readthedocs.io/en/latest/parameters_advanced.html)
 
 How to deploy it?
 ------------------

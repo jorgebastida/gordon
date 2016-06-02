@@ -1,7 +1,7 @@
 Telegram Example
 ===========================
 
-![gordon](http://gordondoc.s3-website-eu-west-1.amazonaws.com/_static/examples/telegram.svg)
+![gordon](http://gordon.readthedocs.io/en/latest/_static/examples/telegram.svg)
 
 This project defines one API Gateway called ``telegramexampleapi`` and connects one
 lambda written in javascript called ``javascript_bot`` with the ``/my-js-bot-webhook`` url.
@@ -25,6 +25,6 @@ The bot is not very clever, and only replies saying ``Hello from gordon!``
 
 
 Documentation relevant to this example:
- * [Lambdas](http://gordondoc.s3-website-eu-west-1.amazonaws.com/lambdas.html)
- * [APIGateway](http://gordondoc.s3-website-eu-west-1.amazonaws.com/eventsources/apigateway.html)
+ * [Lambdas](http://gordon.readthedocs.io/en/latest/lambdas.html)
+ * [APIGateway](http://gordon.readthedocs.io/en/latest/eventsources/apigateway.html)
  * [Telegram API](https://core.telegram.org/)

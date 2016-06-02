@@ -10,4 +10,4 @@ Then, we only need to customize the ``build`` process of our lambda in order to 
 the Go source code, and... done!
 
 Documentation relevant to this example:
- * [Lambdas](http://gordondoc.s3-website-eu-west-1.amazonaws.com/lambdas.html)
+ * [Lambdas](http://gordon.readthedocs.io/en/latest/lambdas.html)

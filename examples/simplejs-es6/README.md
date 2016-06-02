@@ -34,8 +34,8 @@ package it inside the ``.zip`` file of your lambda.
 
 
 Documentation relevant to this example:
- * [Lambdas](http://gordondoc.s3-website-eu-west-1.amazonaws.com/lambdas.html)
- * [Lambdas Build](http://gordondoc.s3-website-eu-west-1.amazonaws.com/lambdas.html#build)
+ * [Lambdas](http://gordon.readthedocs.io/en/latest/lambdas.html)
+ * [Lambdas Build](http://gordon.readthedocs.io/en/latest/lambdas.html#build)
 
 How to deploy it?
 ------------------

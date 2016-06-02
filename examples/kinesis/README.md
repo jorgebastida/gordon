@@ -1,7 +1,7 @@
 Kinesis Example
 ===========================
 
-![gordon](http://gordondoc.s3-website-eu-west-1.amazonaws.com/_static/examples/kinesis.svg)
+![gordon](http://gordon.readthedocs.io/en/latest/_static/examples/kinesis.svg)
 
 This simple project defines one lambda called ``kinesisconsumer`` and integrates it with one kinesis stream.
 
@@ -11,8 +11,8 @@ The lambda is quite dumb, and only prints the received event.
 
 
 Documentation relevant to this example:
- * [Lambdas](http://gordondoc.s3-website-eu-west-1.amazonaws.com/lambdas.html)
- * [Kinesis](http://gordondoc.s3-website-eu-west-1.amazonaws.com/eventsources/kinesis.html)
+ * [Lambdas](http://gordon.readthedocs.io/en/latest/lambdas.html)
+ * [Kinesis](http://gordon.readthedocs.io/en/latest/eventsources/kinesis.html)
 
 How to deploy it?
 ------------------

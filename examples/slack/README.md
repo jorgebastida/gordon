@@ -6,7 +6,7 @@ lambda written in python called ``python_bot`` with the ``/my-python-bot-webhook
 
 If you configure a new slash command in your slack account to invoque this endpoint, you'll get something similar like this:
 
-![slack](http://gordondoc.s3-website-eu-west-1.amazonaws.com/_static/examples/slack_demo.png)
+![slack](http://gordon.readthedocs.io/en/latest/_static/examples/slack_demo.png)
 
 In order to create your slash command in Slack, you'll need to follow a few steps:
 
@@ -18,8 +18,8 @@ In order to create your slash command in Slack, you'll need to follow a few step
 * Done! You should be able to use your slash command.
 
 Documentation relevant to this example:
- * [Lambdas](http://gordondoc.s3-website-eu-west-1.amazonaws.com/lambdas.html)
- * [APIGateway](http://gordondoc.s3-website-eu-west-1.amazonaws.com/eventsources/apigateway.html)
+ * [Lambdas](http://gordon.readthedocs.io/en/latest/lambdas.html)
+ * [APIGateway](http://gordon.readthedocs.io/en/latest/eventsources/apigateway.html)
  * [Slack Outgoing Webhooks](https://api.slack.com/outgoing-webhooks)
  * [Slack Icomming Webhooks](https://api.slack.com/incoming-webhooks)
  * [Slack Slash Commands](https://api.slack.com/slash-commands)

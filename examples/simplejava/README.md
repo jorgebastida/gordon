@@ -14,8 +14,8 @@ The lambda itself is quite dumb, and only prints information about the ``Hello W
 ```
 
 Documentation relevant to this example:
- * [Lambdas](http://gordondoc.s3-website-eu-west-1.amazonaws.com/lambdas.html)
- * [Java Requirements](http://gordondoc.s3-website-eu-west-1.amazonaws.com/requirements.html#java-requirements)
+ * [Lambdas](http://gordon.readthedocs.io/en/latest/lambdas.html)
+ * [Java Requirements](http://gordon.readthedocs.io/en/latest/requirements.html#java-requirements)
 
 How to deploy it?
 ------------------

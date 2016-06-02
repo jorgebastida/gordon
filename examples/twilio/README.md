@@ -1,7 +1,7 @@
 Twilio Example
 ===========================
 
-![gordon](http://gordondoc.s3-website-eu-west-1.amazonaws.com/_static/examples/twilio.svg)
+![gordon](http://gordon.readthedocs.io/en/latest/_static/examples/twilio.svg)
 
 This project defines one API Gateway called ``twilioexample``and connects one
 lambda written in python called ``helloworld`` with the ``/`` url.
@@ -23,6 +23,6 @@ in order to make the integration work:
 
 
 Documentation relevant to this example:
- * [Lambdas](http://gordondoc.s3-website-eu-west-1.amazonaws.com/lambdas.html)
- * [APIGateway](http://gordondoc.s3-website-eu-west-1.amazonaws.com/eventsources/apigateway.html)
+ * [Lambdas](http://gordon.readthedocs.io/en/latest/lambdas.html)
+ * [APIGateway](http://gordon.readthedocs.io/en/latest/eventsources/apigateway.html)
  * [TwiML Reference](https://www.twilio.com/docs/api/twiml)

@@ -1,7 +1,7 @@
 Cron Example
 ===========================
 
-![gordon](http://gordondoc.s3-website-eu-west-1.amazonaws.com/_static/examples/cron.svg)
+![gordon](http://gordon.readthedocs.io/en/latest/_static/examples/cron.svg)
 
 This simple project defines one lambda called ``hellopy``, and two CloudWatch rules called
 ``every_night`` and ``update_dns``.
@@ -12,8 +12,8 @@ This simple project defines one lambda called ``hellopy``, and two CloudWatch ru
 The lambda is quite dumb, and only prints the received event.
 
 Documentation relevant to this example:
- * [Lambdas](http://gordondoc.s3-website-eu-west-1.amazonaws.com/lambdas.html)
- * [Events](http://gordondoc.s3-website-eu-west-1.amazonaws.com/eventsources/events.html)
+ * [Lambdas](http://gordon.readthedocs.io/en/latest/lambdas.html)
+ * [Events](http://gordon.readthedocs.io/en/latest/eventsources/events.html)
 
 How to deploy it?
 ------------------
