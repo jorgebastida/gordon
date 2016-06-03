@@ -39,7 +39,7 @@ Term                   Description
 What gordon will do for you?
 -----------------------------
 
-* Download any external requirement you lambdas might have.
+* Download any external requirements your lambdas might have.
 * Create a zip file with your lambda, packages and libraries.
 * Upload this file to S3.
 * Create a lambda with your code and settings (memory, timeout...)
