@@ -1,7 +1,7 @@
 Twilio Example
 ===========================
 
-![gordon](http://gordon.readthedocs.io/en/latest/_static/examples/twilio.svg)
+![gordon](https://gordon.readthedocs.io/en/latest/_static/examples/twilio.svg)
 
 This project defines one API Gateway called ``twilioexample``and connects one
 lambda written in python called ``helloworld`` with the ``/`` url.
@@ -23,6 +23,6 @@ in order to make the integration work:
 
 
 Documentation relevant to this example:
- * [Lambdas](http://gordon.readthedocs.io/en/latest/lambdas.html)
- * [APIGateway](http://gordon.readthedocs.io/en/latest/eventsources/apigateway.html)
+ * [Lambdas](https://gordon.readthedocs.io/en/latest/lambdas.html)
+ * [APIGateway](https://gordon.readthedocs.io/en/latest/eventsources/apigateway.html)
  * [TwiML Reference](https://www.twilio.com/docs/api/twiml)

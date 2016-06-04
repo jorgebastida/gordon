@@ -5,4 +5,4 @@ There are few ways and things to consider in order to configure your AWS credent
 
 * http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html
 * http://docs.aws.amazon.com/general/latest/gr/aws-access-keys-best-practices.html
-* http://boto3.readthedocs.io/en/latest/guide/configuration.html
+* https://boto3.readthedocs.io/en/latest/guide/configuration.html

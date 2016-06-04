@@ -15,7 +15,7 @@ You'll only need to deploy it and use the ``Arn``   as the ``ServiceToken`` of y
 ```
 
 Documentation relevant to this example:
- * [Lambdas](http://gordon.readthedocs.io/en/latest/lambdas.html)
+ * [Lambdas](https://gordon.readthedocs.io/en/latest/lambdas.html)
  * [AWS:Lambda-backed Custom Resources](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-custom-resources-lambda.html)
 
 How to deploy it?

@@ -1,4 +1,4 @@
-![gordon](http://gordon.readthedocs.io/en/latest/_static/logo_text.svg)
+![gordon](https://gordon.readthedocs.io/en/latest/_static/logo_text.svg)
 
 [![GitHub license](https://img.shields.io/badge/license-BSD-blue.svg)](COPYING)
 ![Python Versions](https://img.shields.io/badge/python-2.7%20%7C%203.3%20%7C%203.4%20%7C%203.5-green.svg)
@@ -10,7 +10,7 @@
 
 Gordon is a tool to create, wire and deploy AWS Lambdas using CloudFormation
 
-Documentation: http://gordon.readthedocs.io/en/latest/
+Documentation: https://gordon.readthedocs.io/en/latest/
 
 Features
 ---------
