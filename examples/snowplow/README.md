@@ -10,8 +10,8 @@ Every time changes are published to the stream, the lambda will be executed. The
 the [Snowplow Analytics Python SDK](https://github.com/snowplow/snowplow-python-analytics-sdk) and do a simple update in a dynamodb table.
 
 Documentation relevant to this example:
- * [Lambdas](http://gordon.readthedocs.io/en/latest/lambdas.html)
- * [Kinesis](http://gordon.readthedocs.io/en/latest/eventsources/kinesis.html)
+ * [Lambdas](https://gordon.readthedocs.io/en/latest/lambdas.html)
+ * [Kinesis](https://gordon.readthedocs.io/en/latest/eventsources/kinesis.html)
 
 How to deploy it?
 ------------------

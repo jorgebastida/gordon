@@ -21,8 +21,8 @@ file and will bundle them together before uploading your lambda to AWS.
 The lambda is quite dumb, and only an example.
 
 Documentation relevant to this example:
- * [Lambdas](http://gordon.readthedocs.io/en/latest/lambdas.html)
- * [Python Requirements](http://gordon.readthedocs.io/en/latest/requirements.html#python-requirements)
+ * [Lambdas](https://gordon.readthedocs.io/en/latest/lambdas.html)
+ * [Python Requirements](https://gordon.readthedocs.io/en/latest/requirements.html#python-requirements)
 
 How to deploy it?
 ------------------
