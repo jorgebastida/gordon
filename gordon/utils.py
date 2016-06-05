@@ -105,6 +105,12 @@ def validate_code_bucket(name):
       around this, use HTTP or write your own certificate verification logic.
       We recommend that you do not use periods (".") in bucket names.
     """
+
+    if isinstance(name, troposphere.Ref):
+        # If code-bucket is a reference to a parameter we can't apply any
+        # validation as the value could be anything on apply time.
+        return name
+
     if len(name) > 31:
         raise exceptions.ValidationError("code-bucket length must be less than 31 characters.")
 

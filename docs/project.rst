@@ -47,7 +47,7 @@ As well as creating these templates, gordon will create all necessary artifacts 
 At this point, gordon will not use any AWS credentials. This is important.
 
 What gordon generates in the build directory is merely declarative and completely agnostic of in which region or stage you'll (later)
-deploy it. Gordon doesn't know/care what is the current status (if any) of all those resources.
+deploy it. Gordon doesn't know/care what is the current status (if  any) of all those resources.
 
 This is one of the greatness (and technical challenges) of gordon.
 
@@ -72,8 +72,12 @@ Apply is the action that will deploy your project to one specific region and sta
 =====================  ================================================================================================
 Term                   Description
 =====================  ================================================================================================
-``region``             AWS cloud is divided in several regions. Each Region is a separate geographic area. `AWS Regions and Availability Zones <http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html>`_
-``stage``              Stages are 100% isolated deployments of the same project. The idea is that the same project can be deployed in the same AWS account in different stages (``dev``, ``staging``, ``prod``...) in order to SAFELY test it's behaviour.
+``region``             AWS cloud is divided in several regions. Each Region is a separate geographic area.
+                       `AWS Regions and Availability Zones <http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html>`_
+``stage``              Stages are 100% isolated deployments of the same project. The idea is that the same project can
+                       be deployed in the same AWS account in different stages (``dev``, ``staging``, ``prod``...)
+                       in order to SAFELY test it's behaviour.
+                       Stage names must only contain up to 16 lowercase alphanumeric characters including hyphen.
 =====================  ================================================================================================
 
 This command will:
@@ -144,6 +148,7 @@ code-bucket
 Name                         ``code-bucket``
 Required                     Yes
 Valid types                  ``string``
+Validation                   Up to 31 lowercase alphanumeric characters including hyphen.
 Description                  Base Name of the bucket gordon will use to store the source code of your lambdas and Cloudformation templates.
 ===========================  ================================================================================================================
 
