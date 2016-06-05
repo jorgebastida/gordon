@@ -80,7 +80,11 @@ Keep it simple! 😀
 Isolation between stages?
 -----------------------------------
 
-Yes, we believe that there must be 100% isolation between your application stages (``dev``, ``staging``, ``prod``...). That means that resources which (for example) serve a development purpose **must** not be related to the ones which are serving production load. Putting that to the extreme, [and following AWS best practices](http://blogs.aws.amazon.com/security/post/TxQYSWLSAPYVGT/Guidelines-for-when-to-use-Accounts-Users-and-Groups) that means using different AWS accounts. This completely clash with the suggested approach that AWS suggest you to follow with services such as apigateway, where they emphasize to have several "stages" for the same apigateway resource. We disagree and completely ignore that functionality.
+Yes, we believe that there must be 100% isolation between your application stages (``dev``, ``staging``, ``prod``...). That means that resources which (for example) serve a development purpose **must** not be related to the ones which are serving production load.
+
+On example of this is that it is an AWS [best practice](http://blogs.aws.amazon.com/security/post/TxQYSWLSAPYVGT/Guidelines-for-when-to-use-Accounts-Users-and-Groups) to use different AWS accounts between stages. Although this is not required, it makes evident that mixing resources between stages is a bad idea.
+
+This completely clash with the suggested approach for services such as apigateway, where they emphasize to have several "stages" for the same apigateway resource. We disagree and completely ignore that functionality because we believe is the wrong approach.
 
 Gordon keeps reproducibility and isolation at it's core. When you apply gordon projects in different stages or regions, you'll deploy completely isolated Cloudformation stacks which will contain an exact and isolated copy of all the resources you have defined.
 
