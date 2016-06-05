@@ -169,3 +169,8 @@ class InvalidApigatewayIntegrationTypeError(BaseGordonException):
 class LambdaNotFound(BaseGordonException):
     hint = u"Lambda with name {} can't be found."
     code = 23
+
+
+class ValidationError(BaseGordonException):
+    hint = u"  Validation Error: {}"
+    code = 24

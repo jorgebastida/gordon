@@ -10,7 +10,8 @@ from .exceptions import BaseGordonException
 
 
 def stage_validator(s):
-    if re.match(r'^[a-zA-Z0-9]+$', s):
+    """Stage names must be between 2 and 16 characters long."""
+    if re.match(r'^[a-z0-9\-]{2,16}$', s):
         return s
     else:
         raise argparse.ArgumentTypeError("Stage names can only contain alphanumeric characters")

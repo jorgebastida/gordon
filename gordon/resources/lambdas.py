@@ -199,7 +199,7 @@ class Lambda(base.BaseResource):
         bucket_name = troposphere.Join(
             "-",
             [
-                project.settings['code-bucket'],
+                utils.validate_code_bucket(project.settings['code-bucket']),
                 troposphere.Ref(troposphere.AWS_REGION),
                 troposphere.Ref('Stage')
             ]

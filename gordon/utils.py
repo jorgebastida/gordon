@@ -83,6 +83,37 @@ def get_file_hash(filename):
         return digest.hexdigest()
 
 
+def validate_code_bucket(name):
+    """
+    Code bucket variable is going to be used as part of a bucket name with
+    the following format "{code-bucket}-{region}-{stage}".
+
+    - AWS region goes up to 14 characters (today).
+    - Stage goes from 2 to 16 characters.
+    - Separators are 2 characters.
+    - Code bucket must be equal or less than 63-14-16-2=31 characters.
+
+    Bucket name validation: http://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html
+    * Bucket names must be at least 3 and no more than 63 characters long.
+    * Bucket names must be a series of one or more labels. Adjacent labels are
+      separated by a single period (.). Bucket names can contain lowercase letters,
+      numbers, and hyphens. Each label must start and end with a lowercase
+      letter or a number.
+    * Bucket names must not be formatted as an IP address (e.g., 192.168.5.4).
+    * When using virtual hosted–style buckets with SSL, the SSL wildcard
+      certificate only matches buckets that do not contain periods. To work
+      around this, use HTTP or write your own certificate verification logic.
+      We recommend that you do not use periods (".") in bucket names.
+    """
+    if len(name) > 31:
+        raise exceptions.ValidationError("code-bucket length must be less than 31 characters.")
+
+    if not re.match(r'^[a-z0-9\-]+$', name):
+        raise exceptions.ValidationError("code-bucket must only contain lowercase 'a-z', '0-9' and '-' characters.")
+
+    return name
+
+
 def setup_region(region, settings=None):
     """Returns which region should be used and sets ``AWS_DEFAULT_REGION`` in
     order to configure ``boto3``."""
