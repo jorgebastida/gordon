@@ -1,4 +1,5 @@
 import os
+import re
 import sys
 import argparse
 
@@ -6,6 +7,13 @@ from clint.textui import colored, puts
 
 from .core import Bootstrap, ProjectBuild, ProjectApply, ProjectDelete, ProjectRun
 from .exceptions import BaseGordonException
+
+
+def stage_validator(s):
+    if re.match(r'^[a-zA-Z0-9]+$', s):
+        return s
+    else:
+        raise argparse.ArgumentTypeError("Stage names can only contain alphanumeric characters")
 
 
 def main(argv=None, stdin=None):
@@ -58,7 +66,7 @@ def main(argv=None, stdin=None):
     apply_parser.set_defaults(func="apply")
     apply_parser.add_argument("-s", "--stage",
                               dest="stage",
-                              type=str,
+                              type=stage_validator,
                               default='dev',
                               help="Stage where to apply this project")
     apply_parser.add_argument("--cf-timeout",
