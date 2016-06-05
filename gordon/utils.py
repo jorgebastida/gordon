@@ -22,29 +22,29 @@ from clint.textui import colored, puts, indent
 from . import exceptions
 from gordon import get_version
 
-
-FINAL_STATUS = (
-    'CREATE_FAILED', 'DELETE_FAILED', 'ROLLBACK_FAILED',
-    'UPDATE_ROLLBACK_FAILED', 'UPDATE_ROLLBACK_COMPLETE', 'CREATE_COMPLETE',
-    'DELETE_COMPLETE', 'UPDATE_COMPLETE',
-    'UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS', 'ROLLBACK_COMPLETE',
-    'UPDATE_COMPLETE_CLEANUP_IN_PROGRESS'
+CF_FINAL_SUCCEED_STATUS = (
+    'UPDATE_COMPLETE_CLEANUP_IN_PROGRESS', 'DELETE_COMPLETE',
+    'UPDATE_COMPLETE', 'CREATE_COMPLETE'
 )
 
+CF_FINAL_ERRORED_STATUS = (
+    'CREATE_FAILED', 'DELETE_FAILED', 'ROLLBACK_FAILED', 'UPDATE_ROLLBACK_FAILED',
+    'UPDATE_ROLLBACK_COMPLETE', 'UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS',
+    'ROLLBACK_COMPLETE'
+)
 
-IN_PROGRESS_STATUS = (
+CF_IN_PROGRESS_STATUS = (
     'CREATE_IN_PROGRESS', 'DELETE_IN_PROGRESS', 'ROLLBACK_IN_PROGRESS',
     'UPDATE_IN_PROGRESS', 'UPDATE_ROLLBACK_IN_PROGRESS'
 )
 
-DELETE_STACK_STATUS = (
+CF_DELETE_STACK_REQUIRED_STATUS = (
     'CREATE_FAILED', 'DELETE_FAILED', 'ROLLBACK_FAILED',
     'UPDATE_ROLLBACK_FAILED'
 )
 
-STATUS_COLORS = {
-    'CREATE_FAILED'
-}
+CF_FINAL_STATUS = CF_FINAL_SUCCEED_STATUS + CF_FINAL_ERRORED_STATUS
+
 
 MILL_CHARS = ['|', '/', '-', '\\']
 
@@ -298,12 +298,10 @@ def update_stack(name, template_filename, bucket, context, **kwargs):
     return get_cf_stack(stack['StackId'])
 
 
-def wait_for_cf_status(stack_id, success_if, abort_if=None, spin_every=50, every=1000, limit=60 * 15 * 1000):
+def wait_for_cf_status(stack_id, spin_every=50, every=1000, limit=60 * 15 * 1000):
     """Waits up to ``limit`` seconds in ``every`` intervals until the stack
-    with ID ``stack_id`` reached one of the status in ``success_if`` or
-    ``abort_if``.
+    with ID ``stack_id`` reached one of the ``FINAL_STATUS``.
     """
-    abort_if = abort_if or DELETE_STACK_STATUS
     clean_output = False
     stack_status = 'N/A'
     for m, i in mill(range(0, limit, spin_every)):
@@ -316,12 +314,12 @@ def wait_for_cf_status(stack_id, success_if, abort_if=None, spin_every=50, every
             puts("\r{}".format(" " * 80), newline=False)
             puts("\r    {} waiting... {}".format(get_cf_color(stack_status)(stack_status), m), newline=False)
             sys.stdout.flush()
-        if stack_status in success_if:
+        if stack_status in CF_FINAL_SUCCEED_STATUS:
             if clean_output:
                 puts("")
             return stack
-        elif stack_status in abort_if:
-            raise exceptions.AbnormalCloudFormationStatusError(stack, stack_status, success_if, abort_if)
+        elif stack_status in CF_FINAL_ERRORED_STATUS:
+            raise exceptions.AbnormalCloudFormationStatusError(stack, stack_status)
         clean_output = True
         time.sleep(spin_every / 1000.0)
     puts("")
@@ -333,9 +331,9 @@ def create_or_update_cf_stack(name, template_filename, bucket=None, context=None
     context = context or {}
     stack = get_cf_stack(name)
 
-    if stack and stack['StackStatus'] in IN_PROGRESS_STATUS:
+    if stack and stack['StackStatus'] in CF_IN_PROGRESS_STATUS:
         raise exceptions.CloudFormationStackInProgressError(stack['StackId'], stack['StackStatus'])
-    elif stack and stack['StackStatus'] in DELETE_STACK_STATUS:
+    elif stack and stack['StackStatus'] in CF_DELETE_STACK_REQUIRED_STATUS:
         raise exceptions.AbnormalCloudFormationStatusError(stack['StackId'], stack['StackStatus'])
 
     if stack:
@@ -343,9 +341,7 @@ def create_or_update_cf_stack(name, template_filename, bucket=None, context=None
     else:
         stack = create_stack(name, template_filename, bucket=bucket, context=context, **kwargs)
 
-    stack = wait_for_cf_status(stack['StackId'], FINAL_STATUS)
-
-    return stack
+    return wait_for_cf_status(stack['StackId'])
 
 
 def delete_s3_bucket(bucket_name, dry_run=True, quiet=False):
