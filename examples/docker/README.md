@@ -7,7 +7,7 @@ In this example, we use [lambci/docker-lambda](https://github.com/lambci/docker-
 they are almost identical to the environment where the lambdas are going to run.
 
 Documentation relevant to this example:
- * [Lambdas](http://gordon.readthedocs.io/en/latest/lambdas.html)
+ * [Lambdas](https://gordon.readthedocs.io/en/latest/lambdas.html)
 
 How to deploy it?
 ------------------

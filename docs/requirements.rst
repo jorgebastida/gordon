@@ -27,7 +27,7 @@ file in the root of your lambda folder, and gordon will install all those using 
 
 For more information about the format of this file:
 
-    * https://pip.readthedocs.org/en/1.1/requirements.html
+    * https://pip.readthedocs.io/en/1.1/requirements.html
 
 Additionally you can customize how gordon invoques ``pip`` using the following settings:
 

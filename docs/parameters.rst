@@ -17,8 +17,8 @@ In order to use parameters you only need to:
 
   ...
   parameters
-  ├── dev.py
-  ├── prod.py
+  ├── dev.yml
+  ├── prod.yml
   └── common.yml
 
 .. note::
