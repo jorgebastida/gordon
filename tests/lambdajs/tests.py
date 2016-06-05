@@ -19,7 +19,7 @@ class IntegrationTest(BaseIntegrationTest):
         self.assertEqual(lambda_['Timeout'], 123)
 
         aliases = self.get_lambda_aliases(function_name=lambda_['FunctionName'])
-        self.assertEqual(aliases.keys(), ['current'])
+        self.assertEqual(list(aliases.keys()), ['current'])
 
         response = self.invoke_lambda(
             function_name=lambda_['FunctionName'],

@@ -158,7 +158,7 @@ class BaseIntegrationTest(BaseBuildTest):
         self.assertIn(stack['StackStatus'], ('CREATE_COMPLETE',))
 
     def assert_lambda_response(self, response, value):
-        self.assertEqual(json.loads(response['Payload'].read()), value)
+        self.assertEqual(json.loads(response['Payload'].read().decode('utf-8')), value)
 
     def get_lambda(self, function_name):
         client = boto3.client('lambda')

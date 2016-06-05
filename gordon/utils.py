@@ -67,7 +67,7 @@ def get_zip_hash(obj):
     digest = hashlib.sha1()
     zfile = zipfile.ZipFile(obj, 'r')
     for path in sorted(zfile.namelist()):
-        digest.update(path)
+        digest.update(six.text_type(path).encode('utf-8'))
         digest.update(zfile.read(path))
     return digest.hexdigest()
 
@@ -78,8 +78,8 @@ def get_file_hash(filename):
 
     with open(filename, 'r') as f:
         digest = hashlib.sha1()
-        digest.update(filename)
-        digest.update(f.read())
+        digest.update(six.text_type(filename).encode('utf-8'))
+        digest.update(six.text_type(f.read()).encode('utf-8'))
         return digest.hexdigest()
 
 
@@ -224,7 +224,7 @@ def get_template_s3_key(filename):
         data = f.read()
     return 'cf_templates/{}/{}.json'.format(
         datetime.now().strftime("%Y-%m-%d"),
-        hashlib.sha1(data).hexdigest()[:8]
+        hashlib.sha1(six.text_type(data).encode('utf-8')).hexdigest()[:8]
     )
 
 
@@ -306,7 +306,7 @@ def wait_for_cf_status(stack_id, success_if, abort_if=None, spin_every=50, every
     abort_if = abort_if or DELETE_STACK_STATUS
     clean_output = False
     stack_status = 'N/A'
-    for m, i in mill(xrange(0, limit, spin_every)):
+    for m, i in mill(range(0, limit, spin_every)):
         if not (i % every):
             stack = get_cf_stack(name=stack_id)
             if stack:

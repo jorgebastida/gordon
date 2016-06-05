@@ -22,7 +22,7 @@ class IntegrationTest(BaseIntegrationTest):
         self.assertEqual(lambda_['Runtime'], 'python2.7')
 
         aliases = self.get_lambda_aliases(function_name=lambda_['FunctionName'])
-        self.assertEqual(aliases.keys(), ['current'])
+        self.assertEqual(list(aliases.keys()), ['current'])
 
 
 class BuildTest(BaseBuildTest):

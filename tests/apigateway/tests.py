@@ -23,7 +23,7 @@ class IntegrationTest(BaseIntegrationTest):
         self.assertEqual(lambda_['Timeout'], 123)
 
         aliases = self.get_lambda_aliases(function_name=lambda_['FunctionName'])
-        self.assertEqual(aliases.keys(), ['current'])
+        self.assertEqual(list(aliases.keys()), ['current'])
 
         response = self.invoke_lambda(
             function_name=lambda_['FunctionName'],
@@ -38,7 +38,7 @@ class IntegrationTest(BaseIntegrationTest):
         self.assertEqual(lambda_['Timeout'], 123)
 
         aliases = self.get_lambda_aliases(function_name=lambda_['FunctionName'])
-        self.assertEqual(aliases.keys(), ['current'])
+        self.assertEqual(list(aliases.keys()), ['current'])
 
         response = self.invoke_lambda(
             function_name=lambda_['FunctionName'],
@@ -52,27 +52,27 @@ class IntegrationTest(BaseIntegrationTest):
 
         response = requests.get(endpoint)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.content, '"hello"')
+        self.assertEqual(response.content.decode('utf-8'), '"hello"')
 
         response = requests.get('{}/404'.format(endpoint))
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.content, '"hello"')
+        self.assertEqual(response.content.decode('utf-8'), '"hello"')
 
         response = requests.get('{}/shop/2'.format(endpoint))
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.content, '"hello"')
+        self.assertEqual(response.content.decode('utf-8'), '"hello"')
 
         response = requests.get('{}/http'.format(endpoint))
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(json.loads(response.content)['args'], {'hello': 'world'})
+        self.assertEqual(json.loads(response.content.decode('utf-8'))['args'], {'hello': 'world'})
 
         response = requests.get('{}/complex'.format(endpoint))
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.content, '"hello"')
+        self.assertEqual(response.content.decode('utf-8'), '"hello"')
 
         response = requests.post('{}/complex'.format(endpoint))
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.content, '"bye"')
+        self.assertEqual(response.content.decode('utf-8'), '"bye"')
 
 
 class BuildTest(BaseBuildTest):
