@@ -54,7 +54,7 @@ class AbnormalCloudFormationStatusError(BaseGordonException):
     resource cannot return to its original state, which causes a failure.
 
     What can you do now? Well... you need to delete the stack  and run this
-    commanda again. Before doing that, it would be good if you check what
+    command again. Before doing that, it would be good if you check what
     failed... because it is quite possible this will happend again if you
     don't solve the root issue.
 
