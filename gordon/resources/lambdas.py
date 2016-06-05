@@ -163,7 +163,7 @@ class Lambda(base.BaseResource):
 
         role = self.settings.get('role')
 
-        if isinstance(role, six.string_types):
+        if isinstance(role, six.string_types) or isinstance(role, troposphere.Ref):
             return role
         elif role is None:
             pass

@@ -423,7 +423,7 @@ role
 Name                         ``role``
 Required                     No
 default                      Gordon will create a minimal role for this function
-Valid types                  ``arn``
+Valid types                  ``arn``, ``reference``
 Description                  ARN of the lambda role this function will use.
 ===========================  ============================================================================================================
 
