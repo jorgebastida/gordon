@@ -1,0 +1,17 @@
+---
+project: vpc
+default-region: eu-west-1
+code-bucket: gordon-vpc-0do1mc7
+apps:
+  - gordon.contrib.lambdas
+  - helloworld
+
+vpcs:
+    default:
+        security-groups:
+            - sg-0e7c2e76
+        subnet-ids:
+            - subnet-c7ea6bed
+            - subnet-43295935
+            - subnet-3e175403
+            - subnet-b245ccea

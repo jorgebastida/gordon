@@ -1,3 +1,4 @@
 lambdas:
   hellopy:
     code: hellopy.py
+    vpc: default
