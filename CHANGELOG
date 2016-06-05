@@ -4,6 +4,7 @@
 * Fix Python 3 support.
 * Add tox environment for python 3 integration tests.
 * Fix Lambda:role resource so it can be a reference/parameter.
+* Make the apply command exit immediately if one of the steps fails.
 
 0.2
 ====
