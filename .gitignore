@@ -10,3 +10,4 @@ __pycache__
 build
 dist
 _build
+docs/_build
