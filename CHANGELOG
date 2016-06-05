@@ -3,6 +3,7 @@
 * Fix typos and grammar errors all across the the documentation.
 * Fix Python 3 support.
 * Add tox environment for python 3 integration tests.
+* Fix Lambda:role resource so it can be a reference/parameter.
 
 0.2
 ====
