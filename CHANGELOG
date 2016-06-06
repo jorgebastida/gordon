@@ -6,6 +6,7 @@
 * Fix Lambda:role resource so it can be a reference/parameter.
 * Make the apply command exit immediately if one of the steps fails.
 * Added ``fail`` method to the node Mock
+* Make it possible to use non-user temp credentials
 
 0.2
 ====
