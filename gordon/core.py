@@ -12,6 +12,7 @@ import boto3
 import jinja2
 import troposphere
 from clint.textui import colored, puts, indent
+from botocore.exceptions import ClientError
 
 from . import exceptions
 from . import utils
@@ -449,10 +450,17 @@ class ProjectApply(ProjectApplyLoopBase):
             os.path.join(self.path, 'parameters', '{}.yml'.format(self.stage)),
         )
 
+        # Retrieve the account_id of the credentials currently in use.
+        # The first approach is slightly more lightweight than the second.
+        try:
+            aws_account_id = boto3.client('iam').get_user()['User']['Arn'].split(':')[4]
+        except ClientError:
+            aws_account_id = boto3.client('iam').list_users(MaxItems=1)['Users'][0]['Arn'].split(':')[4]
+
         context = {
             'stage': self.stage,
             'aws_region': self.region,
-            'aws_account_id': boto3.client('iam').get_user()['User']['Arn'].split(':')[4],
+            'aws_account_id': aws_account_id,
             'env': os.environ
         }
 
