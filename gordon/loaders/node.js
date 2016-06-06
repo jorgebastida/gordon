@@ -25,6 +25,10 @@ LambdaContext.prototype.succeed = function(message) {
     console.log("output: " + message);
 }
 
+LambdaContext.prototype.fail = function(error) {
+    console.log("fail: " + error);
+}
+
 // This language needs more love
 String.prototype.rsplit = function(sep, maxsplit) {
     var split = this.split(sep);
