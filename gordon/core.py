@@ -452,7 +452,7 @@ class ProjectApply(ProjectApplyLoopBase):
         context = {
             'stage': self.stage,
             'aws_region': self.region,
-            'aws_account_id': boto3.client('iam').get_user()['User']['Arn'].split(':')[4],
+            'aws_account_id': boto3.client('iam').list_users(MaxItems=1)['Users'][0]['Arn'].split(':')[4],
             'env': os.environ
         }
 
