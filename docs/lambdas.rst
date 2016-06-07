@@ -100,7 +100,7 @@ The following is the anatomy of a lambda in gordon.
           { MAP }
         ...
 
-The best way to organize you lambdas is to register them inside the ``settings.yml`` file of your apps within your :doc:`project`.
+The best way to organize your lambdas is to register them inside the ``settings.yml`` file of your apps within your :doc:`project`.
 
 
 Lambda Properties
