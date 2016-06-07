@@ -466,11 +466,13 @@ class ProjectApply(ProjectApplyLoopBase):
 
         for path in parameters_paths:
             if os.path.exists(path):
-                params = utils.load_settings(
-                    path,
-                    jinja2_enrich=True,
-                    protocols=protocols.BASE_APPLY_PROTOCOLS,
-                    context=context
+                params = utils.convert_cloudformation_types(
+                    utils.load_settings(
+                        path,
+                        jinja2_enrich=True,
+                        protocols=protocols.BASE_APPLY_PROTOCOLS,
+                        context=context
+                    )
                 )
                 parameters.update(params)
 

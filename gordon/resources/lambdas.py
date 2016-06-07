@@ -254,6 +254,13 @@ class Lambda(base.BaseResource):
         extra = {}
         if self.settings.get('vpc'):
             vpc = self.project.get_resource('vpc::{}'.format(self.settings.get('vpc')))
+
+            if isinstance(vpc.settings['security-groups'], troposphere.Ref):
+                vpc.settings['security-groups']._type = 'List<AWS::EC2::SecurityGroup::Id>'
+
+            if isinstance(vpc.settings['subnet-ids'], troposphere.Ref):
+                vpc.settings['subnet-ids']._type = 'List<AWS::EC2::Subnet::Id>'
+
             extra['VpcConfig'] = awslambda.VPCConfig(
                 SecurityGroupIds=vpc.settings['security-groups'],
                 SubnetIds=vpc.settings['subnet-ids']

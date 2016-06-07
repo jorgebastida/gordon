@@ -183,6 +183,16 @@ def load_settings(filename, default=None, jinja2_enrich=False, context=None, pro
     return settings
 
 
+def convert_cloudformation_types(data):
+    cf_data = {}
+    for k, v in six.iteritems(data):
+        if isinstance(v, Iterable):
+            cf_data[k] = ', '.join(v)
+        else:
+            cf_data[k] = v
+    return cf_data
+
+
 def fix_troposphere_references(template):
     """"Tranverse the troposphere ``template`` looking missing references.
     Fix them by adding a new parameter for those references."""
@@ -194,7 +204,7 @@ def fix_troposphere_references(template):
                 template.add_parameter(
                     troposphere.Parameter(
                         name,
-                        Type="String",
+                        Type=getattr(value, '_type', 'String'),
                     )
                 )
 
