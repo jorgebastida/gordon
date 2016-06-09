@@ -53,7 +53,7 @@ We think documentation and examples are an important pillar... so here you have 
 * [Golang Runtime](https://github.com/jorgebastida/gordon/tree/master/examples/go): Run Golang based Lambdas via shim.
 * [ApiGateway](https://github.com/jorgebastida/gordon/tree/master/examples/apigateway): Integration for creating a simple web service.
 * [Cron](https://github.com/jorgebastida/gordon/tree/master/examples/cron): Schedule lambdas using cron syntax.
-* [Dynamodb Stream Consumer](https://github.com/jorgebastida/gordon/tree/master/examples/dynamodbpython): Consume as a stream changes to a dynamodb table.
+* [Dynamodb Stream Consumer](https://github.com/jorgebastida/gordon/tree/master/examples/dynamodb): Consume as a stream changes to a dynamodb table.
 * [Kinesis Stream Consumer](https://github.com/jorgebastida/gordon/tree/master/examples/kinesis): Consume Events published in a Kinesis Stream.
 * [S3 Consumer](https://github.com/jorgebastida/gordon/tree/master/examples/s3): Run your lambdas when a file is created/deleted on S3.
 * [Contexts](https://github.com/jorgebastida/gordon/tree/master/examples/contexts): Add dynamic configuration to your lambdas.
