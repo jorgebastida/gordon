@@ -8,6 +8,7 @@ from troposphere import sqs, sns, awslambda
 from . import base
 from gordon import exceptions
 from gordon import utils
+from gordon.actions import Ref
 from gordon.contrib.s3.resources import (
     S3BucketNotificationConfiguration,
     NotificationConfiguration, KeyFilter
@@ -304,6 +305,10 @@ class BucketNotificationConfiguration(base.BaseResource):
         overlap_checks = {'prefix': 'startswith', 'suffix': 'endswith'}
         for filter_type, values in six.iteritems(all_filters):
             check = overlap_checks.get(filter_type)
+            # Don't check fields that are Ref instances
+            # since Refs aren't bound until apply
+            if isinstance(check, Ref):
+                continue
             overlaps = [sum([int(getattr(v, check)(z)) for z in values]) for v in values]
             if sum(overlaps) > len(values):
                 raise exceptions.ResourceValidationError(
