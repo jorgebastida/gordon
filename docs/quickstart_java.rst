@@ -3,7 +3,7 @@ Quickstart: Java
 
 Now that you have Gordon installed, let's create our first project. Before doing so, you need to understand how Gordon projects are structured.
 
-A Gordon project consist in one or more applications. The term application describes a directory that provides some set of features. Applications may be reused in various projects.
+A Gordon project consists of one or more applications. The term application describes a directory that provides some set of features. Applications may be reused in various projects.
 
 Requirements for Java lambdas:
  * ``gradle``: http://gradle.org/gradle-download/
@@ -161,5 +161,5 @@ What next?
 You should have a basic understanding of how Gordon works. We recommend you to dig a bit deeper and explore:
 
   * :doc:`project` Details about how you can customize your projects
-  * :doc:`lambdas` In-depth exmplanation of how lambdas work.
+  * :doc:`lambdas` In-depth explanation of how lambdas work.
   * :doc:`eventsources` List of all resources and integrations you can create using Gordon.
