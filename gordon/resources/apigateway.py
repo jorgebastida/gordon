@@ -172,15 +172,15 @@ class ApiGateway(BaseResource):
         return resource.get('request_templates', {})
 
     def get_integration(self, resource, invoke_lambda_role):
-        integrantion_type = self.get_integration_type(resource)
-        if integrantion_type:
+        integration_type = self.get_integration_type(resource)
+        if integration_type:
             extra = {}
             if 'parameters' in resource['integration']:
                 extra['RequestParameters'] = resource['integration']['parameters']
             return Integration(
                 IntegrationResponses=self.get_integration_responses(resource),
                 IntegrationHttpMethod=self.get_integration_http_method(resource),
-                Type=integrantion_type,
+                Type=integration_type,
                 Credentials=self.get_integration_credentials(resource, invoke_lambda_role),
                 RequestTemplates=self.get_request_templates(resource),
                 Uri=self.get_integration_uri(resource),
