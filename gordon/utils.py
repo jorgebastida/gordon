@@ -186,7 +186,7 @@ def load_settings(filename, default=None, jinja2_enrich=False, context=None, pro
 def convert_cloudformation_types(data):
     cf_data = {}
     for k, v in six.iteritems(data):
-        if isinstance(v, Iterable):
+        if isinstance(v, Iterable) and not isinstance(v, six.string_types):
             cf_data[k] = ', '.join(v)
         else:
             cf_data[k] = v
