@@ -61,7 +61,7 @@ def main(argv=None, stdin=None):
     build_parser.set_defaults(cls=ProjectBuild)
     build_parser.set_defaults(func="build")
 
-    apply_parser = subparsers.add_parser('apply', description='Build')
+    apply_parser = subparsers.add_parser('apply', description='Apply')
     add_default_arguments(apply_parser)
     apply_parser.set_defaults(cls=ProjectApply)
     apply_parser.set_defaults(func="apply")
