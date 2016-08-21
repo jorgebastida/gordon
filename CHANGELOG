@@ -3,6 +3,7 @@
 * Add Kotlin example (Thanks Pelle Almquist)
 * Breaking change: S3 event source bucket definition can't be an ARN anymore
 * New: S3 event source bucket definition can be a reference now.
+* New: VPC security-groups and subnet-ids can now be customized using parameters.
 
 0.2.1
 =======
