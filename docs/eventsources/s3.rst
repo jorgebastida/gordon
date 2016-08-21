@@ -213,7 +213,7 @@ Description                  Map of filters you want to apply
 ===========================  ============================================================================================================
 
 Filters are optional to all notifications. The current AWS API only allows you to filter events by the key's ``prefix`` and ``suffix``. One notification can't define
-more than one of each (``prefix`` and ``suffix``) and  filters in a bucket can't overlap one to each other.
+more than one of each (``prefix`` and ``suffix``) and  filters in a bucket can't overlap one to each other.``prefix`` and ``suffix`` value and can be either a ``string`` or a ``references``.
 
 
 Full Example
