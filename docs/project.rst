@@ -199,6 +199,21 @@ Example:
                 - subnet-1234567b
                 - subnet-1234567c
 
+
+You can customize both ``security-groups`` and ``subnet-ids`` using parameters
+
+.. code-block:: yaml
+
+    ---
+    project: vpcexample
+    ...
+
+    vpcs:
+        my-vpc:
+            security-groups: ref://VpcSecurityGroups
+            subnet-ids: ref://VpcSubnets
+            
+
 contexts
 ^^^^^^^^^^^^^^^^^^^^^^
 
