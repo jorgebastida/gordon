@@ -69,9 +69,9 @@ Bucket
 ===========================  ============================================================================================================
 Name                         ``bucket``
 Required                     Yes
-Valid types                  ``string``, ``arn``
+Valid types                  ``string``, ``reference``
 Max length                   30
-Description                  Name or ARN of the bucket source of the events
+Description                  Name of the bucket source of the events
 ===========================  ============================================================================================================
 
 Notifications

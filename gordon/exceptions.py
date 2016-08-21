@@ -162,7 +162,7 @@ class LambdaBuildProcessError(BaseGordonException):
 
 
 class InvalidApigatewayIntegrationTypeError(BaseGordonException):
-    hint = u"Invalid Apigateway integrantion type: {}"
+    hint = u"Invalid Apigateway integration type: {}"
     code = 22
 
 

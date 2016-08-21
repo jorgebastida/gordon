@@ -1,0 +1,34 @@
+buildscript {
+    ext.kotlin_version = '1.0.3'
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+apply plugin: 'kotlin'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile (
+            "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version",
+            "com.amazonaws:aws-lambda-java-core:1.1.0",
+            "com.amazonaws:aws-lambda-java-events:1.1.0"
+    )
+}
+
+task buildLambda(type: Copy) {
+    from compileKotlin
+    from processResources
+    into('lib') {
+        from configurations.runtime
+    }
+    into target
+}
+
+build.dependsOn buildLambda

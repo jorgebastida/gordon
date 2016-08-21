@@ -264,15 +264,13 @@ class BucketNotificationConfiguration(base.BaseResource):
         self._validate_notifications()
 
     def get_bucket_arn(self):
-        bucket = self.settings.get('bucket')
-        if bucket.startswith('arn:aws:'):
-            return bucket
-        return troposphere.Join("", ["arn:aws:s3:::", bucket])
+        bucket_name = self.get_bucket_name()
+        return troposphere.Join("", ["arn:aws:s3:::", bucket_name])
 
     def get_bucket_name(self):
         bucket = self.settings.get('bucket')
-        if bucket.startswith('arn:aws:'):
-            return bucket.rsplit(':', 1)[1]
+        if isinstance(bucket, troposphere.Ref):
+            return bucket
         return bucket
 
     def _validate_notifications(self):

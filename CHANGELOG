@@ -1,3 +1,9 @@
+0.3.0
+=======
+* Add Kotlin example (Thanks Pelle Almquist)
+* Breaking change: S3 event source bucket definition can't be an ARN anymore
+* New: S3 event source bucket definition can be a reference now.
+
 0.2.1
 =======
 * Fix typos and grammar errors all across the the documentation.

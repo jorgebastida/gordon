@@ -1,0 +1,5 @@
+lambdas:
+  hellokotlin:
+    code: hellokotlin
+    runtime: java8
+    handler: example.Hello::handler
