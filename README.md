@@ -49,6 +49,7 @@ We think documentation and examples are an important pillar... so here you have 
 * [Javascript HelloWorld Lambda](https://github.com/jorgebastida/gordon/tree/master/examples/modulejs): Simple Lambda written in Javascript.
 * [Javascript ES6 HelloWorld Lambda](https://github.com/jorgebastida/gordon/tree/master/examples/simplejs-es6): Simple Lambda written in Javascript using ES-6.
 * [Java HelloWorld Lambda](https://github.com/jorgebastida/gordon/tree/master/examples/simplejava): Simple Lambda written in Java.
+* [Kotlin HelloWorld Lambda](https://github.com/jorgebastida/gordon/tree/master/examples/simplekotlin): Simple Lambda written in Kotlin.
 * [Scala HelloWorld Lambda](https://github.com/jorgebastida/gordon/tree/master/examples/simplescala): Simple Lambda written in Scala.
 * [Golang Runtime](https://github.com/jorgebastida/gordon/tree/master/examples/go): Run Golang based Lambdas via shim.
 * [ApiGateway](https://github.com/jorgebastida/gordon/tree/master/examples/apigateway): Integration for creating a simple web service.
