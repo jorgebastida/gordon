@@ -104,6 +104,7 @@ class LambdaFunctionNotification(BaseNotification):
                 FunctionName=self.get_destination_arn(),
                 Principal="s3.amazonaws.com",
                 SourceAccount=troposphere.Ref(troposphere.AWS_ACCOUNT_ID),
+                SourceArn=self.bucket_notification_configuration.get_bucket_arn()
             )
         )
 
