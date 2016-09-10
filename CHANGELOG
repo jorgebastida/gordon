@@ -1,3 +1,7 @@
+0.4.0
+=======
+* Improve speed of zip archiving (Thanks Ed Lewis)
+
 0.3.0
 =======
 * Add Kotlin example (Thanks Pelle Almquist)
