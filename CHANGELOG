@@ -2,6 +2,7 @@
 =======
 * Improve speed of zip archiving (Thanks Ed Lewis)
 * Removed overly strict validation on s3 integration (Thanks Ben Siemon)
+* S3 triggers configured via gordon should now appear in the console (Thanks Ben Siemon)
 
 0.3.0
 =======
