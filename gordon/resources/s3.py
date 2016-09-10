@@ -275,24 +275,6 @@ class BucketNotificationConfiguration(base.BaseResource):
         return bucket
 
     def _validate_notifications(self):
-        # Validate that notifications events don't overlap
-        top_events_for_bucket = set()
-        sub_events_for_top = defaultdict(list)
-        for notification_id, notification in six.iteritems(self._notifications):
-            for event, top, sub in notification.events:
-                if top in top_events_for_bucket or \
-                   top in sub_events_for_top or\
-                   sub in sub_events_for_top.get(top, []):
-                    raise exceptions.ResourceValidationError(
-                        (
-                            "Event {} overlaps with some other event "
-                            "registered for the same bucket."
-                        ).format(event)
-                    )
-                else:
-                    top_events_for_bucket.add(top)
-                    sub_events_for_top[top].append(sub)
-
         # Validate that all key prefix/suffix filters for a bucket
         # don't overlap one to each other.
         all_filters = defaultdict(list)
