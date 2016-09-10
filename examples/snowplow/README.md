@@ -1,4 +1,5 @@
 Snowplow Example
+================
 
 This simple project defines one lambda called ``snowplowconsumer`` and integrates it with one kinesis stream.
 
