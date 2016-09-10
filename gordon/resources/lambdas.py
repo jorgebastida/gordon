@@ -465,18 +465,18 @@ class Lambda(base.BaseResource):
             shutil.rmtree(destination)
             raise exceptions.LambdaBuildProcessError(exc, self)
 
-        output = six.BytesIO()
-        zf = zipfile.ZipFile(output, 'w')
+        with tempfile.SpooledTemporaryFile(0, 'wb') as tmp:
+            with zipfile.ZipFile(tmp, 'w') as zf:
+                for basedir, dirs, files in os.walk(destination):
+                    relative = os.path.relpath(basedir, destination)
+                    for filename in files:
+                        source = os.path.join(destination, basedir, filename)
+                        relative_destination = os.path.join(relative, filename)
+                        zf.write(source, relative_destination)
 
-        for basedir, dirs, files in os.walk(destination):
-            relative = os.path.relpath(basedir, destination)
+            tmp.seek(0)
+            output = six.BytesIO(tmp.read())
 
-            for filename in files:
-                source = os.path.join(destination, basedir, filename)
-                relative_destination = os.path.join(relative, filename)
-                zf.write(source, relative_destination)
-
-        zf.close()
         output.seek(0)
         shutil.rmtree(destination)
         return output
