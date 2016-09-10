@@ -1,6 +1,7 @@
 0.4.0
 =======
 * Improve speed of zip archiving (Thanks Ed Lewis)
+* Removed overly strict validation on s3 integration (Thanks Ben Siemon)
 
 0.3.0
 =======
