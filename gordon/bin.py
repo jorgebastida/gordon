@@ -21,7 +21,10 @@ def main(argv=None, stdin=None):
     stdin = stdin or sys.stdin
     argv = (argv or sys.argv)[1:]
 
-    parser = argparse.ArgumentParser(usage=("%(prog)s [build | apply | startproject | startapp]"))
+    parser = argparse.ArgumentParser()
+    parser.format_usage = lambda: (
+        "usage: gordon [%s]\n" % ' | '.join(parser._actions[1].choices.keys())
+    )
     subparsers = parser.add_subparsers()
 
     def add_default_arguments(p):
