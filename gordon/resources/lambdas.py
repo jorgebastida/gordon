@@ -472,6 +472,9 @@ class Lambda(base.BaseResource):
                     for filename in files:
                         source = os.path.join(destination, basedir, filename)
                         relative_destination = os.path.join(relative, filename)
+                        if six.PY2:
+                            source = source.decode('utf-8', errors='strict')
+                            relative_destination = relative_destination.decode('utf-8', errors='strict')
                         zf.write(source, relative_destination)
 
             tmp.seek(0)
