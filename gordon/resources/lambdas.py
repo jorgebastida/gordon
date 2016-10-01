@@ -155,7 +155,7 @@ class Lambda(base.BaseResource):
     def get_role(self):
         """Returns the role this lambda function will use. Users can customize
         which role to apply by referencing the ARN of the role. If no Role
-        is defined, gordon will create and assing one with the basic
+        is defined, gordon will create and assign one with the basic
         permissions suggested by AWS.
 
         Users can customize the policies attached to the role using
