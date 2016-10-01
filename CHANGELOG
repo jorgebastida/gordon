@@ -1,3 +1,10 @@
+0.5.0
+=======
+* Fix help command (Thanks Alexandre González)
+* Ensure zip filenames are UTF-8 (Thanks Ed Lewis)
+* Switch to ZIP_DEFLATED (Thanks Ed Lewis)
+* Make debugging compatible for python3 (Thanks @kmonkeyjam)
+
 0.4.0
 =======
 * Improve speed of zip archiving (Thanks Ed Lewis)
