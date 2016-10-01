@@ -155,7 +155,7 @@ class Lambda(base.BaseResource):
     def get_role(self):
         """Returns the role this lambda function will use. Users can customize
         which role to apply by referencing the ARN of the role. If no Role
-        is defined, gordon will create and assing one with the basic
+        is defined, gordon will create and assign one with the basic
         permissions suggested by AWS.
 
         Users can customize the policies attached to the role using
@@ -466,12 +466,15 @@ class Lambda(base.BaseResource):
             raise exceptions.LambdaBuildProcessError(exc, self)
 
         with tempfile.SpooledTemporaryFile(0, 'wb') as tmp:
-            with zipfile.ZipFile(tmp, 'w') as zf:
+            with zipfile.ZipFile(tmp, 'w', zipfile.ZIP_DEFLATED) as zf:
                 for basedir, dirs, files in os.walk(destination):
                     relative = os.path.relpath(basedir, destination)
                     for filename in files:
                         source = os.path.join(destination, basedir, filename)
                         relative_destination = os.path.join(relative, filename)
+                        if six.PY2:
+                            source = source.decode('utf-8', errors='strict')
+                            relative_destination = relative_destination.decode('utf-8', errors='strict')
                         zf.write(source, relative_destination)
 
             tmp.seek(0)
@@ -532,7 +535,7 @@ class Lambda(base.BaseResource):
                 )
                 if self.project.debug and out:
                     with indent(4):
-                        self.project.puts(out)
+                        self.project.puts(out.decode("utf-8"))
 
     def _collect_folder(self, source, destination):
         for basedir, dirs, files in os.walk(source):
