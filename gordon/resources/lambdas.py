@@ -532,7 +532,7 @@ class Lambda(base.BaseResource):
                 )
                 if self.project.debug and out:
                     with indent(4):
-                        self.project.puts(out)
+                        self.project.puts(out.decode("utf-8"))
 
     def _collect_folder(self, source, destination):
         for basedir, dirs, files in os.walk(source):
