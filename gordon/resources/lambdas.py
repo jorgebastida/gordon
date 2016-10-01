@@ -466,12 +466,15 @@ class Lambda(base.BaseResource):
             raise exceptions.LambdaBuildProcessError(exc, self)
 
         with tempfile.SpooledTemporaryFile(0, 'wb') as tmp:
-            with zipfile.ZipFile(tmp, 'w') as zf:
+            with zipfile.ZipFile(tmp, 'w', zipfile.ZIP_DEFLATED) as zf:
                 for basedir, dirs, files in os.walk(destination):
                     relative = os.path.relpath(basedir, destination)
                     for filename in files:
                         source = os.path.join(destination, basedir, filename)
                         relative_destination = os.path.join(relative, filename)
+                        if six.PY2:
+                            source = source.decode('utf-8', errors='strict')
+                            relative_destination = relative_destination.decode('utf-8', errors='strict')
                         zf.write(source, relative_destination)
 
             tmp.seek(0)
