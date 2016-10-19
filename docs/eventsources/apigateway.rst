@@ -300,7 +300,7 @@ Integration Type
 Name                         ``type``
 Required                     No
 Default                      AWS
-Valid Values                 ``AWS``, ``MOCK``, ``HTTP``
+Valid Values                 ``AWS``, ``AWS_PROXY``, ``MOCK``, ``HTTP``
 Description                  Type of the integration
 ===========================  ============================================================================================================
 
