@@ -451,12 +451,15 @@ class ProjectApply(ProjectApplyLoopBase):
             os.path.join(self.path, 'parameters', '{}.yml'.format(self.stage)),
         )
 
-        # Retrieve the account_id of the credentials currently in use.
+        # If not defined in settings.yml then retrieve the account_id of the credentials currently in use.
         # The first approach is slightly more lightweight than the second.
-        try:
-            aws_account_id = boto3.client('iam').get_user()['User']['Arn'].split(':')[4]
-        except ClientError:
-            aws_account_id = boto3.client('iam').list_users(MaxItems=1)['Users'][0]['Arn'].split(':')[4]
+        if self.settings.get('aws-account-id', None) == None:
+            try:
+                aws_account_id = boto3.client('iam').get_user()['User']['Arn'].split(':')[4]
+            except ClientError:
+                aws_account_id = boto3.client('iam').list_users(MaxItems=1)['Users'][0]['Arn'].split(':')[4]
+        else:
+            aws_account_id = self.settings.get('aws-account-id', None)
 
         context = {
             'stage': self.stage,
