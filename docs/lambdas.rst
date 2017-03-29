@@ -156,7 +156,7 @@ Folder javascript lambda:
       hello_world:
         code: myfolder
         handler: file.handler
-        runtime: nodejs4.3
+        runtime: nodejs6.10
 
 
 Java lambda:
@@ -263,6 +263,7 @@ Runtime                                                  AWS Runtime
 =======================================================  ================
 ``node``, ``nodejs``, ``node0.10`` and ``nodejs0.10``    ``nodejs``
 ``node4.3`` and ``nodejs4.3``                            ``nodejs4.3``
+``node6.10```                                            ``nodejs6.10``
 ``python`` and ``python2.7``                             ``python2.7``
 ``java`` and ``java8``                                   ``java8``
 =======================================================  ================
@@ -272,7 +273,7 @@ If you don't specify any runtime, Gordon tries to auto detect it based on the ex
 =====================  ===============
 Extension              AWS Runtime
 =====================  ===============
-``.js``                ``nodejs4.3``
+``.js``                ``nodejs6.10``
 ``.py``                ``python2.7``
 =====================  ===============
 
