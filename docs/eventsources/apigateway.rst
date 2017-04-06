@@ -246,10 +246,10 @@ Example:
                     integration:
                         lambda: helloworld.sayhi
                         responses:
-                            - code: "404"
+                            - pattern: ""
+                              code: "404"
                     responses:
-                        - pattern: ""
-                          code: "404"
+                        - code: "404"
 
 
 Resource Parameters
@@ -366,8 +366,6 @@ Example:
               responses:
                 - pattern: ""
                   code: "404"
-                  models:
-                    application/xml: Empty
                   template:
                     application/json: |
                       #set($inputRoot = $input.path('$'))
@@ -400,10 +398,10 @@ Full Example
                     integration:
                         lambda: helloworld.sayhi
                         responses:
-                            - code: "404"
+                            - pattern: ""
+                              code: "404"
                     responses:
-                        - pattern: ""
-                          code: "404"
+                        - code: "404"
 
                 /hi/none:
                     method: GET
