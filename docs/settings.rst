@@ -26,6 +26,7 @@ Settings               Description
 ``kinesis``            Kinesis Event Source definitions. :ref:`Anatomy of Kinesis integration <kinesis-anatomy>`
 ``s3``                 S3 notfication definitions. :ref:`Anatomy of S3 integration <s3-anatomy>`
 ``apigateway``         API Gateway definitions. :ref:`Anatomy of Api Gateway integration <apigateway-anatomy>`
+``aws-account-id``     AWS account id where you are deploying your lambdas. If not present, gordon will try to retrieve it using IAM api.
 =====================  =================================================================================================================================================
 
 
