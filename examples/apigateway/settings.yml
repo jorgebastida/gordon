@@ -48,6 +48,25 @@ apigateway:
                       parameters:
                         method.response.header.color: color
 
+            /cors:
+                # http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-apitgateway-method-integration-integrationresponse.html
+                methods: GET
+                integration:
+                    lambda: helloworld.hellopy
+                    responses:
+                        - pattern: ""
+                          code: "200"
+                          parameters:
+                              method.response.header.Access-Control-Allow-Origin: "'*'"
+                              method.response.header.Access-Control-Allow-Methods: "'*'"
+                              method.response.header.Access-Control-Request-Method: "'GET'"
+                responses:
+                    - code: "200"
+                      parameters:
+                          method.response.header.Access-Control-Allow-Origin: true
+                          method.response.header.Access-Control-Allow-Methods: true
+                          method.response.header.Access-Control-Request-Method: true
+
             /shop/{item}:
                 methods: GET
                 integration:

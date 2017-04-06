@@ -157,6 +157,8 @@ class ApiGateway(BaseResource):
         responses = []
         for response in resource['integration'].get('responses', default_integration_responses):
             extra = {}
+            if 'parameters' in response:
+                extra['ResponseParameters'] = response['parameters']
             if 'template' in response:
                 extra['ResponseTemplates'] = response['template']
             responses.append(
