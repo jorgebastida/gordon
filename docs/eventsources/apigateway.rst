@@ -300,7 +300,7 @@ Integration Type
 Name                         ``type``
 Required                     No
 Default                      AWS
-Valid Values                 ``AWS``, ``MOCK``, ``HTTP``
+Valid Values                 ``AWS``, ``AWS_PROXY``, ``MOCK``, ``HTTP``
 Description                  Type of the integration
 ===========================  ============================================================================================================
 
@@ -424,6 +424,12 @@ Full Example
                     methods: GET
                     integration:
                         type: MOCK
+
+                /{integration+}:
+                    methods: POST
+                    integration:
+                        lambda: helloworld.sayho
+                        type: AWS_PROXY
 
                 /parameters:
                     methods: GET

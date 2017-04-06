@@ -16,6 +16,7 @@ from .base import BaseResource
 LAMBDA_INTEGRATION = 20
 HTTP_INTEGRATION = 30
 MOCK_INTEGRATION = 40
+LAMBDA_PROXY_INTEGRATION = 50
 
 
 class ApiGateway(BaseResource):
@@ -82,7 +83,8 @@ class ApiGateway(BaseResource):
             return http_method
 
         integration_type = self._get_integration_type(resource)
-        if integration_type == LAMBDA_INTEGRATION:
+        if integration_type == LAMBDA_INTEGRATION or \
+                integration_type == LAMBDA_PROXY_INTEGRATION:
             return 'POST'
         else:
             return 'GET'
@@ -91,6 +93,9 @@ class ApiGateway(BaseResource):
         if 'integration' not in resource:
             raise exceptions.InvalidApigatewayIntegrationTypeError("Resource has no integration".format(resource))
         if 'lambda' in resource['integration']:
+            if 'type' in resource['integration'] and \
+                    resource['integration']['type'] == 'AWS_PROXY':
+                return LAMBDA_PROXY_INTEGRATION
             return LAMBDA_INTEGRATION
         elif resource['integration']['type'] == 'HTTP':
             return HTTP_INTEGRATION
@@ -106,16 +111,21 @@ class ApiGateway(BaseResource):
             return 'MOCK'
         elif integration == LAMBDA_INTEGRATION:
             return 'AWS'
+        elif integration == LAMBDA_PROXY_INTEGRATION:
+            return 'AWS_PROXY'
         return None
 
     def get_integration_credentials(self, resource, invoke_lambda_role):
-        if self._get_integration_type(resource) == LAMBDA_INTEGRATION:
+        integration_type = self._get_integration_type(resource)
+        if integration_type == LAMBDA_INTEGRATION or \
+                integration_type == LAMBDA_PROXY_INTEGRATION:
             return troposphere.GetAtt(invoke_lambda_role, 'Arn')
         return troposphere.Ref(troposphere.AWS_NO_VALUE)
 
     def get_integration_uri(self, resource):
         integration_type = self._get_integration_type(resource)
-        if integration_type == LAMBDA_INTEGRATION:
+        if integration_type == LAMBDA_INTEGRATION or \
+                integration_type == LAMBDA_PROXY_INTEGRATION:
             return troposphere.Join(
                 '',
                 [
