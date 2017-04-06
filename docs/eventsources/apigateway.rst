@@ -419,6 +419,12 @@ Full Example
                     integration:
                         type: MOCK
 
+                /{integration+}:
+                    methods: POST
+                    integration:
+                        lambda: helloworld.sayho
+                        type: AWS_PROXY
+
                 /parameters:
                     methods: GET
                     parameters:
