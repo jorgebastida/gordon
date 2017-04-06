@@ -611,11 +611,12 @@ class PythonLambda(Lambda):
 
 class NodeLambda(Lambda):
 
-    _default_runtime = 'nodejs4.3'
+    _default_runtime = 'nodejs6.10'
     _runtimes = {
         'node': 'nodejs',
         'nodejs': 'nodejs',
         'nodejs4.3': 'nodejs4.3',
+        'nodejs6.10': 'nodejs6.10',
         'nodejs0.10': 'nodejs',
         'node0.10': 'nodejs'
     }
