@@ -2,6 +2,7 @@
 =======
 * Make node v6.10 the default runtime (Thanks Pelle Almquist)
 * Adding ``aws-account-id`` to your settings will make gordon not require any IAM permissions (Thanks Kerry Hatcher)
+* Add API Gateway IntegrationResponse header support (Thanks Daniel Upton)
 
 0.5.0
 =======
