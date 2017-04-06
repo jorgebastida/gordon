@@ -187,7 +187,7 @@ def convert_cloudformation_types(data):
     cf_data = {}
     for k, v in six.iteritems(data):
         if isinstance(v, Iterable) and not isinstance(v, six.string_types):
-            cf_data[k] = ', '.join(v)
+            cf_data[k] = ', '.join([repr(v)])
         else:
             cf_data[k] = v
     return cf_data
@@ -232,8 +232,8 @@ def generate_stack_name(stage, project_name, step):
 
 
 def valid_cloudformation_name(*elements):
-    """Generete a valid CloudFormation name using ``elements``
-    Because Resource names in AWS are truncaded, we try to respect up to 7
+    """Generate a valid CloudFormation name using ``elements``
+    Because Resource names in AWS are truncated, we try to respect up to 7
     characters per group, except for the last one, which hopefully is the
     most representative one
     """
