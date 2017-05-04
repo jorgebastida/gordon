@@ -103,7 +103,7 @@ Then... why not just use CloudFormation? Well, there are three reasons:
 This project tries to solve these three issues by:
 
 1. Creating a really thin layer of conventions on top of easy to maintain YAML files.
-2. Making everything work out of the box as well trying to make people not shoot in their foot.
+2. Making everything work out of the box as well trying to make people not shoot themselves in the foot.
 3. Working around the lack of CloudFormation/Framework APIs (keeping in mind they will eventually happen).
 
 
