@@ -82,6 +82,23 @@ def get_file_hash(filename):
         digest.update(six.text_type(f.read()).encode('utf-8'))
         return digest.hexdigest()
 
+def validate_lamba_env_var_name(name):
+    """
+    There is no limit to the number of environment variables you can create as long as the total
+    size of the set does not exceed 4 KB.
+
+    Other requirements include:
+
+    Must start with letters [a-zA-Z]. Can only contain alphanumeric characters and underscores
+    ([a-zA-Z0-9_].  In addition, there are a specific set of keys that AWS Lambda reserves. If you
+    try to set values for any of these reserved keys, you will receive an error message indicating
+    that the action is not allowed.
+    """
+
+    if not re.match(r'^[a-zA-Z][a-zA-Z0-9_]+$', name):
+        raise exceptions.ValidationError("Lambda environment variable names must only contain lowercase 'a-z', '0-9' and '_' characters.")
+
+    return name
 
 def validate_code_bucket(name):
     """

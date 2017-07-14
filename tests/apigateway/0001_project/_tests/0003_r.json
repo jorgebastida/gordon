@@ -160,6 +160,7 @@
                     }
                 },
                 "Description": "Sleeps several seconds before succeeding.",
+                "Environment": {"Variables": {}},
                 "Handler": "sleep.handler",
                 "MemorySize": 128,
                 "Role": {
@@ -188,6 +189,7 @@
                     }
                 },
                 "Description": "Publishes new versions of Lambdas.",
+                "Environment": {"Variables": {}},
                 "Handler": "version.handler",
                 "MemorySize": 128,
                 "Role": {
@@ -746,6 +748,7 @@
                     }
                 },
                 "Description": "My bye description",
+                "Environment": {"Variables": {}},
                 "Handler": "code.bye_handler",
                 "MemorySize": 192,
                 "Role": {
@@ -774,6 +777,7 @@
                     }
                 },
                 "Description": "My hello description",
+                "Environment": {"Variables": {}},
                 "Handler": "code.handler",
                 "MemorySize": 192,
                 "Role": {

@@ -152,6 +152,14 @@ class Lambda(base.BaseResource):
             )
         return policies
 
+    def get_environment(self):
+        """Return the environment as defined in settings.yml. Valudates variable names"""
+
+        for key, value in six.iteritems(self.settings.get('environment', {})):
+            utils.validate_lamba_env_var_name(key)
+
+        return self.settings.get('environment', {})
+
     def get_role(self):
         """Returns the role this lambda function will use. Users can customize
         which role to apply by referencing the ARN of the role. If no Role
@@ -238,6 +246,7 @@ class Lambda(base.BaseResource):
         this function requires a custom Role, register it too."""
 
         role = self.get_role()
+        env = self.get_environment()
         depends_on = []
         if isinstance(role, iam.Role):
             template.add_resource(role)
@@ -283,6 +292,7 @@ class Lambda(base.BaseResource):
                 Role=role,
                 Runtime=self.get_runtime(),
                 Timeout=self.get_timeout(),
+                Environment=awslambda.Environment(Variables=env),
                 **extra
             )
         )
