@@ -471,6 +471,8 @@ class Lambda(base.BaseResource):
                     relative = os.path.relpath(basedir, destination)
                     for filename in files:
                         source = os.path.join(destination, basedir, filename)
+                        # resolve symlinks if present when packaging
+                        source = os.path.realpath(source)
                         relative_destination = os.path.join(relative, filename)
                         if six.PY2:
                             source = source.decode('utf-8', errors='strict')
