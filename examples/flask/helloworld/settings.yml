@@ -1,0 +1,6 @@
+lambdas:
+  gui:
+    code: app
+    handler: main.lambda_handler
+    runtime: python
+    description: a test flask web app
