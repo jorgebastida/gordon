@@ -264,7 +264,8 @@ Runtime                                                  AWS Runtime
 ``node``, ``nodejs``, ``node0.10`` and ``nodejs0.10``    ``nodejs``
 ``node4.3`` and ``nodejs4.3``                            ``nodejs4.3``
 ``node6.10```                                            ``nodejs6.10``
-``python`` and ``python2.7``                             ``python2.7``
+``python`` and ``python2.7`` and ``python2``             ``python2.7``
+``python3.6`` and ``python3``                            ``python3.6``
 ``java`` and ``java8``                                   ``java8``
 =======================================================  ================
 
