@@ -22,13 +22,23 @@ from . import protocols
 
 SETTINGS_FILE = 'settings.yml'
 
+# Lambda region list updated on Nov 28, 2017 from
+# http://docs.aws.amazon.com/general/latest/gr/rande.html
 AWS_LAMBDA_REGIONS = (
-    'eu-west-1',
-    'eu-central-1',
-    'ap-northeast-1',
-    'ap-southeast-2',
-    'us-east-1',
-    'us-west-2',
+    'us-east-1',  # US East (N. Virginia)
+    'us-east-2',  # US East (Ohio)
+    'us-west-1',  # US West (N. California)
+    'us-west-2',  # US West (Oregon)
+    'ap-south-1',  # Asia Pacific (Mumbai)
+    'ap-northeast-2',  # Asia Pacific (Seoul)
+    'ap-southeast-1',  # Asia Pacific (Singapore)
+    'ap-southeast-2',  # Asia Pacific (Sydney)
+    'ap-northeast-1',  # Asia Pacific (Tokyo)
+    'ca-central-1',  # Canada (Central)
+    'eu-central-1',  # EU (Frankfurt)
+    'eu-west-1',  # EU (Ireland)
+    'eu-west-2',  # EU (London)
+    'sa-east-1',  # South America (Sao Paulo)
 )
 
 AVAILABLE_RESOURCES = {
