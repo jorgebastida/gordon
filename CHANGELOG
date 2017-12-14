@@ -4,6 +4,7 @@
 * Environment variables support added (Thanks Dariusz Dwornikowski)
 * Added symlink resolution when building zip files (Thanks dshivak-twist)
 * Add missing AWS policies for auto-vpc-policy (Thanks Andrea Masi)
+* Update Lambda regions (Thanks Eric Blade)
 
 0.6.0
 =======
