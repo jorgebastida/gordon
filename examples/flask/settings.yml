@@ -1,0 +1,26 @@
+---
+project: flaskexample
+default-region: eu-west-1
+code-bucket: gordon-flaskexample-9565d59e
+apps:
+  - gordon.contrib.lambdas
+  - helloworld
+
+contexts:
+  default:
+    script_name: ref://SCRIPT_NAME
+
+apigateway:
+  mygui:
+    description: My first GUI gateway
+    resources:
+      /{proxy+}:
+        methods: ANY
+        integration:
+          lambda: helloworld.gui
+          type: AWS_PROXY
+      /:
+        methods: ANY
+        integration:
+          lambda: helloworld.gui
+          type: AWS_PROXY

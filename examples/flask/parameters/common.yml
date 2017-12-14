@@ -1,0 +1,2 @@
+---
+SCRIPT_NAME: "/{{ stage }}"
