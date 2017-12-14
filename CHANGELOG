@@ -1,3 +1,10 @@
+0.7.0
+=======
+* Add python 3.6 support (Thanks Brian Candler)
+* Environment variables support added (Thanks Dariusz Dwornikowski)
+* Added symlink resolution when building zip files (Thanks dshivak-twist)
+* Add missing AWS policies for auto-vpc-policy (Thanks Andrea Masi)
+
 0.6.0
 =======
 * Make node v6.10 the default runtime (Thanks Pelle Almquist)
