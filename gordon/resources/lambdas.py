@@ -587,7 +587,9 @@ class PythonLambda(Lambda):
     _runtimes = {
         'python': 'python2.7',
         'python2.7': 'python2.7',
-        'python2': 'python2.7'
+        'python2': 'python2.7',
+        'python3.6': 'python3.6',
+        'python3': 'python3.6',
     }
     extension = 'py'
 
