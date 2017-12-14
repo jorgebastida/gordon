@@ -95,6 +95,8 @@ The following is the anatomy of a lambda in gordon.
       auto-vpc-policy: { BOOLEAN }
       auto-run-policy: { BOOLEAN }
       cli-output: { BOOLEAN }
+      environment:
+         { MAP }
       policies:
         { POLICY_NAME }:
           { MAP }
@@ -537,6 +539,15 @@ Valid types                  ``boolean``
 Description                  Output the lambda ARN as part of the ``apply`` output
 ===========================  ============================================================================================================
 
+environment
+^^^^^^^^^^^^^^^^^^^^^^
+
+===========================  ============================================================================================================
+Name                         ``environment``
+Required                     No
+Valid types                  ``map``
+Description                  Map of environment variables to attach to this lambda.
+===========================  ============================================================================================================
 
 policies
 ^^^^^^^^^^^^^^^^^^^^^^
