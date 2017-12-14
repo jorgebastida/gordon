@@ -29,7 +29,7 @@ Features
   * Dynamodb Streams
   * Kinesis Streams
   * S3
-* AWS Lambda Versions an Aliases
+* AWS Lambda Versions and Aliases
 * VPC support
 * Dynamic stage parametrization including:
   * Environment variables
@@ -83,9 +83,9 @@ Isolation between stages?
 
 Yes, we believe that there must be 100% isolation between your application stages (``dev``, ``staging``, ``prod``...). That means that resources which (for example) serve a development purpose **must** not be related to the ones which are serving production load.
 
-On example of this is that it is an AWS [best practice](http://blogs.aws.amazon.com/security/post/TxQYSWLSAPYVGT/Guidelines-for-when-to-use-Accounts-Users-and-Groups) to use different AWS accounts between stages. Although this is not required, it makes evident that mixing resources between stages is a bad idea.
+One example of this is that it is an AWS [best practice](http://blogs.aws.amazon.com/security/post/TxQYSWLSAPYVGT/Guidelines-for-when-to-use-Accounts-Users-and-Groups) to use different AWS accounts between stages. Although this is not required, it makes evident that mixing resources between stages is a bad idea.
 
-This completely clash with the suggested approach for services such as apigateway, where they emphasize to have several "stages" for the same apigateway resource. We disagree and completely ignore that functionality because we believe is the wrong approach.
+This completely clashes with the suggested approach for services such as apigateway, where they emphasize to have several "stages" for the same apigateway resource. We disagree and completely ignore that functionality because we believe is the wrong approach.
 
 Gordon keeps reproducibility and isolation at it's core. When you apply gordon projects in different stages or regions, you'll deploy completely isolated Cloudformation stacks which will contain an exact and isolated copy of all the resources you have defined.
 
@@ -103,7 +103,7 @@ Then... why not just use CloudFormation? Well, there are three reasons:
 This project tries to solve these three issues by:
 
 1. Creating a really thin layer of conventions on top of easy to maintain YAML files.
-2. Making everything work out of the box as well trying to make people not shoot in their foot.
+2. Making everything work out of the box as well trying to make people not shoot themselves in the foot.
 3. Working around the lack of CloudFormation/Framework APIs (keeping in mind they will eventually happen).
 
 
