@@ -418,6 +418,7 @@ def delete_cf_stack(name, dry_run=True):
         if e.response['Error']['Code'] == 'ValidationError':
             puts(colored.red("Stack '{}' not found.".format(name)))
             return
+        raise
 
     for resource in stack['StackResources']:
         puts(colored.red("{} {}".format(resource['ResourceType'], resource.get('PhysicalResourceId', ''))))
